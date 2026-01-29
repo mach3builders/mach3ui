@@ -264,3 +264,21 @@ html.dark {
     top: auto;
     left: anchor(left);
 }
+
+@position-try --datepicker-top {
+    bottom: calc(anchor(top) + 0.25rem);
+    top: auto;
+    left: anchor(left);
+}
+
+@position-try --daterange-top {
+    bottom: calc(anchor(top) + 0.25rem);
+    top: auto;
+    left: anchor(left);
+}
+
+@position-try --timepicker-top {
+    bottom: calc(anchor(top) + 0.25rem);
+    top: auto;
+    left: anchor(left);
+}
