@@ -2,9 +2,9 @@
 
 namespace Mach3Builders\Ui;
 
+use Mach3Builders\Ui\Commands\UiCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Mach3Builders\Ui\Commands\UiCommand;
 
 class UiServiceProvider extends PackageServiceProvider
 {
