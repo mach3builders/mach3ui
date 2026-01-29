@@ -1,0 +1,52 @@
+@props([
+    'checked' => false,
+    'description' => null,
+    'label' => null,
+])
+
+@php
+    $radio_classes = [
+        'size-[18px] shrink-0 appearance-none rounded-full border cursor-pointer bg-center bg-no-repeat',
+        'border-gray-300 bg-white',
+        'dark:border-gray-600 dark:bg-gray-800',
+        'checked:border-blue-600 checked:bg-blue-600',
+        'dark:checked:border-blue-500 dark:checked:bg-blue-500',
+        "checked:bg-[url('data:image/svg+xml,%3csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%225%22%20fill%3D%22white%22%2F%3E%3C%2Fsvg%3E')]",
+        'checked:bg-[length:14px]',
+        'focus:outline-none focus:ring-2 focus:ring-blue-600/20 focus:ring-offset-0',
+        'dark:focus:ring-blue-500/20',
+        'disabled:cursor-not-allowed disabled:opacity-50',
+    ];
+@endphp
+
+@if ($label || $description)
+    <label @class([
+        'group inline-flex gap-2.5 cursor-pointer has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50',
+        'items-center' => !$description,
+        'items-start' => $description,
+    ])>
+        <input
+            type="radio"
+            {{ $attributes->class(array_merge($radio_classes, [$description ? 'mt-0.5' : ''])) }}
+            @checked($checked)
+            data-radio
+        />
+
+        <span class="flex flex-col gap-0.5">
+            @if ($label)
+                <span class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ $label }}</span>
+            @endif
+
+            @if ($description)
+                <span class="text-sm text-gray-500 dark:text-gray-400">{{ $description }}</span>
+            @endif
+        </span>
+    </label>
+@else
+    <input
+        type="radio"
+        {{ $attributes->class($radio_classes) }}
+        @checked($checked)
+        data-radio
+    />
+@endif

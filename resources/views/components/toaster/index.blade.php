@@ -1,0 +1,154 @@
+@props([
+    'position' => 'bottom-right',
+    'duration' => 5000,
+])
+
+@php
+    $position_classes = [
+        'top-left' => 'top-4 left-4 items-start',
+        'top-right' => 'top-4 right-4 items-end',
+        'top-center' => 'top-4 left-1/2 -translate-x-1/2 items-center',
+        'bottom-left' => 'bottom-4 left-4 items-start',
+        'bottom-right' => 'bottom-4 right-4 items-end',
+        'bottom-center' => 'bottom-4 left-1/2 -translate-x-1/2 items-center',
+    ];
+
+    $variant_classes = [
+        'default' =>
+            'border-gray-100 bg-gray-20/90 text-gray-700 dark:border-gray-700 dark:bg-gray-780/90 dark:text-gray-200 [&>[data-toast-icon]]:text-gray-500 dark:[&>[data-toast-icon]]:text-gray-400',
+        'info' =>
+            'border-cyan-200 bg-cyan-50/90 dark:border-cyan-800/50 dark:bg-cyan-900/30 [&>[data-toast-icon]]:text-cyan-600 dark:[&>[data-toast-icon]]:text-cyan-500',
+        'success' =>
+            'border-green-200 bg-green-50/90 dark:border-green-800/50 dark:bg-green-900/30 [&>[data-toast-icon]]:text-green-600 dark:[&>[data-toast-icon]]:text-green-500',
+        'warning' =>
+            'border-amber-200 bg-amber-50/90 dark:border-amber-800/50 dark:bg-amber-900/30 [&>[data-toast-icon]]:text-amber-600 dark:[&>[data-toast-icon]]:text-amber-500',
+        'danger' =>
+            'border-red-200 bg-red-50/90 dark:border-red-800/50 dark:bg-red-900/30 [&>[data-toast-icon]]:text-red-600 dark:[&>[data-toast-icon]]:text-red-500',
+    ];
+
+    $close_classes = [
+        'default' =>
+            'text-gray-400 hover:bg-gray-100 hover:text-gray-600 dark:text-gray-500 dark:hover:bg-gray-700 dark:hover:text-gray-300',
+        'info' =>
+            'text-cyan-400 hover:bg-cyan-100/50 hover:text-cyan-500 dark:text-cyan-600 dark:hover:bg-cyan-800/30 dark:hover:text-cyan-400',
+        'success' =>
+            'text-green-400 hover:bg-green-100/50 hover:text-green-500 dark:text-green-600 dark:hover:bg-green-800/30 dark:hover:text-green-400',
+        'warning' =>
+            'text-amber-400 hover:bg-amber-100/50 hover:text-amber-500 dark:text-amber-600 dark:hover:bg-amber-800/30 dark:hover:text-amber-400',
+        'danger' =>
+            'text-red-400 hover:bg-red-100/50 hover:text-red-500 dark:text-red-600 dark:hover:bg-red-800/30 dark:hover:text-red-400',
+    ];
+@endphp
+
+<div {{ $attributes->class([
+    'fixed z-[9999] flex flex-col gap-3 pointer-events-none',
+    $position_classes[$position] ?? $position_classes['bottom-right'],
+]) }}
+    x-data="{
+        toasts: [],
+        variantClasses: @js($variant_classes),
+        closeClasses: @js($close_classes),
+        duration: @js($duration),
+    
+        add(toast) {
+            const id = Date.now() + Math.random();
+            this.toasts.push({
+                id,
+                variant: toast.variant || 'default',
+                title: toast.title || '',
+                description: toast.description || '',
+                dismissible: toast.dismissible !== false,
+                icon: toast.icon !== false,
+                open: false,
+            });
+    
+            this.$nextTick(() => {
+                const t = this.toasts.find(t => t.id === id);
+                if (t) t.open = true;
+            });
+    
+            if (toast.duration !== 0) {
+                setTimeout(() => this.dismiss(id), toast.duration || this.duration);
+            }
+        },
+    
+        dismiss(id) {
+            const toast = this.toasts.find(t => t.id === id);
+            if (toast) {
+                toast.open = false;
+                setTimeout(() => {
+                    this.toasts = this.toasts.filter(t => t.id !== id);
+                }, 200);
+            }
+        },
+    }" data-toaster x-on:toast.window="add($event.detail)" @if (class_exists('Livewire\Livewire'))
+    x-init="Livewire.on('toast', (data) => {
+        add(Array.isArray(data) ? data[0] : data);
+    });"
+    @endif
+    >
+    <template x-for="toast in toasts" :key="toast.id">
+        <div class="pointer-events-auto flex min-w-80 max-w-md items-start gap-3 rounded-lg border p-4 shadow-sm backdrop-blur-xl"
+            :class="variantClasses[toast.variant]" x-show="toast.open"
+            x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 translate-x-full"
+            x-transition:enter-end="opacity-100 translate-x-0" x-transition:leave="transition ease-in duration-150"
+            x-transition:leave-start="opacity-100 translate-x-0" x-transition:leave-end="opacity-0 translate-x-full">
+            <template x-if="toast.icon && (toast.variant === 'default' || toast.variant === 'info')">
+                <svg data-toast-icon class="mt-0.5 size-5 shrink-0" xmlns="http://www.w3.org/2000/svg" width="24"
+                    height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M12 16v-4" />
+                    <path d="M12 8h.01" />
+                </svg>
+            </template>
+
+            <template x-if="toast.icon && toast.variant === 'success'">
+                <svg data-toast-icon class="mt-0.5 size-5 shrink-0" xmlns="http://www.w3.org/2000/svg" width="24"
+                    height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="m9 12 2 2 4-4" />
+                </svg>
+            </template>
+
+            <template x-if="toast.icon && toast.variant === 'warning'">
+                <svg data-toast-icon class="mt-0.5 size-5 shrink-0" xmlns="http://www.w3.org/2000/svg" width="24"
+                    height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                </svg>
+            </template>
+
+            <template x-if="toast.icon && toast.variant === 'danger'">
+                <svg data-toast-icon class="mt-0.5 size-5 shrink-0" xmlns="http://www.w3.org/2000/svg" width="24"
+                    height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="m15 9-6 6" />
+                    <path d="m9 9 6 6" />
+                </svg>
+            </template>
+
+            <div class="flex-1">
+                <div class="font-semibold leading-6 text-gray-900 dark:text-white" x-text="toast.title"></div>
+
+                <div class="text-gray-600 dark:text-gray-300" x-show="toast.description" x-text="toast.description">
+                </div>
+            </div>
+
+            <button x-show="toast.dismissible"
+                class="-mr-1 -mt-1 flex size-6 shrink-0 cursor-pointer items-center justify-center rounded"
+                :class="closeClasses[toast.variant]" type="button" x-on:click="dismiss(toast.id)">
+                <svg class="size-4 shrink-0" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path d="M18 6 6 18" />
+                    <path d="m6 6 12 12" />
+                </svg>
+            </button>
+        </div>
+    </template>
+</div>
