@@ -5,6 +5,7 @@
 @php
     $type_classes = [
         'default' => 'bg-white dark:bg-gray-800',
+        'message' => 'bg-white dark:bg-gray-800',
         'auth' => 'bg-gray-30 dark:bg-gray-830',
     ];
 @endphp
