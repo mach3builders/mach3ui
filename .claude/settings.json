@@ -1,12 +1,4 @@
 {
-  "permissions": {
-    "additionalDirectories": [
-      "/Users/paul/Code/mach3ui/.claude"
-    ]
-  },
-  "enabledMcpjsonServers": [
-    "laravel-boost"
-  ],
   "hooks": {
     "PostToolUse": [
       {
