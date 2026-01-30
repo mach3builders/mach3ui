@@ -4,6 +4,7 @@
     'color' => 'gray',
     'boxed' => false,
     'round' => false,
+    'stroke' => 2,
 ])
 
 @php
@@ -51,12 +52,12 @@
             $boxed_colors[$color] ?? $boxed_colors['gray'],
         ]) }}
         data-icon>
-        <x-dynamic-component :component="'lucide-' . $name" @class([
+        <x-dynamic-component :component="'lucide-' . $name" :stroke-width="$stroke" @class([
             'shrink-0',
             $boxed_sizes[$effective_size]['icon'] ?? $boxed_sizes['sm']['icon'],
         ]) />
     </span>
 @else
-    <x-dynamic-component :component="'lucide-' . $name" {{ $attributes->class(['shrink-0', $size_classes[$size] ?? null]) }}
-        data-icon />
+    <x-dynamic-component :component="'lucide-' . $name" :stroke-width="$stroke"
+        {{ $attributes->class(['shrink-0', $size_classes[$size] ?? null]) }} data-icon />
 @endif
