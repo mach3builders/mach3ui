@@ -10,7 +10,7 @@
         'border-gray-80 bg-gray-30 dark:border-gray-700 dark:bg-gray-820' => $variant === 'inverted',
     ]) }}>
     @if ($divided)
-        <ui:divider variant="subtle" class="mx-4.5" />
+        <ui:divider variant="subtle" class="mt-4" />
     @endif
 
     <div class="flex items-center gap-2 px-4.5 py-4">

@@ -29,7 +29,7 @@
         {{ $attributes->class([
             'min-h-5 w-px shrink-0 self-stretch',
             'bg-gray-200 dark:bg-gray-600' => ! $is_subtle,
-            'bg-gray-120 dark:bg-gray-700' => $is_subtle,
+            'bg-gray-100 dark:bg-gray-700' => $is_subtle,
         ]) }}
         data-divider
     ></div>
@@ -38,7 +38,7 @@
         {{ $attributes->class([
             'h-px w-full shrink-0 border-0',
             'bg-gray-200 dark:bg-gray-600 [[data-dropdown-menu]_&]:bg-gray-80 dark:[[data-dropdown-menu]_&]:bg-gray-740' => ! $is_subtle,
-            'bg-gray-120 dark:bg-gray-700' => $is_subtle,
+            'bg-gray-100 dark:bg-gray-700' => $is_subtle,
         ]) }}
         data-divider
     />
