@@ -27,7 +27,7 @@
         role="separator"
         aria-orientation="vertical"
         {{ $attributes->class([
-            'min-h-5 w-px shrink-0 self-stretch',
+            'min-h-5 w-px shrink-0 self-stretch my-2',
             'bg-gray-200 dark:bg-gray-600' => ! $is_subtle,
             'bg-gray-100 dark:bg-gray-700' => $is_subtle,
         ]) }}
