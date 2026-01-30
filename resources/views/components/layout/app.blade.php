@@ -115,7 +115,7 @@
                     @if (isset($topbarActions))
                         {{ $topbarActions }}
                     @else
-                        <ui:button size="sm" icon="package" variant="outline-info">Free Plan</ui:button>
+                        <ui:button size="sm" icon="package" variant="outline-danger">{{ __('common.free') }}</ui:button>
                     @endif
                 </x-slot:actions>
 
