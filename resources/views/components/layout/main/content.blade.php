@@ -35,7 +35,7 @@
         @endif
 
         @if (isset($badges))
-            <div class="badges mt-1">
+            <div class="flex items-center gap-1 mt-1">
                 {{ $badges }}
             </div>
         @endif
