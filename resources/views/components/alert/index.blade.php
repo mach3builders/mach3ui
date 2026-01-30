@@ -7,7 +7,7 @@
 
 @php
     $icons = [
-        'default' => 'info',
+        'default' => 'megaphone',
         'info' => 'info',
         'success' => 'circle-check',
         'warning' => 'triangle-alert',
@@ -43,14 +43,11 @@
     ];
 @endphp
 
-<div
-    {{ $attributes->class([
-        'flex gap-3 rounded-lg border p-4 [&>svg]:mt-0.5 [&>svg]:size-5 [&>svg]:shrink-0',
-        ...$variant_classes[$variant] ?? $variant_classes['default'],
-    ]) }}
-    data-alert
-    data-variant="{{ $variant }}"
->
+<div {{ $attributes->class([
+    'flex gap-3 rounded-lg border p-4 [&>svg]:mt-0.5 [&>svg]:size-5 [&>svg]:shrink-0',
+    ...$variant_classes[$variant] ?? $variant_classes['default'],
+]) }}
+    data-alert data-variant="{{ $variant }}">
     @if ($title)
         <ui:icon :name="$icon ?? $icons[$variant] ?? $icons['default']" />
 

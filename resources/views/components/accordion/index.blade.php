@@ -1,20 +1,11 @@
 @props([
-    'default' => null,
     'type' => 'multiple',
 ])
 
-<div
-    {{ $attributes->class(['flex flex-col select-none']) }}
-    @if ($type === 'single')
-        x-data="{
-            active: @js($default),
-            toggle(value) {
-                this.active = this.active === value ? null : value;
-            }
-        }"
-        data-accordion-type="single"
-    @endif
-    data-accordion
->
+@php
+    $classes = Ui::classes()->add('flex flex-col');
+@endphp
+
+<div {{ $attributes->class($classes) }} data-accordion data-type="{{ $type }}">
     {{ $slot }}
 </div>
