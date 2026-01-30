@@ -1,5 +1,5 @@
 @props([
-    'columns' => null,
+    'columns' => 3,
     'gap' => 'md',
 ])
 

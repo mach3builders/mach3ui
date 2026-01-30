@@ -78,6 +78,7 @@
                 select(val) {
                     this.value = val;
                     this.$refs.menu.hidePopover();
+                    this.$dispatch('input', val);
                 },
                 updateAriaSelected() {
                     this.$refs.options.querySelectorAll('[data-value]').forEach(el => {
@@ -164,6 +165,7 @@
             select(val) {
                 this.value = val;
                 this.$refs.menu.hidePopover();
+                this.$dispatch('input', val);
             },
             updateAriaSelected() {
                 this.$refs.options.querySelectorAll('[data-value]').forEach(el => {
