@@ -5,7 +5,11 @@
 ])
 
 @php
-    $is_clickable = $clickable || $attributes->has('data-href') || $attributes->whereStartsWith('wire:click')->isNotEmpty();
+    $is_clickable = $clickable
+        || $attributes->has('data-href')
+        || $attributes->whereStartsWith('wire:click')->isNotEmpty()
+        || $attributes->has('x-on:click')
+        || $attributes->whereStartsWith('@click')->isNotEmpty();
 @endphp
 
 <tr

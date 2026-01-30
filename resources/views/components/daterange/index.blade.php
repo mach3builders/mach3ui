@@ -2,6 +2,7 @@
     'clearLabel' => 'Clear',
     'disabled' => false,
     'displayFormat' => null,
+    'endModel' => null,
     'endName' => 'end_date',
     'endValue' => null,
     'locale' => 'en',
@@ -11,6 +12,7 @@
     'separator' => '–',
     'showFooter' => false,
     'showSelects' => false,
+    'startModel' => null,
     'startName' => 'start_date',
     'startValue' => null,
     'todayLabel' => 'Today',
@@ -19,9 +21,6 @@
 
 @php
     $id = 'daterange-' . uniqid();
-
-    $wire_start = $attributes->whereStartsWith('wire:start')->first();
-    $wire_end = $attributes->whereStartsWith('wire:end')->first();
 
     $locales = [
         'en' => [
@@ -358,11 +357,11 @@
     </button>
 
     <input type="hidden" x-ref="startInput" name="{{ $startName }}" :value="startDate"
-        @if ($wire_start) {{ str_replace('wire:start', 'wire:model', $wire_start) }} @endif
+        @if ($startModel) wire:model="{{ $startModel }}" @endif
         @disabled($disabled) />
 
     <input type="hidden" x-ref="endInput" name="{{ $endName }}" :value="endDate"
-        @if ($wire_end) {{ str_replace('wire:end', 'wire:model', $wire_end) }} @endif
+        @if ($endModel) wire:model="{{ $endModel }}" @endif
         @disabled($disabled) />
 
     <div x-ref="calendar" x-on:toggle="if ($event.newState === 'open') onOpen()" id="{{ $id }}" popover
