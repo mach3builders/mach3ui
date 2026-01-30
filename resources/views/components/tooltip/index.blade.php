@@ -15,26 +15,26 @@
         'right' => 'top: anchor(center); left: calc(anchor(right) + 0.5rem); translate: 0 -50%;',
     ];
 
-    $arrow_styles = [
-        'top' => 'top: 100%; left: 50%; translate: -50% 0; border-width: 4px; border-color: transparent; border-top-color: var(--color-gray-900);',
-        'top-start' => 'top: 100%; left: 1rem; translate: 0 0; border-width: 4px; border-color: transparent; border-top-color: var(--color-gray-900);',
-        'top-end' => 'top: 100%; right: 1rem; translate: 0 0; border-width: 4px; border-color: transparent; border-top-color: var(--color-gray-900);',
-        'bottom' => 'bottom: 100%; left: 50%; translate: -50% 0; border-width: 4px; border-color: transparent; border-bottom-color: var(--color-gray-900);',
-        'bottom-start' => 'bottom: 100%; left: 1rem; translate: 0 0; border-width: 4px; border-color: transparent; border-bottom-color: var(--color-gray-900);',
-        'bottom-end' => 'bottom: 100%; right: 1rem; translate: 0 0; border-width: 4px; border-color: transparent; border-bottom-color: var(--color-gray-900);',
-        'left' => 'top: 50%; left: 100%; translate: 0 -50%; rotate: 45deg; width: 8px; height: 8px; background: var(--color-gray-900);',
-        'right' => 'top: 50%; right: 100%; translate: 0 -50%; rotate: 45deg; width: 8px; height: 8px; background: var(--color-gray-900);',
+    $arrow_position = [
+        'top' => 'top: 100%; left: 50%; translate: -50% 0;',
+        'top-start' => 'top: 100%; left: 1rem;',
+        'top-end' => 'top: 100%; right: 1rem;',
+        'bottom' => 'bottom: 100%; left: 50%; translate: -50% 0;',
+        'bottom-start' => 'bottom: 100%; left: 1rem;',
+        'bottom-end' => 'bottom: 100%; right: 1rem;',
+        'left' => 'top: 50%; left: 100%; translate: 0 -50%;',
+        'right' => 'top: 50%; right: 100%; translate: 0 -50%;',
     ];
 
-    $arrow_dark_styles = [
-        'top' => 'border-top-color: var(--color-gray-100);',
-        'top-start' => 'border-top-color: var(--color-gray-100);',
-        'top-end' => 'border-top-color: var(--color-gray-100);',
-        'bottom' => 'border-bottom-color: var(--color-gray-100);',
-        'bottom-start' => 'border-bottom-color: var(--color-gray-100);',
-        'bottom-end' => 'border-bottom-color: var(--color-gray-100);',
-        'left' => 'background: var(--color-gray-100);',
-        'right' => 'background: var(--color-gray-100);',
+    $arrow_classes = [
+        'top' => 'border-4 border-transparent border-t-gray-900 dark:border-t-gray-100',
+        'top-start' => 'border-4 border-transparent border-t-gray-900 dark:border-t-gray-100',
+        'top-end' => 'border-4 border-transparent border-t-gray-900 dark:border-t-gray-100',
+        'bottom' => 'border-4 border-transparent border-b-gray-900 dark:border-b-gray-100',
+        'bottom-start' => 'border-4 border-transparent border-b-gray-900 dark:border-b-gray-100',
+        'bottom-end' => 'border-4 border-transparent border-b-gray-900 dark:border-b-gray-100',
+        'left' => 'border-4 border-transparent border-l-gray-900 dark:border-l-gray-100',
+        'right' => 'border-4 border-transparent border-r-gray-900 dark:border-r-gray-100',
     ];
 @endphp
 
@@ -56,13 +56,8 @@
         {{ $text }}
 
         <span
-            class="absolute content-[''] dark:hidden"
-            style="{{ $arrow_styles[$position] }}"
-        ></span>
-
-        <span
-            class="absolute hidden content-[''] dark:block"
-            style="{{ $arrow_styles[$position] }} {{ $arrow_dark_styles[$position] }}"
+            class="absolute block {{ $arrow_classes[$position] }}"
+            style="{{ $arrow_position[$position] }}"
         ></span>
     </div>
 </div>
