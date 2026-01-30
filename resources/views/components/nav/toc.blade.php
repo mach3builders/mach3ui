@@ -4,87 +4,77 @@
     'title' => 'On this page',
 ])
 
-<div
-    x-data="{
-        activeId: null,
-        headings: [],
-        offset: {{ $offset }},
-        scrollHandler: null,
-        livewireHandler: null,
+@once
+    <script>
+        window.tocNavInit = function(el, offset, setActive) {
+            console.log('tocNavInit called');
+            const links = el.querySelectorAll('[data-nav-item]');
+            const ids = [...links].map(a => a.getAttribute('href')?.slice(1)).filter(Boolean);
+            console.log('Found ids:', ids);
 
-        init() {
-            this.collectHeadings();
+            if (!ids.length) return;
 
-            this.scrollHandler = () => this.onScroll();
-            window.addEventListener('scroll', this.scrollHandler, { passive: true });
+            setActive(ids[0]);
+            console.log('Set initial active:', ids[0]);
 
-            this.livewireHandler = () => this.$nextTick(() => this.collectHeadings());
-            document.addEventListener('livewire:navigated', this.livewireHandler);
-        },
+            let lastActiveId = ids[0];
 
-        destroy() {
-            window.removeEventListener('scroll', this.scrollHandler);
-            document.removeEventListener('livewire:navigated', this.livewireHandler);
-        },
+            window.addEventListener('scroll', () => {
+                let newActiveId = ids[0];
 
-        collectHeadings() {
-            this.headings = Array.from(document.querySelectorAll('[id]'))
-                .filter(el => this.$el.querySelector(`a[href='#${el.id}']`));
-
-            if (this.headings.length) {
-                this.activeId = this.headings[0].id;
-            }
-
-            this.onScroll();
-        },
-
-        onScroll() {
-            const scrollY = window.scrollY;
-            const windowHeight = window.innerHeight;
-            const documentHeight = document.documentElement.scrollHeight;
-
-            if (scrollY + windowHeight >= documentHeight - 50 && this.headings.length) {
-                this.activeId = this.headings[this.headings.length - 1].id;
-                return;
-            }
-
-            for (let i = this.headings.length - 1; i >= 0; i--) {
-                if (this.headings[i].offsetTop - this.offset <= scrollY) {
-                    this.activeId = this.headings[i].id;
-                    return;
+                for (let i = ids.length - 1; i >= 0; i--) {
+                    const section = document.getElementById(ids[i]);
+                    if (section && section.getBoundingClientRect().top <= offset) {
+                        newActiveId = ids[i];
+                        break;
+                    }
                 }
-            }
 
-            if (this.headings.length) {
-                this.activeId = this.headings[0].id;
-            }
-        },
+                if (newActiveId !== lastActiveId) {
+                    setActive(newActiveId);
+                    console.log('Active changed to:', newActiveId);
+                    const link = el.querySelector('[data-nav-item][href="#' + newActiveId + '"]');
+                    if (link) link.scrollIntoView({
+                        block: 'nearest',
+                        behavior: 'smooth'
+                    });
+                    lastActiveId = newActiveId;
+                }
+            }, {
+                passive: true
+            });
 
-        scrollTo(id, event) {
-            event.preventDefault();
-            const el = document.getElementById(id);
-            if (el) {
-                window.scrollTo({
-                    top: el.offsetTop - this.offset + 20,
-                    behavior: 'smooth'
+            links.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const id = link.getAttribute('href')?.slice(1);
+                    const target = document.getElementById(id);
+                    if (target) {
+                        window.scrollTo({
+                            top: target.offsetTop - offset + 20,
+                            behavior: 'smooth'
+                        });
+                        history.pushState(null, null, '#' + id);
+                    }
                 });
-                this.activeId = id;
-                history.pushState(null, null, `#${id}`);
-            }
-        },
+            });
+        };
+    </script>
+@endonce
 
-        isActive(href) {
-            return this.activeId === href.replace('#', '');
-        }
-    }"
-    {{ $attributes->class(['hidden lg:block']) }}
+{{-- blade-formatter-disable --}}
+<div
+    x-data="{ activeId: '' }"
+    x-init="$nextTick(() => window.tocNavInit($el, {{ $offset }}, id => { activeId = id; console.log('activeId set to:', id); }))"
+    {{ $attributes->class(['hidden lg:block max-h-[calc(100vh-8rem)] overflow-y-auto']) }}
     data-nav-toc
 >
-    @if ($title !== false)
-        <ui:nav.title :icon="$icon !== false ? $icon : null" :title="$title" class="px-0!" />
-    @endif
+{{-- blade-formatter-enable --}}
+@if ($title !== false)
+    <ui:nav.title :icon="$icon !== false ? $icon : null" :title="$title" class="px-0!" />
+@endif
 
-    <ui:nav variant="toc">
-        {{ $slot }}
-    </ui:nav>
+<ui:nav variant="toc">
+    {{ $slot }}
+</ui:nav>
 </div>
