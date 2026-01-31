@@ -46,6 +46,18 @@ resources/views/components/  # 72 Blade UI components
 - **Livewire**: Components must work without Livewire (no hardcoded `wire:` directives)
 - **Data attribute**: Root element needs `data-{component}` for CSS targeting
 
+### Livewire Wire Model
+Extract wire:model using the official Livewire API:
+
+```blade
+@php
+    $wireModel = $attributes->wire('model');
+    $hasWireModel = (bool) $wireModel?->directive;
+    $wireModelValue = $wireModel?->value();
+    $isLive = $wireModel?->hasModifier('live');
+@endphp
+```
+
 ### Component Structure
 ```
 resources/views/components/[component]/
@@ -136,10 +148,11 @@ Always use `<ui:icon>` instead of `<x-lucide-*>` or `<x-dynamic-component>`:
 ```
 
 ### Dark Mode
-Always include dark mode variants on the same line:
+Light and dark mode classes on separate lines for readability:
 ```blade
-'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300'
-'border-gray-200 dark:border-gray-700'
+$classes = Ui::classes()
+    ->add('bg-gray-100 text-gray-600')
+    ->add('dark:bg-gray-700 dark:text-gray-300');
 ```
 
 ### Alpine.js Patterns

@@ -5,19 +5,19 @@
 ])
 
 @php
-    $itemClasses = Ui::classes()->add('group border-b border-gray-100 dark:border-gray-680');
+    $itemClasses = Ui::classes()->add('group border-b border-gray-100')->add('dark:border-gray-680');
 
     $titleClasses = Ui::classes()
         ->add('flex w-full cursor-pointer select-none items-center gap-2 py-4 text-left font-medium')
-        ->add('text-gray-900 dark:text-white')
-        ->add('hover:underline');
+        ->add('text-gray-900 hover:underline')
+        ->add('dark:text-white');
 
     $contentClasses = Ui::classes()
-        ->add('overflow-hidden pb-4')
-        ->add('text-gray-600 dark:text-gray-400')
+        ->add('overflow-hidden pb-4 text-gray-600')
+        ->add('dark:text-gray-400')
         ->when($icon, 'pl-6');
 
-    $iconClasses = Ui::classes()->add('size-4 text-gray-400 dark:text-gray-500');
+    $iconClasses = Ui::classes()->add('size-4 text-gray-400')->add('dark:text-gray-500');
 
     $chevronClasses = Ui::classes()->add('size-4 shrink-0 transition-transform duration-200 group-open:rotate-180');
 @endphp

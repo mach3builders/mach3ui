@@ -21,8 +21,10 @@
                 default => 'border-transparent bg-gray-900 text-white dark:bg-gray-50 dark:text-gray-900',
             },
         )
-        ->add($icon ? 'pl-1.5' : '')
-        ->add($href ? 'pr-1' : '');
+        ->when($icon, 'pl-1.5')
+        ->when($href, 'pr-1');
+
+    $iconClasses = Ui::classes()->add('size-3');
 
     $linkClasses = Ui::classes()
         ->add('-mr-0.5 ml-0.5 inline-flex size-4 shrink-0 items-center justify-center rounded-full')
@@ -37,18 +39,20 @@
                 default => 'hover:bg-gray-700 dark:hover:bg-gray-300',
             },
         );
+
+    $linkIconClasses = Ui::classes()->add('size-2.5');
 @endphp
 
 <span {{ $attributes->class($classes) }} data-badge>
     @if ($icon)
-        <ui:icon :name="$icon" class="size-3" />
+        <ui:icon :name="$icon" :class="$iconClasses" />
     @endif
 
     {{ $label ?? $slot }}
 
     @if ($href)
         <a href="{{ $href }}" target="_blank" rel="noopener noreferrer" class="{{ $linkClasses }}">
-            <ui:icon name="external-link" class="size-2.5" />
+            <ui:icon name="external-link" :class="$linkIconClasses" />
         </a>
     @endif
 </span>
