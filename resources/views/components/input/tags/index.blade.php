@@ -2,13 +2,14 @@
     'disabled' => false,
     'invalid' => false,
     'name' => 'tags',
-    'placeholder' => 'Add a tag...',
+    'placeholder' => null,
     'size' => null,
     'tags' => [],
 ])
 
 @php
-    $tags_array = is_array($tags) ? $tags : (is_string($tags) ? json_decode($tags, true) ?? [] : []);
+    $resolvedPlaceholder = $placeholder ?? __('ui::ui.input_tags.placeholder');
+    $tagsArray = is_array($tags) ? $tags : (is_string($tags) ? json_decode($tags, true) ?? [] : []);
 
     $container_classes = [
         'flex min-h-10 w-full flex-wrap items-center gap-1.5 rounded-md border px-2 py-1.5 shadow-xs',
@@ -45,73 +46,52 @@
     ];
 @endphp
 
-<div
-    x-data="{
-        tags: @js($tags_array),
-        newTag: '',
-        addTag() {
-            const value = this.newTag.trim();
-            if (value && !this.tags.includes(value)) {
-                this.tags.push(value);
-                this.dispatchChange();
-            }
-            this.newTag = '';
-        },
-        removeTag(index) {
-            this.tags.splice(index, 1);
+<div x-data="{
+    tags: @js($tagsArray),
+    newTag: '',
+    addTag() {
+        const value = this.newTag.trim();
+        if (value && !this.tags.includes(value)) {
+            this.tags.push(value);
             this.dispatchChange();
-        },
-        handleKeydown(event) {
-            if ((event.key === 'Enter' || event.key === 'Tab' || event.key === ',') && this.newTag.trim()) {
-                event.preventDefault();
-                this.addTag();
-            }
-            if (event.key === 'Backspace' && !this.newTag && this.tags.length > 0) {
-                this.removeTag(this.tags.length - 1);
-            }
-        },
-        dispatchChange() {
-            this.$nextTick(() => {
-                this.$refs.hidden.dispatchEvent(new Event('input', { bubbles: true }));
-                this.$dispatch('tags:change', { tags: this.tags });
-            });
-        },
-    }"
-    x-on:click="$refs.input.focus()"
-    {{ $attributes->class($container_classes) }}
-    data-input-tags
->
+        }
+        this.newTag = '';
+    },
+    removeTag(index) {
+        this.tags.splice(index, 1);
+        this.dispatchChange();
+    },
+    handleKeydown(event) {
+        if ((event.key === 'Enter' || event.key === 'Tab' || event.key === ',') && this.newTag.trim()) {
+            event.preventDefault();
+            this.addTag();
+        }
+        if (event.key === 'Backspace' && !this.newTag && this.tags.length > 0) {
+            this.removeTag(this.tags.length - 1);
+        }
+    },
+    dispatchChange() {
+        this.$nextTick(() => {
+            this.$refs.hidden.dispatchEvent(new Event('input', { bubbles: true }));
+            this.$dispatch('tags:change', { tags: this.tags });
+        });
+    },
+}" x-on:click="$refs.input.focus()" {{ $attributes->class($container_classes) }}
+    data-input-tags>
     <template x-for="(tag, index) in tags" :key="index">
         <span @class($tag_classes) x-bind:data-value="tag">
             <span x-text="tag"></span>
 
-            <button
-                type="button"
-                @class($remove_classes)
-                x-on:click.stop="removeTag(index)"
-                @disabled($disabled)
-            >
+            <button type="button" @class($remove_classes) x-on:click.stop="removeTag(index)"
+                @disabled($disabled)>
                 <ui:icon name="x" class="size-3" />
             </button>
         </span>
     </template>
 
-    <input
-        type="hidden"
-        x-ref="hidden"
-        name="{{ $name }}"
-        x-bind:value="JSON.stringify(tags)"
-        {{ $attributes->only(['wire:model', 'wire:model.live', 'wire:model.blur', 'wire:model.defer']) }}
-    />
+    <input type="hidden" x-ref="hidden" name="{{ $name }}" x-bind:value="JSON.stringify(tags)"
+        {{ $attributes->only(['wire:model', 'wire:model.live', 'wire:model.blur', 'wire:model.defer']) }} />
 
-    <input
-        type="text"
-        x-ref="input"
-        x-model="newTag"
-        x-on:keydown="handleKeydown"
-        x-on:blur="addTag()"
-        placeholder="{{ $placeholder }}"
-        @class($input_classes)
-        @disabled($disabled)
-    />
+    <input type="text" x-ref="input" x-model="newTag" x-on:keydown="handleKeydown" x-on:blur="addTag()"
+        placeholder="{{ $resolvedPlaceholder }}" @class($input_classes) @disabled($disabled) />
 </div>

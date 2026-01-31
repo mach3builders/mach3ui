@@ -1,48 +1,51 @@
 @props([
-    'clearText' => 'Clear',
+    'clearText' => null,
     'disabled' => false,
     'format' => '24',
     'id' => null,
-    'locale' => 'en',
+    'locale' => null,
     'name' => null,
-    'nowText' => 'Now',
-    'placeholder' => 'Select time',
+    'nowText' => null,
+    'placeholder' => null,
     'showFooter' => false,
     'step' => 15,
     'value' => null,
 ])
 
 @php
-    $picker_id = $id ?? 'timepicker-' . Str::random(8);
-    $use_24_hour = $format === '24';
+    $pickerId = $id ?? 'timepicker-' . Str::random(8);
+    $locale = $locale ?? app()->getLocale();
+    $use24Hour = $format === '24';
 
-    $locales = [
-        'en' => ['placeholder' => 'Select time', 'am' => 'AM', 'pm' => 'PM'],
-        'nl' => ['placeholder' => 'Selecteer tijd', 'am' => 'AM', 'pm' => 'PM'],
+    $localeData = [
+        'am' => __('ui::ui.timepicker.am', [], $locale),
+        'pm' => __('ui::ui.timepicker.pm', [], $locale),
     ];
 
-    $locale_data = $locales[$locale] ?? $locales['en'];
+    $resolvedPlaceholder = $placeholder ?? __('ui::ui.timepicker.placeholder', [], $locale);
+    $resolvedClearText = $clearText ?? __('ui::ui.clear', [], $locale);
+    $resolvedNowText = $nowText ?? __('ui::ui.now', [], $locale);
 
-    $wire_model_attr = null;
+    $wireModelAttr = null;
     foreach (
         ['wire:model.live', 'wire:model.blur', 'wire:model.change', 'wire:model.debounce', 'wire:model']
         as $attr
     ) {
         if ($attributes->has($attr)) {
-            $wire_model_attr = $attr;
+            $wireModelAttr = $attr;
             break;
         }
     }
-    $wire_model_value = $wire_model_attr ? $attributes->get($wire_model_attr) : null;
-    $wire_model_live = $wire_model_attr && str_contains($wire_model_attr, '.live');
+    $wireModelValue = $wireModelAttr ? $attributes->get($wireModelAttr) : null;
+    $wireModelLive = $wireModelAttr && str_contains($wireModelAttr, '.live');
 @endphp
 
 <div x-data="{
-    value: @if ($wire_model_value) (typeof $wire !== 'undefined' ? $wire.entangle('{{ $wire_model_value }}'){{ $wire_model_live ? '.live' : '' }} : @js($value)) @else @js($value) @endif,
-    use24Hour: @js($use_24_hour),
+    value: @if ($wireModelValue) (typeof $wire !== 'undefined' ? $wire.entangle('{{ $wireModelValue }}'){{ $wireModelLive ? '.live' : '' }} : @js($value)) @else @js($value) @endif,
+    use24Hour: @js($use24Hour),
     step: @js($step),
-    locale: @js($locale_data),
-    placeholder: @js($placeholder),
+    locale: @js($localeData),
+    placeholder: @js($resolvedPlaceholder),
 
     get displayValue() {
         if (!this.value) return null;
@@ -121,13 +124,13 @@
     x-on:toggle.document="if ($event.target === $refs.dropdown && $event.newState === 'open') scrollToSelected()"
     {{ $attributes->class(['relative inline-block select-none [anchor-scope:--timepicker-trigger]'])->except(['wire:model', 'wire:model.live', 'wire:model.blur', 'wire:model.change']) }}
     data-timepicker>
-    <button type="button" popovertarget="{{ $picker_id }}" @if ($disabled) disabled @endif
+    <button type="button" popovertarget="{{ $pickerId }}" @if ($disabled) disabled @endif
         class="flex h-10 w-full items-center gap-2 rounded-md border px-3 text-sm shadow-xs [anchor-name:--timepicker-trigger]
                border-gray-140 bg-white text-gray-900 focus:border-gray-400 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50
                dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 dark:focus:border-gray-500">
         <span x-show="displayValue" x-text="displayValue"></span>
 
-        <span x-show="!displayValue" class="text-gray-400 dark:text-gray-500">{{ $placeholder }}</span>
+        <span x-show="!displayValue" class="text-gray-400 dark:text-gray-500">{{ $resolvedPlaceholder }}</span>
 
         <ui:icon name="clock" class="ml-auto size-4 shrink-0 text-gray-400 dark:text-gray-500" />
     </button>
@@ -136,7 +139,7 @@
         @if ($disabled) disabled @endif />
 
     @if (!$disabled)
-        <div x-ref="dropdown" id="{{ $picker_id }}" popover
+        <div x-ref="dropdown" id="{{ $pickerId }}" popover
             class="m-0 hidden w-36 flex-col rounded-lg border p-1 shadow-lg open:flex [position-anchor:--timepicker-trigger] [top:calc(anchor(bottom)+0.25rem)] [left:anchor(left)] [position-try-fallbacks:--timepicker-top]
                    border-gray-100 bg-white
                    dark:border-gray-740 dark:bg-gray-790">
@@ -154,9 +157,9 @@
             @if ($showFooter)
                 <div
                     class="mt-1 flex items-center justify-between gap-2 border-t pt-2 border-gray-100 dark:border-gray-740">
-                    <ui:button variant="ghost" size="xs" x-on:click="clear()">{{ $clearText }}</ui:button>
+                    <ui:button variant="ghost" size="xs" x-on:click="clear()">{{ $resolvedClearText }}</ui:button>
 
-                    <ui:button size="xs" x-on:click="selectNow()">{{ $nowText }}</ui:button>
+                    <ui:button size="xs" x-on:click="selectNow()">{{ $resolvedNowText }}</ui:button>
                 </div>
             @endif
         </div>

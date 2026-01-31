@@ -1,9 +1,14 @@
 @props([
     'colspan' => 1,
-    'description' => 'No results found matching your criteria.',
+    'description' => null,
     'icon' => 'search-x',
-    'title' => 'No data found',
+    'title' => null,
 ])
+
+@php
+    $resolvedTitle = $title ?? __('ui::ui.table_empty.title');
+    $resolvedDescription = $description ?? __('ui::ui.table_empty.description');
+@endphp
 
 <tr>
     <td colspan="{{ $colspan }}" class="py-12 text-center">
@@ -12,11 +17,11 @@
         </div>
 
         <p class="text-sm font-medium text-gray-900 dark:text-white">
-            {{ $title }}
+            {{ $resolvedTitle }}
         </p>
 
         <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
-            {{ $description }}
+            {{ $resolvedDescription }}
         </p>
 
         {{ $slot }}
