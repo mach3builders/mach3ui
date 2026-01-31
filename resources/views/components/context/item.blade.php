@@ -14,7 +14,7 @@
 
 <ui:nav.item :active="$active" :href="$href" :icon="$icon"
     :icon:end="$__data['icon:end'] ?? null" :label="$label" :route="$route" :variant="$variant"
-    {{ $attributes }}>
+    {{ $attributes }} data-context-item>
     @if ($iconSlot)
         <x-slot:icon>{{ $iconSlot }}</x-slot:icon>
     @endif
