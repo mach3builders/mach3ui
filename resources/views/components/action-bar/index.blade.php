@@ -7,13 +7,14 @@
     $classes = Ui::classes()
         ->add('inline-flex h-10 items-center gap-1 rounded-lg border p-1')
         ->add('border-gray-100 bg-gray-20')
-        ->add('dark:border-gray-700 dark:bg-gray-820');
+        ->add('dark:border-gray-700 dark:bg-gray-820')
+        ->merge($attributes->only('class'));
 
     $countClasses = Ui::classes()->add('flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium');
     $actionsClasses = Ui::classes()->add('flex items-center gap-1');
 @endphp
 
-<div {{ $attributes->class($classes) }} x-data="{ count: @js($count) }" data-action-bar>
+<div class="{{ $classes }}" {{ $attributes->except('class') }} x-data="{ count: @js($count) }" data-action-bar>
     <template x-if="count !== null">
         <span class="{{ $countClasses }}" data-action-bar-count>
             <span x-text="count"></span>

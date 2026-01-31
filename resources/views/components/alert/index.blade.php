@@ -25,7 +25,8 @@
                 default
                     => 'bg-gray-20 border-gray-100 text-gray-700 dark:bg-gray-780 dark:border-gray-700 dark:text-gray-200',
             },
-        );
+        )
+        ->merge($attributes->only('class'));
 
     $iconClasses = Ui::classes()
         ->add('mt-0.5 size-5 shrink-0')
@@ -43,7 +44,7 @@
     $messageClasses = Ui::classes()->add('leading-relaxed text-gray-600 dark:text-gray-300');
 @endphp
 
-<div {{ $attributes->class($classes) }} data-alert data-variant="{{ $variant }}">
+<div class="{{ $classes }}" {{ $attributes->except('class') }} data-alert data-variant="{{ $variant }}">
     <ui:icon :name="$icon ?? $icons[$variant] ?? $icons['default']" :class="$iconClasses" />
 
     <div>

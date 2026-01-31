@@ -20,22 +20,25 @@
         ->add('relative hidden whitespace-nowrap pl-4 underline-offset-4 md:block md:pl-5')
         ->add($separatorClasses)
         ->add('text-gray-900 hover:text-gray-980 hover:underline')
-        ->add('dark:text-gray-100 dark:hover:text-gray-20');
+        ->add('dark:text-gray-100 dark:hover:text-gray-20')
+        ->merge($attributes->only('class'));
 
     $spanClasses = Ui::classes()
         ->add('relative max-w-48 truncate whitespace-nowrap pl-0 md:max-w-3xs md:pl-5')
         ->add($separatorClasses)
         ->add('before:hidden md:before:block')
         ->add('text-gray-500')
-        ->add('dark:text-gray-400');
+        ->add('dark:text-gray-400')
+        ->merge($attributes->only('class'));
 @endphp
 
 @if ($isLink)
-    <a x-init="register(@js($url))" {{ $attributes->class($linkClasses) }} href="{{ $url }}" data-breadcrumbs-item>
+    <a x-init="register(@js($url))" class="{{ $linkClasses }}" {{ $attributes->except('class') }} href="{{ $url }}"
+        data-breadcrumbs-item>
         {{ $label ?? $slot }}
     </a>
 @else
-    <span x-init="register(null)" {{ $attributes->class($spanClasses) }} data-breadcrumbs-item>
+    <span x-init="register(null)" class="{{ $spanClasses }}" {{ $attributes->except('class') }} data-breadcrumbs-item>
         {{ $label ?? $slot }}
     </span>
 @endif

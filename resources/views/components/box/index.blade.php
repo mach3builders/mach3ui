@@ -10,9 +10,10 @@
                 'subtle' => 'bg-gray-30 dark:bg-gray-830',
                 default => 'border border-gray-100 bg-white dark:border-gray-700 dark:bg-gray-800',
             },
-        );
+        )
+        ->merge($attributes->only('class'));
 @endphp
 
-<div {{ $attributes->class($classes) }} data-box>
+<div class="{{ $classes }}" {{ $attributes->except('class') }} data-box>
     {{ $slot }}
 </div>

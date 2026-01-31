@@ -28,12 +28,14 @@
         ->add('group inline-flex cursor-pointer gap-2.5 has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50')
         ->add($description ? 'items-start' : 'items-center');
 
-    $inputClasses = Ui::classes($checkboxClasses)->when($description, 'mt-0.5');
+    $inputClasses = Ui::classes($checkboxClasses)->when($description, 'mt-0.5')->merge($attributes->only('class'));
+
+    $standaloneClasses = Ui::classes($checkboxClasses)->add('block')->merge($attributes->only('class'));
 @endphp
 
 @if ($label || $description)
     <label class="{{ $labelClasses }}">
-        <input type="checkbox" {{ $attributes->class($inputClasses) }} @checked($checked)
+        <input type="checkbox" class="{{ $inputClasses }}" {{ $attributes->except('class') }} @checked($checked)
             @if ($indeterminate) x-init="$el.indeterminate = true" @endif data-checkbox />
 
         <span class="flex flex-col gap-0.5">
@@ -47,6 +49,7 @@
         </span>
     </label>
 @else
-    <input type="checkbox" {{ $attributes->class($checkboxClasses->add('block')) }} @checked($checked)
-        @if ($indeterminate) x-init="$el.indeterminate = true" @endif data-checkbox />
+    <input type="checkbox" class="{{ $standaloneClasses }}" {{ $attributes->except('class') }}
+        @checked($checked) @if ($indeterminate) x-init="$el.indeterminate = true" @endif
+        data-checkbox />
 @endif

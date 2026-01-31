@@ -9,7 +9,8 @@
     $classes = Ui::classes()
         ->add('overflow-hidden rounded-lg border')
         ->add('border-gray-100 bg-gray-10')
-        ->add('dark:border-gray-700 dark:bg-gray-800');
+        ->add('dark:border-gray-700 dark:bg-gray-800')
+        ->merge($attributes->only('class'));
 
     $headerClasses = Ui::classes()->add('flex items-center gap-3 px-4 py-3');
     $dotClasses = Ui::classes()->add('size-3 rounded-full');
@@ -27,7 +28,7 @@
 @endphp
 
 <div @if ($code) x-data="{ copied: false, code: {{ Js::from($code) }} }" @endif
-    {{ $attributes->class($classes) }} data-browser>
+    class="{{ $classes }}" {{ $attributes->except('class') }} data-browser>
     <header class="{{ $headerClasses }}" data-browser-header>
         <div class="flex gap-1.5">
             <span class="{{ $dotClasses }} bg-red-400"></span>

@@ -8,7 +8,8 @@
 @php
     $classes = Ui::classes()
         ->add('relative flex cursor-pointer items-center gap-3 rounded-lg px-2 py-2 transition-colors duration-75')
-        ->add('hover:bg-gray-40 dark:hover:bg-gray-750');
+        ->add('hover:bg-gray-40 dark:hover:bg-gray-750')
+        ->merge($attributes->only('class'));
 
     $iconClasses = Ui::classes()
         ->add('flex size-9 shrink-0 items-center justify-center rounded-lg')
@@ -19,9 +20,10 @@
     $checkClasses = Ui::classes()->add('ml-auto text-blue-600 dark:text-blue-400');
 @endphp
 
-<div {{ $attributes->class($classes) }} :class="{ 'bg-gray-40 dark:bg-gray-750': selected === items.indexOf($el) }"
-    x-init="$el.dataset.index = items.indexOf($el) >= 0 ? items.indexOf($el) : items.length" @click="select($el.dataset.index); activate()" data-app-switcher-item
-    data-href="{{ $href }}" role="option" tabindex="0">
+<div class="{{ $classes }}" {{ $attributes->except('class') }}
+    :class="{ 'bg-gray-40 dark:bg-gray-750': selected === items.indexOf($el) }" x-init="$el.dataset.index = items.indexOf($el) >= 0 ? items.indexOf($el) : items.length"
+    @click="select($el.dataset.index); activate()" data-app-switcher-item data-href="{{ $href }}" role="option"
+    tabindex="0">
     <div class="{{ $iconClasses }}">
         @if ($icon)
             <ui:icon :name="$icon" size="sm" />

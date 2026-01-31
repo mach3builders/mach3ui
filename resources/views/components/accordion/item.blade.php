@@ -7,7 +7,10 @@
 @php
     $id = uniqid('accordion-');
 
-    $itemClasses = Ui::classes()->add('group border-b border-gray-100')->add('dark:border-gray-680');
+    $itemClasses = Ui::classes()
+        ->add('group border-b border-gray-100')
+        ->add('dark:border-gray-680')
+        ->merge($attributes->only('class'));
 
     $titleClasses = Ui::classes()
         ->add('flex w-full cursor-pointer select-none items-center gap-2 py-4 text-left font-medium')
@@ -30,7 +33,7 @@
         const isSingle = parent?.dataset.type === 'single';
         $el.open = isSingle ? Alpine.$data(parent).active === id : localOpen;
     "
-    {{ $attributes->class($itemClasses) }} data-accordion-item>
+    class="{{ $itemClasses }}" {{ $attributes->except('class') }} data-accordion-item>
     <summary
         x-on:click.prevent="
             const parent = $el.closest('[data-accordion]');

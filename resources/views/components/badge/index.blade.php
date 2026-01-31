@@ -22,7 +22,8 @@
             },
         )
         ->when($icon, 'pl-1.5')
-        ->when($href, 'pr-1');
+        ->when($href, 'pr-1')
+        ->merge($attributes->only('class'));
 
     $iconClasses = Ui::classes()->add('size-3');
 
@@ -43,7 +44,7 @@
     $linkIconClasses = Ui::classes()->add('size-2.5');
 @endphp
 
-<span {{ $attributes->class($classes) }} data-badge>
+<span class="{{ $classes }}" {{ $attributes->except('class') }} data-badge>
     @if ($icon)
         <ui:icon :name="$icon" :class="$iconClasses" />
     @endif

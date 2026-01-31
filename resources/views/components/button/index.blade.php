@@ -120,17 +120,25 @@
         ->add('[[data-field]+&]:mt-4 [[data-section]+&]:mt-4')
         ->add($variantData['base'])
         ->add($variantData['active'])
-        ->when($type === 'submit', '[[data-section]+&]:self-end');
+        ->when($type === 'submit', '[[data-section]+&]:self-end')
+        ->merge($attributes->only('class'));
 
-    $linkClasses = Ui::classes($classes)
+    $linkClasses = Ui::classes($baseClasses)
+        ->add('rounded-md')
+        ->add('focus:ring-1 focus:ring-offset-1 focus:outline-none')
+        ->add('[[data-field]+&]:mt-4 [[data-section]+&]:mt-4')
+        ->add($variantData['base'])
+        ->add($variantData['active'])
         ->when($disabled || $loading, 'pointer-events-none')
-        ->when($disabled, 'opacity-50');
+        ->when($disabled, 'opacity-50')
+        ->merge($attributes->only('class'));
 
     // AI button classes
     $aiWrapperClasses = Ui::classes()
         ->add('group/ai relative inline-flex rounded-full p-0.25')
         ->add('transition-transform duration-500 active:scale-[0.98]')
-        ->add('[[data-field]+&]:mt-4 [[data-section]+&]:mt-4');
+        ->add('[[data-field]+&]:mt-4 [[data-section]+&]:mt-4')
+        ->merge($attributes->only('class'));
 
     $aiClasses = Ui::classes($baseClasses)
         ->add('relative rounded-full border-transparent bg-white focus:outline-none')
@@ -142,7 +150,7 @@
 @endphp
 
 @if ($isAi)
-    <div {{ $attributes->class($aiWrapperClasses) }} data-button>
+    <div class="{{ $aiWrapperClasses }}" {{ $attributes->except('class') }} data-button>
         {{-- Glow effect --}}
         <span
             class="absolute inset-0 animate-[shimmer_5s_ease-in-out_infinite] rounded-full bg-[linear-gradient(90deg,theme(colors.orange.500),theme(colors.pink.500),theme(colors.violet.500),theme(colors.cyan.500),theme(colors.orange.500))] bg-[length:200%_100%] opacity-25 blur-sm"></span>
@@ -152,7 +160,7 @@
             class="absolute inset-0 animate-[shimmer_5s_ease-in-out_infinite] rounded-full bg-[linear-gradient(90deg,theme(colors.orange.500),theme(colors.pink.500),theme(colors.violet.500),theme(colors.cyan.500),theme(colors.orange.500))] bg-[length:200%_100%]"></span>
 
         @if ($isLink)
-            <a {{ $attributes->class($aiLinkClasses) }} href="{{ $href }}"
+            <a class="{{ $aiLinkClasses }}" href="{{ $href }}"
                 @if ($disabled || $loading) aria-disabled="true" tabindex="-1" @endif>
                 @include('ui::button._content', [
                     'icon' => $icon,
@@ -163,7 +171,7 @@
                 ])
             </a>
         @else
-            <button {{ $attributes->class($aiClasses) }} type="{{ $type }}"
+            <button class="{{ $aiClasses }}" type="{{ $type }}"
                 @if ($disabled) disabled @endif>
                 @include('ui::button._content', [
                     'icon' => $icon,
@@ -176,7 +184,7 @@
         @endif
     </div>
 @elseif ($isLink)
-    <a {{ $attributes->class($linkClasses) }} href="{{ $href }}"
+    <a class="{{ $linkClasses }}" {{ $attributes->except('class') }} href="{{ $href }}"
         @if ($disabled || $loading) aria-disabled="true" tabindex="-1" @endif
         @if ($active) data-active @endif data-button>
         @include('ui::button._content', [
@@ -188,7 +196,7 @@
         ])
     </a>
 @else
-    <button {{ $attributes->class($classes) }} type="{{ $type }}"
+    <button class="{{ $classes }}" {{ $attributes->except('class') }} type="{{ $type }}"
         @if ($disabled) disabled @endif @if ($active) data-active @endif
         data-button>
         @include('ui::button._content', [

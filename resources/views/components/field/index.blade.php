@@ -16,9 +16,10 @@
                 default => 'flex flex-col gap-2',
             },
         )
-        ->add('[[data-field]+&]:mt-4');
+        ->add('[[data-field]+&]:mt-4')
+        ->merge($attributes->only('class'));
 @endphp
 
-<div {{ $attributes->class($classes) }} data-field data-variant="{{ $variant }}">
+<div class="{{ $classes }}" {{ $attributes->except('class') }} data-field data-variant="{{ $variant }}">
     {{ $slot }}
 </div>

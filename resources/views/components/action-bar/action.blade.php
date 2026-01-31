@@ -18,10 +18,11 @@
                 default
                     => 'text-gray-600 hover:bg-gray-60 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-740 dark:hover:text-gray-100',
             },
-        );
+        )
+        ->merge($attributes->only('class'));
 @endphp
 
-<button {{ $attributes->class($classes) }} type="button" data-action-bar-action>
+<button class="{{ $classes }}" {{ $attributes->except('class') }} type="button" data-action-bar-action>
     @if ($icon)
         <ui:icon :name="$icon" size="sm" />
     @endif
