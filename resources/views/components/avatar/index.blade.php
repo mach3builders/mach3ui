@@ -42,7 +42,7 @@
 <span
     @if ($src) x-data="{ loaded: false, failed: false }"
         x-init="$nextTick(() => { if ($refs.img.complete && $refs.img.naturalWidth > 0) loaded = true })" @endif
-    {{ $attributes->class($classes->get()) }} data-avatar>
+    {{ $attributes->class($classes) }} data-avatar>
     @if ($src)
         <img x-ref="img" src="{{ $src }}" alt="{{ $name ?? '' }}" x-show="loaded && !failed"
             x-on:load="loaded = true" x-on:error="failed = true" class="size-full object-cover" />

@@ -32,11 +32,11 @@
         );
 @endphp
 
-<div {{ $attributes->class($classes->get()) }} data-avatar-group>
+<div {{ $attributes->class($classes) }} data-avatar-group>
     {{ $slot }}
 
     @if ($limit)
-        <span @class($limitClasses->get())>
+        <span class="{{ $limitClasses }}">
             +{{ $limit }}
         </span>
     @endif

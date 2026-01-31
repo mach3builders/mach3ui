@@ -13,6 +13,6 @@
         );
 @endphp
 
-<div {{ $attributes->class($classes->get()) }} data-box>
+<div {{ $attributes->class($classes) }} data-box>
     {{ $slot }}
 </div>

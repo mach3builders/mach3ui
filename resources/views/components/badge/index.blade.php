@@ -39,7 +39,7 @@
         );
 @endphp
 
-<span {{ $attributes->class($classes->get()) }} data-badge>
+<span {{ $attributes->class($classes) }} data-badge>
     @if ($icon)
         <ui:icon :name="$icon" class="size-3" />
     @endif
@@ -47,7 +47,7 @@
     {{ $label ?? $slot }}
 
     @if ($href)
-        <a href="{{ $href }}" target="_blank" rel="noopener noreferrer" @class($linkClasses->get())>
+        <a href="{{ $href }}" target="_blank" rel="noopener noreferrer" class="{{ $linkClasses }}">
             <ui:icon name="external-link" class="size-2.5" />
         </a>
     @endif
