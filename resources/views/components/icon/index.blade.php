@@ -46,7 +46,8 @@
         ->add('flex items-center justify-center')
         ->add($round ? 'rounded-full' : 'rounded-lg')
         ->add($boxedSizes[$effectiveSize]['box'] ?? $boxedSizes['sm']['box'])
-        ->add($boxedColors[$color] ?? $boxedColors['gray']);
+        ->add($boxedColors[$color] ?? $boxedColors['gray'])
+        ->merge($attributes->only('class'));
 
     $iconClasses = Ui::classes()
         ->add('shrink-0')
@@ -54,13 +55,15 @@
 
     $simpleClasses = Ui::classes()
         ->add('shrink-0')
-        ->add($sizeClasses[$size] ?? '');
+        ->add($sizeClasses[$size] ?? '')
+        ->merge($attributes->only('class'));
 @endphp
 
 @if ($boxed)
-    <span {{ $attributes->class($boxClasses) }} data-icon>
+    <span class="{{ $boxClasses }}" {{ $attributes->except('class') }} data-icon>
         <x-dynamic-component :component="'lucide-' . $name" :stroke-width="$stroke" class="{{ $iconClasses }}" />
     </span>
 @else
-    <x-dynamic-component :component="'lucide-' . $name" :stroke-width="$stroke" {{ $attributes->class($simpleClasses) }} data-icon />
+    <x-dynamic-component :component="'lucide-' . $name" :stroke-width="$stroke" class="{{ $simpleClasses }}"
+        {{ $attributes->except('class') }} data-icon />
 @endif

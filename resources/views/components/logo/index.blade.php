@@ -1,15 +1,15 @@
 @props([
-    'href' => null,
-    'name' => 'Builders',
-    'image' => null,
     'color' => null,
+    'href' => null,
+    'image' => null,
+    'name' => 'Builders',
     'size' => 'base',
 ])
 
 @php
     $tag = $href ? 'a' : 'div';
 
-    $color_classes = [
+    $colorClasses = [
         'blue' => 'text-blue-500',
         'orange' => 'text-orange-500',
         'emerald' => 'text-emerald-500',
@@ -20,26 +20,37 @@
         'yellow' => 'text-yellow-500',
     ];
 
-    $size_classes = [
-        'sm' => 'text-sm',
-        'base' => 'text-base',
-        'lg' => 'text-lg',
-        'xl' => 'text-xl',
-        '2xl' => 'text-2xl',
-    ];
+    $brandClass = $color ? $colorClasses[$color] ?? $colorClasses['blue'] : 'text-brand';
 
-    $brand_class = $color ? ($color_classes[$color] ?? $color_classes['blue']) : 'text-brand';
-    $size_class = $size_classes[$size] ?? $size_classes['base'];
+    $classes = Ui::classes()
+        ->add(
+            'flex items-center gap-[0.1em] font-brand font-bold tracking-wide uppercase leading-none no-underline select-none',
+        )
+        ->add('text-gray-800')
+        ->add('dark:text-gray-50')
+        ->add(
+            match ($size) {
+                'sm' => 'text-sm',
+                'lg' => 'text-lg',
+                'xl' => 'text-xl',
+                '2xl' => 'text-2xl',
+                default => 'text-base',
+            },
+        )
+        ->merge($attributes->only('class'));
+
+    $brandClasses = Ui::classes()->add('-skew-x-12 font-semibold')->add($brandClass);
 @endphp
 
-<{{ $tag }} {{ $attributes->class(['flex items-center gap-[0.1em] font-brand font-bold tracking-wide uppercase uppercase leading-none no-underline select-none', 'text-gray-800 dark:text-gray-50', $size_class])->merge(['href' => $href]) }} data-logo>
+<{{ $tag }} class="{{ $classes }}" @if ($href) href="{{ $href }}" @endif
+    {{ $attributes->except('class') }} data-logo>
     @if ($image)
         <img src="{{ $image }}" alt="{{ $name }}" class="max-h-8" />
     @else
         <span>Mach3</span>
 
-        <span class="-skew-x-12 font-semibold {{ $brand_class }}">III</span>
+        <span class="{{ $brandClasses }}">III</span>
 
         <span>{{ $name }}</span>
     @endif
-</{{ $tag }}>
+    </{{ $tag }}>

@@ -9,6 +9,8 @@
     $resolvedPlaceholder = $placeholder ?? __('ui::ui.input_file.placeholder');
     $resolvedButtonText = $buttonText ?? __('ui::ui.browse');
     $filesSelectedTemplate = __('ui::ui.input_file.files_selected');
+
+    $classes = Ui::classes()->add('relative flex w-full')->merge($attributes->only('class'));
 @endphp
 
 <div x-data="{
@@ -28,7 +30,7 @@
             this.fileName = this.filesSelectedTemplate.replace(':count', files.length);
         }
     }
-}" {{ $attributes->only('class')->class(['relative flex w-full']) }} data-input-file>
+}" class="{{ $classes }}" {{ $attributes->except('class') }} data-input-file>
     <span
         class="block h-10 min-w-0 flex-1 truncate rounded-s-md border border-r-0 px-3 py-2 text-sm border-gray-140 bg-white text-gray-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400"
         x-text="displayText"></span>

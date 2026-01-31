@@ -15,7 +15,7 @@
     $showStartEllipsis = $start > 2;
     $showEndEllipsis = $end < $total - 1;
 
-    $classes = Ui::classes()->add('flex items-center gap-1');
+    $classes = Ui::classes()->add('flex items-center gap-1')->merge($attributes->only('class'));
 
     $itemClasses = Ui::classes()
         ->add(
@@ -46,7 +46,8 @@
     $xData = $href ? null : '';
 @endphp
 
-<nav {{ $attributes->class($classes) }} data-pagination @if ($xData !== null) x-data @endif>
+<nav class="{{ $classes }}" {{ $attributes->except('class') }} data-pagination
+    @if ($xData !== null) x-data @endif>
     @if ($controls)
         @php
             $prevDisabled = $current <= 1;

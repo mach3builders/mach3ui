@@ -8,38 +8,28 @@
 @php
     $percentage = round(($current / $total) * 100);
 
-    $classes = [
-        'flex w-full flex-col gap-1',
-    ];
+    $classes = Ui::classes()->add('flex w-full flex-col gap-1')->merge($attributes->only('class'));
 
-    $text_classes = [
-        'flex items-center justify-between text-xs font-bold',
-        'text-gray-400',
-        'dark:text-gray-340',
-    ];
+    $textClasses = Ui::classes()
+        ->add('flex items-center justify-between text-xs font-bold')
+        ->add('text-gray-400')
+        ->add('dark:text-gray-340');
 
-    $bar_classes = [
-        'flex items-center gap-4',
-    ];
+    $barClasses = Ui::classes()->add('flex items-center gap-4');
 
-    $step_classes = [
-        'base' => 'flex-1 py-2',
-        'indicator' => [
-            'block h-1.5 rounded-full',
-            'bg-gray-100',
-            'dark:bg-gray-700',
-        ],
-        'active_indicator' => [
-            'block h-1.5 rounded-full cursor-pointer',
-            'bg-gray-240 hover:bg-gray-300',
-            'dark:bg-gray-540 dark:hover:bg-gray-460',
-        ],
-    ];
+    $stepBaseClasses = Ui::classes()->add('flex-1 py-2');
+
+    $indicatorClasses = Ui::classes()->add('block h-1.5 rounded-full')->add('bg-gray-100')->add('dark:bg-gray-700');
+
+    $activeIndicatorClasses = Ui::classes()
+        ->add('block h-1.5 rounded-full cursor-pointer')
+        ->add('bg-gray-240 hover:bg-gray-300')
+        ->add('dark:bg-gray-540 dark:hover:bg-gray-460');
 @endphp
 
-<div {{ $attributes->class($classes) }} data-progress>
+<div class="{{ $classes }}" {{ $attributes->except('class') }} data-progress>
     @if ($text)
-        <div class="{{ implode(' ', $text_classes) }}">
+        <div class="{{ $textClasses }}">
             <div>{{ $current }} / {{ $total }}</div>
 
             @if ($percent)
@@ -48,14 +38,14 @@
         </div>
     @endif
 
-    <div class="{{ implode(' ', $bar_classes) }}">
+    <div class="{{ $barClasses }}">
         @for ($i = 1; $i <= $total; $i++)
             @php
-                $is_active = $i <= $current;
+                $isActive = $i <= $current;
             @endphp
 
-            <button class="{{ $step_classes['base'] }}">
-                <span class="{{ implode(' ', $is_active ? $step_classes['active_indicator'] : $step_classes['indicator']) }}"></span>
+            <button class="{{ $stepBaseClasses }}">
+                <span class="{{ $isActive ? $activeIndicatorClasses : $indicatorClasses }}"></span>
             </button>
         @endfor
     </div>

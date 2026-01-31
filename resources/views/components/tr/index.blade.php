@@ -15,9 +15,11 @@
     $classes = Ui::classes()
         ->add('group')
         ->when($isClickable, 'cursor-pointer transition-colors hover:[&_td]:bg-gray-20 dark:hover:[&_td]:bg-gray-790')
-        ->when($selected, '[&_td]:bg-gray-10 dark:[&_td]:bg-gray-790');
+        ->when($selected, '[&_td]:bg-gray-10 dark:[&_td]:bg-gray-790')
+        ->merge($attributes->only('class'));
 @endphp
 
-<tr {{ $attributes->class($classes) }} @if ($nested) x-show="expanded" x-cloak @endif data-tr>
+<tr class="{{ $classes }}" {{ $attributes->except('class') }}
+    @if ($nested) x-show="expanded" x-cloak @endif data-tr>
     {{ $slot }}
 </tr>

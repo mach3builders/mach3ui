@@ -15,22 +15,25 @@
     $name = $name ?? $attributes->whereStartsWith('wire:model')->first();
     $hasError = $name && $errors->has($name);
 
-    $sizeClasses = match ($size) {
-        'sm' => 'h-8 px-2.5 py-1.5 pr-8 text-xs',
-        'lg' => 'h-12 px-4 py-3 pr-10 text-base',
-        default => 'h-10 px-3 py-2 pr-9 text-sm',
-    };
-
-    $selectClasses = [
-        'block w-full cursor-pointer appearance-none rounded-md border bg-no-repeat shadow-xs',
-        'border-gray-140 bg-white text-gray-900',
-        'dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100',
-        'focus:border-gray-400 focus:outline-none',
-        'dark:focus:border-gray-500',
-        'disabled:cursor-not-allowed disabled:opacity-50',
-        $sizeClasses,
-        'border-red-500 dark:border-red-500 focus:border-red-600 dark:focus:border-red-500' => $invalid || $hasError,
-    ];
+    $selectClasses = Ui::classes()
+        ->add('block w-full cursor-pointer appearance-none rounded-md border bg-no-repeat shadow-xs')
+        ->add('border-gray-140 bg-white text-gray-900')
+        ->add('dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100')
+        ->add('focus:border-gray-400 focus:outline-none')
+        ->add('dark:focus:border-gray-500')
+        ->add('disabled:cursor-not-allowed disabled:opacity-50')
+        ->add(
+            match ($size) {
+                'sm' => 'h-8 px-2.5 py-1.5 pr-8 text-xs',
+                'lg' => 'h-12 px-4 py-3 pr-10 text-base',
+                default => 'h-10 px-3 py-2 pr-9 text-sm',
+            },
+        )
+        ->when(
+            $invalid || $hasError,
+            'border-red-500 dark:border-red-500 focus:border-red-600 dark:focus:border-red-500',
+        )
+        ->merge($attributes->only('class'));
 
     $optionsArray = is_array($options) ? $options : [];
     $hasSlot = !$slot->isEmpty();
@@ -53,7 +56,7 @@
         <ui:label :for="$id">{{ $label }}</ui:label>
 
         <div class="relative w-full" data-select>
-            <select {{ $attributes->class($selectClasses) }} id="{{ $id }}"
+            <select class="{{ $selectClasses }}" {{ $attributes->except('class') }} id="{{ $id }}"
                 @if ($name) name="{{ $name }}" @endif @disabled($disabled)>
                 @if ($placeholder)
                     <option value="" disabled @if (!$value) selected @endif>{{ $placeholder }}
@@ -72,7 +75,7 @@
 
             <div
                 class="pointer-events-none absolute inset-y-0 {{ $iconRight }} flex items-center text-gray-400 dark:text-gray-500">
-                <x-lucide-chevron-down class="{{ $iconSize }}" />
+                <ui:icon name="chevron-down" class="{{ $iconSize }}" />
             </div>
         </div>
 
@@ -86,7 +89,7 @@
     </ui:field>
 @else
     <div class="relative w-full" data-select>
-        <select {{ $attributes->class($selectClasses) }}
+        <select class="{{ $selectClasses }}" {{ $attributes->except('class') }}
             @if ($name) name="{{ $name }}" @endif @disabled($disabled)>
             @if ($placeholder)
                 <option value="" disabled @if (!$value) selected @endif>{{ $placeholder }}
@@ -105,7 +108,7 @@
 
         <div
             class="pointer-events-none absolute inset-y-0 {{ $iconRight }} flex items-center text-gray-400 dark:text-gray-500">
-            <x-lucide-chevron-down class="{{ $iconSize }}" />
+            <ui:icon name="chevron-down" class="{{ $iconSize }}" />
         </div>
     </div>
 @endif

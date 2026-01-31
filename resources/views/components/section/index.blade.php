@@ -8,7 +8,7 @@
     $isStacked = $variant === 'stacked';
     $isInline = $variant === 'inline';
 
-    $classes = Ui::classes()->add('@container [[data-section]+&]:mt-8');
+    $classes = Ui::classes()->add('@container [[data-section]+&]:mt-8')->merge($attributes->only('class'));
 
     $wrapperClasses = Ui::classes()
         ->add('flex gap-3')
@@ -23,7 +23,7 @@
         ->when(!$isStacked && !$isInline, '@xl:w-56 @xl:shrink-0 @xl:px-0 @xl:pt-4');
 @endphp
 
-<div {{ $attributes->class($classes) }} data-section>
+<div class="{{ $classes }}" {{ $attributes->except('class') }} data-section>
     <div class="{{ $wrapperClasses }}">
         @if ($title || $description || isset($header))
             <div class="{{ $headerClasses }}">

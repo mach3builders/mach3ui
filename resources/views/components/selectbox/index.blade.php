@@ -60,7 +60,8 @@
     <ui:field>
         <ui:label>{{ $label }}</ui:label>
 
-        <div {{ $attributes->class($containerClasses)->except(['wire:model', 'wire:model.live', 'wire:model.blur', 'wire:model.change']) }}
+        <div class="{{ $containerClasses }}"
+            {{ $attributes->except(['class', 'wire:model', 'wire:model.live', 'wire:model.blur', 'wire:model.change']) }}
             x-data="{
                 value: @if ($wireModelValue) (typeof $wire !== 'undefined' ? $wire.entangle('{{ $wireModelValue }}'){{ $wireModelLive ? '.live' : '' }} : '{{ $value }}') @else '{{ $value }}' @endif,
                 search: '',
@@ -102,7 +103,7 @@
 
                 <span x-show="!selectedLabel" class="text-gray-400 dark:text-gray-500">{{ $placeholder }}</span>
 
-                <x-lucide-chevrons-up-down class="size-4 shrink-0 text-gray-400 dark:text-gray-500" />
+                <ui:icon name="chevrons-up-down" class="size-4 shrink-0 text-gray-400 dark:text-gray-500" />
             </button>
 
             <input type="hidden" @if ($name) name="{{ $name }}" @endif x-model="value"
@@ -147,7 +148,8 @@
         @endif
     </ui:field>
 @else
-    <div {{ $attributes->class($containerClasses)->except(['wire:model', 'wire:model.live', 'wire:model.blur', 'wire:model.change']) }}
+    <div class="{{ $containerClasses }}"
+        {{ $attributes->except(['class', 'wire:model', 'wire:model.live', 'wire:model.blur', 'wire:model.change']) }}
         x-data="{
             value: @if ($wireModelValue) (typeof $wire !== 'undefined' ? $wire.entangle('{{ $wireModelValue }}'){{ $wireModelLive ? '.live' : '' }} : '{{ $value }}') @else '{{ $value }}' @endif,
             search: '',
@@ -189,7 +191,7 @@
 
             <span x-show="!selectedLabel" class="text-gray-400 dark:text-gray-500">{{ $placeholder }}</span>
 
-            <x-lucide-chevrons-up-down class="size-4 shrink-0 text-gray-400 dark:text-gray-500" />
+            <ui:icon name="chevrons-up-down" class="size-4 shrink-0 text-gray-400 dark:text-gray-500" />
         </button>
 
         <input type="hidden" @if ($name) name="{{ $name }}" @endif x-model="value"

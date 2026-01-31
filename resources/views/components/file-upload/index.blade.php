@@ -62,7 +62,8 @@
         this.lightboxSrc = '';
         this.lightboxName = '';
     }
-}" {{ $attributes->only('class')->class(['flex flex-col gap-3']) }} data-file-upload>
+}" class="{{ Ui::classes()->add('flex flex-col gap-3')->merge($attributes->only('class')) }}"
+    {{ $attributes->except('class') }} data-file-upload>
     <div class="relative flex min-h-32 cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed p-6 transition-colors border-gray-140 bg-white hover:border-gray-400 hover:bg-gray-20 dark:border-gray-700 dark:bg-gray-800 dark:hover:border-gray-600 dark:hover:bg-gray-820"
         :class="{ 'border-blue-500! bg-blue-50! dark:bg-blue-900/20!': dragover }"
         x-on:dragover.prevent="dragover = true" x-on:dragleave.prevent="dragover = false"

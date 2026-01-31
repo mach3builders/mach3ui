@@ -27,7 +27,8 @@
 
 @if ($label || $description)
     <label class="{{ $labelClasses }}">
-        <input type="radio" {{ $attributes->class($radioClasses) }} @checked($checked) data-radio />
+        <input type="radio" class="{{ Ui::classes($radioClasses)->merge($attributes->only('class')) }}"
+            {{ $attributes->except('class') }} @checked($checked) data-radio />
 
         <span class="flex flex-col gap-0.5">
             @if ($label)
@@ -40,5 +41,6 @@
         </span>
     </label>
 @else
-    <input type="radio" {{ $attributes->class($radioClasses) }} @checked($checked) data-radio />
+    <input type="radio" class="{{ Ui::classes($radioClasses)->merge($attributes->only('class')) }}"
+        {{ $attributes->except('class') }} @checked($checked) data-radio />
 @endif

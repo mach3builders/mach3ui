@@ -23,13 +23,16 @@
         default => 'numeric',
     };
 
-    $slot_size_classes = match ($size) {
+    $slotSizeClasses = match ($size) {
         'sm' => 'h-9 w-8 text-sm',
         'lg' => 'h-14 w-12 text-xl',
         default => 'h-12 w-10 text-lg',
     };
 
-    $wrapper_classes = ['flex items-center gap-2', 'opacity-50' => $disabled];
+    $wrapperClasses = Ui::classes()
+        ->add('flex items-center gap-2')
+        ->when($disabled, 'opacity-50')
+        ->merge($attributes->only('class'));
 @endphp
 
 <div x-data="{
@@ -120,7 +123,8 @@
         if (!char) return '';
         return this.private ? '•' : char;
     }
-}" {{ $attributes->except(['id', 'name', 'value'])->class($wrapper_classes) }} data-input-otp>
+}" class="{{ $wrapperClasses }}" {{ $attributes->except(['id', 'name', 'value', 'class']) }}
+    data-input-otp>
     <input type="hidden" x-ref="hidden" id="{{ $id }}"
         @if ($name) name="{{ $name }}" @endif :value="value"
         {{ $attributes->only(['wire:model', 'wire:model.live', 'wire:model.blur', 'wire:model.defer', 'x-model']) }} />
@@ -135,7 +139,7 @@
         @foreach ($groups as $groupIndex => $group)
             <div class="flex items-center" data-input-otp-group>
                 @foreach ($group as $index)
-                    <div class="{{ $slot_size_classes }} relative -ml-px flex cursor-text items-center justify-center border font-medium transition-colors first:ml-0 first:rounded-l-lg last:rounded-r-lg border-gray-200 bg-white text-gray-900 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
+                    <div class="{{ $slotSizeClasses }} relative -ml-px flex cursor-text items-center justify-center border font-medium transition-colors first:ml-0 first:rounded-l-lg last:rounded-r-lg border-gray-200 bg-white text-gray-900 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
                         :class="{
                             'z-10 ring-1 ring-gray-400 dark:ring-gray-500': activeIndex === {{ $index }},
                         }"
@@ -154,7 +158,7 @@
     @else
         <div class="flex items-center" data-input-otp-group>
             @for ($i = 0; $i < $length; $i++)
-                <div class="{{ $slot_size_classes }} relative -ml-px flex cursor-text items-center justify-center border font-medium transition-colors first:ml-0 first:rounded-l-lg last:rounded-r-lg border-gray-200 bg-white text-gray-900 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
+                <div class="{{ $slotSizeClasses }} relative -ml-px flex cursor-text items-center justify-center border font-medium transition-colors first:ml-0 first:rounded-l-lg last:rounded-r-lg border-gray-200 bg-white text-gray-900 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
                     :class="{
                         'z-10 ring-1 ring-gray-400 dark:ring-gray-500': activeIndex === {{ $i }},
                     }"
@@ -166,6 +170,7 @@
     @endif
 
     <input type="text" inputmode="{{ $inputmode }}" autocomplete="one-time-code" x-ref="input" class="sr-only"
-        maxlength="{{ $length }}" @input="handleInput($event)" @keydown="handleKeydown($event)"
-        @focus="handleFocus()" @blur="handleBlur()" @paste="handlePaste($event)" @disabled($disabled) />
+        maxlength="{{ $length }}" x-on:input="handleInput($event)" x-on:keydown="handleKeydown($event)"
+        x-on:focus="handleFocus()" x-on:blur="handleBlur()" x-on:paste="handlePaste($event)"
+        @disabled($disabled) />
 </div>

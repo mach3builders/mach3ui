@@ -11,7 +11,8 @@
         ->add($banner ? 'h-[calc(100vh-2.5rem)]' : 'h-screen')
         ->add('bg-gray-20 border-gray-100')
         ->add('dark:bg-gray-820 dark:border-gray-740')
-        ->add('xl:sticky xl:translate-x-0 xl:self-start');
+        ->add('xl:sticky xl:translate-x-0 xl:self-start')
+        ->merge($attributes->only('class'));
 
     $overlayClasses = Ui::classes()
         ->add('absolute top-0 right-full bottom-0 w-screen')
@@ -19,7 +20,8 @@
         ->add('dark:bg-gray-820');
 @endphp
 
-<aside {{ $attributes->class($classes) }} :class="{ 'translate-x-0!': sideBarOpen }" data-layout-sidebar>
+<aside class="{{ $classes }}" {{ $attributes->except('class') }} :class="{ 'translate-x-0!': sideBarOpen }"
+    data-layout-sidebar>
     <div class="{{ $overlayClasses }}"></div>
 
     {{ $slot }}

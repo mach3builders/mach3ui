@@ -9,57 +9,53 @@
 @php
     $id = $attributes->get('id') ?? ($name ? 'switch-' . $name : 'switch-' . uniqid());
 
-    $track_classes = [
-        'relative inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full transition-colors',
-        'bg-gray-200',
-        'dark:bg-gray-620',
-        'has-[:checked]:bg-blue-500',
-        'dark:has-[:checked]:bg-blue-600',
-        'has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50',
-    ];
+    $trackClasses = Ui::classes()
+        ->add('relative inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full transition-colors')
+        ->add('bg-gray-200')
+        ->add('dark:bg-gray-620')
+        ->add('has-[:checked]:bg-blue-500')
+        ->add('dark:has-[:checked]:bg-blue-600')
+        ->add('has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50');
 
-    $thumb_classes = [
-        'pointer-events-none inline-block h-4 w-4 translate-x-0.5 rounded-full shadow-sm transition-transform duration-200',
-        'bg-white',
-    ];
+    $thumbClasses = Ui::classes()
+        ->add(
+            'pointer-events-none inline-block h-4 w-4 translate-x-0.5 rounded-full shadow-sm transition-transform duration-200',
+        )
+        ->add('bg-white')
+        ->add('peer-checked:translate-x-4');
+
+    $wrapperClasses = Ui::classes()->add('flex items-start gap-3')->merge($attributes->only('class'));
+    $inputClasses = Ui::classes()->add('peer sr-only');
+
+    $labelTextClasses = Ui::classes()->add('text-sm font-medium text-gray-800')->add('dark:text-gray-100');
+    $descriptionClasses = Ui::classes()->add('text-sm text-gray-500')->add('dark:text-gray-400');
 @endphp
 
 @if ($label || $description)
-    <div {{ $attributes->only('class')->class(['flex items-start gap-3']) }} data-switch>
-        <label for="{{ $id }}" @class($track_classes)>
-            <input
-                type="checkbox"
-                role="switch"
-                id="{{ $id }}"
-                @if ($name) name="{{ $name }}" @endif
-                {{ $attributes->except(['class', 'id'])->class(['peer sr-only']) }}
-                @checked($checked)
-                @disabled($disabled)
-            />
+    <div class="{{ $wrapperClasses }}" {{ $attributes->except('class') }} data-switch>
+        <label for="{{ $id }}" class="{{ $trackClasses }}">
+            <input type="checkbox" role="switch" id="{{ $id }}"
+                @if ($name) name="{{ $name }}" @endif class="{{ $inputClasses }}"
+                @checked($checked) @disabled($disabled) />
 
-            <span @class(array_merge($thumb_classes, ['peer-checked:translate-x-4']))></span>
+            <span class="{{ $thumbClasses }}"></span>
         </label>
 
         <label for="{{ $id }}" class="flex flex-col gap-0.5">
-            <span class="text-sm font-medium text-gray-800 dark:text-gray-100">{{ $label }}</span>
+            <span class="{{ $labelTextClasses }}">{{ $label }}</span>
 
             @if ($description)
-                <span class="text-sm text-gray-500 dark:text-gray-400">{{ $description }}</span>
+                <span class="{{ $descriptionClasses }}">{{ $description }}</span>
             @endif
         </label>
     </div>
 @else
-    <label for="{{ $id }}" {{ $attributes->only('class')->class($track_classes) }} data-switch>
-        <input
-            type="checkbox"
-            role="switch"
-            id="{{ $id }}"
-            @if ($name) name="{{ $name }}" @endif
-            {{ $attributes->except(['class', 'id'])->class(['peer sr-only']) }}
-            @checked($checked)
-            @disabled($disabled)
-        />
+    <label for="{{ $id }}" class="{{ Ui::classes($trackClasses)->merge($attributes->only('class')) }}"
+        {{ $attributes->except('class') }} data-switch>
+        <input type="checkbox" role="switch" id="{{ $id }}"
+            @if ($name) name="{{ $name }}" @endif class="{{ $inputClasses }}"
+            @checked($checked) @disabled($disabled) />
 
-        <span @class(array_merge($thumb_classes, ['peer-checked:translate-x-4']))></span>
+        <span class="{{ $thumbClasses }}"></span>
     </label>
 @endif

@@ -40,10 +40,11 @@
         ->add('[[data-variant=simple]_&]:px-3 [[data-variant=simple]_&]:py-2.5')
         ->add(
             '[[data-variant=simple]_&:first-child]:font-medium [[data-variant=simple]_&:first-child]:text-gray-900 [[data-variant=simple]_&:first-child]:dark:text-white',
-        );
+        )
+        ->merge($attributes->only('class'));
 @endphp
 
-<td {{ $attributes->class($classes) }} data-td>
+<td class="{{ $classes }}" {{ $attributes->except('class') }} data-td>
     @if ($actions)
         <div class="invisible inline-flex gap-1 group-hover:visible">
             {{ $slot }}

@@ -13,7 +13,8 @@
 
     $classes = Ui::classes()
         ->add('rich-text-editor')
-        ->when($variant === 'inset', 'rich-text-editor-inset');
+        ->when($variant === 'inset', 'rich-text-editor-inset')
+        ->merge($attributes->only('class'));
 
     $toolbarGroups = [
         'minimal' => [['bold', 'italic', 'link']],
@@ -49,7 +50,7 @@
     $groups = is_array($toolbar) ? $toolbar : $toolbarGroups[$toolbar] ?? $toolbarGroups['full'];
 @endphp
 
-<div {{ $attributes->class($classes) }} data-rich-text-editor data-placeholder="{{ $placeholder }}">
+<div class="{{ $classes }}" data-rich-text-editor data-placeholder="{{ $placeholder }}">
     <div class="rich-text-editor-toolbar">
         @foreach ($groups as $groupIndex => $group)
             @if ($groupIndex > 0)

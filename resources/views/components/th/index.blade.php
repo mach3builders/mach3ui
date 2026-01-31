@@ -19,7 +19,8 @@
         ->when($sortable && !$isSorted, 'hover:text-gray-700 dark:hover:text-gray-200')
         ->add(
             '[[data-variant=simple]_&]:px-3 [[data-variant=simple]_&]:py-2.5 [[data-variant=simple]_&]:tracking-normal [[data-variant=simple]_&]:normal-case',
-        );
+        )
+        ->merge($attributes->only('class'));
 
     $iconClasses = Ui::classes()
         ->add('size-4 shrink-0 transition-transform')
@@ -27,7 +28,7 @@
         ->when($sorted === 'desc', 'rotate-180');
 @endphp
 
-<th {{ $attributes->class($classes) }} data-th>
+<th class="{{ $classes }}" {{ $attributes->except('class') }} data-th>
     @if ($sortable)
         <span class="inline-flex items-center gap-1">
             {{ $slot }}

@@ -4,7 +4,7 @@
 ])
 
 @php
-    $classes = Ui::classes()->add('inline-flex items-center gap-1');
+    $classes = Ui::classes()->add('inline-flex items-center gap-1')->merge($attributes->only('class'));
 @endphp
 
 @if ($grouped)
@@ -17,7 +17,7 @@
         </ui:dropdown.menu>
     </ui:dropdown>
 @else
-    <div {{ $attributes->class($classes) }} data-actions>
+    <div class="{{ $classes }}" {{ $attributes->except('class') }} data-actions>
         {{ $slot }}
     </div>
 @endif

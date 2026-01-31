@@ -21,10 +21,11 @@
     $prevClasses = Ui::classes($controlClasses)->add('-translate-x-1/2');
     $nextClasses = Ui::classes($controlClasses)->add('translate-x-1/2');
 
-    $indicatorClasses = 'size-2 rounded-full';
-    $indicatorActiveClasses = $indicatorClasses . ' bg-gray-900 dark:bg-gray-100';
-    $indicatorInactiveClasses =
-        $indicatorClasses . ' bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600';
+    $indicatorBaseClasses = Ui::classes()->add('size-2 rounded-full');
+    $indicatorActiveClasses = Ui::classes($indicatorBaseClasses)->add('bg-gray-900')->add('dark:bg-gray-100');
+    $indicatorInactiveClasses = Ui::classes($indicatorBaseClasses)
+        ->add('bg-gray-200 hover:bg-gray-300')
+        ->add('dark:bg-gray-700 dark:hover:bg-gray-600');
 @endphp
 
 <div x-data="{

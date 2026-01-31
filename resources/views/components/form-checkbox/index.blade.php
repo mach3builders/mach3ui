@@ -1,10 +1,10 @@
 @props([
-    'name' => null,
-    'label' => null,
-    'description' => null,
-    'error' => null,
     'checked' => false,
+    'description' => null,
     'disabled' => false,
+    'error' => null,
+    'label' => null,
+    'name' => null,
     'value' => null,
 ])
 
@@ -12,26 +12,28 @@
     $id = $attributes->get('id') ?? ($name ? 'checkbox-' . $name : 'checkbox-' . uniqid());
 
     $hasError = $error || ($name && $errors->has($name));
-    $errorMessage = $error ?? ($name ? $errors->first($name) : null);
+
+    $wrapperClasses = Ui::classes()
+        ->add('form-field-inline')
+        ->when($hasError, 'is-invalid')
+        ->merge($attributes->only('class'));
+
+    $checkboxClasses = Ui::classes()->add('form-checkbox');
+    $labelTextClasses = Ui::classes()->add('form-label');
+    $descriptionClasses = Ui::classes()->add('form-description');
 @endphp
 
-<div {{ $attributes->only('class')->class(['form-field-inline', 'is-invalid' => $hasError]) }}>
-    <input
-        type="checkbox"
-        id="{{ $id }}"
-        @if ($name) name="{{ $name }}" @endif
-        @if ($value) value="{{ $value }}" @endif
-        {{ $attributes->except(['class', 'id'])->class(['form-checkbox']) }}
-        @checked($checked)
-        @disabled($disabled)
-    />
+<div class="{{ $wrapperClasses }}" {{ $attributes->except(['class', 'id']) }} data-form-checkbox>
+    <input type="checkbox" id="{{ $id }}" @if ($name) name="{{ $name }}" @endif
+        @if ($value) value="{{ $value }}" @endif class="{{ $checkboxClasses }}"
+        @checked($checked) @disabled($disabled) />
 
     @if ($label)
         <label for="{{ $id }}">
-            <span class="form-label">{{ $label }}</span>
+            <span class="{{ $labelTextClasses }}">{{ $label }}</span>
 
             @if ($description)
-                <span class="form-description">{{ $description }}</span>
+                <span class="{{ $descriptionClasses }}">{{ $description }}</span>
             @endif
         </label>
     @endif

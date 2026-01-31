@@ -98,11 +98,11 @@
     handleKeyup(e) {
         if (this.open && ['Control', 'Alt', 'Meta'].includes(e.key)) this.activate()
     }
-}" @keydown.window="handleKeydown" @keyup.window="handleKeyup" {{ $attributes }}
+}" x-on:keydown.window="handleKeydown" x-on:keyup.window="handleKeyup" {{ $attributes }}
     data-app-switcher>
     <div x-cloak x-show="open" x-transition:enter="transition ease-out duration-150" x-transition:enter-start="opacity-0"
         x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-100"
-        x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" @click.self="close"
+        x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" x-on:click.self="close"
         class="{{ $overlayClasses }}" role="dialog" aria-modal="true">
         <div x-show="open" x-transition:enter="transition ease-out duration-150"
             x-transition:enter-start="opacity-0 scale-95 -translate-y-2"

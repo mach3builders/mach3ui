@@ -15,7 +15,8 @@
                 'bottom-center' => 'bottom-4 left-1/2 -translate-x-1/2 items-center',
                 default => 'bottom-4 right-4 items-end',
             },
-        );
+        )
+        ->merge($attributes->only('class'));
 
     $variantClasses = [
         'default' =>
@@ -44,7 +45,7 @@
     ];
 @endphp
 
-<div {{ $attributes->class($classes) }} x-data="{
+<div class="{{ $classes }}" {{ $attributes->except('class') }} x-data="{
     toasts: [],
     variantClasses: @js($variantClasses),
     closeClasses: @js($closeClasses),
@@ -81,8 +82,8 @@
             }, 200);
         }
     },
-}" data-toaster x-on:toast.window="add($event.detail)"
-    @if (class_exists('Livewire\Livewire'))
+}" data-toaster
+    x-on:toast.window="add($event.detail)" @if (class_exists('Livewire\Livewire'))
     x-init="Livewire.on('toast', (data) => {
         add(Array.isArray(data) ? data[0] : data);
     });"

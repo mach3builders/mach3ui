@@ -2,9 +2,10 @@
 
 @php
     $id = uniqid('context-');
+    $classes = Ui::classes()->add('contents')->merge($attributes->only('class'));
 @endphp
 
-<div {{ $attributes->class('contents') }} x-data="{
+<div class="{{ $classes }}" {{ $attributes->except('class') }} x-data="{
     id: '{{ $id }}',
     x: 0,
     y: 0,
@@ -23,8 +24,8 @@
         this.$refs.menu.hidePopover();
         this.isOpen = false;
     }
-}" x-on:contextmenu.prevent="open($event)"
-    x-on:contextmenu.window="if (isOpen && !$el.contains($event.target)) close()"
+}"
+    x-on:contextmenu.prevent="open($event)" x-on:contextmenu.window="if (isOpen && !$el.contains($event.target)) close()"
     x-on:click.window="if (isOpen && !$refs.menu.contains($event.target)) close()" x-on:keydown.escape.window="close()"
     data-context>
     {{ $slot }}
