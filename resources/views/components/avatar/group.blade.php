@@ -7,7 +7,7 @@
     $classes = Ui::classes()
         ->add('flex items-center')
         ->add('*:ring-2 *:ring-white')
-        ->add('dark:*:ring-gray-900')
+        ->add('*:dark:ring-gray-900')
         ->add(
             match ($size) {
                 'xs' => '-space-x-2',
@@ -16,7 +16,8 @@
                 'xl' => '-space-x-5',
                 default => '-space-x-3',
             },
-        );
+        )
+        ->merge($attributes->only('class'));
 
     $limitClasses = Ui::classes()
         ->add('relative inline-flex shrink-0 items-center justify-center rounded-full font-medium')
@@ -33,7 +34,7 @@
         );
 @endphp
 
-<div {{ $attributes->class($classes) }} data-avatar-group>
+<div class="{{ $classes }}" {{ $attributes->except('class') }} data-avatar-group>
     {{ $slot }}
 
     @if ($limit)

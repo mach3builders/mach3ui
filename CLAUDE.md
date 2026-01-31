@@ -79,37 +79,51 @@ Use `Ui::classes()` for all class definitions. Returns a `ClassBuilder` (impleme
         ->add(match ($variant) { ... }) // Match expression
         ->add($bool ? 'class' : '')     // Ternary
         ->when($icon, 'pl-6')           // Add if truthy
-        ->unless($icon, 'pl-2');        // Add if falsy
+        ->unless($icon, 'pl-2')         // Add if falsy
+        ->merge($attributes->only('class')); // Merge user classes (always last!)
 @endphp
 
-<div {{ $attributes->class($classes) }} data-component>
+<div class="{{ $classes }}" {{ $attributes->except('class') }} data-component>
 ```
 
-**Important**: No `.get()` needed - ClassBuilder converts to string automatically.
+**Important**:
+- No `.get()` needed - ClassBuilder converts to string automatically
+- `->merge()` uses `ClassMerger` for intelligent Tailwind conflict resolution
+- User class `p-4` overrides component's `px-2 py-3` (hierarchy aware)
+- User class `!p-4` (important) works correctly
 
 ### Multiple Class Variables
 Use descriptive names for different element classes within a component:
 
 ```blade
 @php
-    $itemClasses = Ui::classes()->add('...');
+    $classes = Ui::classes()
+        ->add('...')
+        ->merge($attributes->only('class'));
     $titleClasses = Ui::classes()->add('...');
     $contentClasses = Ui::classes()->add('...');
-    $iconClasses = Ui::classes()->add('...');
 @endphp
 
-<div {{ $attributes->class($itemClasses) }} data-component>
+<div class="{{ $classes }}" {{ $attributes->except('class') }} data-component>
     <div class="{{ $titleClasses }}" data-component-title>...</div>
     <div class="{{ $contentClasses }}" data-component-content>...</div>
 </div>
 ```
 
-Note: Root element uses `$attributes->class()`, inner elements use `class="{{ $classes }}"`.
+**Rules**:
+- Only the **root element** gets `->merge($attributes->only('class'))`
+- Only the **root element** gets `{{ $attributes->except('class') }}`
+- Inner elements use plain `class="{{ $classes }}"` without merge
+- Components with conditional root elements (e.g., `<a>` vs `<button>`) apply merge to each possible root
 
 ### Props Naming
 - **camelCase** for all props: `iconLeading`, `iconTrailing`, `iconVariant`
 - **Positioning suffixes**: `Leading` / `Trailing` for before/after content
 - **Boolean props**: Simple names like `open`, `disabled`, `loading`
+
+### Variable Naming
+- **camelCase** for all PHP variables: `$iconSlot`, `$hasImage`, `$showOverlay`
+- Never use snake_case: `$icon_slot`, `$has_image`, `$show_overlay` ✗
 
 ### Data Attributes
 - Root element: `data-{component}` (e.g., `data-accordion`)
@@ -231,6 +245,12 @@ Checkboxes/Radios:
 Use modern child selectors:
 - `*:ring-2` instead of `[&>*]:ring-2`
 - `*:border-t` instead of `[&>*]:border-t`
+
+When combining child selectors with variants, put the variant first:
+- `first:*:rounded-l-md` (first child gets rounded-l-md)
+- `last:*:rounded-r-md` (last child gets rounded-r-md)
+- `focus:*:z-10` (focused children get z-10)
+- `*:dark:ring-gray-900` (children get ring-gray-900 in dark mode)
 
 ### Standard Variants
 `default`, `primary`, `secondary`, `success`, `danger`, `warning`, `info`, `ghost`, `subtle`, `outline-*`

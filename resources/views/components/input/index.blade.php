@@ -14,65 +14,72 @@
 @php
     $id = $attributes->get('id') ?? ($label ? 'input-' . Str::random(8) : null);
     $name = $attributes->get('name') ?? $attributes->whereStartsWith('wire:model')->first();
-    $has_error = $name && $errors->has($name);
+    $hasError = $name && $errors->has($name);
 
-    $size_classes = match ($size) {
-        'sm' => 'h-8 px-2.5 py-1.5 text-xs',
-        'lg' => 'h-12 px-4 py-3 text-base',
-        default => 'h-10 px-3 py-2 text-sm',
-    };
+    $iconTrailing = $__data['icon:end'] ?? null;
+    $addonTrailing = $__data['addon:end'] ?? null;
+    $hasIcon = $icon !== null;
+    $hasIconTrailing = $iconTrailing !== null;
+    $hasAddon = $addon !== null;
+    $hasAddonTrailing = $addonTrailing !== null;
+    $hasTrailingElement = $hasIconTrailing || $copyable;
 
-    $icon_trailing = $__data['icon:end'] ?? null;
-    $addon_trailing = $__data['addon:end'] ?? null;
-    $has_icon = $icon !== null;
-    $has_icon_trailing = $icon_trailing !== null;
-    $has_addon = $addon !== null;
-    $has_addon_trailing = $addon_trailing !== null;
-    $has_trailing_element = $has_icon_trailing || $copyable;
-
-    $input_classes = [
-        'block w-full appearance-none border shadow-xs focus:outline-none',
-        'border-gray-140 bg-white text-gray-900 placeholder-gray-400 focus:border-gray-400 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 dark:placeholder-gray-500 dark:focus:border-gray-500' =>
-            $variant !== 'inverted' && !$has_error,
-        'border-gray-140 bg-gray-10 text-gray-900 placeholder-gray-400 focus:border-gray-400 dark:border-gray-700 dark:bg-gray-820 dark:text-gray-100 dark:placeholder-gray-500 dark:focus:border-gray-600' =>
-            $variant === 'inverted' && !$has_error,
-        'border-red-500 bg-white text-gray-900 placeholder-gray-400 focus:border-red-500 dark:border-red-500 dark:bg-gray-800 dark:text-gray-100 dark:placeholder-gray-500 dark:focus:border-red-500' => $has_error,
-        'disabled:cursor-not-allowed disabled:opacity-50',
-        $size_classes,
-        'rounded-md' => !$has_addon && !$has_addon_trailing,
-        'rounded-none' => $has_addon && $has_addon_trailing,
-        'rounded-none rounded-e-md' => $has_addon && !$has_addon_trailing,
-        'rounded-none rounded-s-md' => !$has_addon && $has_addon_trailing,
-        'border-l-0' => $has_addon,
-        'border-r-0' => $has_addon_trailing,
-        'pl-10' => $has_icon,
-        'pr-10' => $has_trailing_element,
-    ];
+    $inputClasses = Ui::classes()
+        ->add('block w-full appearance-none border shadow-xs focus:outline-none')
+        ->add('disabled:cursor-not-allowed disabled:opacity-50')
+        ->add(
+            match ($size) {
+                'sm' => 'h-8 px-2.5 py-1.5 text-xs',
+                'lg' => 'h-12 px-4 py-3 text-base',
+                default => 'h-10 px-3 py-2 text-sm',
+            },
+        )
+        ->add(
+            match (true) {
+                $hasError
+                    => 'border-red-500 bg-white text-gray-900 placeholder-gray-400 focus:border-red-500 dark:border-red-500 dark:bg-gray-800 dark:text-gray-100 dark:placeholder-gray-500 dark:focus:border-red-500',
+                $variant === 'inverted'
+                    => 'border-gray-140 bg-gray-10 text-gray-900 placeholder-gray-400 focus:border-gray-400 dark:border-gray-700 dark:bg-gray-820 dark:text-gray-100 dark:placeholder-gray-500 dark:focus:border-gray-600',
+                default
+                    => 'border-gray-140 bg-white text-gray-900 placeholder-gray-400 focus:border-gray-400 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 dark:placeholder-gray-500 dark:focus:border-gray-500',
+            },
+        )
+        ->add(
+            match (true) {
+                $hasAddon && $hasAddonTrailing => 'rounded-none',
+                $hasAddon => 'rounded-none rounded-e-md border-l-0',
+                $hasAddonTrailing => 'rounded-none rounded-s-md border-r-0',
+                default => 'rounded-md',
+            },
+        )
+        ->when($hasIcon, 'pl-10')
+        ->when($hasTrailingElement, 'pr-10')
+        ->merge($attributes->only('class'));
 @endphp
 
 @if ($label)
     <ui:field>
         <ui:label :for="$id">{{ $label }}</ui:label>
 
-        @if ($has_addon || $has_addon_trailing)
+        @if ($hasAddon || $hasAddonTrailing)
             <ui:input.group>
-                @if ($has_addon)
+                @if ($hasAddon)
                     <ui:input.addon>{{ $addon }}</ui:input.addon>
                 @endif
 
-                @if ($has_icon || $has_trailing_element)
+                @if ($hasIcon || $hasTrailingElement)
                     <div class="relative w-full" data-input-wrapper
                         @if ($copyable) x-data="{ copied: false }" @endif>
-                        @if ($has_icon)
+                        @if ($hasIcon)
                             <div
                                 class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400 dark:text-gray-500">
                                 <ui:icon :name="$icon" class="size-4" />
                             </div>
                         @endif
 
-                        <input type="{{ $type }}" id="{{ $id }}"
-                            {{ $attributes->class($input_classes) }}
-                            @if ($copyable) x-ref="input" @endif data-input />
+                        <input type="{{ $type }}" id="{{ $id }}" class="{{ $inputClasses }}"
+                            {{ $attributes->except('class') }} @if ($copyable) x-ref="input" @endif
+                            data-input />
 
                         @if ($copyable)
                             <ui:button variant="ghost" size="sm"
@@ -82,34 +89,35 @@
 
                                 <ui:icon name="check" class="text-green-500" x-show="copied" x-cloak />
                             </ui:button>
-                        @elseif ($has_icon_trailing)
+                        @elseif ($hasIconTrailing)
                             <div
                                 class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 dark:text-gray-500">
-                                <ui:icon :name="$icon_trailing" class="size-4" />
+                                <ui:icon :name="$iconTrailing" class="size-4" />
                             </div>
                         @endif
                     </div>
                 @else
-                    <input type="{{ $type }}" id="{{ $id }}" {{ $attributes->class($input_classes) }}
-                        data-input />
+                    <input type="{{ $type }}" id="{{ $id }}" class="{{ $inputClasses }}"
+                        {{ $attributes->except('class') }} data-input />
                 @endif
 
-                @if ($has_addon_trailing)
-                    <ui:input.addon>{{ $addon_trailing }}</ui:input.addon>
+                @if ($hasAddonTrailing)
+                    <ui:input.addon>{{ $addonTrailing }}</ui:input.addon>
                 @endif
             </ui:input.group>
-        @elseif ($has_icon || $has_trailing_element)
+        @elseif ($hasIcon || $hasTrailingElement)
             <div class="relative w-full" data-input-wrapper
                 @if ($copyable) x-data="{ copied: false }" @endif>
-                @if ($has_icon)
+                @if ($hasIcon)
                     <div
                         class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400 dark:text-gray-500">
                         <ui:icon :name="$icon" class="size-4" />
                     </div>
                 @endif
 
-                <input type="{{ $type }}" id="{{ $id }}" {{ $attributes->class($input_classes) }}
-                    @if ($copyable) x-ref="input" @endif data-input />
+                <input type="{{ $type }}" id="{{ $id }}" class="{{ $inputClasses }}"
+                    {{ $attributes->except('class') }} @if ($copyable) x-ref="input" @endif
+                    data-input />
 
                 @if ($copyable)
                     <ui:button variant="ghost" size="sm"
@@ -119,16 +127,16 @@
 
                         <ui:icon name="check" class="text-green-500" x-show="copied" x-cloak />
                     </ui:button>
-                @elseif ($has_icon_trailing)
+                @elseif ($hasIconTrailing)
                     <div
                         class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 dark:text-gray-500">
-                        <ui:icon :name="$icon_trailing" class="size-4" />
+                        <ui:icon :name="$iconTrailing" class="size-4" />
                     </div>
                 @endif
             </div>
         @else
-            <input type="{{ $type }}" id="{{ $id }}" {{ $attributes->class($input_classes) }}
-                data-input />
+            <input type="{{ $type }}" id="{{ $id }}" class="{{ $inputClasses }}"
+                {{ $attributes->except('class') }} data-input />
         @endif
 
         @if ($help)
@@ -140,23 +148,23 @@
         @endif
     </ui:field>
 @else
-    @if ($has_addon || $has_addon_trailing)
+    @if ($hasAddon || $hasAddonTrailing)
         <ui:input.group>
-            @if ($has_addon)
+            @if ($hasAddon)
                 <ui:input.addon>{{ $addon }}</ui:input.addon>
             @endif
 
-            @if ($has_icon || $has_trailing_element)
+            @if ($hasIcon || $hasTrailingElement)
                 <div class="relative w-full" data-input-wrapper
                     @if ($copyable) x-data="{ copied: false }" @endif>
-                    @if ($has_icon)
+                    @if ($hasIcon)
                         <div
                             class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400 dark:text-gray-500">
                             <ui:icon :name="$icon" class="size-4" />
                         </div>
                     @endif
 
-                    <input type="{{ $type }}" {{ $attributes->class($input_classes) }}
+                    <input type="{{ $type }}" class="{{ $inputClasses }}" {{ $attributes->except('class') }}
                         @if ($copyable) x-ref="input" @endif data-input />
 
                     @if ($copyable)
@@ -167,32 +175,33 @@
 
                             <ui:icon name="check" class="text-green-500" x-show="copied" x-cloak />
                         </ui:button>
-                    @elseif ($has_icon_trailing)
+                    @elseif ($hasIconTrailing)
                         <div
                             class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 dark:text-gray-500">
-                            <ui:icon :name="$icon_trailing" class="size-4" />
+                            <ui:icon :name="$iconTrailing" class="size-4" />
                         </div>
                     @endif
                 </div>
             @else
-                <input type="{{ $type }}" {{ $attributes->class($input_classes) }} data-input />
+                <input type="{{ $type }}" class="{{ $inputClasses }}" {{ $attributes->except('class') }}
+                    data-input />
             @endif
 
-            @if ($has_addon_trailing)
-                <ui:input.addon>{{ $addon_trailing }}</ui:input.addon>
+            @if ($hasAddonTrailing)
+                <ui:input.addon>{{ $addonTrailing }}</ui:input.addon>
             @endif
         </ui:input.group>
-    @elseif ($has_icon || $has_trailing_element)
+    @elseif ($hasIcon || $hasTrailingElement)
         <div class="relative w-full" data-input-wrapper
             @if ($copyable) x-data="{ copied: false }" @endif>
-            @if ($has_icon)
+            @if ($hasIcon)
                 <div
                     class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400 dark:text-gray-500">
                     <ui:icon :name="$icon" class="size-4" />
                 </div>
             @endif
 
-            <input type="{{ $type }}" {{ $attributes->class($input_classes) }}
+            <input type="{{ $type }}" class="{{ $inputClasses }}" {{ $attributes->except('class') }}
                 @if ($copyable) x-ref="input" @endif data-input />
 
             @if ($copyable)
@@ -203,14 +212,15 @@
 
                     <ui:icon name="check" class="text-green-500" x-show="copied" x-cloak />
                 </ui:button>
-            @elseif ($has_icon_trailing)
+            @elseif ($hasIconTrailing)
                 <div
                     class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 dark:text-gray-500">
-                    <ui:icon :name="$icon_trailing" class="size-4" />
+                    <ui:icon :name="$iconTrailing" class="size-4" />
                 </div>
             @endif
         </div>
     @else
-        <input type="{{ $type }}" {{ $attributes->class($input_classes) }} data-input />
+        <input type="{{ $type }}" class="{{ $inputClasses }}" {{ $attributes->except('class') }}
+            data-input />
     @endif
 @endif

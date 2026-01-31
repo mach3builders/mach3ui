@@ -87,5 +87,14 @@ class UiServiceProvider extends PackageServiceProvider
 
             return null;
         });
+
+        // Smart class merging that allows user classes to override component classes
+        ComponentAttributeBag::macro('ui', function (string|\Stringable $componentClasses): ComponentAttributeBag {
+            /** @var ComponentAttributeBag $this */
+            $userClasses = $this->get('class', '');
+            $merged = ClassMerger::merge((string) $componentClasses, $userClasses);
+
+            return $this->merge(['class' => $merged]);
+        });
     }
 }

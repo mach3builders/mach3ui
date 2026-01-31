@@ -10,22 +10,14 @@
 ])
 
 @php
-    $icon_slot = $__laravel_slots['icon'] ?? null;
+    $iconSlot = $__laravel_slots['icon'] ?? null;
 @endphp
 
-<ui:nav.item
-    :active="$active"
-    :href="$href"
-    :icon="$icon"
-    :icon:end="$__data['icon:end'] ?? null"
-    :label="$label"
-    :route="$route"
-    :type="$type"
-    :variant="$variant"
-    {{ $attributes }}
->
-    @if ($icon_slot)
-        <x-slot:icon>{{ $icon_slot }}</x-slot:icon>
+<ui:nav.item :active="$active" :href="$href" :icon="$icon"
+    :icon:end="$__data['icon:end'] ?? null" :label="$label" :route="$route" :type="$type"
+    :variant="$variant" {{ $attributes }}>
+    @if ($iconSlot)
+        <x-slot:icon>{{ $iconSlot }}</x-slot:icon>
     @endif
 
     {{ $slot }}

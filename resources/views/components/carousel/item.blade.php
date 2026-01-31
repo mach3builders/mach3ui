@@ -1,15 +1,9 @@
-@props([
-    'size' => null,
-])
+@props([])
 
 @php
-    $width_class = match ($size) {
-        'sm' => 'w-1/3',
-        'md' => 'w-1/2',
-        default => 'w-full',
-    };
+    $classes = Ui::classes()->add('w-full flex-none')->merge($attributes->only('class'));
 @endphp
 
-<div {{ $attributes->class(['flex-none', $width_class]) }}>
+<div class="{{ $classes }}" {{ $attributes->except('class') }} data-carousel-item>
     {{ $slot }}
 </div>

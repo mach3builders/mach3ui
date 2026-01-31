@@ -3,12 +3,15 @@
 namespace Mach3Builders\Ui;
 
 use Illuminate\Support\Arr;
+use Illuminate\View\ComponentAttributeBag;
 use Stringable;
 
 class ClassBuilder implements Stringable
 {
     /** @var array<int, string> */
     protected array $pending = [];
+
+    protected ?string $userClasses = null;
 
     /**
      * Add classes to the builder.
@@ -46,8 +49,27 @@ class ClassBuilder implements Stringable
         return $this->when(! $condition, $classes);
     }
 
+    /**
+     * Merge user classes with intelligent conflict resolution.
+     */
+    public function merge(ComponentAttributeBag|string $attributes): static
+    {
+        $this->userClasses = match (true) {
+            $attributes instanceof ComponentAttributeBag => $attributes->get('class', ''),
+            default => $attributes,
+        };
+
+        return $this;
+    }
+
     public function __toString(): string
     {
-        return collect($this->pending)->filter()->join(' ');
+        $componentClasses = collect($this->pending)->filter()->join(' ');
+
+        if ($this->userClasses) {
+            return ClassMerger::merge($componentClasses, $this->userClasses);
+        }
+
+        return $componentClasses;
     }
 }
