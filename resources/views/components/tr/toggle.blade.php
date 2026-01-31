@@ -4,8 +4,8 @@
 ])
 
 @php
-    $icon_active = $__data['icon:active'] ?? 'chevron-down';
+    $iconActive = $__data['icon:active'] ?? 'chevron-down';
 @endphp
 
-<ui:toggle :icon="$icon" :icon:active="$icon_active" state="expanded" variant="ghost" size="sm"
+<ui:toggle :icon="$icon" :icon:active="$iconActive" state="expanded" variant="ghost" size="sm"
     {{ $attributes }} />

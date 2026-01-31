@@ -16,48 +16,56 @@
 @php
     $id = 'selectbox-' . uniqid();
     $name = $name ?? $attributes->whereStartsWith('wire:model')->first();
-    $has_error = $name && $errors->has($name);
+    $hasError = $name && $errors->has($name);
 
-    $trigger_classes = [
-        'flex w-full cursor-pointer items-center justify-between rounded-md border px-3 py-2 text-sm shadow-xs [anchor-name:--selectbox-trigger]',
-        'border-gray-140 bg-white text-gray-900',
-        'dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100',
-        'focus:border-gray-400 focus:outline-none',
-        'dark:focus:border-gray-500',
-        'disabled:cursor-not-allowed disabled:opacity-50',
-        'h-8 px-2.5 py-1.5 text-xs' => $size === 'sm',
-        'h-10' => $size === null,
-        'h-12 px-4 py-3 text-base' => $size === 'lg',
-        'border-red-500 dark:border-red-500 focus:border-red-600 dark:focus:border-red-500' => $invalid || $has_error,
-    ];
+    $containerClasses = Ui::classes()->add(
+        'relative select-none inline-block w-full [anchor-scope:--selectbox-trigger]',
+    );
 
-    $options_array = is_array($options) ? $options : [];
-    $has_slot = !$slot->isEmpty();
+    $triggerClasses = Ui::classes()
+        ->add(
+            'flex w-full cursor-pointer items-center justify-between rounded-md border px-3 py-2 text-sm shadow-xs [anchor-name:--selectbox-trigger]',
+        )
+        ->add('border-gray-140 bg-white text-gray-900')
+        ->add('dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100')
+        ->add('focus:border-gray-400 focus:outline-none')
+        ->add('dark:focus:border-gray-500')
+        ->add('disabled:cursor-not-allowed disabled:opacity-50')
+        ->when($size === 'sm', 'h-8 px-2.5 py-1.5 text-xs')
+        ->when($size === null, 'h-10')
+        ->when($size === 'lg', 'h-12 px-4 py-3 text-base')
+        ->when(
+            $invalid || $hasError,
+            'border-red-500 dark:border-red-500 focus:border-red-600 dark:focus:border-red-500',
+        );
 
-    $wire_model_attr = null;
+    $optionsArray = is_array($options) ? $options : [];
+    $hasSlot = !$slot->isEmpty();
+
+    $wireModelAttr = null;
     foreach (
         ['wire:model.live', 'wire:model.blur', 'wire:model.change', 'wire:model.debounce', 'wire:model']
         as $attr
     ) {
         if ($attributes->has($attr)) {
-            $wire_model_attr = $attr;
+            $wireModelAttr = $attr;
             break;
         }
     }
-    $wire_model_value = $wire_model_attr ? $attributes->get($wire_model_attr) : null;
-    $wire_model_live = $wire_model_attr && str_contains($wire_model_attr, '.live');
+    $wireModelValue = $wireModelAttr ? $attributes->get($wireModelAttr) : null;
+    $wireModelLive = $wireModelAttr && str_contains($wireModelAttr, '.live');
 @endphp
 
 @if ($label)
     <ui:field>
         <ui:label>{{ $label }}</ui:label>
 
-        <div {{ $attributes->class(['relative select-none inline-block w-full [anchor-scope:--selectbox-trigger]'])->except(['wire:model', 'wire:model.live', 'wire:model.blur', 'wire:model.change']) }}
+        <div {{ $attributes->class($containerClasses)->except(['wire:model', 'wire:model.live', 'wire:model.blur', 'wire:model.change']) }}
             x-data="{
-                value: @if ($wire_model_value) (typeof $wire !== 'undefined' ? $wire.entangle('{{ $wire_model_value }}'){{ $wire_model_live ? '.live' : '' }} : '{{ $value }}') @else '{{ $value }}' @endif,
+                value: @if ($wireModelValue) (typeof $wire !== 'undefined' ? $wire.entangle('{{ $wireModelValue }}'){{ $wireModelLive ? '.live' : '' }} : '{{ $value }}') @else '{{ $value }}' @endif,
                 search: '',
-                options: {{ Js::from($options_array) }},
-                hasSlot: {{ $has_slot ? 'true' : 'false' }},
+                options: {{ Js::from($optionsArray) }},
+                hasSlot: {{ $hasSlot ? 'true' : 'false' }},
                 init() {
                     if (this.hasSlot) {
                         this.options = {};
@@ -88,7 +96,7 @@
             }"
             x-on:toggle.window="if ($event.target === $refs.menu && $event.newState === 'closed') search = ''"
             x-effect="updateAriaSelected()" data-selectbox>
-            <button type="button" @class($trigger_classes) popovertarget="{{ $id }}"
+            <button type="button" class="{{ $triggerClasses }}" popovertarget="{{ $id }}"
                 @disabled($disabled)>
                 <span x-show="selectedLabel" x-text="selectedLabel"></span>
 
@@ -110,8 +118,8 @@
                 @endif
 
                 <div class="flex flex-col gap-1 overflow-y-auto p-1" x-ref="options"
-                    @if ($has_slot) x-on:click="if ($event.target.closest('[data-value]')) select($event.target.closest('[data-value]').dataset.value)" @endif>
-                    @if ($has_slot)
+                    @if ($hasSlot) x-on:click="if ($event.target.closest('[data-value]')) select($event.target.closest('[data-value]').dataset.value)" @endif>
+                    @if ($hasSlot)
                         {{ $slot }}
                     @else
                         <template x-for="[optValue, optLabel] in filteredOptions" :key="optValue">
@@ -139,12 +147,12 @@
         @endif
     </ui:field>
 @else
-    <div {{ $attributes->class(['relative select-none inline-block w-full [anchor-scope:--selectbox-trigger]'])->except(['wire:model', 'wire:model.live', 'wire:model.blur', 'wire:model.change']) }}
+    <div {{ $attributes->class($containerClasses)->except(['wire:model', 'wire:model.live', 'wire:model.blur', 'wire:model.change']) }}
         x-data="{
-            value: @if ($wire_model_value) (typeof $wire !== 'undefined' ? $wire.entangle('{{ $wire_model_value }}'){{ $wire_model_live ? '.live' : '' }} : '{{ $value }}') @else '{{ $value }}' @endif,
+            value: @if ($wireModelValue) (typeof $wire !== 'undefined' ? $wire.entangle('{{ $wireModelValue }}'){{ $wireModelLive ? '.live' : '' }} : '{{ $value }}') @else '{{ $value }}' @endif,
             search: '',
-            options: {{ Js::from($options_array) }},
-            hasSlot: {{ $has_slot ? 'true' : 'false' }},
+            options: {{ Js::from($optionsArray) }},
+            hasSlot: {{ $hasSlot ? 'true' : 'false' }},
             init() {
                 if (this.hasSlot) {
                     this.options = {};
@@ -175,7 +183,7 @@
         }"
         x-on:toggle.window="if ($event.target === $refs.menu && $event.newState === 'closed') search = ''"
         x-effect="updateAriaSelected()" data-selectbox>
-        <button type="button" @class($trigger_classes) popovertarget="{{ $id }}"
+        <button type="button" class="{{ $triggerClasses }}" popovertarget="{{ $id }}"
             @disabled($disabled)>
             <span x-show="selectedLabel" x-text="selectedLabel"></span>
 
@@ -197,8 +205,8 @@
             @endif
 
             <div class="flex flex-col gap-1 overflow-y-auto p-1" x-ref="options"
-                @if ($has_slot) x-on:click="if ($event.target.closest('[data-value]')) select($event.target.closest('[data-value]').dataset.value)" @endif>
-                @if ($has_slot)
+                @if ($hasSlot) x-on:click="if ($event.target.closest('[data-value]')) select($event.target.closest('[data-value]').dataset.value)" @endif>
+                @if ($hasSlot)
                     {{ $slot }}
                 @else
                     <template x-for="[optValue, optLabel] in filteredOptions" :key="optValue">

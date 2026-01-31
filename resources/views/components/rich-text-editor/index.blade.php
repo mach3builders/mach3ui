@@ -9,18 +9,15 @@
 ])
 
 @php
-    $editor_id = $id ?? 'rich-text-editor-' . Str::random(8);
-    $variant_class = $variant === 'inset' ? 'rich-text-editor-inset' : '';
+    $editorId = $id ?? 'rich-text-editor-' . Str::random(8);
 
-    $toolbar_groups = [
-        'minimal' => [
-            ['bold', 'italic', 'link'],
-        ],
-        'basic' => [
-            ['bold', 'italic', 'strike'],
-            ['bullet-list', 'ordered-list'],
-            ['undo', 'redo'],
-        ],
+    $classes = Ui::classes()
+        ->add('rich-text-editor')
+        ->when($variant === 'inset', 'rich-text-editor-inset');
+
+    $toolbarGroups = [
+        'minimal' => [['bold', 'italic', 'link']],
+        'basic' => [['bold', 'italic', 'strike'], ['bullet-list', 'ordered-list'], ['undo', 'redo']],
         'full' => [
             ['bold', 'italic', 'strike', 'code'],
             ['heading-1', 'heading-2', 'heading-3'],
@@ -49,14 +46,10 @@
         'redo' => ['icon' => 'redo-2', 'title' => 'Redo'],
     ];
 
-    $groups = is_array($toolbar) ? $toolbar : ($toolbar_groups[$toolbar] ?? $toolbar_groups['full']);
+    $groups = is_array($toolbar) ? $toolbar : $toolbarGroups[$toolbar] ?? $toolbarGroups['full'];
 @endphp
 
-<div
-    {{ $attributes->class(['rich-text-editor', $variant_class]) }}
-    data-rich-text-editor
-    data-placeholder="{{ $placeholder }}"
->
+<div {{ $attributes->class($classes) }} data-rich-text-editor data-placeholder="{{ $placeholder }}">
     <div class="rich-text-editor-toolbar">
         @foreach ($groups as $groupIndex => $group)
             @if ($groupIndex > 0)
@@ -69,50 +62,44 @@
                     @if ($t)
                         @if (!empty($t['popover']))
                             <div class="rich-text-editor-toolbar-popover">
-                                <button
-                                    type="button"
-                                    class="rich-text-editor-toolbar-btn"
-                                    data-rich-text-editor-action="{{ $tool }}"
-                                    title="{{ $t['title'] }}"
-                                    popovertarget="{{ $editor_id }}-{{ $tool }}-popover"
-                                >
+                                <button type="button" class="rich-text-editor-toolbar-btn"
+                                    data-rich-text-editor-action="{{ $tool }}" title="{{ $t['title'] }}"
+                                    popovertarget="{{ $editorId }}-{{ $tool }}-popover">
                                     <x-dynamic-component :component="'lucide-' . $t['icon']" />
                                 </button>
 
-                                <div
-                                    class="rich-text-editor-popover"
-                                    id="{{ $editor_id }}-{{ $tool }}-popover"
-                                    data-rich-text-editor-popover="{{ $tool }}"
-                                    popover
-                                >
+                                <div class="rich-text-editor-popover"
+                                    id="{{ $editorId }}-{{ $tool }}-popover"
+                                    data-rich-text-editor-popover="{{ $tool }}" popover>
                                     @if ($tool === 'link')
                                         <div class="rich-text-editor-popover-title">Insert Link</div>
 
-                                        <input type="url" class="rich-text-editor-popover-input" placeholder="https://example.com" />
+                                        <input type="url" class="rich-text-editor-popover-input"
+                                            placeholder="https://example.com" />
 
                                         <div class="rich-text-editor-popover-actions">
-                                            <ui:button variant="danger" size="sm" data-action="remove">Remove</ui:button>
+                                            <ui:button variant="danger" size="sm" data-action="remove">Remove
+                                            </ui:button>
 
-                                            <ui:button variant="primary" size="sm" data-action="apply">Apply</ui:button>
+                                            <ui:button variant="primary" size="sm" data-action="apply">Apply
+                                            </ui:button>
                                         </div>
                                     @elseif ($tool === 'image')
                                         <div class="rich-text-editor-popover-title">Insert Image</div>
 
-                                        <input type="url" class="rich-text-editor-popover-input" placeholder="https://example.com/image.jpg" />
+                                        <input type="url" class="rich-text-editor-popover-input"
+                                            placeholder="https://example.com/image.jpg" />
 
                                         <div class="rich-text-editor-popover-actions">
-                                            <ui:button variant="primary" size="sm" data-action="apply">Insert</ui:button>
+                                            <ui:button variant="primary" size="sm" data-action="apply">Insert
+                                            </ui:button>
                                         </div>
                                     @endif
                                 </div>
                             </div>
                         @else
-                            <button
-                                type="button"
-                                class="rich-text-editor-toolbar-btn"
-                                data-rich-text-editor-action="{{ $tool }}"
-                                title="{{ $t['title'] }}"
-                            >
+                            <button type="button" class="rich-text-editor-toolbar-btn"
+                                data-rich-text-editor-action="{{ $tool }}" title="{{ $t['title'] }}">
                                 <x-dynamic-component :component="'lucide-' . $t['icon']" />
                             </button>
                         @endif
@@ -130,10 +117,7 @@
         </div>
     @endif
 
-    <input
-        type="hidden"
-        name="{{ $name }}"
+    <input type="hidden" name="{{ $name }}"
         @if ($value) value="{{ $value }}" @endif
-        {{ $attributes->whereStartsWith('wire:model') }}
-    />
+        {{ $attributes->whereStartsWith('wire:model') }} />
 </div>

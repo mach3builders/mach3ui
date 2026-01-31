@@ -4,16 +4,20 @@
 ])
 
 @php
-    $position_classes = [
-        'top-left' => 'top-4 left-4 items-start',
-        'top-right' => 'top-4 right-4 items-end',
-        'top-center' => 'top-4 left-1/2 -translate-x-1/2 items-center',
-        'bottom-left' => 'bottom-4 left-4 items-start',
-        'bottom-right' => 'bottom-4 right-4 items-end',
-        'bottom-center' => 'bottom-4 left-1/2 -translate-x-1/2 items-center',
-    ];
+    $classes = Ui::classes()
+        ->add('fixed z-[9999] flex flex-col gap-3 pointer-events-none')
+        ->add(
+            match ($position) {
+                'top-left' => 'top-4 left-4 items-start',
+                'top-right' => 'top-4 right-4 items-end',
+                'top-center' => 'top-4 left-1/2 -translate-x-1/2 items-center',
+                'bottom-left' => 'bottom-4 left-4 items-start',
+                'bottom-center' => 'bottom-4 left-1/2 -translate-x-1/2 items-center',
+                default => 'bottom-4 right-4 items-end',
+            },
+        );
 
-    $variant_classes = [
+    $variantClasses = [
         'default' =>
             'border-gray-100 bg-gray-20/90 text-gray-700 dark:border-gray-700 dark:bg-gray-780/90 dark:text-gray-200 [&>[data-toast-icon]]:text-gray-500 dark:[&>[data-toast-icon]]:text-gray-400',
         'info' =>
@@ -26,7 +30,7 @@
             'border-red-200 bg-red-50/90 dark:border-red-800/50 dark:bg-red-900/30 [&>[data-toast-icon]]:text-red-600 dark:[&>[data-toast-icon]]:text-red-500',
     ];
 
-    $close_classes = [
+    $closeClasses = [
         'default' =>
             'text-gray-400 hover:bg-gray-100 hover:text-gray-600 dark:text-gray-500 dark:hover:bg-gray-700 dark:hover:text-gray-300',
         'info' =>
@@ -40,48 +44,45 @@
     ];
 @endphp
 
-<div {{ $attributes->class([
-    'fixed z-[9999] flex flex-col gap-3 pointer-events-none',
-    $position_classes[$position] ?? $position_classes['bottom-right'],
-]) }}
-    x-data="{
-        toasts: [],
-        variantClasses: @js($variant_classes),
-        closeClasses: @js($close_classes),
-        duration: @js($duration),
-    
-        add(toast) {
-            const id = Date.now() + Math.random();
-            this.toasts.push({
-                id,
-                variant: toast.variant || 'default',
-                title: toast.title || '',
-                description: toast.description || '',
-                dismissible: toast.dismissible !== false,
-                icon: toast.icon !== false,
-                open: false,
-            });
-    
-            this.$nextTick(() => {
-                const t = this.toasts.find(t => t.id === id);
-                if (t) t.open = true;
-            });
-    
-            if (toast.duration !== 0) {
-                setTimeout(() => this.dismiss(id), toast.duration || this.duration);
-            }
-        },
-    
-        dismiss(id) {
-            const toast = this.toasts.find(t => t.id === id);
-            if (toast) {
-                toast.open = false;
-                setTimeout(() => {
-                    this.toasts = this.toasts.filter(t => t.id !== id);
-                }, 200);
-            }
-        },
-    }" data-toaster x-on:toast.window="add($event.detail)" @if (class_exists('Livewire\Livewire'))
+<div {{ $attributes->class($classes) }} x-data="{
+    toasts: [],
+    variantClasses: @js($variantClasses),
+    closeClasses: @js($closeClasses),
+    duration: @js($duration),
+
+    add(toast) {
+        const id = Date.now() + Math.random();
+        this.toasts.push({
+            id,
+            variant: toast.variant || 'default',
+            title: toast.title || '',
+            description: toast.description || '',
+            dismissible: toast.dismissible !== false,
+            icon: toast.icon !== false,
+            open: false,
+        });
+
+        this.$nextTick(() => {
+            const t = this.toasts.find(t => t.id === id);
+            if (t) t.open = true;
+        });
+
+        if (toast.duration !== 0) {
+            setTimeout(() => this.dismiss(id), toast.duration || this.duration);
+        }
+    },
+
+    dismiss(id) {
+        const toast = this.toasts.find(t => t.id === id);
+        if (toast) {
+            toast.open = false;
+            setTimeout(() => {
+                this.toasts = this.toasts.filter(t => t.id !== id);
+            }, 200);
+        }
+    },
+}" data-toaster x-on:toast.window="add($event.detail)"
+    @if (class_exists('Livewire\Livewire'))
     x-init="Livewire.on('toast', (data) => {
         add(Array.isArray(data) ? data[0] : data);
     });"

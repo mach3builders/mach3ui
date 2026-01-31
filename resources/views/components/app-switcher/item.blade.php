@@ -22,8 +22,8 @@
 
 <div class="{{ $classes }}" {{ $attributes->except('class') }}
     :class="{ 'bg-gray-40 dark:bg-gray-750': selected === items.indexOf($el) }" x-init="$el.dataset.index = items.indexOf($el) >= 0 ? items.indexOf($el) : items.length"
-    @click="select($el.dataset.index); activate()" data-app-switcher-item data-href="{{ $href }}" role="option"
-    tabindex="0">
+    x-on:click="select($el.dataset.index); activate()" data-app-switcher-item data-href="{{ $href }}"
+    role="option" tabindex="0">
     <div class="{{ $iconClasses }}">
         @if ($icon)
             <ui:icon :name="$icon" size="sm" />

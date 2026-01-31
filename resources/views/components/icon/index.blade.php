@@ -8,7 +8,7 @@
 ])
 
 @php
-    $size_classes = [
+    $sizeClasses = [
         'xs' => 'size-3',
         'sm' => 'size-4',
         'md' => 'size-5',
@@ -16,7 +16,7 @@
         'xl' => 'size-8',
     ];
 
-    $boxed_sizes = [
+    $boxedSizes = [
         'xs' => ['box' => 'size-5', 'icon' => 'size-3'],
         'sm' => ['box' => 'size-8', 'icon' => 'size-4'],
         'md' => ['box' => 'size-10', 'icon' => 'size-5'],
@@ -24,7 +24,7 @@
         'xl' => ['box' => 'size-14', 'icon' => 'size-8'],
     ];
 
-    $boxed_colors = [
+    $boxedColors = [
         'gray' => 'bg-gray-60 text-gray-600 dark:bg-gray-740 dark:text-gray-400',
         'blue' => 'bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400',
         'green' => 'bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400',
@@ -40,24 +40,27 @@
         'violet' => 'bg-violet-100 text-violet-600 dark:bg-violet-900/30 dark:text-violet-400',
     ];
 
-    $effective_size = $size ?? 'sm';
+    $effectiveSize = $size ?? 'sm';
+
+    $boxClasses = Ui::classes()
+        ->add('flex items-center justify-center')
+        ->add($round ? 'rounded-full' : 'rounded-lg')
+        ->add($boxedSizes[$effectiveSize]['box'] ?? $boxedSizes['sm']['box'])
+        ->add($boxedColors[$color] ?? $boxedColors['gray']);
+
+    $iconClasses = Ui::classes()
+        ->add('shrink-0')
+        ->add($boxedSizes[$effectiveSize]['icon'] ?? $boxedSizes['sm']['icon']);
+
+    $simpleClasses = Ui::classes()
+        ->add('shrink-0')
+        ->add($sizeClasses[$size] ?? '');
 @endphp
 
 @if ($boxed)
-    <span
-        {{ $attributes->class([
-            'flex items-center justify-center',
-            $round ? 'rounded-full' : 'rounded-lg',
-            $boxed_sizes[$effective_size]['box'] ?? $boxed_sizes['sm']['box'],
-            $boxed_colors[$color] ?? $boxed_colors['gray'],
-        ]) }}
-        data-icon>
-        <x-dynamic-component :component="'lucide-' . $name" :stroke-width="$stroke" @class([
-            'shrink-0',
-            $boxed_sizes[$effective_size]['icon'] ?? $boxed_sizes['sm']['icon'],
-        ]) />
+    <span {{ $attributes->class($boxClasses) }} data-icon>
+        <x-dynamic-component :component="'lucide-' . $name" :stroke-width="$stroke" class="{{ $iconClasses }}" />
     </span>
 @else
-    <x-dynamic-component :component="'lucide-' . $name" :stroke-width="$stroke"
-        {{ $attributes->class(['shrink-0', $size_classes[$size] ?? null]) }} data-icon />
+    <x-dynamic-component :component="'lucide-' . $name" :stroke-width="$stroke" {{ $attributes->class($simpleClasses) }} data-icon />
 @endif

@@ -3,17 +3,17 @@
 ])
 
 @php
-    $variant_classes = [
+    $variantClasses = [
         'default' => 'rounded-md',
         'circle' => 'rounded-full',
     ];
+
+    $classes = Ui::classes()
+        ->add('animate-pulse')
+        ->add('bg-gray-200')
+        ->add('dark:bg-gray-700')
+        ->add($variantClasses[$variant] ?? $variantClasses['default'])
+        ->merge($attributes->only('class'));
 @endphp
 
-<div
-    {{ $attributes->class([
-        'animate-pulse',
-        'bg-gray-200 dark:bg-gray-700',
-        $variant_classes[$variant] ?? $variant_classes['default'],
-    ]) }}
-    data-skeleton
-></div>
+<div class="{{ $classes }}" {{ $attributes->except('class') }} data-skeleton></div>

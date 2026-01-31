@@ -5,28 +5,28 @@
 ])
 
 @php
-    $is_stacked = $variant === 'stacked';
-    $is_inline = $variant === 'inline';
+    $isStacked = $variant === 'stacked';
+    $isInline = $variant === 'inline';
 
-    $wrapper_classes = [
-        'flex gap-3',
-        'flex-col' => !$is_inline,
-        'flex-row items-start gap-8' => $is_inline,
-        '@xl:flex-row @xl:items-start @xl:gap-8' => !$is_stacked && !$is_inline,
-    ];
+    $classes = Ui::classes()->add('@container [[data-section]+&]:mt-8');
 
-    $header_classes = [
-        'flex flex-col gap-1',
-        'px-4' => !$is_inline,
-        'w-56 shrink-0 pt-4' => $is_inline,
-        '@xl:w-56 @xl:shrink-0 @xl:px-0 @xl:pt-4' => !$is_stacked && !$is_inline,
-    ];
+    $wrapperClasses = Ui::classes()
+        ->add('flex gap-3')
+        ->unless($isInline, 'flex-col')
+        ->when($isInline, 'flex-row items-start gap-8')
+        ->when(!$isStacked && !$isInline, '@xl:flex-row @xl:items-start @xl:gap-8');
+
+    $headerClasses = Ui::classes()
+        ->add('flex flex-col gap-1')
+        ->unless($isInline, 'px-4')
+        ->when($isInline, 'w-56 shrink-0 pt-4')
+        ->when(!$isStacked && !$isInline, '@xl:w-56 @xl:shrink-0 @xl:px-0 @xl:pt-4');
 @endphp
 
-<div {{ $attributes->class(['@container', '[[data-section]+&]:mt-8']) }} data-section>
-    <div @class($wrapper_classes)>
+<div {{ $attributes->class($classes) }} data-section>
+    <div class="{{ $wrapperClasses }}">
         @if ($title || $description || isset($header))
-            <div @class($header_classes)>
+            <div class="{{ $headerClasses }}">
                 @if (isset($header))
                     {{ $header }}
                 @else

@@ -4,11 +4,11 @@
 ])
 
 @php
-    $store_name = $name ? "tabs_{$name}" : null;
+    $storeName = $name ? "tabs_{$name}" : null;
 @endphp
 
 <div {{ $attributes }}
-    x-show="{{ $store_name ? "Alpine.store('" . $store_name . "')?.active" : 'activeTab' }} === @js($value)"
+    x-show="{{ $storeName ? "Alpine.store('" . $storeName . "')?.active" : 'activeTab' }} === @js($value)"
     x-cloak>
     {{ $slot }}
 </div>

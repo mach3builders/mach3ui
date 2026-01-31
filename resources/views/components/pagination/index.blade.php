@@ -12,127 +12,102 @@
     $start = max(1, $current - floor($visible / 2));
     $end = min($total, $start + $visible - 1);
     $start = max(1, $end - $visible + 1);
-    $show_start_ellipsis = $start > 2;
-    $show_end_ellipsis = $end < $total - 1;
+    $showStartEllipsis = $start > 2;
+    $showEndEllipsis = $end < $total - 1;
 
-    $item_classes = [
-        'inline-flex h-9 min-w-9 cursor-pointer items-center justify-center gap-2 rounded-md border px-3 text-sm font-medium [&_svg]:size-4 [&_svg]:shrink-0',
-        'bg-transparent text-gray-600',
-        'dark:text-gray-400',
-        'disabled:pointer-events-none disabled:opacity-25',
-    ];
+    $classes = Ui::classes()->add('flex items-center gap-1');
 
-    $inactive_classes = [
-        'border-transparent',
-        'hover:bg-gray-40 hover:text-gray-900',
-        'dark:hover:bg-gray-760 dark:hover:text-gray-100',
-    ];
+    $itemClasses = Ui::classes()
+        ->add(
+            'inline-flex h-9 min-w-9 cursor-pointer items-center justify-center gap-2 rounded-md border px-3 text-sm font-medium [&_svg]:size-4 [&_svg]:shrink-0',
+        )
+        ->add('bg-transparent text-gray-600')
+        ->add('dark:text-gray-400')
+        ->add('disabled:pointer-events-none disabled:opacity-25');
 
-    $active_classes = [
-        'border-gray-120 bg-white text-gray-900 shadow-xs',
-        'dark:border-gray-690 dark:bg-gray-800 dark:text-gray-20',
-    ];
+    $inactiveClasses = Ui::classes()
+        ->add('border-transparent')
+        ->add('hover:bg-gray-40 hover:text-gray-900')
+        ->add('dark:hover:bg-gray-760 dark:hover:text-gray-100');
 
-    $page_url = fn($page) => $href ? str_replace('{page}', $page, $href) : null;
-    $x_click = fn($page) => $href ? null : "\$dispatch('page', {$page})";
+    $activeClasses = Ui::classes()
+        ->add('border-gray-120 bg-white text-gray-900 shadow-xs')
+        ->add('dark:border-gray-690 dark:bg-gray-800 dark:text-gray-20');
+
+    $getPageClasses = fn($isActive, $noPadding = false, $disabled = false) => Ui::classes()
+        ->add($itemClasses)
+        ->add($isActive ? $activeClasses : $inactiveClasses)
+        ->when($noPadding, 'px-0')
+        ->when($disabled, 'pointer-events-none opacity-25');
+
+    $pageUrl = fn($page) => $href ? str_replace('{page}', $page, $href) : null;
+    $xClick = fn($page) => $href ? null : "\$dispatch('page', {$page})";
     $tag = $href ? 'a' : 'button';
-    $x_data = $href ? null : '';
+    $xData = $href ? null : '';
 @endphp
 
-<nav
-    {{ $attributes->class(['flex items-center gap-1']) }}
-    data-pagination
-    @if ($x_data !== null) x-data @endif
->
+<nav {{ $attributes->class($classes) }} data-pagination @if ($xData !== null) x-data @endif>
     @if ($controls)
         @php
-            $prev_disabled = $current <= 1;
+            $prevDisabled = $current <= 1;
         @endphp
-        <{{ $tag }}
-            @class([
-                ...$item_classes,
-                ...$inactive_classes,
-                'px-0' => !$prev,
-                'pointer-events-none opacity-25' => $prev_disabled,
-            ])
-            @if ($href)
-                href="{{ $prev_disabled ? '#' : $page_url($current - 1) }}"
-            @endif
-            @if ($href && $prev_disabled)
-                aria-disabled="true"
-                tabindex="-1"
-            @endif
-            @if (!$href)
-                x-on:click="{{ $x_click($current - 1) }}"
-            @endif
-            @if (!$href && $prev_disabled)
-                disabled
-            @endif
-        >
+        <{{ $tag }} class="{{ $getPageClasses(false, !$prev, $prevDisabled) }}"
+            @if ($href) href="{{ $prevDisabled ? '#' : $pageUrl($current - 1) }}" @endif
+            @if ($href && $prevDisabled) aria-disabled="true"
+                tabindex="-1" @endif
+            @if (!$href) x-on:click="{{ $xClick($current - 1) }}" @endif
+            @if (!$href && $prevDisabled) disabled @endif>
             <ui:icon name="chevron-left" />
-            @if ($prev) {{ $prev }} @endif
-        </{{ $tag }}>
+            @if ($prev)
+                {{ $prev }}
+            @endif
+            </{{ $tag }}>
     @endif
 
     @if ($start > 1)
-        <{{ $tag }}
-            @class([...$item_classes, ...($current === 1 ? $active_classes : $inactive_classes)])
-            @if ($href) href="{{ $page_url(1) }}" @endif
-            @if (!$href) x-on:click="{{ $x_click(1) }}" @endif
-        >1</{{ $tag }}>
+        <{{ $tag }} class="{{ $getPageClasses($current === 1) }}"
+            @if ($href) href="{{ $pageUrl(1) }}" @endif
+            @if (!$href) x-on:click="{{ $xClick(1) }}" @endif>1</{{ $tag }}>
     @endif
 
-    @if ($show_start_ellipsis)
-        <span class="inline-flex h-9 min-w-9 items-center justify-center text-sm text-gray-500 dark:text-gray-500">...</span>
+    @if ($showStartEllipsis)
+        <span
+            class="inline-flex h-9 min-w-9 items-center justify-center text-sm text-gray-500 dark:text-gray-500">...</span>
     @endif
 
     @for ($i = $start; $i <= $end; $i++)
-        <{{ $tag }}
-            @class([...$item_classes, ...($current === $i ? $active_classes : $inactive_classes)])
-            @if ($href) href="{{ $page_url($i) }}" @endif
-            @if (!$href) x-on:click="{{ $x_click($i) }}" @endif
-        >{{ $i }}</{{ $tag }}>
+        <{{ $tag }} class="{{ $getPageClasses($current === $i) }}"
+            @if ($href) href="{{ $pageUrl($i) }}" @endif
+            @if (!$href) x-on:click="{{ $xClick($i) }}" @endif>{{ $i }}
+            </{{ $tag }}>
     @endfor
 
-    @if ($show_end_ellipsis)
-        <span class="inline-flex h-9 min-w-9 items-center justify-center text-sm text-gray-500 dark:text-gray-500">...</span>
+    @if ($showEndEllipsis)
+        <span
+            class="inline-flex h-9 min-w-9 items-center justify-center text-sm text-gray-500 dark:text-gray-500">...</span>
     @endif
 
     @if ($end < $total)
-        <{{ $tag }}
-            @class([...$item_classes, ...($current === $total ? $active_classes : $inactive_classes)])
-            @if ($href) href="{{ $page_url($total) }}" @endif
-            @if (!$href) x-on:click="{{ $x_click($total) }}" @endif
-        >{{ $total }}</{{ $tag }}>
+        <{{ $tag }} class="{{ $getPageClasses($current === $total) }}"
+            @if ($href) href="{{ $pageUrl($total) }}" @endif
+            @if (!$href) x-on:click="{{ $xClick($total) }}" @endif>{{ $total }}
+            </{{ $tag }}>
     @endif
 
     @if ($controls)
         @php
-            $next_disabled = $current >= $total;
+            $nextDisabled = $current >= $total;
         @endphp
-        <{{ $tag }}
-            @class([
-                ...$item_classes,
-                ...$inactive_classes,
-                'px-0' => !$next,
-                'pointer-events-none opacity-25' => $next_disabled,
-            ])
-            @if ($href)
-                href="{{ $next_disabled ? '#' : $page_url($current + 1) }}"
+        <{{ $tag }} class="{{ $getPageClasses(false, !$next, $nextDisabled) }}"
+            @if ($href) href="{{ $nextDisabled ? '#' : $pageUrl($current + 1) }}" @endif
+            @if ($href && $nextDisabled) aria-disabled="true"
+                tabindex="-1" @endif
+            @if (!$href) x-on:click="{{ $xClick($current + 1) }}" @endif
+            @if (!$href && $nextDisabled) disabled @endif>
+            @if ($next)
+                {{ $next }}
             @endif
-            @if ($href && $next_disabled)
-                aria-disabled="true"
-                tabindex="-1"
-            @endif
-            @if (!$href)
-                x-on:click="{{ $x_click($current + 1) }}"
-            @endif
-            @if (!$href && $next_disabled)
-                disabled
-            @endif
-        >
-            @if ($next) {{ $next }} @endif
             <ui:icon name="chevron-right" />
-        </{{ $tag }}>
+            </{{ $tag }}>
     @endif
 </nav>

@@ -38,6 +38,8 @@
     }
     $wireModelValue = $wireModelAttr ? $attributes->get($wireModelAttr) : null;
     $wireModelLive = $wireModelAttr && str_contains($wireModelAttr, '.live');
+
+    $classes = Ui::classes()->add('relative inline-block select-none [anchor-scope:--timepicker-trigger]');
 @endphp
 
 <div x-data="{
@@ -122,7 +124,7 @@
     }
 }" x-modelable="value"
     x-on:toggle.document="if ($event.target === $refs.dropdown && $event.newState === 'open') scrollToSelected()"
-    {{ $attributes->class(['relative inline-block select-none [anchor-scope:--timepicker-trigger]'])->except(['wire:model', 'wire:model.live', 'wire:model.blur', 'wire:model.change']) }}
+    {{ $attributes->class($classes)->except(['wire:model', 'wire:model.live', 'wire:model.blur', 'wire:model.change']) }}
     data-timepicker>
     <button type="button" popovertarget="{{ $pickerId }}" @if ($disabled) disabled @endif
         class="flex h-10 w-full items-center gap-2 rounded-md border px-3 text-sm shadow-xs [anchor-name:--timepicker-trigger]

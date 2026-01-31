@@ -9,21 +9,22 @@
 ])
 
 @php
-    $features_slot = $__laravel_slots['features'] ?? null;
+    $featuresSlot = $__laravel_slots['features'] ?? null;
+
+    $classes = Ui::classes()
+        ->add('flex flex-col rounded-xl p-1.5')
+        ->add('bg-gray-30')
+        ->add('dark:bg-gray-830')
+        ->when($active, 'ring-2 ring-blue-600 dark:ring-blue-500');
+
+    $innerClasses = Ui::classes()
+        ->add('flex flex-1 flex-col rounded-lg border px-5 py-5 shadow-xs')
+        ->add('border-gray-60 bg-white')
+        ->add('dark:border-gray-740 dark:bg-gray-800');
 @endphp
 
-<div
-    {{ $attributes->class([
-        'flex flex-col rounded-xl p-1.5',
-        'bg-gray-30',
-        'dark:bg-gray-830',
-        'ring-2 ring-blue-600 dark:ring-blue-500' => $active,
-    ]) }}>
-    <div @class([
-        'flex flex-1 flex-col rounded-lg border px-5 py-5 shadow-xs',
-        'border-gray-60 bg-white',
-        'dark:border-gray-740 dark:bg-gray-800',
-    ])>
+<div {{ $attributes->class($classes) }} data-pricing-item>
+    <div class="{{ $innerClasses }}">
         <div class="mb-4 flex items-start justify-between gap-2">
             <div>
                 @if ($title)
@@ -46,8 +47,8 @@
             <span class="text-gray-500 dark:text-gray-400">/ {{ $period }}</span>
         </div>
 
-        @if ($features_slot)
-            {{ $features_slot }}
+        @if ($featuresSlot)
+            {{ $featuresSlot }}
         @elseif (count($features) > 0)
             <ul class="mb-6 space-y-3 text-sm text-gray-700 dark:text-gray-300">
                 @foreach ($features as $feature)

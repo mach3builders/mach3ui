@@ -3,28 +3,29 @@
 ])
 
 @php
-    $height_class = $banner ? 'h-[calc(100vh-2.5rem)]' : 'h-screen';
-
-    $scrollbar_classes = [
-        'overflow-y-auto',
-
+    $classes = Ui::classes()
+        ->add('relative z-10')
+        ->add($banner ? 'h-[calc(100vh-2.5rem)]' : 'h-screen')
+        ->add('overflow-y-auto')
         // Firefox
-        '[scrollbar-width:thin]',
-        '[scrollbar-color:transparent_transparent]',
-        'hover:[scrollbar-color:theme(colors.gray.300)_transparent]',
-        'dark:hover:[scrollbar-color:theme(colors.gray.600)_transparent]',
-
+        ->add('[scrollbar-width:thin]')
+        ->add('[scrollbar-color:transparent_transparent]')
+        ->add('hover:[scrollbar-color:theme(colors.gray.300)_transparent]')
+        ->add('dark:hover:[scrollbar-color:theme(colors.gray.600)_transparent]')
         // WebKit (Chrome, Safari, Edge)
-        '[&::-webkit-scrollbar]:w-2',
-        '[&::-webkit-scrollbar-track]:bg-transparent',
-        '[&::-webkit-scrollbar-thumb]:rounded-full',
-        '[&::-webkit-scrollbar-thumb]:bg-transparent',
-        'hover:[&::-webkit-scrollbar-thumb]:bg-gray-300',
-        'dark:hover:[&::-webkit-scrollbar-thumb]:bg-gray-600',
-    ];
+        ->add('[&::-webkit-scrollbar]:w-2')
+        ->add('[&::-webkit-scrollbar-track]:bg-transparent')
+        ->add('[&::-webkit-scrollbar-thumb]:rounded-full')
+        ->add('[&::-webkit-scrollbar-thumb]:bg-transparent')
+        ->add('hover:[&::-webkit-scrollbar-thumb]:bg-gray-300')
+        ->add('dark:hover:[&::-webkit-scrollbar-thumb]:bg-gray-600');
+
+    $innerClasses = Ui::classes()
+        ->add('mx-auto flex flex-col max-w-10xl xl:flex-row')
+        ->add($banner ? 'min-h-[calc(100vh-2.5rem)]' : 'min-h-screen');
 @endphp
 
-<div {{ $attributes->class(array_merge(['relative z-10', $height_class], $scrollbar_classes)) }} x-data="{
+<div {{ $attributes->class($classes) }} x-data="{
     sideBarOpen: false,
     init() {
         window.addEventListener('resize', () => {
@@ -43,10 +44,7 @@
 }"
     x-on:click="if ($event.target.closest('[data-layout-sidebar] .nav-item') && window.innerWidth < 1280) sideBarOpen = false"
     :class="{ 'overflow-hidden!': sideBarOpen }" data-layout-app>
-    <div @class([
-        'mx-auto flex flex-col max-w-10xl xl:flex-row',
-        $banner ? 'min-h-[calc(100vh-2.5rem)]' : 'min-h-screen',
-    ])>
+    <div class="{{ $innerClasses }}">
         <ui:layout.backdrop />
 
         @persist('sidebar')
@@ -115,7 +113,8 @@
                     @if (isset($topbarActions))
                         {{ $topbarActions }}
                     @else
-                        <ui:button size="sm" icon="package" variant="outline-danger">{{ __('common.free') }}</ui:button>
+                        <ui:button size="sm" icon="package" variant="outline-danger">{{ __('common.free') }}
+                        </ui:button>
                     @endif
                 </x-slot:actions>
 
@@ -130,7 +129,8 @@
                                 <div class="hidden flex-col items-start sm:flex normal-case">
                                     <ui:text weight="medium">{{ auth()->user()?->name ?? 'John Doe' }}</ui:text>
 
-                                    <ui:text size="xs" variant="muted">{{ auth()->user()?->account ?? 'Acme Inc' }}</ui:text>
+                                    <ui:text size="xs" variant="muted">
+                                        {{ auth()->user()?->account ?? 'Acme Inc' }}</ui:text>
                                 </div>
                             </div>
                         </ui:dropdown.trigger>
@@ -139,7 +139,8 @@
                             <ui:dropdown.header class="flex-col items-start gap-0!">
                                 <ui:text weight="medium">{{ auth()->user()?->name ?? 'John Doe' }}</ui:text>
 
-                                <ui:text size="xs" variant="muted">{{ auth()->user()?->email ?? 'john@example.com' }}</ui:text>
+                                <ui:text size="xs" variant="muted">
+                                    {{ auth()->user()?->email ?? 'john@example.com' }}</ui:text>
                             </ui:dropdown.header>
 
                             <ui:dropdown.item href="#" icon="user" label="Profile" />

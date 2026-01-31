@@ -139,7 +139,7 @@
                         :class="{
                             'z-10 ring-1 ring-gray-400 dark:ring-gray-500': activeIndex === {{ $index }},
                         }"
-                        @click="focusIndex({{ $index }})" data-input-otp-slot>
+                        x-on:click="focusIndex({{ $index }})" data-input-otp-slot>
                         <span x-text="displayChar(digits[{{ $index }}])"></span>
                     </div>
                 @endforeach
@@ -158,7 +158,7 @@
                     :class="{
                         'z-10 ring-1 ring-gray-400 dark:ring-gray-500': activeIndex === {{ $i }},
                     }"
-                    @click="focusIndex({{ $i }})" data-input-otp-slot>
+                    x-on:click="focusIndex({{ $i }})" data-input-otp-slot>
                     <span x-text="displayChar(digits[{{ $i }}])"></span>
                 </div>
             @endfor
