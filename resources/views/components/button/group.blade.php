@@ -1,13 +1,14 @@
 @props([])
 
-<div
-    {{ $attributes->class([
-        'inline-flex',
-        '[&>[data-button]]:rounded-none [&>[data-button]]:border-l-0',
-        '[&>[data-button]:first-child]:rounded-l-md [&>[data-button]:first-child]:border-l',
-        '[&>[data-button]:last-child]:rounded-r-md',
-        '[&>[data-button]:focus]:z-10 [&>[data-button]:focus-visible]:z-10',
-    ]) }}
->
+@php
+    $classes = Ui::classes()
+        ->add('inline-flex')
+        ->add('*:rounded-none *:border-l-0')
+        ->add('*:first:rounded-l-md *:first:border-l')
+        ->add('*:last:rounded-r-md')
+        ->add('*:focus:z-10 *:focus-visible:z-10');
+@endphp
+
+<div {{ $attributes->class($classes) }} data-button-group>
     {{ $slot }}
 </div>

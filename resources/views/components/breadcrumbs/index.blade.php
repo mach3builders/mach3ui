@@ -1,3 +1,5 @@
+@props([])
+
 @php
     $classes = Ui::classes()->add('relative flex min-h-6 items-center gap-2 text-xs md:gap-3');
 @endphp

@@ -21,6 +21,7 @@
         ->add('dark:text-gray-500 dark:hover:text-gray-300');
 
     $copyIconClasses = Ui::classes()->add('size-4');
+    $copyIconSuccessClasses = Ui::classes()->add('size-4 text-green-500');
 
     $contentClasses = Ui::classes()->add('w-full overflow-auto rounded-md bg-white')->add('dark:bg-gray-900');
 @endphp
@@ -45,7 +46,7 @@
                 x-on:click="navigator.clipboard.writeText(code); copied = true; setTimeout(() => copied = false, 2000)"
                 class="{{ $copyButtonClasses }}">
                 <ui:icon x-show="!copied" name="copy" :class="$copyIconClasses" />
-                <ui:icon x-show="copied" x-cloak name="check" :class="$copyIconClasses" class="text-green-500" />
+                <ui:icon x-show="copied" x-cloak name="check" :class="$copyIconSuccessClasses" />
             </button>
         @endif
     </header>

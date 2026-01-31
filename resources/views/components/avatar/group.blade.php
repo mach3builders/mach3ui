@@ -6,7 +6,8 @@
 @php
     $classes = Ui::classes()
         ->add('flex items-center')
-        ->add('*:ring-2 *:ring-white dark:*:ring-gray-900')
+        ->add('*:ring-2 *:ring-white')
+        ->add('dark:*:ring-gray-900')
         ->add(
             match ($size) {
                 'xs' => '-space-x-2',

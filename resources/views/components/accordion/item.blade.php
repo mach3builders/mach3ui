@@ -5,6 +5,8 @@
 ])
 
 @php
+    $id = uniqid('accordion-');
+
     $itemClasses = Ui::classes()->add('group border-b border-gray-100')->add('dark:border-gray-680');
 
     $titleClasses = Ui::classes()
@@ -22,17 +24,24 @@
     $chevronClasses = Ui::classes()->add('size-4 shrink-0 transition-transform duration-200 group-open:rotate-180');
 @endphp
 
-<details {{ $attributes->class($itemClasses) }} @if ($open) open @endif data-accordion-item>
-    <summary class="{{ $titleClasses }}"
+<details x-data="{ id: '{{ $id }}', localOpen: @js($open) }"
+    x-effect="
+        const parent = $el.closest('[data-accordion]');
+        const isSingle = parent?.dataset.type === 'single';
+        $el.open = isSingle ? Alpine.$data(parent).active === id : localOpen;
+    "
+    {{ $attributes->class($itemClasses) }} data-accordion-item>
+    <summary
         x-on:click.prevent="
-            const details = $el.closest('details');
-            const parent = details.closest('[data-accordion][data-type=single]');
-            if (parent && !details.open) {
-                parent.querySelectorAll('details[open]').forEach(d => d.open = false);
+            const parent = $el.closest('[data-accordion]');
+            const isSingle = parent?.dataset.type === 'single';
+            if (isSingle) {
+                $dispatch('accordion-toggle', id);
+            } else {
+                localOpen = !localOpen;
             }
-            details.open = !details.open;
         "
-        data-accordion-title>
+        class="{{ $titleClasses }}" data-accordion-title>
         @if ($icon)
             <ui:icon :name="$icon" :class="$iconClasses" />
         @endif

@@ -45,6 +45,9 @@ resources/views/components/  # 72 Blade UI components
 - **Interactivity**: Alpine.js inline, no separate JS files
 - **Livewire**: Components must work without Livewire (no hardcoded `wire:` directives)
 - **Data attribute**: Root element needs `data-{component}` for CSS targeting
+- **@props**: Always include `@props([...])` at top, even if empty: `@props([])`
+- **Classes**: Always use `Ui::classes()`, never plain strings for class variables
+- **IDs**: Generate unique IDs with `$id = uniqid('component-');`
 
 ### Livewire Wire Model
 Extract wire:model using the official Livewire API:
@@ -148,44 +151,61 @@ Always use `<ui:icon>` instead of `<x-lucide-*>` or `<x-dynamic-component>`:
 ```
 
 ### Dark Mode
-Light and dark mode classes on separate lines for readability:
+Light and dark mode classes on separate `->add()` lines:
 ```blade
 $classes = Ui::classes()
     ->add('bg-gray-100 text-gray-600')
     ->add('dark:bg-gray-700 dark:text-gray-300');
 ```
 
+**Exception:** Inside `match()` statements, keep light+dark together per variant:
+```blade
+->add(match ($variant) {
+    'info' => 'bg-cyan-50 text-cyan-800 dark:bg-cyan-900/20 dark:text-cyan-400',
+    'danger' => 'bg-red-50 text-red-800 dark:bg-red-900/20 dark:text-red-400',
+    default => 'bg-gray-50 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400',
+});
+```
+
 ### Alpine.js Patterns
-Simple state on one line:
+
+**Always use `x-on:` instead of `@` shorthand:**
+```blade
+x-on:click="..."      ✓
+@click="..."          ✗
+```
+
+**State-based parent/child pattern (preferred):**
+```blade
+{{-- Parent: manages state, listens for events --}}
+<div
+    x-data="{ active: null }"
+    x-on:item-toggle.stop="active = (active === $event.detail) ? null : $event.detail">
+
+{{-- Child: has local state, dispatches events to parent --}}
+<div
+    x-data="{ id: '{{ $id }}', localOpen: @js($open) }"
+    x-effect="
+        const parent = $el.closest('[data-parent]');
+        const isSingle = parent?.dataset.type === 'single';
+        $el.open = isSingle ? Alpine.$data(parent).active === id : localOpen;
+    ">
+    <button x-on:click="isSingle ? $dispatch('item-toggle', id) : localOpen = !localOpen">
+```
+
+**Simple state:**
 ```blade
 <div x-data="{ open: false }">
 ```
 
-With config props:
-```blade
-<div x-data="{ open: false, id: '{{ $id }}', position: '{{ $position }}' }">
-```
-
-Complex state multi-line:
-```blade
-<div
-    x-data="{
-        open: false,
-        selected: null,
-        init() {
-            // initialization logic
-        },
-    }"
->
-```
-
-Common directives:
+**Common directives:**
 - `x-show="open"` - Toggle visibility
 - `x-cloak` - Hide until Alpine loads (pair with x-show)
 - `x-on:click="open = !open"` - Event handling
+- `x-effect="..."` - Reactive side effects
 - `x-init="..."` - Run on init
 - `x-ref="name"` - Element reference
-- `x-transition` - Transitions
+- `$dispatch('event', data)` - Emit events to parent
 
 ### Focus & Ring States
 Buttons:
