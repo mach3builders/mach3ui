@@ -3,19 +3,21 @@
 ])
 
 @php
-    $type_classes = [
+    $typeClasses = [
         'default' => 'bg-white dark:bg-gray-800',
         'message' => 'bg-white dark:bg-gray-800',
         'auth' => 'bg-gray-30 dark:bg-gray-830',
     ];
+
+    $classes = Ui::classes()
+        ->add('h-full min-h-screen font-sans text-sm antialiased')
+        ->add('text-gray-980')
+        ->add('dark:text-gray-100')
+        ->add($typeClasses[$type] ?? $typeClasses['default'])
+        ->merge($attributes->only('class'));
 @endphp
 
-<body
-    {{ $attributes->class([
-        'h-full min-h-screen font-sans text-sm antialiased text-gray-980 dark:text-gray-100',
-        $type_classes[$type] ?? $type_classes['default'],
-    ]) }}
-    data-layout-body>
+<body class="{{ $classes }}" {{ $attributes->except('class') }} data-document-body>
     @if ($type === 'auth')
         <main class="flex min-h-screen flex-col items-center justify-center py-20">
             @isset($topbar)

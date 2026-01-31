@@ -2,7 +2,7 @@
     'title' => null,
 ])
 
-<ui:nav.title :title="$title" {{ $attributes }}>
+<ui:nav.title :title="$title" {{ $attributes }} data-dropdown-header>
     {{ $slot }}
 </ui:nav.title>
 

@@ -3,14 +3,12 @@
 ])
 
 @php
-    $id = 'dropdown-' . uniqid();
+    $id = uniqid('dropdown-');
+
+    $classes = Ui::classes()->add('relative inline-block select-none')->merge($attributes->only('class'));
 @endphp
 
-<div
-    {{ $attributes->class(['relative inline-block select-none']) }}
-    x-data="{ open: false, id: '{{ $id }}', position: '{{ $position }}' }"
-    style="anchor-scope: --dropdown-trigger;"
-    data-dropdown
->
+<div class="{{ $classes }}" {{ $attributes->except('class') }} x-data="{ open: false, id: '{{ $id }}', position: '{{ $position }}' }"
+    style="anchor-scope: --dropdown-trigger;" data-dropdown>
     {{ $slot }}
 </div>

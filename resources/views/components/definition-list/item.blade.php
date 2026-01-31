@@ -1,16 +1,20 @@
-@props([
-    'term',
-    'value' => null,
-])
+@props(['term', 'value' => null])
 
-<div
-    {{ $attributes->class([
-        'flex items-baseline gap-2',
-    ]) }}
->
-    <dt class="shrink-0 text-gray-500 dark:text-gray-400">{{ $term }}</dt>
+@php
+    $classes = Ui::classes()->add('flex items-baseline gap-2')->merge($attributes->only('class'));
 
-    <span class="flex-1 border-b border-dotted border-gray-300 dark:border-gray-600"></span>
+    $termClasses = Ui::classes()->add('shrink-0')->add('text-gray-500')->add('dark:text-gray-400');
 
-    <dd class="text-right font-medium text-gray-900 dark:text-white">{{ $value ?? $slot }}</dd>
+    $dividerClasses = Ui::classes()
+        ->add('flex-1 border-b border-dotted')
+        ->add('border-gray-300')
+        ->add('dark:border-gray-600');
+
+    $valueClasses = Ui::classes()->add('text-right font-medium')->add('text-gray-900')->add('dark:text-white');
+@endphp
+
+<div class="{{ $classes }}" {{ $attributes->except('class') }} data-definition-list-item>
+    <dt class="{{ $termClasses }}" data-definition-list-term>{{ $term }}</dt>
+    <span class="{{ $dividerClasses }}" data-definition-list-divider></span>
+    <dd class="{{ $valueClasses }}" data-definition-list-value>{{ $value ?? $slot }}</dd>
 </div>

@@ -15,7 +15,7 @@
 
 <ui:nav.item :active="$active" :href="$href" :icon="$icon"
     :icon:end="$__data['icon:end'] ?? null" :label="$label" :route="$route" :type="$type"
-    :variant="$variant" {{ $attributes }}>
+    :variant="$variant" {{ $attributes }} data-dropdown-item>
     @if ($iconSlot)
         <x-slot:icon>{{ $iconSlot }}</x-slot:icon>
     @endif
