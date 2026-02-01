@@ -125,10 +125,22 @@ Use descriptive names for different element classes within a component:
 - Components with conditional root elements (e.g., `<a>` vs `<button>`) apply merge to each possible root
 
 ### Props Naming
-- **camelCase** for all props: `iconLeading`, `iconTrailing`, `iconVariant`
-- **Positioning suffixes**: `Leading` / `Trailing` for before/after content
+- **camelCase** for standard props: `iconVariant`, `showLabel`
+- **Colon syntax** for positional variants: `icon` (start), `icon:end` (end), `addon`, `addon:end`
 - **Boolean props**: Simple names like `open`, `disabled`, `loading`
 - **Alphabetical order**: Always sort props alphabetically in `@props([...])`
+
+Access colon props via `$__data`:
+```blade
+@props([
+    'icon' => null,
+    'icon:end' => null,
+])
+
+@php
+    $iconEnd = $__data['icon:end'] ?? null;
+@endphp
+```
 
 ### Variable Naming
 - **camelCase** for all PHP variables: `$iconSlot`, `$hasImage`, `$showOverlay`

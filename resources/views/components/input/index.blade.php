@@ -30,14 +30,14 @@
 
     $iconEnd = $__data['icon:end'] ?? null;
     $addonEnd = $__data['addon:end'] ?? null;
+
     $hasIcon = $icon !== null;
     $hasIconEnd = $iconEnd !== null;
     $hasAddon = $addon !== null;
     $hasAddonEnd = $addonEnd !== null;
-    $hasEndElement = $hasIconEnd;
 
     $wrapperClasses = Ui::classes()
-        ->when($hasIcon || $hasEndElement, 'relative w-full')
+        ->when($hasIcon || $hasIconEnd, 'relative w-full')
         ->merge($attributes->only('class'));
 
     $inputClasses = Ui::classes()
@@ -69,7 +69,9 @@
             },
         )
         ->when($hasIcon, 'pl-10')
-        ->when($hasEndElement, 'pr-10');
+        ->when($hasIconEnd, 'pr-10');
+
+    $iconWrapperClasses = 'pointer-events-none absolute inset-y-0 flex items-center text-gray-400 dark:text-gray-500';
 @endphp
 
 @if ($label)
@@ -82,11 +84,10 @@
                     <ui:input.addon>{{ $addon }}</ui:input.addon>
                 @endif
 
-                @if ($hasIcon || $hasEndElement)
+                @if ($hasIcon || $hasIconEnd)
                     <div class="relative w-full" data-input data-control>
                         @if ($hasIcon)
-                            <div
-                                class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400 dark:text-gray-500">
+                            <div class="{{ $iconWrapperClasses }} left-0 pl-3">
                                 <ui:icon :name="$icon" class="size-4" />
                             </div>
                         @endif
@@ -96,8 +97,7 @@
                             class="{{ $inputClasses }}" {{ $attributes->except(['class', 'data-*', 'name']) }} />
 
                         @if ($hasIconEnd)
-                            <div
-                                class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 dark:text-gray-500">
+                            <div class="{{ $iconWrapperClasses }} right-0 pr-3">
                                 <ui:icon :name="$iconEnd" class="size-4" />
                             </div>
                         @endif
@@ -113,11 +113,10 @@
                     <ui:input.addon>{{ $addonEnd }}</ui:input.addon>
                 @endif
             </ui:input.group>
-        @elseif ($hasIcon || $hasEndElement)
+        @elseif ($hasIcon || $hasIconEnd)
             <div class="{{ $wrapperClasses }}" {{ $attributes->only('data-*') }} data-input data-control>
                 @if ($hasIcon)
-                    <div
-                        class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400 dark:text-gray-500">
+                    <div class="{{ $iconWrapperClasses }} left-0 pl-3">
                         <ui:icon :name="$icon" class="size-4" />
                     </div>
                 @endif
@@ -127,8 +126,7 @@
                     {{ $attributes->except(['class', 'data-*', 'name']) }} />
 
                 @if ($hasIconEnd)
-                    <div
-                        class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 dark:text-gray-500">
+                    <div class="{{ $iconWrapperClasses }} right-0 pr-3">
                         <ui:icon :name="$iconEnd" class="size-4" />
                     </div>
                 @endif
@@ -156,11 +154,10 @@
                 <ui:input.addon>{{ $addon }}</ui:input.addon>
             @endif
 
-            @if ($hasIcon || $hasEndElement)
+            @if ($hasIcon || $hasIconEnd)
                 <div class="relative w-full" data-input data-control>
                     @if ($hasIcon)
-                        <div
-                            class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400 dark:text-gray-500">
+                        <div class="{{ $iconWrapperClasses }} left-0 pl-3">
                             <ui:icon :name="$icon" class="size-4" />
                         </div>
                     @endif
@@ -170,8 +167,7 @@
                         class="{{ $inputClasses }}" {{ $attributes->except(['class', 'data-*', 'name']) }} />
 
                     @if ($hasIconEnd)
-                        <div
-                            class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 dark:text-gray-500">
+                        <div class="{{ $iconWrapperClasses }} right-0 pr-3">
                             <ui:icon :name="$iconEnd" class="size-4" />
                         </div>
                     @endif
@@ -185,11 +181,10 @@
                 <ui:input.addon>{{ $addonEnd }}</ui:input.addon>
             @endif
         </ui:input.group>
-    @elseif ($hasIcon || $hasEndElement)
+    @elseif ($hasIcon || $hasIconEnd)
         <div class="{{ $wrapperClasses }}" {{ $attributes->only('data-*') }} data-input data-control>
             @if ($hasIcon)
-                <div
-                    class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400 dark:text-gray-500">
+                <div class="{{ $iconWrapperClasses }} left-0 pl-3">
                     <ui:icon :name="$icon" class="size-4" />
                 </div>
             @endif
@@ -198,8 +193,7 @@
                 class="{{ $inputClasses }}" {{ $attributes->except(['class', 'data-*', 'name']) }} />
 
             @if ($hasIconEnd)
-                <div
-                    class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 dark:text-gray-500">
+                <div class="{{ $iconWrapperClasses }} right-0 pr-3">
                     <ui:icon :name="$iconEnd" class="size-4" />
                 </div>
             @endif
