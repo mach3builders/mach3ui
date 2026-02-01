@@ -23,7 +23,6 @@
     }
 
     $name = $attributes->get('name') ?? ($wireModelValue ?? $xModel);
-
     $id = $attributes->get('id') ?? ($name ? 'input-otp-' . $name : 'input-otp-' . uniqid());
 
     $pattern = match ($mode) {
@@ -47,6 +46,19 @@
         ->add('flex items-center gap-2')
         ->when($disabled, 'opacity-50')
         ->merge($attributes->only('class'));
+
+    $slotClasses = Ui::classes()
+        ->add($slotSizeClasses)
+        ->add('relative -ml-px flex cursor-text items-center justify-center border font-medium transition-colors')
+        ->add('first:ml-0 first:rounded-l-lg last:rounded-r-lg')
+        ->add('border-gray-200 bg-white text-gray-900')
+        ->add('dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100');
+
+    $activeRingClasses = 'z-10 ring-1 ring-gray-400 dark:ring-gray-500';
+
+    $separatorClasses = Ui::classes()->add('flex items-center justify-center px-1');
+
+    $separatorDotClasses = Ui::classes()->add('h-1 w-2 rounded-full')->add('bg-gray-300')->add('dark:bg-gray-600');
 @endphp
 
 <div x-data="{
@@ -153,10 +165,8 @@
         @foreach ($groups as $groupIndex => $group)
             <div class="flex items-center" data-input-otp-group>
                 @foreach ($group as $index)
-                    <div class="{{ $slotSizeClasses }} relative -ml-px flex cursor-text items-center justify-center border font-medium transition-colors first:ml-0 first:rounded-l-lg last:rounded-r-lg border-gray-200 bg-white text-gray-900 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
-                        :class="{
-                            'z-10 ring-1 ring-gray-400 dark:ring-gray-500': activeIndex === {{ $index }},
-                        }"
+                    <div class="{{ $slotClasses }}"
+                        :class="{ '{{ $activeRingClasses }}': activeIndex === {{ $index }} }"
                         x-on:click="focusIndex({{ $index }})" data-input-otp-slot>
                         <span x-text="displayChar(digits[{{ $index }}])"></span>
                     </div>
@@ -164,18 +174,16 @@
             </div>
 
             @if (!$loop->last)
-                <div class="flex items-center justify-center px-1" data-input-otp-separator>
-                    <div class="h-1 w-2 rounded-full bg-gray-300 dark:bg-gray-600"></div>
+                <div class="{{ $separatorClasses }}" data-input-otp-separator>
+                    <div class="{{ $separatorDotClasses }}"></div>
                 </div>
             @endif
         @endforeach
     @else
         <div class="flex items-center" data-input-otp-group>
             @for ($i = 0; $i < $length; $i++)
-                <div class="{{ $slotSizeClasses }} relative -ml-px flex cursor-text items-center justify-center border font-medium transition-colors first:ml-0 first:rounded-l-lg last:rounded-r-lg border-gray-200 bg-white text-gray-900 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
-                    :class="{
-                        'z-10 ring-1 ring-gray-400 dark:ring-gray-500': activeIndex === {{ $i }},
-                    }"
+                <div class="{{ $slotClasses }}"
+                    :class="{ '{{ $activeRingClasses }}': activeIndex === {{ $i }} }"
                     x-on:click="focusIndex({{ $i }})" data-input-otp-slot>
                     <span x-text="displayChar(digits[{{ $i }}])"></span>
                 </div>
