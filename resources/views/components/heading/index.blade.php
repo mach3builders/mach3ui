@@ -16,7 +16,12 @@
                 default => 'text-base',
             },
         )
-        ->add($muted ? 'text-gray-500 dark:text-gray-400' : 'text-gray-980 dark:text-gray-100')
+        ->add(
+            match ($muted) {
+                true => 'text-gray-500 dark:text-gray-400',
+                default => 'text-gray-980 dark:text-gray-100',
+            },
+        )
         ->merge($attributes->only('class'));
 @endphp
 
