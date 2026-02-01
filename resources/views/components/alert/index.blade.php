@@ -41,7 +41,17 @@
         );
 
     $titleClasses = Ui::classes()->add('font-semibold leading-6 text-gray-900 dark:text-white');
-    $messageClasses = Ui::classes()->add('leading-relaxed text-gray-600 dark:text-gray-300');
+    $messageClasses = Ui::classes()
+        ->add('leading-relaxed')
+        ->add(
+            match ($variant) {
+                'info' => 'text-cyan-700 dark:text-cyan-200',
+                'success' => 'text-green-700 dark:text-green-200',
+                'warning' => 'text-amber-700 dark:text-amber-200',
+                'danger' => 'text-red-700 dark:text-red-200',
+                default => 'text-gray-600 dark:text-gray-300',
+            },
+        );
 @endphp
 
 <div class="{{ $classes }}" {{ $attributes->except('class') }} data-alert data-variant="{{ $variant }}">

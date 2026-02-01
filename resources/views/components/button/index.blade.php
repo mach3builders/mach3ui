@@ -144,7 +144,7 @@
         ->merge($attributes->only('class'));
 
     $aiClasses = Ui::classes($baseClasses)
-        ->add('relative rounded-full border-transparent bg-white focus:outline-none')
+        ->add('relative z-10 w-full rounded-full border-transparent bg-white focus:outline-none')
         ->add('dark:bg-gray-900');
 
     $aiLinkClasses = Ui::classes($aiClasses)
