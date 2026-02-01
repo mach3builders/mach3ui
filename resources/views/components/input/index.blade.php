@@ -19,16 +19,16 @@
     $name = $attributes->get('name') ?? $wireModelValue;
     $hasError = $name && $errors->has($name);
 
-    $iconTrailing = $__data['icon:end'] ?? null;
-    $addonTrailing = $__data['addon:end'] ?? null;
+    $iconEnd = $__data['icon:end'] ?? null;
+    $addonEnd = $__data['addon:end'] ?? null;
     $hasIcon = $icon !== null;
-    $hasIconTrailing = $iconTrailing !== null;
+    $hasIconEnd = $iconEnd !== null;
     $hasAddon = $addon !== null;
-    $hasAddonTrailing = $addonTrailing !== null;
-    $hasTrailingElement = $hasIconTrailing;
+    $hasAddonEnd = $addonEnd !== null;
+    $hasEndElement = $hasIconEnd;
 
     $wrapperClasses = Ui::classes()
-        ->when($hasIcon || $hasTrailingElement, 'relative w-full')
+        ->when($hasIcon || $hasEndElement, 'relative w-full')
         ->merge($attributes->only('class'));
 
     $inputClasses = Ui::classes()
@@ -53,27 +53,27 @@
         )
         ->add(
             match (true) {
-                $hasAddon && $hasAddonTrailing => 'rounded-none',
+                $hasAddon && $hasAddonEnd => 'rounded-none',
                 $hasAddon => 'rounded-none rounded-e-md border-l-0',
-                $hasAddonTrailing => 'rounded-none rounded-s-md border-r-0',
+                $hasAddonEnd => 'rounded-none rounded-s-md border-r-0',
                 default => 'rounded-md',
             },
         )
         ->when($hasIcon, 'pl-10')
-        ->when($hasTrailingElement, 'pr-10');
+        ->when($hasEndElement, 'pr-10');
 @endphp
 
 @if ($label)
     <ui:field>
         <ui:label :for="$id">{{ $label }}</ui:label>
 
-        @if ($hasAddon || $hasAddonTrailing)
+        @if ($hasAddon || $hasAddonEnd)
             <ui:input.group {{ $attributes->only('data-*') }} class="{{ $attributes->get('class') }}">
                 @if ($hasAddon)
                     <ui:input.addon>{{ $addon }}</ui:input.addon>
                 @endif
 
-                @if ($hasIcon || $hasTrailingElement)
+                @if ($hasIcon || $hasEndElement)
                     <div class="relative w-full" data-input>
                         @if ($hasIcon)
                             <div
@@ -85,10 +85,10 @@
                         <input type="{{ $type }}" id="{{ $id }}" class="{{ $inputClasses }}"
                             {{ $attributes->except(['class', 'data-*']) }} />
 
-                        @if ($hasIconTrailing)
+                        @if ($hasIconEnd)
                             <div
                                 class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 dark:text-gray-500">
-                                <ui:icon :name="$iconTrailing" class="size-4" />
+                                <ui:icon :name="$iconEnd" class="size-4" />
                             </div>
                         @endif
                     </div>
@@ -97,11 +97,11 @@
                         {{ $attributes->except(['class', 'data-*']) }} data-input />
                 @endif
 
-                @if ($hasAddonTrailing)
-                    <ui:input.addon>{{ $addonTrailing }}</ui:input.addon>
+                @if ($hasAddonEnd)
+                    <ui:input.addon>{{ $addonEnd }}</ui:input.addon>
                 @endif
             </ui:input.group>
-        @elseif ($hasIcon || $hasTrailingElement)
+        @elseif ($hasIcon || $hasEndElement)
             <div class="{{ $wrapperClasses }}" {{ $attributes->only('data-*') }} data-input>
                 @if ($hasIcon)
                     <div
@@ -113,10 +113,10 @@
                 <input type="{{ $type }}" id="{{ $id }}" class="{{ $inputClasses }}"
                     {{ $attributes->except(['class', 'data-*']) }} />
 
-                @if ($hasIconTrailing)
+                @if ($hasIconEnd)
                     <div
                         class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 dark:text-gray-500">
-                        <ui:icon :name="$iconTrailing" class="size-4" />
+                        <ui:icon :name="$iconEnd" class="size-4" />
                     </div>
                 @endif
             </div>
@@ -136,13 +136,13 @@
         @endif
     </ui:field>
 @else
-    @if ($hasAddon || $hasAddonTrailing)
+    @if ($hasAddon || $hasAddonEnd)
         <ui:input.group {{ $attributes->only('data-*') }} class="{{ $attributes->get('class') }}">
             @if ($hasAddon)
                 <ui:input.addon>{{ $addon }}</ui:input.addon>
             @endif
 
-            @if ($hasIcon || $hasTrailingElement)
+            @if ($hasIcon || $hasEndElement)
                 <div class="relative w-full" data-input>
                     @if ($hasIcon)
                         <div
@@ -154,10 +154,10 @@
                     <input type="{{ $type }}" class="{{ $inputClasses }}"
                         {{ $attributes->except(['class', 'data-*']) }} />
 
-                    @if ($hasIconTrailing)
+                    @if ($hasIconEnd)
                         <div
                             class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 dark:text-gray-500">
-                            <ui:icon :name="$iconTrailing" class="size-4" />
+                            <ui:icon :name="$iconEnd" class="size-4" />
                         </div>
                     @endif
                 </div>
@@ -166,11 +166,11 @@
                     {{ $attributes->except(['class', 'data-*']) }} data-input />
             @endif
 
-            @if ($hasAddonTrailing)
-                <ui:input.addon>{{ $addonTrailing }}</ui:input.addon>
+            @if ($hasAddonEnd)
+                <ui:input.addon>{{ $addonEnd }}</ui:input.addon>
             @endif
         </ui:input.group>
-    @elseif ($hasIcon || $hasTrailingElement)
+    @elseif ($hasIcon || $hasEndElement)
         <div class="{{ $wrapperClasses }}" {{ $attributes->only('data-*') }} data-input>
             @if ($hasIcon)
                 <div
@@ -182,10 +182,10 @@
             <input type="{{ $type }}" class="{{ $inputClasses }}"
                 {{ $attributes->except(['class', 'data-*']) }} />
 
-            @if ($hasIconTrailing)
+            @if ($hasIconEnd)
                 <div
                     class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 dark:text-gray-500">
-                    <ui:icon :name="$iconTrailing" class="size-4" />
+                    <ui:icon :name="$iconEnd" class="size-4" />
                 </div>
             @endif
         </div>

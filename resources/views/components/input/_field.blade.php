@@ -1,15 +1,15 @@
 @props([
     'hasIcon' => false,
-    'hasIconTrailing' => false,
+    'hasIconEnd' => false,
     'icon' => null,
-    'iconTrailing' => null,
+    'iconEnd' => null,
     'id' => null,
     'inputClasses' => '',
     'type' => 'text',
 ])
 
 @php
-    $needsWrapper = $hasIcon || $hasIconTrailing;
+    $needsWrapper = $hasIcon || $hasIconEnd;
 @endphp
 
 @if ($needsWrapper)
@@ -21,17 +21,17 @@
             </div>
         @endif
 
-        <input type="{{ $type }}" @if ($id) id="{{ $id }}" @endif class="{{ $inputClasses }}"
-            {{ $attributes->except('class') }} data-input />
+        <input type="{{ $type }}" @if ($id) id="{{ $id }}" @endif
+            class="{{ $inputClasses }}" {{ $attributes->except('class') }} data-input />
 
-        @if ($hasIconTrailing)
+        @if ($hasIconEnd)
             <div
                 class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 dark:text-gray-500">
-                <ui:icon :name="$iconTrailing" class="size-4" />
+                <ui:icon :name="$iconEnd" class="size-4" />
             </div>
         @endif
     </div>
 @else
-    <input type="{{ $type }}" @if ($id) id="{{ $id }}" @endif class="{{ $inputClasses }}"
-        {{ $attributes->except('class') }} data-input />
+    <input type="{{ $type }}" @if ($id) id="{{ $id }}" @endif
+        class="{{ $inputClasses }}" {{ $attributes->except('class') }} data-input />
 @endif

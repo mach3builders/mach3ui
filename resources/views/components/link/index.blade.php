@@ -9,7 +9,7 @@
 
 @php
     $url = $route ? route($route) : $href ?? '#';
-    $iconTrailing = $__data['icon:end'] ?? null;
+    $iconEnd = $__data['icon:end'] ?? null;
 
     $classes = Ui::classes()
         ->add('inline-flex items-center gap-1.5')
@@ -42,7 +42,7 @@
 
     {{ $slot }}
 
-    @if ($iconTrailing)
-        <ui:icon :name="$iconTrailing" />
+    @if ($iconEnd)
+        <ui:icon :name="$iconEnd" />
     @endif
 </a>

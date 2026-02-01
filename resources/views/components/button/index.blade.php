@@ -4,7 +4,7 @@
     'href' => null,
     'icon' => null,
     'icon:color' => null,
-    'iconTrailing' => null,
+    'icon:end' => null,
     'loading' => false,
     'size' => 'md',
     'square' => false,
@@ -14,9 +14,10 @@
 
 @php
     $iconColor = $__data['icon:color'] ?? null;
+    $iconEnd = $__data['icon:end'] ?? null;
 
-    $iconTrailingSlot = $__laravel_slots['iconTrailing'] ?? null;
-    $iconTrailingValue = $iconTrailingSlot ?? $iconTrailing;
+    $iconEndSlot = $__laravel_slots['icon:end'] ?? null;
+    $iconEndValue = $iconEndSlot ?? $iconEnd;
     $iconColorClass = $iconColor
         ? 'text-' . (preg_match('/-\d+$/', $iconColor) ? $iconColor : "{$iconColor}-500")
         : null;
@@ -167,7 +168,7 @@
                 @include('ui::components.button._content', [
                     'icon' => $icon,
                     'iconColorClass' => $iconColorClass,
-                    'iconTrailingValue' => $iconTrailingValue,
+                    'iconEndValue' => $iconEndValue,
                     'loading' => false,
                     'isAi' => true,
                 ])
@@ -178,7 +179,7 @@
                 @include('ui::components.button._content', [
                     'icon' => $icon,
                     'iconColorClass' => $iconColorClass,
-                    'iconTrailingValue' => $iconTrailingValue,
+                    'iconEndValue' => $iconEndValue,
                     'loading' => $loading,
                     'isAi' => true,
                 ])
@@ -192,7 +193,7 @@
         @include('ui::components.button._content', [
             'icon' => $icon,
             'iconColorClass' => $iconColorClass,
-            'iconTrailingValue' => $iconTrailingValue,
+            'iconEndValue' => $iconEndValue,
             'loading' => false,
             'isAi' => false,
         ])
@@ -204,7 +205,7 @@
         @include('ui::components.button._content', [
             'icon' => $icon,
             'iconColorClass' => $iconColorClass,
-            'iconTrailingValue' => $iconTrailingValue,
+            'iconEndValue' => $iconEndValue,
             'loading' => $loading,
             'isAi' => false,
         ])

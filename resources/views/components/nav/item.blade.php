@@ -13,7 +13,7 @@
     $url = $route ? route($route) : $href;
     $isActive = $active || ($route && Route::is($route)) || ($href && url()->current() === $href);
     $iconSlot = $__laravel_slots['icon'] ?? null;
-    $iconTrailing = $__data['icon:end'] ?? null;
+    $iconEnd = $__data['icon:end'] ?? null;
 
     $baseClasses = Ui::classes()
         ->add('flex items-center gap-2 rounded-md px-3 py-2 text-[13px] leading-5')
@@ -43,8 +43,8 @@
 
         <span class="flex-1">{{ $label ?? $slot }}</span>
 
-        @if ($iconTrailing)
-            <ui:icon :name="$iconTrailing" />
+        @if ($iconEnd)
+            <ui:icon :name="$iconEnd" />
         @endif
     </a>
 @else
@@ -57,8 +57,8 @@
 
         <span class="flex-1">{{ $label ?? $slot }}</span>
 
-        @if ($iconTrailing)
-            <ui:icon :name="$iconTrailing" />
+        @if ($iconEnd)
+            <ui:icon :name="$iconEnd" />
         @endif
     </button>
 @endif

@@ -1,7 +1,7 @@
 @props([
     'icon' => null,
     'iconColorClass' => null,
-    'iconTrailingValue' => null,
+    'iconEndValue' => null,
     'loading' => false,
     'isAi' => false,
 ])
@@ -18,6 +18,6 @@
     <span>{{ $slot }}</span>
 @endif
 
-@if ($iconTrailingValue && is_string($iconTrailingValue))
-    <ui:icon :name="$iconTrailingValue" class="ml-auto {{ $iconColorClass ?? ($isAi ? 'text-gray-500' : null) }}" />
+@if ($iconEndValue && is_string($iconEndValue))
+    <ui:icon :name="$iconEndValue" class="ml-auto {{ $iconColorClass ?? ($isAi ? 'text-gray-500' : null) }}" />
 @endif
