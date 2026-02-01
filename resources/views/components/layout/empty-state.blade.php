@@ -1,7 +1,7 @@
 @props([
+    'description' => null,
     'icon' => 'search',
     'title' => null,
-    'description' => null,
 ])
 
 @php

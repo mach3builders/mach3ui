@@ -1,6 +1,6 @@
 @props([
-    'value' => null,
     'selected' => false,
+    'value' => null,
 ])
 
 @php

@@ -1,6 +1,6 @@
 @props([
-    'name' => null,
     'bag' => 'default',
+    'name' => null,
 ])
 
 @php

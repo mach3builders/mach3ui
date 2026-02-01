@@ -1,8 +1,8 @@
 @props([
     'size' => 'sm',
-    'weight' => 'normal',
     'tag' => 'p',
     'variant' => 'default',
+    'weight' => 'normal',
 ])
 
 @php

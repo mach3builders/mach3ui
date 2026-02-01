@@ -1,6 +1,6 @@
 @props([
-    'title' => null,
     'description' => null,
+    'title' => null,
     'variant' => null,
 ])
 

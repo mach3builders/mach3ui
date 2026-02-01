@@ -1,6 +1,6 @@
 @props([
-    'position' => 'bottom-right',
     'duration' => 5000,
+    'position' => 'bottom-right',
 ])
 
 @php

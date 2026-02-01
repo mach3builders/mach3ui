@@ -1,7 +1,7 @@
 @props([
+    'banner' => false,
     'toc' => null,
     'width' => 'full',
-    'banner' => false,
 ])
 
 @php

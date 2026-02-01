@@ -2,8 +2,8 @@
     'icon' => null,
     'iconColorClass' => null,
     'iconEndValue' => null,
-    'loading' => false,
     'isAi' => false,
+    'loading' => false,
 ])
 
 @if ($loading)

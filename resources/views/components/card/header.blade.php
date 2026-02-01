@@ -1,11 +1,11 @@
 @props([
-    'padTop' => false,
+    'hasDescription' => true,
     'icon' => null,
-    'icon:slot' => null,
     'icon:boxed' => false,
     'icon:color' => 'gray',
     'icon:size' => 'md',
-    'hasDescription' => true,
+    'icon:slot' => null,
+    'padTop' => false,
 ])
 
 @php

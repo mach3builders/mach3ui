@@ -1,9 +1,9 @@
 @props([
-    'name' => null,
-    'size' => null,
-    'color' => 'gray',
     'boxed' => false,
+    'color' => 'gray',
+    'name' => null,
     'round' => false,
+    'size' => null,
     'stroke' => 2,
 ])
 

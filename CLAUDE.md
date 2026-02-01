@@ -128,6 +128,7 @@ Use descriptive names for different element classes within a component:
 - **camelCase** for all props: `iconLeading`, `iconTrailing`, `iconVariant`
 - **Positioning suffixes**: `Leading` / `Trailing` for before/after content
 - **Boolean props**: Simple names like `open`, `disabled`, `loading`
+- **Alphabetical order**: Always sort props alphabetically in `@props([...])`
 
 ### Variable Naming
 - **camelCase** for all PHP variables: `$iconSlot`, `$hasImage`, `$showOverlay`
