@@ -1,23 +1,18 @@
 @props([])
 
 @php
+    $anchor = '--dropdown-trigger';
+    $offset = '0.25rem';
+
     $positionStyles = [
-        'bottom-start' =>
-            'position-anchor: --dropdown-trigger; top: calc(anchor(bottom) + 0.25rem); left: anchor(left); position-try-fallbacks: --dropdown-top-start;',
-        'bottom-end' =>
-            'position-anchor: --dropdown-trigger; top: calc(anchor(bottom) + 0.25rem); left: anchor(right); translate: -100% 0; position-try-fallbacks: --dropdown-top-end;',
-        'top-start' =>
-            'position-anchor: --dropdown-trigger; bottom: calc(anchor(top) + 0.25rem); left: anchor(left); position-try-fallbacks: --dropdown-bottom-start;',
-        'top-end' =>
-            'position-anchor: --dropdown-trigger; bottom: calc(anchor(top) + 0.25rem); left: anchor(right); translate: -100% 0; position-try-fallbacks: --dropdown-bottom-end;',
-        'left-start' =>
-            'position-anchor: --dropdown-trigger; top: anchor(top); right: calc(anchor(left) + 0.25rem); position-try-fallbacks: --dropdown-right-start;',
-        'left-end' =>
-            'position-anchor: --dropdown-trigger; top: anchor(bottom); right: calc(anchor(left) + 0.25rem); translate: 0 -100%; position-try-fallbacks: --dropdown-right-end;',
-        'right-start' =>
-            'position-anchor: --dropdown-trigger; top: anchor(top); left: calc(anchor(right) + 0.25rem); position-try-fallbacks: --dropdown-left-start;',
-        'right-end' =>
-            'position-anchor: --dropdown-trigger; top: anchor(bottom); left: calc(anchor(right) + 0.25rem); translate: 0 -100%; position-try-fallbacks: --dropdown-left-end;',
+        'bottom-start' => "position-anchor: {$anchor}; top: calc(anchor(bottom) + {$offset}); left: anchor(left); position-try-fallbacks: --dropdown-top-start;",
+        'bottom-end' => "position-anchor: {$anchor}; top: calc(anchor(bottom) + {$offset}); left: anchor(right); translate: -100% 0; position-try-fallbacks: --dropdown-top-end;",
+        'top-start' => "position-anchor: {$anchor}; bottom: calc(anchor(top) + {$offset}); left: anchor(left); position-try-fallbacks: --dropdown-bottom-start;",
+        'top-end' => "position-anchor: {$anchor}; bottom: calc(anchor(top) + {$offset}); left: anchor(right); translate: -100% 0; position-try-fallbacks: --dropdown-bottom-end;",
+        'left-start' => "position-anchor: {$anchor}; top: anchor(top); right: calc(anchor(left) + {$offset}); position-try-fallbacks: --dropdown-right-start;",
+        'left-end' => "position-anchor: {$anchor}; top: anchor(bottom); right: calc(anchor(left) + {$offset}); translate: 0 -100%; position-try-fallbacks: --dropdown-right-end;",
+        'right-start' => "position-anchor: {$anchor}; top: anchor(top); left: calc(anchor(right) + {$offset}); position-try-fallbacks: --dropdown-left-start;",
+        'right-end' => "position-anchor: {$anchor}; top: anchor(bottom); left: calc(anchor(right) + {$offset}); translate: 0 -100%; position-try-fallbacks: --dropdown-left-end;",
     ];
 
     $classes = Ui::classes()

@@ -2,7 +2,7 @@
     'arrow' => 'chevrons-up-down',
     'icon' => null,
     'size' => null,
-    'variant' => '',
+    'variant' => 'default',
 ])
 
 @php
