@@ -3,9 +3,13 @@
 ])
 
 @php
+    // Dim label when this field (not nested) has a disabled control
+    $disabledLabelSelector = '[&:not(:has([data-field])):has([data-control][disabled])>[data-label]]:opacity-50';
+
     $classes = Ui::classes()
-        ->add('min-w-0') // Allow nested elements to truncate properly
-        ->add('[&:not(:has([data-field])):has([data-control][disabled])>[data-label]]:opacity-50') // Dim labels when control is disabled
+        // Allow nested elements to truncate properly
+        ->add('min-w-0')
+        ->add($disabledLabelSelector)
         ->add(
             match ($variant) {
                 'inline' => [

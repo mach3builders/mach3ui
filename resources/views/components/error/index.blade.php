@@ -4,7 +4,11 @@
 ])
 
 @php
-    $errorMessage = $slot->isNotEmpty() ? $slot : ($name ? $errors->getBag($bag)->first($name) : null);
+    $errorMessage = match (true) {
+        $slot->isNotEmpty() => $slot,
+        $name !== null => $errors->getBag($bag)->first($name),
+        default => null,
+    };
 
     $classes = Ui::classes()
         ->add('flex items-center gap-1.5 text-xs')
