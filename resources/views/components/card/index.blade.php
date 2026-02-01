@@ -2,7 +2,6 @@
     'badge' => null,
     'description' => null,
     'flush' => false,
-    'horizontal' => false,
     'icon' => null,
     'icon:boxed' => false,
     'icon:color' => 'gray',
@@ -27,7 +26,7 @@
 
     $hasImage = $imageSlot || $image;
     $imageFirst = in_array($imagePosition, ['top', 'left']);
-    $isHorizontal = $horizontal || in_array($imagePosition, ['left', 'right']);
+    $isHorizontal = in_array($imagePosition, ['left', 'right']);
     $showOverlay = $imageOverlay && $hasImage && $title;
     $hasIcon = $iconSlot || $icon;
     $showHeader = isset($header) || ($title && !$showOverlay) || ($description && $showOverlay) || $hasIcon;
@@ -53,7 +52,7 @@
 
 <div class="{{ $classes }}" {{ $attributes->except('class') }} data-card data-variant="{{ $variant }}">
     @if ($hasImage && $imageFirst)
-        @include('ui::card._image', [
+        @include('ui::components.card._image', [
             'image' => $image,
             'imageSlot' => $imageSlot,
             'isHorizontal' => $isHorizontal,
@@ -141,7 +140,7 @@
     </div>
 
     @if ($hasImage && !$imageFirst)
-        @include('ui::card._image', [
+        @include('ui::components.card._image', [
             'image' => $image,
             'imageSlot' => $imageSlot,
             'isHorizontal' => $isHorizontal,
