@@ -1,28 +1,23 @@
+@props([])
+
 @php
-    $scrollbar_classes = [
-        'overflow-y-auto',
-
+    $classes = Ui::classes()
+        ->add('flex flex-1 flex-col gap-8 overflow-y-auto px-2 pb-8 pt-4')
         // Firefox
-        '[scrollbar-width:thin]',
-        '[scrollbar-color:transparent_transparent]',
-        'hover:[scrollbar-color:theme(colors.gray.300)_transparent]',
-        'dark:hover:[scrollbar-color:theme(colors.gray.600)_transparent]',
-
+        ->add('[scrollbar-width:thin]')
+        ->add('[scrollbar-color:transparent_transparent]')
+        ->add('hover:[scrollbar-color:theme(colors.gray.300)_transparent]')
+        ->add('dark:hover:[scrollbar-color:theme(colors.gray.600)_transparent]')
         // WebKit (Chrome, Safari, Edge)
-        '[&::-webkit-scrollbar]:w-2',
-        '[&::-webkit-scrollbar-track]:bg-transparent',
-        '[&::-webkit-scrollbar-thumb]:rounded-full',
-        '[&::-webkit-scrollbar-thumb]:bg-transparent',
-        'hover:[&::-webkit-scrollbar-thumb]:bg-gray-300',
-        'dark:hover:[&::-webkit-scrollbar-thumb]:bg-gray-600',
-    ];
+        ->add('[&::-webkit-scrollbar]:w-2')
+        ->add('[&::-webkit-scrollbar-track]:bg-transparent')
+        ->add('[&::-webkit-scrollbar-thumb]:rounded-full')
+        ->add('[&::-webkit-scrollbar-thumb]:bg-transparent')
+        ->add('hover:[&::-webkit-scrollbar-thumb]:bg-gray-300')
+        ->add('dark:hover:[&::-webkit-scrollbar-thumb]:bg-gray-600')
+        ->merge($attributes->only('class'));
 @endphp
 
-<div
-    {{ $attributes->class(array_merge([
-        'flex flex-1 flex-col gap-8 px-2 pt-4 pb-8',
-    ], $scrollbar_classes)) }}
-    data-layout-sidebar-nav
->
+<div class="{{ $classes }}" {{ $attributes->except('class') }} data-layout-sidebar-nav>
     {{ $slot }}
 </div>
