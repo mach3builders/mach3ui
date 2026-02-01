@@ -10,6 +10,7 @@
     $tag = $href ? 'a' : 'div';
 
     $colorClasses = [
+        'gray' => 'text-gray-500',
         'blue' => 'text-blue-500',
         'orange' => 'text-orange-500',
         'emerald' => 'text-emerald-500',
@@ -20,7 +21,7 @@
         'yellow' => 'text-yellow-500',
     ];
 
-    $brandClass = $color ? $colorClasses[$color] ?? $colorClasses['blue'] : 'text-brand';
+    $brandClass = $color ? $colorClasses[$color] ?? $colorClasses['gray'] : 'text-brand';
 
     $classes = Ui::classes()
         ->add(

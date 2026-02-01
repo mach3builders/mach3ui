@@ -8,7 +8,7 @@
     $tag = $level ? 'h' . (int) $level : 'div';
 
     $classes = Ui::classes()
-        ->add('scroll-mt-20 font-semibold tracking-tight')
+        ->add('scroll-mt-20 font-semibold')
         ->add(
             match ($size) {
                 'lg' => 'text-lg',

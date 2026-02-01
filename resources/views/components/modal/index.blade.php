@@ -11,6 +11,8 @@
     $wireModelValue = $hasWireModel ? $wireModel->value() : null;
     $isLive = $hasWireModel && $wireModel->hasModifier('live');
 
+    $openState = $hasWireModel ? "\$wire.entangle('{$wireModelValue}')" . ($isLive ? '.live' : '') : 'false';
+
     $headerSlot = $__laravel_slots['header'] ?? null;
     $alertSlot = $__laravel_slots['alert'] ?? null;
     $footerSlot = $__laravel_slots['footer'] ?? null;
@@ -39,46 +41,33 @@
 @endphp
 
 <dialog class="{{ $classes }}" {{ $attributes->except('class')->whereDoesntStartWith('wire:model') }}
-    x-data="{
-        open: {{ $hasWireModel ? "(typeof \$wire !== 'undefined' ? \$wire.entangle('{$wireModelValue}')" . ($isLive ? '.live' : '') . ' : false)' : 'false' }},
-        dialog: null,
+    wire:ignore.self x-modelable="open" x-data="{
+        open: {{ $openState }},
         init() {
-            this.dialog = this.$el;
             const id = this.$el.id;
-            window.addEventListener('modal-open', (e) => {
-                if (e.detail === id) this.openModal();
-            });
-            window.addEventListener('modal-close', (e) => {
-                if (e.detail === id) this.closeModal();
-            });
-            if (!window.$openModal) {
-                window.$openModal = (id) => window.dispatchEvent(new CustomEvent('modal-open', { detail: id }));
-                window.$closeModal = (id) => window.dispatchEvent(new CustomEvent('modal-close', { detail: id }));
-            }
-            @if($hasWireModel)
-            if (typeof $wire !== 'undefined') {
-                this.$watch('open', (value) => {
-                    value ? this.dialog.showModal() : this.dialog.close();
-                });
-                if (this.open) this.dialog.showModal();
-            }
-            @endif
+    
+            this.$el.addEventListener('toggle', e => this.open = e.newState === 'open');
+            window.addEventListener('modal-open', e => e.detail === id && this.openModal());
+            window.addEventListener('modal-close', e => e.detail === id && this.closeModal());
+    
+            window.$openModal ??= id => window.dispatchEvent(new CustomEvent('modal-open', { detail: id }));
+            window.$closeModal ??= id => window.dispatchEvent(new CustomEvent('modal-close', { detail: id }));
+    
+            this.$watch('open', value => value ? this.$el.showModal() : this.$el.close());
+    
+            if (this.open) this.$el.showModal();
         },
         openModal() {
             document.querySelectorAll('[popover]:popover-open').forEach(p => p.hidePopover());
             this.open = true;
-            this.dialog.showModal();
         },
         closeModal() {
             this.open = false;
-            this.dialog.close();
         }
-    }" @if ($closeable)
-    x-on:click="if ($event.target === $el) closeModal()"
+    }" x-on:keydown.escape.prevent="closeModal()" @if ($closeable)
+    x-on:click.self="closeModal()"
     @endif
-    x-on:keydown.escape.prevent="closeModal()"
-    data-modal
-    >
+    data-modal>
     @if ($title || $headerSlot)
         <ui:modal.header>
             @if ($headerSlot)

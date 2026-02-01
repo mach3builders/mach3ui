@@ -31,6 +31,7 @@ class UiServiceProvider extends PackageServiceProvider
         $this->bootComponentPath();
         $this->bootTagCompiler();
         $this->bootAttributeMacros();
+        $this->bootBladeDirectives();
     }
 
     protected function bootComponentPath(): void
@@ -88,6 +89,33 @@ class UiServiceProvider extends PackageServiceProvider
 
             return null;
         });
+    }
 
+    protected function bootBladeDirectives(): void
+    {
+        Blade::directive('uiStyles', function () {
+            return <<<'HTML'
+<link rel="preconnect" href="https://fonts.bunny.net" />
+<link rel="stylesheet" href="https://fonts.bunny.net/css?family=inter:400,500,600,700|saira-semi-condensed:700&display=swap" />
+<style>[x-cloak] {display: none}</style>
+HTML;
+        });
+
+        Blade::directive('uiScripts', function () {
+            return <<<'HTML'
+<script>
+(function() {
+    function applyTheme() {
+        var t = localStorage.getItem('mach3ui-theme');
+        var d = t === 'dark' || (!t && matchMedia('(prefers-color-scheme:dark)').matches);
+        document.documentElement.classList.toggle('dark', d);
+    }
+    applyTheme();
+    document.addEventListener('livewire:navigate', applyTheme);
+    document.addEventListener('livewire:navigated', applyTheme);
+})();
+</script>
+HTML;
+        });
     }
 }

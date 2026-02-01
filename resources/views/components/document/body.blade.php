@@ -39,6 +39,4 @@
     @else
         {{ $slot }}
     @endif
-
-    @stack('modals')
 </body>
