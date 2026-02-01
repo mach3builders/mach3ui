@@ -12,8 +12,7 @@
         ->merge($attributes->only('class'));
 @endphp
 
-<details class="{{ $classes }}" {{ $attributes->except('class') }} @if ($open) open @endif
-    data-details>
+<details {{ $attributes->except('class')->merge(['open' => $open]) }} class="{{ $classes }}" data-details>
     @if ($title)
         <ui:details.trigger :icon="$icon">{{ $title }}</ui:details.trigger>
         <ui:details.content>{{ $slot }}</ui:details.content>

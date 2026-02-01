@@ -9,13 +9,16 @@
         ->add('dark:text-gray-300 dark:hover:text-white')
         ->add('[&::-webkit-details-marker]:hidden')
         ->merge($attributes->only('class'));
+
+    $iconClasses = Ui::classes()
+        ->add('size-4 shrink-0 transition-transform duration-200')
+        ->add('group-open/details:rotate-90');
 @endphp
 
 <summary class="{{ $classes }}" {{ $attributes->except('class') }} data-details-trigger>
     <span class="text-sm font-medium">{{ $slot }}</span>
 
     @if ($icon)
-        <ui:icon :name="$icon"
-            class="size-4 shrink-0 transition-transform duration-200 group-open/details:rotate-90" />
+        <ui:icon :name="$icon" :class="$iconClasses" />
     @endif
 </summary>
