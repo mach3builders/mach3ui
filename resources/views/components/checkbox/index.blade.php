@@ -1,11 +1,12 @@
 @props([
-    'checked' => false,
     'description' => null,
     'indeterminate' => false,
     'label' => null,
 ])
 
 @php
+    $wrapperClasses = Ui::classes()->merge($attributes->only('class'));
+
     $checkboxClasses = Ui::classes()
         ->add('size-5 shrink-0 cursor-pointer appearance-none rounded-[5px] border bg-center bg-no-repeat')
         ->add('border-gray-300 bg-white')
@@ -22,34 +23,34 @@
         )
         ->add('focus:outline-none focus:ring-2 focus:ring-blue-600/20 focus:ring-offset-0')
         ->add('dark:focus:ring-blue-500/20')
-        ->add('disabled:cursor-not-allowed disabled:opacity-50');
+        ->add('disabled:cursor-not-allowed disabled:opacity-50')
+        ->when($description, 'mt-0.5');
 
     $labelClasses = Ui::classes()
         ->add('group inline-flex cursor-pointer gap-2.5 has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50')
         ->add($description ? 'items-start' : 'items-center');
-
-    $inputClasses = Ui::classes($checkboxClasses)->when($description, 'mt-0.5')->merge($attributes->only('class'));
-
-    $standaloneClasses = Ui::classes($checkboxClasses)->add('block')->merge($attributes->only('class'));
 @endphp
 
 @if ($label || $description)
-    <label class="{{ $labelClasses }}">
-        <input type="checkbox" class="{{ $inputClasses }}" {{ $attributes->except('class') }} @checked($checked)
-            @if ($indeterminate) x-init="$el.indeterminate = true" @endif data-checkbox />
+    <div class="{{ $wrapperClasses }}" {{ $attributes->only('data-*') }} data-checkbox>
+        <label class="{{ $labelClasses }}">
+            <input type="checkbox" class="{{ $checkboxClasses }}" {{ $attributes->except(['class', 'data-*']) }}
+                @if ($indeterminate) x-init="$el.indeterminate = true" @endif />
 
-        <span class="flex flex-col gap-0.5">
-            @if ($label)
-                <span class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ $label }}</span>
-            @endif
+            <span class="flex flex-col gap-0.5">
+                @if ($label)
+                    <span class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ $label }}</span>
+                @endif
 
-            @if ($description)
-                <span class="text-sm text-gray-500 dark:text-gray-400">{{ $description }}</span>
-            @endif
-        </span>
-    </label>
+                @if ($description)
+                    <span class="text-sm text-gray-500 dark:text-gray-400">{{ $description }}</span>
+                @endif
+            </span>
+        </label>
+    </div>
 @else
-    <input type="checkbox" class="{{ $standaloneClasses }}" {{ $attributes->except('class') }}
-        @checked($checked) @if ($indeterminate) x-init="$el.indeterminate = true" @endif
-        data-checkbox />
+    <div class="{{ $wrapperClasses }}" {{ $attributes->only('data-*') }} data-checkbox>
+        <input type="checkbox" class="{{ $checkboxClasses }} block" {{ $attributes->except(['class', 'data-*']) }}
+            @if ($indeterminate) x-init="$el.indeterminate = true" @endif />
+    </div>
 @endif

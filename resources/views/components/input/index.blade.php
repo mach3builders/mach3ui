@@ -23,6 +23,10 @@
     $hasAddonTrailing = $addonTrailing !== null;
     $hasTrailingElement = $hasIconTrailing;
 
+    $wrapperClasses = Ui::classes()
+        ->when($hasIcon || $hasTrailingElement, 'relative w-full')
+        ->merge($attributes->only('class'));
+
     $inputClasses = Ui::classes()
         ->add('block w-full appearance-none border shadow-xs focus:outline-none')
         ->add('disabled:cursor-not-allowed disabled:opacity-50')
@@ -52,8 +56,7 @@
             },
         )
         ->when($hasIcon, 'pl-10')
-        ->when($hasTrailingElement, 'pr-10')
-        ->merge($attributes->only('class'));
+        ->when($hasTrailingElement, 'pr-10');
 @endphp
 
 @if ($label)
@@ -61,13 +64,13 @@
         <ui:label :for="$id">{{ $label }}</ui:label>
 
         @if ($hasAddon || $hasAddonTrailing)
-            <ui:input.group>
+            <ui:input.group {{ $attributes->only('data-*') }} class="{{ $attributes->get('class') }}">
                 @if ($hasAddon)
                     <ui:input.addon>{{ $addon }}</ui:input.addon>
                 @endif
 
                 @if ($hasIcon || $hasTrailingElement)
-                    <div class="relative w-full" data-input-wrapper>
+                    <div class="relative w-full" data-input>
                         @if ($hasIcon)
                             <div
                                 class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400 dark:text-gray-500">
@@ -76,7 +79,7 @@
                         @endif
 
                         <input type="{{ $type }}" id="{{ $id }}" class="{{ $inputClasses }}"
-                            {{ $attributes->except('class') }} data-input />
+                            {{ $attributes->except(['class', 'data-*']) }} />
 
                         @if ($hasIconTrailing)
                             <div
@@ -87,7 +90,7 @@
                     </div>
                 @else
                     <input type="{{ $type }}" id="{{ $id }}" class="{{ $inputClasses }}"
-                        {{ $attributes->except('class') }} data-input />
+                        {{ $attributes->except(['class', 'data-*']) }} data-input />
                 @endif
 
                 @if ($hasAddonTrailing)
@@ -95,7 +98,7 @@
                 @endif
             </ui:input.group>
         @elseif ($hasIcon || $hasTrailingElement)
-            <div class="relative w-full" data-input-wrapper>
+            <div class="{{ $wrapperClasses }}" {{ $attributes->only('data-*') }} data-input>
                 @if ($hasIcon)
                     <div
                         class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400 dark:text-gray-500">
@@ -104,7 +107,7 @@
                 @endif
 
                 <input type="{{ $type }}" id="{{ $id }}" class="{{ $inputClasses }}"
-                    {{ $attributes->except('class') }} data-input />
+                    {{ $attributes->except(['class', 'data-*']) }} />
 
                 @if ($hasIconTrailing)
                     <div
@@ -114,8 +117,10 @@
                 @endif
             </div>
         @else
-            <input type="{{ $type }}" id="{{ $id }}" class="{{ $inputClasses }}"
-                {{ $attributes->except('class') }} data-input />
+            <div class="{{ $wrapperClasses }}" {{ $attributes->only('data-*') }} data-input>
+                <input type="{{ $type }}" id="{{ $id }}" class="{{ $inputClasses }}"
+                    {{ $attributes->except(['class', 'data-*']) }} />
+            </div>
         @endif
 
         @if ($help)
@@ -128,13 +133,13 @@
     </ui:field>
 @else
     @if ($hasAddon || $hasAddonTrailing)
-        <ui:input.group>
+        <ui:input.group {{ $attributes->only('data-*') }} class="{{ $attributes->get('class') }}">
             @if ($hasAddon)
                 <ui:input.addon>{{ $addon }}</ui:input.addon>
             @endif
 
             @if ($hasIcon || $hasTrailingElement)
-                <div class="relative w-full" data-input-wrapper>
+                <div class="relative w-full" data-input>
                     @if ($hasIcon)
                         <div
                             class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400 dark:text-gray-500">
@@ -142,8 +147,8 @@
                         </div>
                     @endif
 
-                    <input type="{{ $type }}" class="{{ $inputClasses }}" {{ $attributes->except('class') }}
-                        data-input />
+                    <input type="{{ $type }}" class="{{ $inputClasses }}"
+                        {{ $attributes->except(['class', 'data-*']) }} />
 
                     @if ($hasIconTrailing)
                         <div
@@ -153,8 +158,8 @@
                     @endif
                 </div>
             @else
-                <input type="{{ $type }}" class="{{ $inputClasses }}" {{ $attributes->except('class') }}
-                    data-input />
+                <input type="{{ $type }}" class="{{ $inputClasses }}"
+                    {{ $attributes->except(['class', 'data-*']) }} data-input />
             @endif
 
             @if ($hasAddonTrailing)
@@ -162,7 +167,7 @@
             @endif
         </ui:input.group>
     @elseif ($hasIcon || $hasTrailingElement)
-        <div class="relative w-full" data-input-wrapper>
+        <div class="{{ $wrapperClasses }}" {{ $attributes->only('data-*') }} data-input>
             @if ($hasIcon)
                 <div
                     class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400 dark:text-gray-500">
@@ -170,8 +175,8 @@
                 </div>
             @endif
 
-            <input type="{{ $type }}" class="{{ $inputClasses }}" {{ $attributes->except('class') }}
-                data-input />
+            <input type="{{ $type }}" class="{{ $inputClasses }}"
+                {{ $attributes->except(['class', 'data-*']) }} />
 
             @if ($hasIconTrailing)
                 <div
@@ -181,7 +186,9 @@
             @endif
         </div>
     @else
-        <input type="{{ $type }}" class="{{ $inputClasses }}" {{ $attributes->except('class') }}
-            data-input />
+        <div class="{{ $wrapperClasses }}" {{ $attributes->only('data-*') }} data-input>
+            <input type="{{ $type }}" class="{{ $inputClasses }}"
+                {{ $attributes->except(['class', 'data-*']) }} />
+        </div>
     @endif
 @endif

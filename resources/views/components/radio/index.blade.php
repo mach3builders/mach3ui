@@ -1,10 +1,11 @@
 @props([
-    'checked' => false,
     'description' => null,
     'label' => null,
 ])
 
 @php
+    $wrapperClasses = Ui::classes()->merge($attributes->only('class'));
+
     $radioClasses = Ui::classes()
         ->add('size-[18px] shrink-0 appearance-none rounded-full border cursor-pointer bg-center bg-no-repeat')
         ->add('border-gray-300 bg-white')
@@ -18,8 +19,7 @@
         ->add('focus:outline-none focus:ring-2 focus:ring-blue-600/20 focus:ring-offset-0')
         ->add('dark:focus:ring-blue-500/20')
         ->add('disabled:cursor-not-allowed disabled:opacity-50')
-        ->when($description, 'mt-0.5')
-        ->merge($attributes->only('class'));
+        ->when($description, 'mt-0.5');
 
     $labelClasses = Ui::classes()
         ->add('group inline-flex gap-2.5 cursor-pointer has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50')
@@ -27,21 +27,23 @@
 @endphp
 
 @if ($label || $description)
-    <label class="{{ $labelClasses }}">
-        <input type="radio" class="{{ $radioClasses }}" {{ $attributes->except('class') }} @checked($checked)
-            data-radio />
+    <div class="{{ $wrapperClasses }}" {{ $attributes->only('data-*') }} data-radio>
+        <label class="{{ $labelClasses }}">
+            <input type="radio" class="{{ $radioClasses }}" {{ $attributes->except(['class', 'data-*']) }} />
 
-        <span class="flex flex-col gap-0.5">
-            @if ($label)
-                <span class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ $label }}</span>
-            @endif
+            <span class="flex flex-col gap-0.5">
+                @if ($label)
+                    <span class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ $label }}</span>
+                @endif
 
-            @if ($description)
-                <span class="text-sm text-gray-500 dark:text-gray-400">{{ $description }}</span>
-            @endif
-        </span>
-    </label>
+                @if ($description)
+                    <span class="text-sm text-gray-500 dark:text-gray-400">{{ $description }}</span>
+                @endif
+            </span>
+        </label>
+    </div>
 @else
-    <input type="radio" class="{{ $radioClasses }}" {{ $attributes->except('class') }} @checked($checked)
-        data-radio />
+    <div class="{{ $wrapperClasses }}" {{ $attributes->only('data-*') }} data-radio>
+        <input type="radio" class="{{ $radioClasses }} block" {{ $attributes->except(['class', 'data-*']) }} />
+    </div>
 @endif

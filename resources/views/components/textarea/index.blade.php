@@ -16,6 +16,8 @@
         default => 'min-h-32 px-3 py-2.5 text-sm',
     };
 
+    $wrapperClasses = Ui::classes()->merge($attributes->only('class'));
+
     $textareaClasses = Ui::classes()
         ->add('block w-full max-h-96 appearance-none rounded-md border shadow-xs')
         ->add('border-gray-140 bg-white text-gray-900 placeholder-gray-400')
@@ -25,21 +27,22 @@
         ->add('disabled:cursor-not-allowed disabled:opacity-50')
         ->add($sizeClasses)
         ->add($resize ? 'resize-y' : 'resize-none')
-        ->when($hasError, 'border-red-500 dark:border-red-500 focus:border-red-500 dark:focus:border-red-500')
-        ->merge($attributes->only('class'));
+        ->when($hasError, 'border-red-500 dark:border-red-500 focus:border-red-500 dark:focus:border-red-500');
 @endphp
 
 @if ($label)
     <ui:field>
         <ui:label :for="$id">{{ $label }}</ui:label>
 
-        <textarea x-data="{
-            resize() {
-                $el.style.height = 'auto';
-                $el.style.height = Math.min($el.scrollHeight, 384) + 'px';
-            }
-        }" x-init="resize()" x-on:input="resize()" class="{{ $textareaClasses }}"
-            {{ $attributes->except('class') }} id="{{ $id }}" data-textarea>{{ $slot }}</textarea>
+        <div class="{{ $wrapperClasses }}" {{ $attributes->only('data-*') }} data-textarea>
+            <textarea x-data="{
+                resize() {
+                    $el.style.height = 'auto';
+                    $el.style.height = Math.min($el.scrollHeight, 384) + 'px';
+                }
+            }" x-init="resize()" x-on:input="resize()" class="{{ $textareaClasses }}"
+                {{ $attributes->except(['class', 'data-*']) }} id="{{ $id }}">{{ $slot }}</textarea>
+        </div>
 
         @if ($help)
             <ui:help>{{ $help }}</ui:help>
@@ -50,11 +53,13 @@
         @endif
     </ui:field>
 @else
-    <textarea x-data="{
-        resize() {
-            $el.style.height = 'auto';
-            $el.style.height = Math.min($el.scrollHeight, 384) + 'px';
-        }
-    }" x-init="resize()" x-on:input="resize()" class="{{ $textareaClasses }}"
-        {{ $attributes->except('class') }} data-textarea>{{ $slot }}</textarea>
+    <div class="{{ $wrapperClasses }}" {{ $attributes->only('data-*') }} data-textarea>
+        <textarea x-data="{
+            resize() {
+                $el.style.height = 'auto';
+                $el.style.height = Math.min($el.scrollHeight, 384) + 'px';
+            }
+        }" x-init="resize()" x-on:input="resize()" class="{{ $textareaClasses }}"
+            {{ $attributes->except(['class', 'data-*']) }}>{{ $slot }}</textarea>
+    </div>
 @endif

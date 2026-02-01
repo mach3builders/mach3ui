@@ -15,6 +15,8 @@
     $name = $name ?? $attributes->whereStartsWith('wire:model')->first();
     $hasError = $name && $errors->has($name);
 
+    $wrapperClasses = Ui::classes()->add('relative w-full')->merge($attributes->only('class'));
+
     $selectClasses = Ui::classes()
         ->add('block w-full cursor-pointer appearance-none rounded-md border bg-no-repeat shadow-xs')
         ->add('border-gray-140 bg-white text-gray-900')
@@ -32,8 +34,7 @@
         ->when(
             $invalid || $hasError,
             'border-red-500 dark:border-red-500 focus:border-red-600 dark:focus:border-red-500',
-        )
-        ->merge($attributes->only('class'));
+        );
 
     $optionsArray = is_array($options) ? $options : [];
     $hasSlot = !$slot->isEmpty();
@@ -55,8 +56,8 @@
     <ui:field>
         <ui:label :for="$id">{{ $label }}</ui:label>
 
-        <div class="relative w-full" data-select>
-            <select class="{{ $selectClasses }}" {{ $attributes->except('class') }} id="{{ $id }}"
+        <div class="{{ $wrapperClasses }}" {{ $attributes->only('data-*') }} data-select>
+            <select class="{{ $selectClasses }}" {{ $attributes->except(['class', 'data-*']) }} id="{{ $id }}"
                 @if ($name) name="{{ $name }}" @endif @disabled($disabled)>
                 @if ($placeholder)
                     <option value="" disabled @if (!$value) selected @endif>{{ $placeholder }}
@@ -88,8 +89,8 @@
         @endif
     </ui:field>
 @else
-    <div class="relative w-full" data-select>
-        <select class="{{ $selectClasses }}" {{ $attributes->except('class') }}
+    <div class="{{ $wrapperClasses }}" {{ $attributes->only('data-*') }} data-select>
+        <select class="{{ $selectClasses }}" {{ $attributes->except(['class', 'data-*']) }}
             @if ($name) name="{{ $name }}" @endif @disabled($disabled)>
             @if ($placeholder)
                 <option value="" disabled @if (!$value) selected @endif>{{ $placeholder }}
