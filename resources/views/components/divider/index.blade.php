@@ -6,30 +6,37 @@
 
 @php
     $isVertical = $orientation === 'vertical';
-    $isSubtle = $variant === 'subtle';
+
+    $colors = match ($variant) {
+        'subtle' => 'bg-gray-100 dark:bg-gray-700',
+        default => 'bg-gray-200 dark:bg-gray-600',
+    };
 
     $textClasses = Ui::classes()
         ->add('flex w-full items-center gap-3')
         ->add("before:h-px before:flex-1 before:content-['']")
         ->add("after:h-px after:flex-1 after:content-['']")
         ->add(
-            $isSubtle
-                ? 'before:bg-gray-120 after:bg-gray-120 dark:before:bg-gray-700 dark:after:bg-gray-700'
-                : 'before:bg-gray-200 after:bg-gray-200 dark:before:bg-gray-600 dark:after:bg-gray-600',
+            match ($variant) {
+                'subtle' => 'before:bg-gray-100 after:bg-gray-100 dark:before:bg-gray-700 dark:after:bg-gray-700',
+                default => 'before:bg-gray-200 after:bg-gray-200 dark:before:bg-gray-600 dark:after:bg-gray-600',
+            },
         )
         ->merge($attributes->only('class'));
 
     $verticalClasses = Ui::classes()
         ->add('min-h-4 w-px shrink-0 self-stretch')
-        ->add($isSubtle ? 'bg-gray-100 dark:bg-gray-700' : 'bg-gray-200 dark:bg-gray-600')
+        ->add($colors)
         ->merge($attributes->only('class'));
 
     $horizontalClasses = Ui::classes()
         ->add('h-px w-full shrink-0 border-0')
+        ->add($colors)
         ->add(
-            $isSubtle
-                ? 'bg-gray-100 dark:bg-gray-700'
-                : 'bg-gray-200 dark:bg-gray-600 [[data-dropdown-menu]_&]:bg-gray-80 dark:[[data-dropdown-menu]_&]:bg-gray-740',
+            match ($variant) {
+                'subtle' => '',
+                default => '[[data-dropdown-menu]_&]:bg-gray-80 dark:[[data-dropdown-menu]_&]:bg-gray-740',
+            },
         )
         ->merge($attributes->only('class'));
 

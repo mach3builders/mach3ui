@@ -3,35 +3,37 @@
 ])
 
 @php
-    $typeClasses = [
-        'default' => 'bg-white dark:bg-gray-800',
-        'message' => 'bg-white dark:bg-gray-800',
-        'auth' => 'bg-gray-30 dark:bg-gray-830',
-    ];
+    $logoSlot = $__laravel_slots['logo'] ?? null;
+    $topbarSlot = $__laravel_slots['topbar'] ?? null;
 
     $classes = Ui::classes()
         ->add('h-full min-h-screen font-sans text-sm antialiased')
         ->add('text-gray-980')
         ->add('dark:text-gray-100')
-        ->add($typeClasses[$type] ?? $typeClasses['default'])
+        ->add(
+            match ($type) {
+                'auth' => 'bg-gray-30 dark:bg-gray-830',
+                default => 'bg-white dark:bg-gray-800',
+            },
+        )
         ->merge($attributes->only('class'));
 @endphp
 
 <body class="{{ $classes }}" {{ $attributes->except('class') }} data-document-body>
     @if ($type === 'auth')
         <main class="flex min-h-screen flex-col items-center justify-center py-20">
-            @isset($topbar)
+            @if ($topbarSlot)
                 <div class="fixed top-4 right-4 flex items-center gap-2">
-                    {{ $topbar }}
+                    {{ $topbarSlot }}
                 </div>
-            @endisset
+            @endif
 
             <div class="flex w-full max-w-md flex-col items-center gap-6">
-                @isset($logo)
-                    {{ $logo }}
+                @if ($logoSlot)
+                    {{ $logoSlot }}
                 @else
                     <ui:logo size="2xl" />
-                @endisset
+                @endif
 
                 {{ $slot }}
             </div>

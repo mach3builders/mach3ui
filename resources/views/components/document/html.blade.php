@@ -5,7 +5,7 @@
 @endphp
 
 <html lang="{{ str_replace('_', '-', strtolower(app()->getLocale())) }}" class="{{ $classes }}"
-    {{ $attributes->except('class') }} data-document>
+    {{ $attributes->except('class') }} data-document-html>
 {{ $slot }}
 
 </html>
