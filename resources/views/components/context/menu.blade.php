@@ -9,7 +9,8 @@
         ->merge($attributes->only('class'));
 @endphp
 
-<div class="{{ $classes }}" {{ $attributes->except('class') }} popover="manual" x-ref="menu"
-    x-bind:id="id" x-bind:style="`position: fixed; top: ${y}px; left: ${x}px;`" data-context-menu>
+<div class="{{ $classes }}" {{ $attributes->except('class') }} popover="manual" role="menu" x-ref="menu"
+    :id="id" :style="`position: fixed; top: ${y}px; left: ${x}px;`" :aria-expanded="isOpen"
+    data-context-menu>
     {{ $slot }}
 </div>
