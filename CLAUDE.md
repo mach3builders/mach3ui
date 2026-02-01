@@ -255,10 +255,10 @@ Use modern child selectors:
 - `*:ring-2` instead of `[&>*]:ring-2`
 - `*:border-t` instead of `[&>*]:border-t`
 
-When combining child selectors with variants, put the variant first:
-- `first:*:rounded-l-md` (first child gets rounded-l-md)
-- `last:*:rounded-r-md` (last child gets rounded-r-md)
-- `focus:*:z-10` (focused children get z-10)
+When combining child selectors with variants, put `*:` first, then the variant:
+- `*:first:rounded-l-md` (first child gets rounded-l-md)
+- `*:last:rounded-r-md` (last child gets rounded-r-md)
+- `*:focus:z-10` (focused children get z-10)
 - `*:dark:ring-gray-900` (children get ring-gray-900 in dark mode)
 
 ### Standard Variants
