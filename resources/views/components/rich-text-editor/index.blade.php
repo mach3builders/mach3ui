@@ -9,8 +9,11 @@
 ])
 
 @php
+    $wireModel = $attributes->wire('model');
+    $hasWireModel = $wireModel && method_exists($wireModel, 'value');
+
     $placeholder = $placeholder ?? __('ui::ui.rich_text_editor.placeholder');
-    $editorId = $id ?? 'rich-text-editor-' . Str::random(8);
+    $editorId = $id ?? uniqid('rich-text-editor-');
 
     $classes = Ui::classes()
         ->add('rich-text-editor')
@@ -60,14 +63,14 @@
 
             <div class="rich-text-editor-toolbar-group">
                 @foreach ($group as $tool)
-                    @php $t = $tools[$tool] ?? null; @endphp
-                    @if ($t)
-                        @if (!empty($t['popover']))
+                    @php $toolConfig = $tools[$tool] ?? null; @endphp
+                    @if ($toolConfig)
+                        @if (!empty($toolConfig['popover']))
                             <div class="rich-text-editor-toolbar-popover">
                                 <button type="button" class="rich-text-editor-toolbar-btn"
-                                    data-rich-text-editor-action="{{ $tool }}" title="{{ $t['title'] }}"
+                                    data-rich-text-editor-action="{{ $tool }}" title="{{ $toolConfig['title'] }}"
                                     popovertarget="{{ $editorId }}-{{ $tool }}-popover">
-                                    <x-dynamic-component :component="'lucide-' . $t['icon']" />
+                                    <ui:icon :name="$toolConfig['icon']" />
                                 </button>
 
                                 <div class="rich-text-editor-popover"
@@ -106,8 +109,8 @@
                             </div>
                         @else
                             <button type="button" class="rich-text-editor-toolbar-btn"
-                                data-rich-text-editor-action="{{ $tool }}" title="{{ $t['title'] }}">
-                                <x-dynamic-component :component="'lucide-' . $t['icon']" />
+                                data-rich-text-editor-action="{{ $tool }}" title="{{ $toolConfig['title'] }}">
+                                <ui:icon :name="$toolConfig['icon']" />
                             </button>
                         @endif
                     @endif
@@ -125,7 +128,6 @@
         </div>
     @endif
 
-    <input type="hidden" name="{{ $name }}"
-        @if ($value) value="{{ $value }}" @endif
-        {{ $attributes->whereStartsWith('wire:model') }} />
+    <input type="hidden" name="{{ $name }}" value="{{ $value ?? '' }}"
+        @if ($hasWireModel) {{ $wireModel }} @endif />
 </div>
