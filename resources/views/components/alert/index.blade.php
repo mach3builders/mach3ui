@@ -41,7 +41,9 @@
         );
 
     $titleClasses = Ui::classes()->add('font-semibold leading-6 text-gray-900 dark:text-white');
-    $messageClasses = Ui::classes()
+    $contentClasses = Ui::classes()->add('flex flex-col gap-1');
+
+    $textClasses = Ui::classes()
         ->add('leading-relaxed')
         ->add(
             match ($variant) {
@@ -57,15 +59,17 @@
 <div class="{{ $classes }}" {{ $attributes->except('class') }} data-alert data-variant="{{ $variant }}">
     <ui:icon :name="$icon ?? $icons[$variant] ?? $icons['default']" :class="$iconClasses" />
 
-    <div>
+    <div class="{{ $contentClasses }}" data-alert-content>
         @if ($title)
             <div class="{{ $titleClasses }}" data-alert-title>{{ $title }}</div>
         @endif
 
         @if ($message)
-            <div class="{{ $messageClasses }}" data-alert-message>{{ $message }}</div>
+            <div class="{{ $textClasses }}" data-alert-message>{{ $message }}</div>
         @endif
 
-        {{ $slot }}
+        @if ($slot->isNotEmpty())
+            <div class="{{ $textClasses }}">{{ $slot }}</div>
+        @endif
     </div>
 </div>

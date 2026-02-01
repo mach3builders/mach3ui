@@ -25,9 +25,11 @@
         ->merge($attributes->only('class'));
 
     $logoClasses = Ui::classes()
-        ->add('flex size-9 shrink-0 items-center justify-center rounded-lg font-brand font-bold tracking-wide uppercase text-base leading-none select-none')
+        ->add(
+            'flex size-9 shrink-0 items-center justify-center rounded-lg font-brand font-bold tracking-wide uppercase text-base leading-none select-none',
+        )
         ->add('bg-gray-80 dark:bg-gray-830')
-        ->add($color ? ($colorClasses[$color] ?? '') : 'text-gray-400 dark:text-gray-500');
+        ->add($color ? $colorClasses[$color] ?? '' : 'text-gray-400 dark:text-gray-500');
 
     $iconClasses = Ui::classes()
         ->add('flex size-9 shrink-0 items-center justify-center rounded-lg')
@@ -40,10 +42,9 @@
     $displayName = (!$icon && $slot->isEmpty() ? 'Mach3' : '') . $name;
 @endphp
 
-<div class="{{ $classes }}" {{ $attributes->except('class') }}
-    :class="{ 'bg-gray-40 dark:bg-gray-750': selected === items.indexOf($el) }" x-init="$el.dataset.index = items.indexOf($el) >= 0 ? items.indexOf($el) : items.length"
-    x-on:click="select($el.dataset.index); activate()" data-app-switcher-item data-href="{{ $href }}"
-    role="option" tabindex="0">
+<div class="{{ $classes }}" {{ $attributes->except('class') }} x-data="{ index: null }" x-init="index = items.indexOf($el) >= 0 ? items.indexOf($el) : items.length"
+    :class="{ 'bg-gray-40 dark:bg-gray-750': selected === index }" x-on:click="select(index); activate()"
+    data-app-switcher-item data-href="{{ $href }}" role="option" tabindex="0">
     @if ($icon)
         <div class="{{ $iconClasses }}">
             <ui:icon :name="$icon" size="sm" />
@@ -58,7 +59,7 @@
         </div>
     @endif
 
-    <div class="flex flex-1 flex-col">
+    <div class="flex flex-1 flex-col" data-app-switcher-item-content>
         <span class="{{ $nameClasses }}">{{ $displayName }}</span>
 
         @if ($description)
@@ -67,5 +68,5 @@
     </div>
 
     <ui:icon name="check" size="sm" :class="$checkClasses"
-        x-bind:class="current === items.indexOf($el.closest('[data-app-switcher-item]')) ? 'opacity-100' : 'opacity-0'" />
+        x-bind:class="current === index ? 'opacity-100' : 'opacity-0'" />
 </div>

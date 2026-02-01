@@ -18,14 +18,13 @@
 
 <div class="{{ $classes }}" {{ $attributes->except('class') }} x-data="{ count: @js($count) }" data-action-bar>
     <template x-if="count !== null">
-        <span class="{{ $countClasses }}" data-action-bar-count>
-            <span x-text="count"></span>
-            <span>{{ $countLabel }}</span>
-        </span>
-    </template>
-
-    <template x-if="count !== null">
-        <ui:divider orientation="vertical" variant="subtle" />
+        <div class="flex items-center gap-1">
+            <span class="{{ $countClasses }}" data-action-bar-count>
+                <span x-text="count"></span>
+                <span>{{ $countLabel }}</span>
+            </span>
+            <ui:divider orientation="vertical" variant="subtle" />
+        </div>
     </template>
 
     <div class="{{ $actionsClasses }}" data-action-bar-actions>

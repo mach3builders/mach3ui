@@ -27,24 +27,21 @@
     $chevronClasses = Ui::classes()->add('size-4 shrink-0 transition-transform duration-200 group-open:rotate-180');
 @endphp
 
-<details x-data="{ id: '{{ $id }}', localOpen: @js($open) }"
-    x-effect="
-        const parent = $el.closest('[data-accordion]');
-        const isSingle = parent?.dataset.type === 'single';
-        $el.open = isSingle ? Alpine.$data(parent).active === id : localOpen;
-    "
+<details x-data="{
+    id: '{{ $id }}',
+    open: @js($open),
+    get parent() { return $el.closest('[data-accordion]') },
+    get isSingle() { return this.parent?.dataset.type === 'single' },
+    toggle() {
+        if (this.isSingle) {
+            $dispatch('accordion-toggle', this.id);
+        } else {
+            this.open = !this.open;
+        }
+    }
+}" x-effect="$el.open = isSingle ? Alpine.$data(parent).active === id : open"
     class="{{ $itemClasses }}" {{ $attributes->except('class') }} data-accordion-item>
-    <summary
-        x-on:click.prevent="
-            const parent = $el.closest('[data-accordion]');
-            const isSingle = parent?.dataset.type === 'single';
-            if (isSingle) {
-                $dispatch('accordion-toggle', id);
-            } else {
-                localOpen = !localOpen;
-            }
-        "
-        class="{{ $titleClasses }}" data-accordion-title>
+    <summary x-on:click.prevent="toggle()" class="{{ $titleClasses }}" data-accordion-title>
         @if ($icon)
             <ui:icon :name="$icon" :class="$iconClasses" />
         @endif

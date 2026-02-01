@@ -5,9 +5,7 @@
 
 @php
     $title = $title ?? __('ui::ui.app_switcher.title');
-@endphp
 
-@php
     $overlayClasses = Ui::classes()
         ->add('fixed inset-0 z-50 flex items-center justify-center')
         ->add('bg-gray-900/40 dark:bg-black/60');
@@ -84,16 +82,16 @@
         }
         if (!this.open) return
         if (e.key === 'Escape') {
-            e.preventDefault();
+            e.preventDefault()
             this.close()
         } else if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
+            e.preventDefault()
             this.activate()
         } else if (e.key >= '1' && e.key <= '9') {
             e.preventDefault()
             const num = parseInt(e.key) - 1
             if (num < this.items.length) {
-                this.select(num);
+                this.select(num)
                 this.activate()
             }
         }
@@ -107,20 +105,20 @@
     <div x-cloak x-show="open" x-transition:enter="transition ease-out duration-150" x-transition:enter-start="opacity-0"
         x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-100"
         x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" x-on:click.self="close"
-        class="{{ $overlayClasses }}" role="dialog" aria-modal="true">
+        class="{{ $overlayClasses }}" role="dialog" aria-modal="true" data-app-switcher-overlay>
         <div x-show="open" x-transition:enter="transition ease-out duration-150"
             x-transition:enter-start="opacity-0 scale-95 -translate-y-2"
             x-transition:enter-end="opacity-100 scale-100 translate-y-0"
             x-transition:leave="transition ease-in duration-100"
             x-transition:leave-start="opacity-100 scale-100 translate-y-0"
             x-transition:leave-end="opacity-0 scale-95 -translate-y-2" class="{{ $panelClasses }}" role="listbox"
-            x-ref="list">
-            <div class="{{ $titleClasses }}">{{ $title }}</div>
+            x-ref="list" data-app-switcher-panel>
+            <div class="{{ $titleClasses }}" data-app-switcher-title>{{ $title }}</div>
 
             {{ $slot }}
         </div>
 
-        <div class="{{ $hintClasses }}">
+        <div class="{{ $hintClasses }}" data-app-switcher-hint>
             <ui:kbd>Ctrl</ui:kbd>
             <ui:kbd>A</ui:kbd> {{ __('ui::ui.app_switcher.hint_cycle') }} · {{ __('ui::ui.app_switcher.hint_release') }}
             <ui:kbd>Ctrl</ui:kbd>

@@ -40,7 +40,7 @@
                 default => 'bg-gray-30 dark:bg-gray-830',
             },
         )
-        ->when($isHorizontal, 'flex flex-row')
+        ->when($isHorizontal, 'flex flex-row gap-1.5')
         ->merge($attributes->only('class'));
 
     $actionHeaderClasses = Ui::classes()

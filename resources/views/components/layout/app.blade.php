@@ -75,7 +75,13 @@
                                             <span class="-skew-x-12 text-{{ $options['color'] }}-500">III</span>
                                         </span>
 
-                                        <ui:text weight="semibold">Mach3{{ $name }}</ui:text>
+                                        <div class="flex flex-col">
+                                            <ui:text weight="semibold">Mach3{{ $name }}</ui:text>
+                                            @if (isset($options['description']))
+                                                <ui:text size="xs" variant="muted">{{ $options['description'] }}
+                                                </ui:text>
+                                            @endif
+                                        </div>
                                         @if ($loop->first)
                                             <ui:icon name="check" size="sm" class="ml-auto text-blue-500" />
                                         @endif
