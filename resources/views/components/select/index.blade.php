@@ -11,8 +11,11 @@
 ])
 
 @php
+    $wireModel = $attributes->wire('model');
+    $wireModelValue = $wireModel?->value();
+
     $id = $attributes->get('id') ?? ($label ? 'select-' . Str::random(8) : null);
-    $name = $name ?? $attributes->whereStartsWith('wire:model')->first();
+    $name = $name ?? $wireModelValue;
     $hasError = $name && $errors->has($name);
 
     $wrapperClasses = Ui::classes()->add('relative w-full')->merge($attributes->only('class'));

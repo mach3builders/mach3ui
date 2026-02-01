@@ -16,8 +16,12 @@
 @php
     $searchPlaceholder = $__data['search:placeholder'] ?? 'Search...';
 
+    $wireModel = $attributes->wire('model');
+    $wireModelValue = $wireModel?->value();
+    $isLive = $wireModel?->hasModifier('live');
+
     $id = 'selectbox-' . uniqid();
-    $name = $name ?? $attributes->whereStartsWith('wire:model')->first();
+    $name = $name ?? $wireModelValue;
     $hasError = $name && $errors->has($name);
 
     $containerClasses = Ui::classes()
@@ -43,19 +47,6 @@
 
     $optionsArray = is_array($options) ? $options : [];
     $hasSlot = !$slot->isEmpty();
-
-    $wireModelAttr = null;
-    foreach (
-        ['wire:model.live', 'wire:model.blur', 'wire:model.change', 'wire:model.debounce', 'wire:model']
-        as $attr
-    ) {
-        if ($attributes->has($attr)) {
-            $wireModelAttr = $attr;
-            break;
-        }
-    }
-    $wireModelValue = $wireModelAttr ? $attributes->get($wireModelAttr) : null;
-    $wireModelLive = $wireModelAttr && str_contains($wireModelAttr, '.live');
 @endphp
 
 @if ($label)
@@ -63,7 +54,7 @@
         <ui:label>{{ $label }}</ui:label>
 
         <div class="{{ $containerClasses }}" {{ $attributes->only('data-*') }} x-data="{
-            value: @if ($wireModelValue) (typeof $wire !== 'undefined' ? $wire.entangle('{{ $wireModelValue }}'){{ $wireModelLive ? '.live' : '' }} : '{{ $value }}') @else '{{ $value }}' @endif,
+            value: @if ($wireModelValue) (typeof $wire !== 'undefined' ? $wire.entangle('{{ $wireModelValue }}'){{ $isLive ? '.live' : '' }} : '{{ $value }}') @else '{{ $value }}' @endif,
             search: '',
             options: {{ Js::from($optionsArray) }},
             hasSlot: {{ $hasSlot ? 'true' : 'false' }},
@@ -149,7 +140,7 @@
     </ui:field>
 @else
     <div class="{{ $containerClasses }}" {{ $attributes->only('data-*') }} x-data="{
-        value: @if ($wireModelValue) (typeof $wire !== 'undefined' ? $wire.entangle('{{ $wireModelValue }}'){{ $wireModelLive ? '.live' : '' }} : '{{ $value }}') @else '{{ $value }}' @endif,
+        value: @if ($wireModelValue) (typeof $wire !== 'undefined' ? $wire.entangle('{{ $wireModelValue }}'){{ $isLive ? '.live' : '' }} : '{{ $value }}') @else '{{ $value }}' @endif,
         search: '',
         options: {{ Js::from($optionsArray) }},
         hasSlot: {{ $hasSlot ? 'true' : 'false' }},

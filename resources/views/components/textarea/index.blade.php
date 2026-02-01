@@ -6,8 +6,11 @@
 ])
 
 @php
+    $wireModel = $attributes->wire('model');
+    $wireModelValue = $wireModel?->value();
+
     $id = $attributes->get('id') ?? ($label ? 'textarea-' . Str::random(8) : null);
-    $name = $attributes->get('name') ?? $attributes->whereStartsWith('wire:model')->first();
+    $name = $attributes->get('name') ?? $wireModelValue;
     $hasError = $name && $errors->has($name);
 
     $sizeClasses = match ($size) {

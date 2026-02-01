@@ -4,6 +4,10 @@
 ])
 
 @php
+    $wireModel = $attributes->wire('model');
+    $wireModelValue = $wireModel?->value();
+    $name = $attributes->get('name') ?? $wireModelValue;
+
     $wrapperClasses = Ui::classes()->merge($attributes->only('class'));
 
     $radioClasses = Ui::classes()
@@ -41,6 +45,10 @@
                 @endif
             </span>
         </label>
+
+        @if ($name)
+            <ui:error :name="$name" />
+        @endif
     </div>
 @else
     <div class="{{ $wrapperClasses }}" {{ $attributes->only('data-*') }} data-radio>
