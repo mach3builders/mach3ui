@@ -8,6 +8,11 @@
 ])
 
 @php
+    $wireModel = $attributes->wire('model');
+    $hasWireModel = $wireModel && method_exists($wireModel, 'value');
+    $wireModelValue = $hasWireModel ? $wireModel->value() : null;
+    $name = $attributes->get('name') ?? $wireModelValue;
+
     $cardClasses = Ui::classes()
         ->add('group relative flex cursor-pointer items-start gap-3 rounded-lg border p-4 transition-colors')
         ->add('border-gray-200 bg-white')
@@ -38,9 +43,10 @@
         ->add('disabled:cursor-not-allowed disabled:opacity-50');
 @endphp
 
-<label {{ $attributes->only('class')->class($cardClasses) }} data-checkbox-card>
+<label {{ $attributes->only('class')->class($cardClasses) }} data-checkbox-card data-control>
     @if ($reversed)
-        <input type="checkbox" {{ $attributes->except('class')->class($checkboxClasses) }} @checked($checked)
+        <input type="checkbox" @if ($name) name="{{ $name }}" @endif
+            {{ $attributes->except(['class', 'name'])->class($checkboxClasses) }} @checked($checked)
             @if ($indeterminate) x-init="$el.indeterminate = true" @endif data-checkbox />
     @endif
 
@@ -63,7 +69,8 @@
     </div>
 
     @if (!$reversed)
-        <input type="checkbox" {{ $attributes->except('class')->class($checkboxClasses) }} @checked($checked)
+        <input type="checkbox" @if ($name) name="{{ $name }}" @endif
+            {{ $attributes->except(['class', 'name'])->class($checkboxClasses) }} @checked($checked)
             @if ($indeterminate) x-init="$el.indeterminate = true" @endif data-checkbox />
     @endif
 </label>

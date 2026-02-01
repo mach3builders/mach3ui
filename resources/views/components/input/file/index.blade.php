@@ -6,6 +6,11 @@
 ])
 
 @php
+    $wireModel = $attributes->wire('model');
+    $hasWireModel = $wireModel && method_exists($wireModel, 'value');
+    $wireModelValue = $hasWireModel ? $wireModel->value() : null;
+    $name = $attributes->get('name') ?? $wireModelValue;
+
     $buttonText = $__data['button:text'] ?? null;
 
     $resolvedPlaceholder = $placeholder ?? __('ui::ui.input_file.placeholder');
@@ -32,7 +37,7 @@
             this.fileName = this.filesSelectedTemplate.replace(':count', files.length);
         }
     }
-}" class="{{ $classes }}" {{ $attributes->except('class') }} data-input-file>
+}" class="{{ $classes }}" {{ $attributes->except('class') }} data-input-file data-control>
     <span
         class="block h-10 min-w-0 flex-1 truncate rounded-s-md border border-r-0 px-3 py-2 text-sm border-gray-140 bg-white text-gray-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400"
         x-text="displayText"></span>
@@ -42,8 +47,8 @@
         {{ $resolvedButtonText }}
     </span>
 
-    <input type="file"
-        {{ $attributes->except('class')->merge(['class' => 'absolute inset-0 cursor-pointer opacity-0']) }}
+    <input type="file" class="absolute inset-0 cursor-pointer opacity-0"
+        @if ($name) name="{{ $name }}" @endif {{ $attributes->except(['class', 'name']) }}
         @if ($accept) accept="{{ $accept }}" @endif
         @if ($multiple) multiple @endif x-on:change="handleChange($event)" />
 </div>

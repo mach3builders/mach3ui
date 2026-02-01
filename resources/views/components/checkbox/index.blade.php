@@ -37,9 +37,11 @@
 @endphp
 
 @if ($label || $description)
-    <div class="{{ $wrapperClasses }}" {{ $attributes->only('data-*') }} data-checkbox>
+    <div class="{{ $wrapperClasses }}" {{ $attributes->only('data-*') }} data-checkbox data-control>
         <label class="{{ $labelClasses }}">
-            <input type="checkbox" class="{{ $checkboxClasses }}" {{ $attributes->except(['class', 'data-*']) }}
+            <input type="checkbox" class="{{ $checkboxClasses }}"
+                @if ($name) name="{{ $name }}" @endif
+                {{ $attributes->except(['class', 'data-*', 'name']) }}
                 @if ($indeterminate) x-init="$el.indeterminate = true" @endif />
 
             <span class="flex flex-col gap-0.5">
@@ -58,8 +60,10 @@
         @endif
     </div>
 @else
-    <div class="{{ $wrapperClasses }}" {{ $attributes->only('data-*') }} data-checkbox>
-        <input type="checkbox" class="{{ $checkboxClasses }} block" {{ $attributes->except(['class', 'data-*']) }}
+    <div class="{{ $wrapperClasses }}" {{ $attributes->only('data-*') }} data-checkbox data-control>
+        <input type="checkbox" class="{{ $checkboxClasses }} block"
+            @if ($name) name="{{ $name }}" @endif
+            {{ $attributes->except(['class', 'data-*', 'name']) }}
             @if ($indeterminate) x-init="$el.indeterminate = true" @endif />
     </div>
 @endif

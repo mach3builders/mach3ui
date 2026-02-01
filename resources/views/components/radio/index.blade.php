@@ -32,9 +32,11 @@
 @endphp
 
 @if ($label || $description)
-    <div class="{{ $wrapperClasses }}" {{ $attributes->only('data-*') }} data-radio>
+    <div class="{{ $wrapperClasses }}" {{ $attributes->only('data-*') }} data-radio data-control>
         <label class="{{ $labelClasses }}">
-            <input type="radio" class="{{ $radioClasses }}" {{ $attributes->except(['class', 'data-*']) }} />
+            <input type="radio" class="{{ $radioClasses }}"
+                @if ($name) name="{{ $name }}" @endif
+                {{ $attributes->except(['class', 'data-*', 'name']) }} />
 
             <span class="flex flex-col gap-0.5">
                 @if ($label)
@@ -52,7 +54,9 @@
         @endif
     </div>
 @else
-    <div class="{{ $wrapperClasses }}" {{ $attributes->only('data-*') }} data-radio>
-        <input type="radio" class="{{ $radioClasses }} block" {{ $attributes->except(['class', 'data-*']) }} />
+    <div class="{{ $wrapperClasses }}" {{ $attributes->only('data-*') }} data-radio data-control>
+        <input type="radio" class="{{ $radioClasses }} block"
+            @if ($name) name="{{ $name }}" @endif
+            {{ $attributes->except(['class', 'data-*', 'name']) }} />
     </div>
 @endif

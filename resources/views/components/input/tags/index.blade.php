@@ -1,13 +1,17 @@
 @props([
     'disabled' => false,
     'invalid' => false,
-    'name' => 'tags',
     'placeholder' => null,
     'size' => null,
     'tags' => [],
 ])
 
 @php
+    $wireModel = $attributes->wire('model');
+    $hasWireModel = $wireModel && method_exists($wireModel, 'value');
+    $wireModelValue = $hasWireModel ? $wireModel->value() : null;
+    $name = $attributes->get('name') ?? ($wireModelValue ?? 'tags');
+
     $resolvedPlaceholder = $placeholder ?? __('ui::ui.input_tags.placeholder');
     $tagsArray = is_array($tags) ? $tags : (is_string($tags) ? json_decode($tags, true) ?? [] : []);
 
@@ -77,7 +81,7 @@
         });
     },
 }" x-on:click="$refs.input.focus()" class="{{ $containerClasses }}"
-    {{ $attributes->except('class') }} data-input-tags>
+    {{ $attributes->except('class') }} data-input-tags data-control>
     <template x-for="(tag, index) in tags" :key="index">
         <span class="{{ $tagClasses }}" x-bind:data-value="tag">
             <span x-text="tag"></span>

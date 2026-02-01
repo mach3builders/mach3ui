@@ -10,8 +10,8 @@
             match ($variant) {
                 'inline' => [
                     'grid gap-x-3 gap-y-1.5',
-                    'has-[[data-label]~[data-control]]:grid-cols-[1fr_auto]',
-                    'has-[[data-control]~[data-label]]:grid-cols-[auto_1fr]',
+                    'has-[>[data-control]:first-child]:grid-cols-[auto_1fr]',
+                    'has-[>[data-control]:last-child]:grid-cols-[1fr_auto]',
                 ],
                 default => 'flex flex-col gap-2',
             },

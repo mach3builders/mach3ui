@@ -1,10 +1,14 @@
 @props([
     'description' => null,
     'label' => null,
-    'name' => null,
 ])
 
 @php
+    $wireModel = $attributes->wire('model');
+    $hasWireModel = $wireModel && method_exists($wireModel, 'value');
+    $wireModelValue = $hasWireModel ? $wireModel->value() : null;
+    $name = $attributes->get('name') ?? $wireModelValue;
+
     $id = $attributes->get('id') ?? ($name ? 'switch-' . $name : 'switch-' . uniqid());
 
     $trackClasses = Ui::classes()
@@ -32,10 +36,11 @@
 @endphp
 
 @if ($label || $description)
-    <div class="{{ $wrapperClasses }}" {{ $attributes->only('data-*') }} data-switch>
+    <div class="{{ $wrapperClasses }}" {{ $attributes->only('data-*') }} data-switch data-control>
         <label for="{{ $id }}" class="{{ $trackClasses }}">
             <input type="checkbox" role="switch" id="{{ $id }}"
-                {{ $attributes->except(['class', 'data-*'])->merge(['name' => $name]) }} class="{{ $inputClasses }}" />
+                @if ($name) name="{{ $name }}" @endif
+                {{ $attributes->except(['class', 'data-*', 'name']) }} class="{{ $inputClasses }}" />
 
             <span class="{{ $thumbClasses }}"></span>
         </label>
@@ -49,9 +54,11 @@
         </label>
     </div>
 @else
-    <label for="{{ $id }}" class="{{ $trackClassesMerged }}" {{ $attributes->only('data-*') }} data-switch>
+    <label for="{{ $id }}" class="{{ $trackClassesMerged }}" {{ $attributes->only('data-*') }} data-switch
+        data-control>
         <input type="checkbox" role="switch" id="{{ $id }}"
-            {{ $attributes->except(['class', 'data-*'])->merge(['name' => $name]) }} class="{{ $inputClasses }}" />
+            @if ($name) name="{{ $name }}" @endif
+            {{ $attributes->except(['class', 'data-*', 'name']) }} class="{{ $inputClasses }}" />
 
         <span class="{{ $thumbClasses }}"></span>
     </label>

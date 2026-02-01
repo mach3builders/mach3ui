@@ -38,14 +38,15 @@
     <ui:field>
         <ui:label :for="$id">{{ $label }}</ui:label>
 
-        <div class="{{ $wrapperClasses }}" {{ $attributes->only('data-*') }} data-textarea>
+        <div class="{{ $wrapperClasses }}" {{ $attributes->only('data-*') }} data-textarea data-control>
             <textarea x-data="{
                 resize() {
                     $el.style.height = 'auto';
                     $el.style.height = Math.min($el.scrollHeight, 384) + 'px';
                 }
             }" x-init="resize()" x-on:input="resize()" class="{{ $textareaClasses }}"
-                {{ $attributes->except(['class', 'data-*']) }} id="{{ $id }}">{{ $slot }}</textarea>
+                @if ($name) name="{{ $name }}" @endif id="{{ $id }}"
+                {{ $attributes->except(['class', 'data-*', 'name']) }}>{{ $slot }}</textarea>
         </div>
 
         @if ($help)
@@ -57,13 +58,14 @@
         @endif
     </ui:field>
 @else
-    <div class="{{ $wrapperClasses }}" {{ $attributes->only('data-*') }} data-textarea>
+    <div class="{{ $wrapperClasses }}" {{ $attributes->only('data-*') }} data-textarea data-control>
         <textarea x-data="{
             resize() {
                 $el.style.height = 'auto';
                 $el.style.height = Math.min($el.scrollHeight, 384) + 'px';
             }
         }" x-init="resize()" x-on:input="resize()" class="{{ $textareaClasses }}"
-            {{ $attributes->except(['class', 'data-*']) }}>{{ $slot }}</textarea>
+            @if ($name) name="{{ $name }}" @endif
+            {{ $attributes->except(['class', 'data-*', 'name']) }}>{{ $slot }}</textarea>
     </div>
 @endif

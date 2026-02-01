@@ -60,7 +60,7 @@
     <ui:field>
         <ui:label :for="$id">{{ $label }}</ui:label>
 
-        <div class="{{ $wrapperClasses }}" {{ $attributes->only('data-*') }} data-select>
+        <div class="{{ $wrapperClasses }}" {{ $attributes->only('data-*') }} data-select data-control>
             <select class="{{ $selectClasses }}" {{ $attributes->except(['class', 'data-*']) }} id="{{ $id }}"
                 @if ($name) name="{{ $name }}" @endif @disabled($disabled)>
                 @if ($placeholder)
@@ -93,7 +93,7 @@
         @endif
     </ui:field>
 @else
-    <div class="{{ $wrapperClasses }}" {{ $attributes->only('data-*') }} data-select>
+    <div class="{{ $wrapperClasses }}" {{ $attributes->only('data-*') }} data-select data-control>
         <select class="{{ $selectClasses }}" {{ $attributes->except(['class', 'data-*']) }}
             @if ($name) name="{{ $name }}" @endif @disabled($disabled)>
             @if ($placeholder)

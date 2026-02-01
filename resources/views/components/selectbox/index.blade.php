@@ -90,7 +90,7 @@
             }
         }"
             x-on:toggle.window="if ($event.target === $refs.menu && $event.newState === 'closed') search = ''"
-            x-effect="updateAriaSelected()" data-selectbox>
+            x-effect="updateAriaSelected()" data-selectbox data-control>
             <button type="button" class="{{ $triggerClasses }}" popovertarget="{{ $id }}"
                 @disabled($disabled)>
                 <span x-show="selectedLabel" x-text="selectedLabel"></span>
@@ -176,7 +176,7 @@
         }
     }"
         x-on:toggle.window="if ($event.target === $refs.menu && $event.newState === 'closed') search = ''"
-        x-effect="updateAriaSelected()" data-selectbox>
+        x-effect="updateAriaSelected()" data-selectbox data-control>
         <button type="button" class="{{ $triggerClasses }}" popovertarget="{{ $id }}"
             @disabled($disabled)>
             <span x-show="selectedLabel" x-text="selectedLabel"></span>

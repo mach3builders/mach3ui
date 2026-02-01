@@ -74,7 +74,7 @@
                 @endif
 
                 @if ($hasIcon || $hasEndElement)
-                    <div class="relative w-full" data-input>
+                    <div class="relative w-full" data-input data-control>
                         @if ($hasIcon)
                             <div
                                 class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400 dark:text-gray-500">
@@ -82,8 +82,9 @@
                             </div>
                         @endif
 
-                        <input type="{{ $type }}" id="{{ $id }}" class="{{ $inputClasses }}"
-                            {{ $attributes->except(['class', 'data-*']) }} />
+                        <input type="{{ $type }}" id="{{ $id }}"
+                            @if ($name) name="{{ $name }}" @endif
+                            class="{{ $inputClasses }}" {{ $attributes->except(['class', 'data-*', 'name']) }} />
 
                         @if ($hasIconEnd)
                             <div
@@ -93,8 +94,10 @@
                         @endif
                     </div>
                 @else
-                    <input type="{{ $type }}" id="{{ $id }}" class="{{ $inputClasses }}"
-                        {{ $attributes->except(['class', 'data-*']) }} data-input />
+                    <input type="{{ $type }}" id="{{ $id }}"
+                        @if ($name) name="{{ $name }}" @endif
+                        class="{{ $inputClasses }}" {{ $attributes->except(['class', 'data-*', 'name']) }}
+                        data-input />
                 @endif
 
                 @if ($hasAddonEnd)
@@ -102,7 +105,7 @@
                 @endif
             </ui:input.group>
         @elseif ($hasIcon || $hasEndElement)
-            <div class="{{ $wrapperClasses }}" {{ $attributes->only('data-*') }} data-input>
+            <div class="{{ $wrapperClasses }}" {{ $attributes->only('data-*') }} data-input data-control>
                 @if ($hasIcon)
                     <div
                         class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400 dark:text-gray-500">
@@ -110,8 +113,9 @@
                     </div>
                 @endif
 
-                <input type="{{ $type }}" id="{{ $id }}" class="{{ $inputClasses }}"
-                    {{ $attributes->except(['class', 'data-*']) }} />
+                <input type="{{ $type }}" id="{{ $id }}"
+                    @if ($name) name="{{ $name }}" @endif class="{{ $inputClasses }}"
+                    {{ $attributes->except(['class', 'data-*', 'name']) }} />
 
                 @if ($hasIconEnd)
                     <div
@@ -121,9 +125,10 @@
                 @endif
             </div>
         @else
-            <div class="{{ $wrapperClasses }}" {{ $attributes->only('data-*') }} data-input>
-                <input type="{{ $type }}" id="{{ $id }}" class="{{ $inputClasses }}"
-                    {{ $attributes->except(['class', 'data-*']) }} />
+            <div class="{{ $wrapperClasses }}" {{ $attributes->only('data-*') }} data-input data-control>
+                <input type="{{ $type }}" id="{{ $id }}"
+                    @if ($name) name="{{ $name }}" @endif class="{{ $inputClasses }}"
+                    {{ $attributes->except(['class', 'data-*', 'name']) }} />
             </div>
         @endif
 
@@ -143,7 +148,7 @@
             @endif
 
             @if ($hasIcon || $hasEndElement)
-                <div class="relative w-full" data-input>
+                <div class="relative w-full" data-input data-control>
                     @if ($hasIcon)
                         <div
                             class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400 dark:text-gray-500">
@@ -151,8 +156,9 @@
                         </div>
                     @endif
 
-                    <input type="{{ $type }}" class="{{ $inputClasses }}"
-                        {{ $attributes->except(['class', 'data-*']) }} />
+                    <input type="{{ $type }}"
+                        @if ($name) name="{{ $name }}" @endif
+                        class="{{ $inputClasses }}" {{ $attributes->except(['class', 'data-*', 'name']) }} />
 
                     @if ($hasIconEnd)
                         <div
@@ -162,8 +168,8 @@
                     @endif
                 </div>
             @else
-                <input type="{{ $type }}" class="{{ $inputClasses }}"
-                    {{ $attributes->except(['class', 'data-*']) }} data-input />
+                <input type="{{ $type }}" @if ($name) name="{{ $name }}" @endif
+                    class="{{ $inputClasses }}" {{ $attributes->except(['class', 'data-*', 'name']) }} data-input />
             @endif
 
             @if ($hasAddonEnd)
@@ -171,7 +177,7 @@
             @endif
         </ui:input.group>
     @elseif ($hasIcon || $hasEndElement)
-        <div class="{{ $wrapperClasses }}" {{ $attributes->only('data-*') }} data-input>
+        <div class="{{ $wrapperClasses }}" {{ $attributes->only('data-*') }} data-input data-control>
             @if ($hasIcon)
                 <div
                     class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400 dark:text-gray-500">
@@ -179,8 +185,8 @@
                 </div>
             @endif
 
-            <input type="{{ $type }}" class="{{ $inputClasses }}"
-                {{ $attributes->except(['class', 'data-*']) }} />
+            <input type="{{ $type }}" @if ($name) name="{{ $name }}" @endif
+                class="{{ $inputClasses }}" {{ $attributes->except(['class', 'data-*', 'name']) }} />
 
             @if ($hasIconEnd)
                 <div
@@ -190,9 +196,9 @@
             @endif
         </div>
     @else
-        <div class="{{ $wrapperClasses }}" {{ $attributes->only('data-*') }} data-input>
-            <input type="{{ $type }}" class="{{ $inputClasses }}"
-                {{ $attributes->except(['class', 'data-*']) }} />
+        <div class="{{ $wrapperClasses }}" {{ $attributes->only('data-*') }} data-input data-control>
+            <input type="{{ $type }}" @if ($name) name="{{ $name }}" @endif
+                class="{{ $inputClasses }}" {{ $attributes->except(['class', 'data-*', 'name']) }} />
         </div>
     @endif
 @endif
