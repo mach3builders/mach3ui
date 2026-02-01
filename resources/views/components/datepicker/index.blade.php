@@ -18,37 +18,26 @@
     $id = uniqid('datepicker-');
     $locale = $locale ?? app()->getLocale();
 
-    // Extract x-model attribute
-    $xModel = null;
-    foreach ($attributes as $key => $val) {
-        if (str_starts_with($key, 'x-model')) {
-            $xModel = $val;
-            break;
-        }
-    }
+    // Extract x-model value for name fallback
+    $xModelValue = $attributes->whereStartsWith('x-model')->first();
+    $resolvedName = $name ?? $xModelValue;
 
-    // Use x-model value as name if no name provided
-    $resolvedName = $name ?? $xModel;
+    // Localization
+    $months = __('ui::ui.months', [], $locale);
+    $weekdayLabels = $weekdays ?? __('ui::ui.weekdays', [], $locale);
+    $displayFormat = $displayFormat ?? __('ui::ui.datepicker.display_format', [], $locale);
+    $placeholder = $placeholder ?? __('ui::ui.datepicker.placeholder', [], $locale);
+    $clearLabel = $clearLabel ?? __('ui::ui.clear', [], $locale);
+    $todayLabel = $todayLabel ?? __('ui::ui.today', [], $locale);
 
-    $localeData = [
-        'weekdays' => __('ui::ui.weekdays', [], $locale),
-        'months' => __('ui::ui.months', [], $locale),
-        'displayFormat' => __('ui::ui.datepicker.display_format', [], $locale),
-    ];
-
-    $weekdayLabels = $weekdays ?? $localeData['weekdays'];
-    $resolvedDisplayFormat = $displayFormat ?? $localeData['displayFormat'];
-    $resolvedPlaceholder = $placeholder ?? __('ui::ui.datepicker.placeholder', [], $locale);
-    $resolvedClearLabel = $clearLabel ?? __('ui::ui.clear', [], $locale);
-    $resolvedTodayLabel = $todayLabel ?? __('ui::ui.today', [], $locale);
-
+    // Initial display value
     $displayValue = null;
     if ($value) {
         try {
             $displayValue = \Carbon\Carbon::parse($value)
                 ->locale($locale)
-                ->isoFormat(str_replace(['F', 'j', 'Y'], ['MMMM', 'D', 'YYYY'], $resolvedDisplayFormat));
-        } catch (\Exception $e) {
+                ->isoFormat(str_replace(['F', 'j', 'Y'], ['MMMM', 'D', 'YYYY'], $displayFormat));
+        } catch (\Exception) {
             $displayValue = $value;
         }
     }
@@ -93,16 +82,20 @@
 
 <div class="{{ $classes }}" {{ $attributes->only('data-*') }} style="anchor-scope: --datepicker-trigger;"
     x-modelable="value" {{ $attributes->whereStartsWith('x-model') }} x-data="{
+        // State
         value: @js($value),
         displayValue: @js($displayValue),
         viewYear: null,
         viewMonth: null,
-        placeholder: @js($resolvedPlaceholder),
-        minDate: @js($minDate),
-        maxDate: @js($maxDate),
-        months: @js($localeData['months']),
-        displayFormat: @js($resolvedDisplayFormat),
     
+        // Config
+        displayFormat: @js($displayFormat),
+        maxDate: @js($maxDate),
+        minDate: @js($minDate),
+        months: @js($months),
+        placeholder: @js($placeholder),
+    
+        // Lifecycle
         init() {
             const date = this.value ? this.parseDate(this.value) : new Date();
             this.viewYear = date.getFullYear();
@@ -116,19 +109,18 @@
                 }
             }
     
-            // Sync displayValue when value changes externally via x-model
-            this.$watch('value', (newVal) => {
-                if (newVal) {
-                    const parsed = this.parseDate(newVal);
-                    if (parsed) {
-                        this.displayValue = this.formatDisplay(parsed);
-                    }
-                } else {
-                    this.displayValue = '';
-                }
+            this.$watch('value', (val) => {
+                this.displayValue = val ? this.formatDisplay(this.parseDate(val)) : '';
             });
         },
     
+        onOpen() {
+            const date = this.value ? this.parseDate(this.value) : new Date();
+            this.viewYear = date.getFullYear();
+            this.viewMonth = date.getMonth();
+        },
+    
+        // Date parsing & formatting
         parseDate(str) {
             if (!str) return null;
             const [year, month, day] = str.split('-').map(Number);
@@ -136,30 +128,20 @@
         },
     
         formatValue(date) {
-            const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const day = String(date.getDate()).padStart(2, '0');
-            return `${year}-${month}-${day}`;
+            const y = date.getFullYear();
+            const m = String(date.getMonth() + 1).padStart(2, '0');
+            const d = String(date.getDate()).padStart(2, '0');
+            return `${y}-${m}-${d}`;
         },
     
         formatDisplay(date) {
-            const year = date.getFullYear();
-            const month = this.months[date.getMonth()];
-            const day = date.getDate();
             return this.displayFormat
-                .replace('F', month)
-                .replace('j', day)
-                .replace('Y', year);
+                .replace('F', this.months[date.getMonth()])
+                .replace('j', date.getDate())
+                .replace('Y', date.getFullYear());
         },
     
-        getDaysInMonth(year, month) {
-            return new Date(year, month + 1, 0).getDate();
-        },
-    
-        getFirstDayOfMonth(year, month) {
-            return new Date(year, month, 1).getDay();
-        },
-    
+        // Date checks
         isDisabled(date) {
             if (this.minDate) {
                 const min = this.parseDate(this.minDate);
@@ -175,36 +157,31 @@
         },
     
         isToday(year, month, day) {
-            const today = new Date();
-            return today.getFullYear() === year && today.getMonth() === month && today.getDate() === day;
+            const t = new Date();
+            return t.getFullYear() === year && t.getMonth() === month && t.getDate() === day;
         },
     
         isSelected(year, month, day) {
             if (!this.value) return false;
-            const selected = this.parseDate(this.value);
-            return selected.getFullYear() === year && selected.getMonth() === month && selected.getDate() === day;
+            const s = this.parseDate(this.value);
+            return s.getFullYear() === year && s.getMonth() === month && s.getDate() === day;
         },
     
+        // Selection
         selectDate(year, month, day) {
             const date = new Date(year, month, day);
             if (this.isDisabled(date)) return;
     
             this.value = this.formatValue(date);
             this.displayValue = this.formatDisplay(date);
-    
-            this.$refs.input.value = this.value;
-            this.$refs.input.dispatchEvent(new Event('input', { bubbles: true }));
-            this.$refs.input.dispatchEvent(new Event('change', { bubbles: true }));
-    
+            this.dispatchChange();
             this.$refs.calendar.hidePopover();
         },
     
         clear() {
             this.value = '';
             this.displayValue = '';
-            this.$refs.input.value = '';
-            this.$refs.input.dispatchEvent(new Event('input', { bubbles: true }));
-            this.$refs.input.dispatchEvent(new Event('change', { bubbles: true }));
+            this.dispatchChange();
             this.$refs.calendar.hidePopover();
         },
     
@@ -215,6 +192,13 @@
             }
         },
     
+        dispatchChange() {
+            this.$refs.input.value = this.value;
+            this.$refs.input.dispatchEvent(new Event('input', { bubbles: true }));
+            this.$refs.input.dispatchEvent(new Event('change', { bubbles: true }));
+        },
+    
+        // Navigation
         prevMonth() {
             if (this.viewMonth === 0) {
                 this.viewMonth = 11;
@@ -236,22 +220,21 @@
         canGoPrev() {
             if (!this.minDate) return true;
             const min = this.parseDate(this.minDate);
-            const prevMonthEnd = new Date(this.viewYear, this.viewMonth, 0);
-            return prevMonthEnd >= min;
+            return new Date(this.viewYear, this.viewMonth, 0) >= min;
         },
     
         canGoNext() {
             if (!this.maxDate) return true;
             const max = this.parseDate(this.maxDate);
-            const nextMonthStart = new Date(this.viewYear, this.viewMonth + 1, 1);
-            return nextMonthStart <= max;
+            return new Date(this.viewYear, this.viewMonth + 1, 1) <= max;
         },
     
+        // Calendar grid
         getCalendarDays() {
             const days = [];
-            const firstDay = this.getFirstDayOfMonth(this.viewYear, this.viewMonth);
-            const daysInMonth = this.getDaysInMonth(this.viewYear, this.viewMonth);
-            const daysInPrevMonth = this.getDaysInMonth(this.viewYear, this.viewMonth - 1);
+            const firstDay = new Date(this.viewYear, this.viewMonth, 1).getDay();
+            const daysInMonth = new Date(this.viewYear, this.viewMonth + 1, 0).getDate();
+            const daysInPrevMonth = new Date(this.viewYear, this.viewMonth, 0).getDate();
     
             for (let i = firstDay - 1; i >= 0; i--) {
                 const day = daysInPrevMonth - i;
@@ -282,21 +265,11 @@
             return days;
         },
     
-        onOpen() {
-            const date = this.value ? this.parseDate(this.value) : new Date();
-            this.viewYear = date.getFullYear();
-            this.viewMonth = date.getMonth();
-        },
-    
         getYearOptions() {
-            const years = [];
             const currentYear = new Date().getFullYear();
             const minYear = this.minDate ? this.parseDate(this.minDate).getFullYear() : currentYear - 100;
             const maxYear = this.maxDate ? this.parseDate(this.maxDate).getFullYear() : currentYear + 10;
-            for (let y = minYear; y <= maxYear; y++) {
-                years.push(y);
-            }
-            return years;
+            return Array.from({ length: maxYear - minYear + 1 }, (_, i) => minYear + i);
         }
     }" data-datepicker>
     <button type="button" class="{{ $triggerClasses }}" popovertarget="{{ $id }}" @disabled($disabled)
@@ -371,8 +344,8 @@
         @if ($showFooter)
             <div class="flex items-center justify-between border-t border-gray-100 pt-3 dark:border-gray-740"
                 data-datepicker-footer>
-                <ui:button variant="ghost" size="sm" x-on:click="clear()">{{ $resolvedClearLabel }}</ui:button>
-                <ui:button size="sm" x-on:click="today()">{{ $resolvedTodayLabel }}</ui:button>
+                <ui:button variant="ghost" size="sm" x-on:click="clear()">{{ $clearLabel }}</ui:button>
+                <ui:button size="sm" x-on:click="today()">{{ $todayLabel }}</ui:button>
             </div>
         @endif
     </div>
