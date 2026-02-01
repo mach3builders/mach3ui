@@ -24,6 +24,7 @@
 
     $isAi = $variant === 'ai';
     $isLink = $href !== null;
+    $isIconOnly = $icon && $slot->isEmpty() && !$iconEndValue;
 
     // Extract wire:click target for wire:target
     $wireClick = $attributes->whereStartsWith('wire:click')->first();
@@ -121,7 +122,7 @@
             'inline-flex cursor-pointer select-none items-center justify-center gap-2 whitespace-nowrap border font-semibold uppercase',
         )
         ->add('disabled:cursor-not-allowed disabled:opacity-50')
-        ->add('[&:has(>svg):not(:has(>span))]:aspect-square [&:has(>svg):not(:has(>span))]:px-0')
+        ->add('[&[data-icon-only]]:aspect-square [&[data-icon-only]]:gap-0 [&[data-icon-only]]:px-0')
         ->add($sizeClasses)
         ->when($square, 'aspect-square px-0!')
         ->when($loading === true, 'pointer-events-none')
@@ -176,7 +177,8 @@
 
         @if ($isLink)
             <a class="{{ $aiLinkClasses }}" {{ $attributes->except(['class', 'data-*']) }} href="{{ $href }}"
-                @if ($disabled || $loading === true) aria-disabled="true" tabindex="-1" @endif>
+                @if ($disabled || $loading === true) aria-disabled="true" tabindex="-1" @endif
+                @if ($isIconOnly) data-icon-only @endif>
                 @include('ui::components.button._content', [
                     'icon' => $icon,
                     'iconColorClass' => $iconColorClass,
@@ -191,7 +193,8 @@
                 @if ($autoLoading && $wireTarget) wire:loading.attr="data-loading"
                     wire:target="{{ $wireTarget }}"
                 @elseif ($autoLoading && $type === 'submit')
-                    wire:loading.attr="data-loading" @endif>
+                    wire:loading.attr="data-loading" @endif
+                @if ($isIconOnly) data-icon-only @endif>
                 @include('ui::components.button._content', [
                     'icon' => $icon,
                     'iconColorClass' => $iconColorClass,
@@ -206,7 +209,7 @@
     <a class="{{ $linkClasses }}" {{ $attributes->except('class') }} href="{{ $href }}"
         @if ($disabled || $loading === true) aria-disabled="true" tabindex="-1" @endif
         @if ($active) data-active @endif @if ($loading === true) data-loading @endif
-        data-button>
+        @if ($isIconOnly) data-icon-only @endif data-button>
         @include('ui::components.button._content', [
             'icon' => $icon,
             'iconColorClass' => $iconColorClass,
@@ -223,7 +226,7 @@
             wire:target="{{ $wireTarget }}"
         @elseif ($autoLoading && $type === 'submit')
             wire:loading.attr="data-loading" @endif
-        data-button>
+        @if ($isIconOnly) data-icon-only @endif data-button>
         @include('ui::components.button._content', [
             'icon' => $icon,
             'iconColorClass' => $iconColorClass,

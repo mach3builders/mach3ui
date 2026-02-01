@@ -21,14 +21,6 @@
         )
         ->merge($attributes->only('class'));
 
-    $iconSize = match ($size) {
-        'xs' => 'xs',
-        'sm' => 'sm',
-        'lg' => 'lg',
-        'xl' => 'xl',
-        default => 'md',
-    };
-
     $initials = null;
     if ($name) {
         $words = preg_split('/\s+/', trim($name));
@@ -38,30 +30,28 @@
             $initials = mb_strtoupper(mb_substr($name, 0, 2));
         }
     }
+
+    $fallbackIcon = $icon ?? 'user';
 @endphp
 
 <span
     @if ($src) x-data="{ loaded: false, failed: false }"
-        x-init="$nextTick(() => { if ($refs.img.complete && $refs.img.naturalWidth > 0) loaded = true })" @endif
+    x-init="$nextTick(() => { if ($refs.img.complete && $refs.img.naturalWidth > 0) loaded = true })" @endif
     class="{{ $classes }}" {{ $attributes->except('class') }} data-avatar>
     @if ($src)
         <img x-ref="img" src="{{ $src }}" alt="{{ $name ?? '' }}" x-show="loaded && !failed"
-            x-on:load="loaded = true" x-on:error="failed = true" class="size-full object-cover" />
+            x-on:load="loaded = true" x-on:error="failed = true" class="size-full object-cover" data-avatar-image />
 
-        <span x-show="!loaded || failed">
+        <span x-show="!loaded || failed" x-cloak data-avatar-fallback>
             @if ($initials)
                 {{ $initials }}
-            @elseif ($icon)
-                <ui:icon :name="$icon" :size="$iconSize" />
             @else
-                <ui:icon name="user" :size="$iconSize" />
+                <ui:icon :name="$fallbackIcon" :size="$size" />
             @endif
         </span>
     @elseif ($initials)
         {{ $initials }}
-    @elseif ($icon)
-        <ui:icon :name="$icon" :size="$iconSize" />
     @else
-        <ui:icon name="user" :size="$iconSize" />
+        <ui:icon :name="$fallbackIcon" :size="$size" />
     @endif
 </span>

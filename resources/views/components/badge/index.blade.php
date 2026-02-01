@@ -46,13 +46,13 @@
 
 <span class="{{ $classes }}" {{ $attributes->except('class') }} data-badge>
     @if ($icon)
-        <ui:icon :name="$icon" :class="$iconClasses" />
+        <ui:icon :name="$icon" :class="$iconClasses" data-badge-icon />
     @endif
 
     {{ $label ?? $slot }}
 
     @if ($href)
-        <a href="{{ $href }}" target="_blank" rel="noopener noreferrer" class="{{ $linkClasses }}">
+        <a href="{{ $href }}" target="_blank" rel="noopener noreferrer" class="{{ $linkClasses }}" data-badge-link>
             <ui:icon name="external-link" :class="$linkIconClasses" />
         </a>
     @endif

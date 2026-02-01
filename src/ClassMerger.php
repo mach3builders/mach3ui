@@ -181,7 +181,13 @@ class ClassMerger
 
     private static function getGroup(string $class): ?string
     {
-        // Strip variants (hover:, dark:, md:, etc.)
+        // Extract variant prefix (hover:, dark:, md:, xl:, etc.)
+        $variantPrefix = '';
+        if (preg_match('/^((?:[a-z0-9-]+:)+)/', $class, $matches) === 1) {
+            $variantPrefix = $matches[1];
+        }
+
+        // Strip variants to get base class
         $base = preg_replace('/^([a-z0-9-]+:)+/', '', $class);
         if ($base === null) {
             return null;
@@ -191,168 +197,168 @@ class ClassMerger
 
         // Semantic subgroups for ambiguous prefixes
         if (in_array($base, self::TEXT_SIZES, true)) {
-            return 'text-size';
+            return $variantPrefix.'text-size';
         }
         if (in_array($base, self::TEXT_ALIGNS, true)) {
-            return 'text-align';
+            return $variantPrefix.'text-align';
         }
         if (in_array($base, self::TEXT_DECORATION, true)) {
-            return 'text-decoration';
+            return $variantPrefix.'text-decoration';
         }
         if (in_array($base, self::TEXT_TRANSFORM, true)) {
-            return 'text-transform';
+            return $variantPrefix.'text-transform';
         }
         if (str_starts_with($base, 'text-')) {
-            return 'text-color';
+            return $variantPrefix.'text-color';
         }
 
         if (in_array($base, self::FONT_FAMILIES, true)) {
-            return 'font-family';
+            return $variantPrefix.'font-family';
         }
         if (in_array($base, self::FONT_STYLE, true)) {
-            return 'font-style';
+            return $variantPrefix.'font-style';
         }
         if (str_starts_with($base, 'font-')) {
-            return 'font-weight';
+            return $variantPrefix.'font-weight';
         }
 
         if (in_array($base, self::BORDER_STYLES, true)) {
-            return 'border-style';
+            return $variantPrefix.'border-style';
         }
         if (in_array($base, self::BORDER_COLLAPSE, true)) {
-            return 'border-collapse';
+            return $variantPrefix.'border-collapse';
         }
         if (preg_match('/^border(-[trblxyse])?-\d/', $base) === 1) {
-            return 'border-width';
+            return $variantPrefix.'border-width';
         }
         if (preg_match('/^border(-[trblxyse])?-[a-z]+-\d/', $base) === 1) {
-            return 'border-color';
+            return $variantPrefix.'border-color';
         }
 
         // Display
         if (in_array($base, self::DISPLAY, true)) {
-            return 'display';
+            return $variantPrefix.'display';
         }
 
         // Flexbox
         if (in_array($base, self::FLEX_DIRECTION, true)) {
-            return 'flex-direction';
+            return $variantPrefix.'flex-direction';
         }
         if (in_array($base, self::FLEX_WRAP, true)) {
-            return 'flex-wrap';
+            return $variantPrefix.'flex-wrap';
         }
 
         // Alignment
         if (in_array($base, self::ITEMS, true)) {
-            return 'align-items';
+            return $variantPrefix.'align-items';
         }
         if (in_array($base, self::JUSTIFY, true)) {
-            return 'justify-content';
+            return $variantPrefix.'justify-content';
         }
         if (in_array($base, self::JUSTIFY_ITEMS, true)) {
-            return 'justify-items';
+            return $variantPrefix.'justify-items';
         }
         if (in_array($base, self::JUSTIFY_SELF, true)) {
-            return 'justify-self';
+            return $variantPrefix.'justify-self';
         }
         if (in_array($base, self::CONTENT, true)) {
-            return 'align-content';
+            return $variantPrefix.'align-content';
         }
         if (in_array($base, self::PLACE_CONTENT, true)) {
-            return 'place-content';
+            return $variantPrefix.'place-content';
         }
         if (in_array($base, self::PLACE_ITEMS, true)) {
-            return 'place-items';
+            return $variantPrefix.'place-items';
         }
         if (in_array($base, self::PLACE_SELF, true)) {
-            return 'place-self';
+            return $variantPrefix.'place-self';
         }
         if (in_array($base, self::SELF, true)) {
-            return 'align-self';
+            return $variantPrefix.'align-self';
         }
 
         // Position & visibility
         if (in_array($base, self::POSITION, true)) {
-            return 'position';
+            return $variantPrefix.'position';
         }
         if (in_array($base, self::VISIBILITY, true)) {
-            return 'visibility';
+            return $variantPrefix.'visibility';
         }
         if (in_array($base, self::FLOAT, true)) {
-            return 'float';
+            return $variantPrefix.'float';
         }
         if (in_array($base, self::CLEAR, true)) {
-            return 'clear';
+            return $variantPrefix.'clear';
         }
 
         // Object
         if (in_array($base, self::OBJECT_FIT, true)) {
-            return 'object-fit';
+            return $variantPrefix.'object-fit';
         }
         if (in_array($base, self::OBJECT_POSITION, true)) {
-            return 'object-position';
+            return $variantPrefix.'object-position';
         }
 
         // Typography
         if (in_array($base, self::WHITESPACE, true)) {
-            return 'whitespace';
+            return $variantPrefix.'whitespace';
         }
         if (in_array($base, self::WORD_BREAK, true)) {
-            return 'word-break';
+            return $variantPrefix.'word-break';
         }
 
         // Interactivity
         if (in_array($base, self::POINTER_EVENTS, true)) {
-            return 'pointer-events';
+            return $variantPrefix.'pointer-events';
         }
         if (in_array($base, self::USER_SELECT, true)) {
-            return 'user-select';
+            return $variantPrefix.'user-select';
         }
         if (in_array($base, self::RESIZE, true)) {
-            return 'resize';
+            return $variantPrefix.'resize';
         }
         if (in_array($base, self::CURSOR, true)) {
-            return 'cursor';
+            return $variantPrefix.'cursor';
         }
 
         // Lists
         if (in_array($base, self::LIST_STYLE_TYPE, true)) {
-            return 'list-style-type';
+            return $variantPrefix.'list-style-type';
         }
         if (in_array($base, self::LIST_STYLE_POSITION, true)) {
-            return 'list-style-position';
+            return $variantPrefix.'list-style-position';
         }
 
         // Accessibility
         if (in_array($base, self::SR, true)) {
-            return 'sr';
+            return $variantPrefix.'sr';
         }
 
         // Box
         if (in_array($base, self::ISOLATION, true)) {
-            return 'isolation';
+            return $variantPrefix.'isolation';
         }
         if (in_array($base, self::BOX_DECORATION, true)) {
-            return 'box-decoration';
+            return $variantPrefix.'box-decoration';
         }
         if (in_array($base, self::BOX_SIZING, true)) {
-            return 'box-sizing';
+            return $variantPrefix.'box-sizing';
         }
 
         // Table
         if (in_array($base, self::TABLE_LAYOUT, true)) {
-            return 'table-layout';
+            return $variantPrefix.'table-layout';
         }
         if (in_array($base, self::CAPTION_SIDE, true)) {
-            return 'caption-side';
+            return $variantPrefix.'caption-side';
         }
 
         // Generic prefix extraction: "px-4" → "px", "bg-red-500" → "bg"
         if (preg_match('/^([a-z]+(?:-[a-z]+)*?)(?:-(?:\d|auto|full|screen|min|max|fit|\[).*)$/', $base, $m) === 1) {
-            return $m[1];
+            return $variantPrefix.$m[1];
         }
 
-        return $base; // Fallback to full class as its own group
+        return $variantPrefix.$base; // Fallback to full class as its own group
     }
 
     /**

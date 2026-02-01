@@ -17,7 +17,7 @@
 
 <div class="{{ $classes }}" {{ $attributes->except('class') }} data-card-footer>
     @if ($divided)
-        <ui:divider variant="subtle" class="mt-4" />
+        <ui:divider class="bg-gray-60 mt-4 dark:bg-gray-740" />
     @endif
 
     <div class="flex items-center gap-2 px-4.5 py-4">

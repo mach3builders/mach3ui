@@ -38,7 +38,8 @@
         {{ $label ?? $slot }}
     </a>
 @else
-    <span x-init="register(null)" class="{{ $spanClasses }}" {{ $attributes->except('class') }} data-breadcrumbs-item>
+    <span x-init="register(null)" class="{{ $spanClasses }}" {{ $attributes->except('class') }} data-breadcrumbs-item
+        data-active>
         {{ $label ?? $slot }}
     </span>
 @endif

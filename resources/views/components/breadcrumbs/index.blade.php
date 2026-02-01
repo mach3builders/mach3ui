@@ -15,8 +15,10 @@
         return this.items.length > 1 ? this.items[this.items.length - 2] : null;
     },
 }" class="{{ $classes }}" {{ $attributes->except('class') }} data-breadcrumbs>
-    <ui:button x-show="parentUrl" x-cloak ::href="parentUrl" variant="subtle" size="xs" icon="chevron-left"
-        class="md:hidden" />
+    <template x-if="parentUrl">
+        <ui:button ::href="parentUrl" variant="subtle" size="xs" icon="chevron-left" class="md:hidden"
+            data-breadcrumbs-back />
+    </template>
 
     {{ $slot }}
 </nav>

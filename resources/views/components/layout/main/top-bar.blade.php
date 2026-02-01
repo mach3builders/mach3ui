@@ -14,8 +14,8 @@
 @endphp
 
 <header class="{{ $classes }}" data-layout-main-top-bar>
-    <div class="flex items-center h-14">
-        <ui:button class="xl:hidden" variant="ghost" icon="menu" x-on:click="sideBarOpen = true" />
+    <div class="flex items-center gap-2 h-14">
+        <ui:button class="xl:hidden shrink-0" variant="ghost" icon="menu" x-on:click="sideBarOpen = true" />
 
         @if (isset($breadcrumbs))
             <ui:breadcrumbs>

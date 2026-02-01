@@ -38,7 +38,7 @@
     {{ $slot }}
 
     @if ($limit)
-        <span class="{{ $limitClasses }}">
+        <span class="{{ $limitClasses }}" data-avatar-group-limit>
             +{{ $limit }}
         </span>
     @endif
