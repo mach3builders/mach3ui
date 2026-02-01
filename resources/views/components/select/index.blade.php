@@ -15,18 +15,14 @@
     $hasWireModel = $wireModel && method_exists($wireModel, 'value');
     $wireModelValue = $hasWireModel ? $wireModel->value() : null;
 
-    // Extract x-model attribute
-    $xModel = null;
-    foreach ($attributes as $key => $val) {
-        if (str_starts_with($key, 'x-model')) {
-            $xModel = $val;
-            break;
-        }
-    }
+    $xModel = $attributes->whereStartsWith('x-model')->first();
 
     $name = $name ?? ($wireModelValue ?? $xModel);
-    $id = $attributes->get('id') ?? ($name ? 'select-' . $name : ($label ? 'select-' . Str::random(8) : null));
+    $id = $attributes->get('id') ?? ($name ? 'select-' . $name : ($label ? uniqid('select-') : null));
     $hasError = $name && $errors->has($name);
+
+    $optionsArray = is_array($options) ? $options : [];
+    $hasSlot = $slot->isNotEmpty();
 
     $wrapperClasses = Ui::classes()->add('relative w-full')->merge($attributes->only('class'));
 
@@ -49,80 +45,62 @@
             'border-red-500 dark:border-red-500 focus:border-red-600 dark:focus:border-red-500',
         );
 
-    $optionsArray = is_array($options) ? $options : [];
-    $hasSlot = !$slot->isEmpty();
+    $iconWrapperClasses = Ui::classes()
+        ->add('pointer-events-none absolute inset-y-0 flex items-center')
+        ->add('text-gray-400')
+        ->add('dark:text-gray-500')
+        ->add(
+            match ($size) {
+                'sm' => 'right-2',
+                'lg' => 'right-3.5',
+                default => 'right-3',
+            },
+        );
 
     $iconSize = match ($size) {
         'sm' => 'size-3.5',
         'lg' => 'size-5',
         default => 'size-4',
     };
-
-    $iconRight = match ($size) {
-        'sm' => 'right-2',
-        'lg' => 'right-3.5',
-        default => 'right-3',
-    };
 @endphp
 
 @if ($label)
     <ui:field>
         <ui:label :for="$id">{{ $label }}</ui:label>
+@endif
 
-        <div class="{{ $wrapperClasses }}" {{ $attributes->only('data-*') }} data-select data-control>
-            <select class="{{ $selectClasses }}" {{ $attributes->except(['class', 'data-*']) }} id="{{ $id }}"
-                @if ($name) name="{{ $name }}" @endif @disabled($disabled)>
-                @if ($placeholder)
-                    <option value="" disabled @if (!$value) selected @endif>{{ $placeholder }}
-                    </option>
-                @endif
-
-                @if ($hasSlot)
-                    {{ $slot }}
-                @else
-                    @foreach ($optionsArray as $optionValue => $optionLabel)
-                        <option value="{{ $optionValue }}" @if ($value == $optionValue) selected @endif>
-                            {{ $optionLabel }}</option>
-                    @endforeach
-                @endif
-            </select>
-
-            <div
-                class="pointer-events-none absolute inset-y-0 {{ $iconRight }} flex items-center text-gray-400 dark:text-gray-500">
-                <ui:icon name="chevron-down" class="{{ $iconSize }}" />
-            </div>
-        </div>
-
-        @if ($help)
-            <ui:help>{{ $help }}</ui:help>
+<div class="{{ $wrapperClasses }}" {{ $attributes->only('data-*') }} data-select data-control>
+    <select class="{{ $selectClasses }}" {{ $attributes->except(['class', 'data-*']) }}
+        @if ($id) id="{{ $id }}" @endif
+        @if ($name) name="{{ $name }}" @endif @disabled($disabled)>
+        @if ($placeholder)
+            <option value="" disabled @if (!$value) selected @endif>{{ $placeholder }}
+            </option>
         @endif
 
-        @if ($name)
-            <ui:error :name="$name" />
-        @endif
-    </ui:field>
-@else
-    <div class="{{ $wrapperClasses }}" {{ $attributes->only('data-*') }} data-select data-control>
-        <select class="{{ $selectClasses }}" {{ $attributes->except(['class', 'data-*']) }}
-            @if ($name) name="{{ $name }}" @endif @disabled($disabled)>
-            @if ($placeholder)
-                <option value="" disabled @if (!$value) selected @endif>{{ $placeholder }}
+        @if ($hasSlot)
+            {{ $slot }}
+        @else
+            @foreach ($optionsArray as $optionValue => $optionLabel)
+                <option value="{{ $optionValue }}" @if ($value == $optionValue) selected @endif>
+                    {{ $optionLabel }}
                 </option>
-            @endif
+            @endforeach
+        @endif
+    </select>
 
-            @if ($hasSlot)
-                {{ $slot }}
-            @else
-                @foreach ($optionsArray as $optionValue => $optionLabel)
-                    <option value="{{ $optionValue }}" @if ($value == $optionValue) selected @endif>
-                        {{ $optionLabel }}</option>
-                @endforeach
-            @endif
-        </select>
-
-        <div
-            class="pointer-events-none absolute inset-y-0 {{ $iconRight }} flex items-center text-gray-400 dark:text-gray-500">
-            <ui:icon name="chevron-down" class="{{ $iconSize }}" />
-        </div>
+    <div class="{{ $iconWrapperClasses }}" data-select-icon>
+        <ui:icon name="chevron-down" class="{{ $iconSize }}" />
     </div>
+</div>
+
+@if ($label)
+    @if ($help)
+        <ui:help>{{ $help }}</ui:help>
+    @endif
+
+    @if ($name)
+        <ui:error :name="$name" />
+    @endif
+    </ui:field>
 @endif

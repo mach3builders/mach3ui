@@ -23,7 +23,7 @@
     $wireModelValue = $hasWireModel ? $wireModel->value() : null;
     $isLive = $hasWireModel && $wireModel->hasModifier('live');
 
-    $id = 'selectbox-' . uniqid();
+    $id = uniqid('selectbox-');
     $name = $name ?? $wireModelValue;
     $hasError = $name && $errors->has($name);
 
@@ -40,16 +40,20 @@
         ->add('focus:border-gray-400 focus:outline-none')
         ->add('dark:focus:border-gray-500')
         ->add('disabled:cursor-not-allowed disabled:opacity-50')
-        ->when($size === 'sm', 'h-8 px-2.5 py-1.5 text-xs')
-        ->when($size === null, 'h-10')
-        ->when($size === 'lg', 'h-12 px-4 py-3 text-base')
+        ->add(
+            match ($size) {
+                'sm' => 'h-8 px-2.5 py-1.5 text-xs',
+                'lg' => 'h-12 px-4 py-3 text-base',
+                default => 'h-10',
+            },
+        )
         ->when(
             $invalid || $hasError,
             'border-red-500 dark:border-red-500 focus:border-red-600 dark:focus:border-red-500',
         );
 
     $optionsArray = is_array($options) ? $options : [];
-    $hasSlot = !$slot->isEmpty();
+    $hasSlot = $slot->isNotEmpty();
 @endphp
 
 @if ($label)
@@ -57,6 +61,7 @@
         <ui:label>{{ $label }}</ui:label>
 
         <div class="{{ $containerClasses }}" {{ $attributes->only('data-*') }} x-data="{
+            open: false,
             value: @if ($wireModelValue) (typeof $wire !== 'undefined' ? $wire.entangle('{{ $wireModelValue }}'){{ $isLive ? '.live' : '' }} : '{{ $value }}') @else '{{ $value }}' @endif,
             search: '',
             options: {{ Js::from($optionsArray) }},
@@ -89,10 +94,10 @@
                 });
             }
         }"
-            x-on:toggle.window="if ($event.target === $refs.menu && $event.newState === 'closed') search = ''"
+            x-on:toggle.window="if ($event.target === $refs.menu) { open = $event.newState === 'open'; if (!open) search = ''; }"
             x-effect="updateAriaSelected()" data-selectbox data-control>
             <button type="button" class="{{ $triggerClasses }}" popovertarget="{{ $id }}"
-                @disabled($disabled)>
+                :class="{ 'border-gray-400 dark:border-gray-500': open }" @disabled($disabled)>
                 <span x-show="selectedLabel" x-text="selectedLabel"></span>
 
                 <span x-show="!selectedLabel" class="text-gray-400 dark:text-gray-500">{{ $placeholder }}</span>
@@ -119,8 +124,8 @@
                     @else
                         <template x-for="[optValue, optLabel] in filteredOptions" :key="optValue">
                             <button type="button"
-                                class="flex w-full cursor-pointer items-center gap-2 rounded-sm px-3 py-2 text-left text-sm text-gray-700 hover:bg-gray-40 dark:text-gray-200 dark:hover:bg-gray-760 aria-selected:bg-gray-50 aria-selected:font-medium dark:aria-selected:bg-gray-760"
-                                x-on:click="select(optValue)" x-text="optLabel"
+                                class="flex w-full cursor-pointer items-center gap-2 rounded-sm px-3 py-2 text-left text-sm text-gray-700 hover:bg-gray-40 focus:outline-none dark:text-gray-200 dark:hover:bg-gray-760 aria-selected:bg-gray-50 aria-selected:font-medium dark:aria-selected:bg-gray-760"
+                                x-on:mousedown.prevent x-on:click="select(optValue)" x-text="optLabel"
                                 :aria-selected="value === optValue"></button>
                         </template>
                     @endif
@@ -143,6 +148,7 @@
     </ui:field>
 @else
     <div class="{{ $containerClasses }}" {{ $attributes->only('data-*') }} x-data="{
+        open: false,
         value: @if ($wireModelValue) (typeof $wire !== 'undefined' ? $wire.entangle('{{ $wireModelValue }}'){{ $isLive ? '.live' : '' }} : '{{ $value }}') @else '{{ $value }}' @endif,
         search: '',
         options: {{ Js::from($optionsArray) }},
@@ -175,10 +181,10 @@
             });
         }
     }"
-        x-on:toggle.window="if ($event.target === $refs.menu && $event.newState === 'closed') search = ''"
+        x-on:toggle.window="if ($event.target === $refs.menu) { open = $event.newState === 'open'; if (!open) search = ''; }"
         x-effect="updateAriaSelected()" data-selectbox data-control>
         <button type="button" class="{{ $triggerClasses }}" popovertarget="{{ $id }}"
-            @disabled($disabled)>
+            :class="{ 'border-gray-400 dark:border-gray-500': open }" @disabled($disabled)>
             <span x-show="selectedLabel" x-text="selectedLabel"></span>
 
             <span x-show="!selectedLabel" class="text-gray-400 dark:text-gray-500">{{ $placeholder }}</span>
@@ -205,7 +211,7 @@
                 @else
                     <template x-for="[optValue, optLabel] in filteredOptions" :key="optValue">
                         <button type="button"
-                            class="flex w-full cursor-pointer items-center gap-2 rounded-sm px-3 py-2 text-left text-sm text-gray-700 hover:bg-gray-40 dark:text-gray-200 dark:hover:bg-gray-760 aria-selected:bg-gray-50 aria-selected:font-medium dark:aria-selected:bg-gray-760"
+                            class="flex w-full cursor-pointer items-center gap-2 rounded-sm px-3 py-2 text-left text-sm text-gray-700 hover:bg-gray-40 focus:outline-none dark:text-gray-200 dark:hover:bg-gray-760 aria-selected:bg-gray-50 aria-selected:font-medium dark:aria-selected:bg-gray-760"
                             x-on:click="select(optValue)" x-text="optLabel"
                             :aria-selected="value === optValue"></button>
                     </template>
