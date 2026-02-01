@@ -1,24 +1,27 @@
 @props([
     'disabled' => false,
-    'emptyText' => 'No results found',
+    'emptyText' => null,
     'help' => null,
     'invalid' => false,
     'label' => null,
     'name' => null,
     'options' => [],
-    'placeholder' => 'Select an option...',
+    'placeholder' => null,
     'search' => false,
-    'search:placeholder' => 'Search...',
+    'search:placeholder' => null,
     'size' => null,
     'value' => null,
 ])
 
 @php
-    $searchPlaceholder = $__data['search:placeholder'] ?? 'Search...';
+    $placeholder = $placeholder ?? __('ui::ui.selectbox.placeholder');
+    $emptyText = $emptyText ?? __('ui::ui.selectbox.no_results');
+    $searchPlaceholder = $__data['search:placeholder'] ?? __('ui::ui.selectbox.search_placeholder');
 
     $wireModel = $attributes->wire('model');
-    $wireModelValue = $wireModel?->value();
-    $isLive = $wireModel?->hasModifier('live');
+    $hasWireModel = $wireModel && method_exists($wireModel, 'value');
+    $wireModelValue = $hasWireModel ? $wireModel->value() : null;
+    $isLive = $hasWireModel && $wireModel->hasModifier('live');
 
     $id = 'selectbox-' . uniqid();
     $name = $name ?? $wireModelValue;

@@ -54,61 +54,59 @@
     <div class="{{ $innerClasses }}">
         <ui:layout.backdrop />
 
-        @persist('sidebar')
-            <ui:layout.sidebar>
-                <ui:layout.sidebar.header>
-                    @if ($sidebarLogoSlot)
-                        <div class="flex items-center h-10">{{ $sidebarLogoSlot }}</div>
-                    @else
-                        <ui:dropdown class="w-full" position="right-start">
-                            <ui:dropdown.trigger variant="ghost" class="px-3!">
-                                <ui:logo />
-                            </ui:dropdown.trigger>
-
-                            <ui:dropdown.menu>
-                                <ui:dropdown.header title="Applications" />
-
-                                @foreach (config('applications') as $name => $options)
-                                    <ui:dropdown.item href="{{ $options['href'] }}" active="{{ $loop->first }}">
-                                        <div class="flex items-center gap-3">
-                                            <span
-                                                class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg font-brand text-sm font-semibold bg-gray-80 dark:bg-gray-830">
-                                                <span class="-skew-x-12 text-{{ $options['color'] }}-500">III</span>
-                                            </span>
-
-                                            <ui:text weight="semibold">Mach3{{ $name }}</ui:text>
-                                            @if ($loop->first)
-                                                <ui:icon name="check" size="sm" class="ml-auto text-blue-500" />
-                                            @endif
-                                        </div>
-                                    </ui:dropdown.item>
-                                @endforeach
-                            </ui:dropdown.menu>
-                        </ui:dropdown>
-                    @endif
-
-                    @if ($sidebarWorkspaceSlot)
-                        {{ $sidebarWorkspaceSlot }}
-                    @endif
-                </ui:layout.sidebar.header>
-
-                @if ($sidebarNavSlot)
-                    {{ $sidebarNavSlot }}
+        <ui:layout.sidebar>
+            <ui:layout.sidebar.header>
+                @if ($sidebarLogoSlot)
+                    <div class="flex items-center h-10">{{ $sidebarLogoSlot }}</div>
                 @else
-                    <ui:layout.sidebar.nav>
-                        <ui:nav>
-                            <ui:nav.item icon="layout-dashboard" label="Dashboard" active />
-                        </ui:nav>
-                    </ui:layout.sidebar.nav>
+                    <ui:dropdown class="w-full" position="right-start">
+                        <ui:dropdown.trigger variant="ghost" class="px-3!">
+                            <ui:logo />
+                        </ui:dropdown.trigger>
+
+                        <ui:dropdown.menu>
+                            <ui:dropdown.header :title="__('ui::ui.layout.applications')" />
+
+                            @foreach (config('applications') as $name => $options)
+                                <ui:dropdown.item href="{{ $options['href'] }}" active="{{ $loop->first }}">
+                                    <div class="flex items-center gap-3">
+                                        <span
+                                            class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg font-brand text-sm font-semibold bg-gray-80 dark:bg-gray-830">
+                                            <span class="-skew-x-12 text-{{ $options['color'] }}-500">III</span>
+                                        </span>
+
+                                        <ui:text weight="semibold">Mach3{{ $name }}</ui:text>
+                                        @if ($loop->first)
+                                            <ui:icon name="check" size="sm" class="ml-auto text-blue-500" />
+                                        @endif
+                                    </div>
+                                </ui:dropdown.item>
+                            @endforeach
+                        </ui:dropdown.menu>
+                    </ui:dropdown>
                 @endif
 
-                @if ($sidebarFooterSlot)
-                    <ui:layout.sidebar.footer>
-                        {{ $sidebarFooterSlot }}
-                    </ui:layout.sidebar.footer>
+                @if ($sidebarWorkspaceSlot)
+                    {{ $sidebarWorkspaceSlot }}
                 @endif
-            </ui:layout.sidebar>
-        @endpersist
+            </ui:layout.sidebar.header>
+
+            @if ($sidebarNavSlot)
+                {{ $sidebarNavSlot }}
+            @else
+                <ui:layout.sidebar.nav>
+                    <ui:nav>
+                        <ui:nav.item icon="layout-dashboard" :label="__('ui::ui.layout.dashboard')" active />
+                    </ui:nav>
+                </ui:layout.sidebar.nav>
+            @endif
+
+            @if ($sidebarFooterSlot)
+                <ui:layout.sidebar.footer>
+                    {{ $sidebarFooterSlot }}
+                </ui:layout.sidebar.footer>
+            @endif
+        </ui:layout.sidebar>
 
         <main class="flex-1" data-layout-main>
             <ui:layout.main.top-bar>
@@ -150,16 +148,17 @@
                                     {{ auth()->user()?->email ?? 'john@example.com' }}</ui:text>
                             </ui:dropdown.header>
 
-                            <ui:dropdown.item href="#" icon="user" label="Profile" />
+                            <ui:dropdown.item href="#" icon="user" :label="__('ui::ui.layout.profile')" />
 
-                            <ui:dropdown.item href="#" icon="settings" label="Settings" />
+                            <ui:dropdown.item href="#" icon="settings" :label="__('ui::ui.layout.settings')" />
 
-                            <ui:dropdown.item href="#" icon="log-out" label="Logout" danger />
+                            <ui:dropdown.item href="#" icon="log-out" :label="__('ui::ui.layout.logout')"
+                                danger />
 
                             <ui:divider variant="subtle" />
 
                             <div class="flex items-center justify-between gap-1 pl-3">
-                                <ui:text size="xs" variant="muted">Theme</ui:text>
+                                <ui:text size="xs" variant="muted">{{ __('ui::ui.layout.theme') }}</ui:text>
 
                                 <ui:theme-switcher />
                             </div>

@@ -1,7 +1,11 @@
 @props([
     'current' => 0,
-    'title' => 'Switch application',
+    'title' => null,
 ])
+
+@php
+    $title = $title ?? __('ui::ui.app_switcher.title');
+@endphp
 
 @php
     $overlayClasses = Ui::classes()
@@ -118,7 +122,10 @@
 
         <div class="{{ $hintClasses }}">
             <ui:kbd>Ctrl</ui:kbd>
-            <ui:kbd>A</ui:kbd> cycle · release <ui:kbd>Ctrl</ui:kbd> select · <ui:kbd>Esc</ui:kbd> close
+            <ui:kbd>A</ui:kbd> {{ __('ui::ui.app_switcher.hint_cycle') }} · {{ __('ui::ui.app_switcher.hint_release') }}
+            <ui:kbd>Ctrl</ui:kbd>
+            {{ __('ui::ui.app_switcher.hint_select') }} · <ui:kbd>Esc</ui:kbd>
+            {{ __('ui::ui.app_switcher.hint_close') }}
         </div>
     </div>
 </div>

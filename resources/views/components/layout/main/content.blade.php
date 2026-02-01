@@ -47,7 +47,7 @@
                 @if (isset($header))
                     {{ $header }}
                 @else
-                    <ui:heading level="1" size="xl">{{ $title ?? 'Page title' }}</ui:heading>
+                    <ui:heading level="1" size="xl">{{ $title ?? __('ui::ui.layout.page_title') }}</ui:heading>
 
                     @if (isset($description))
                         <ui:text variant="muted">{{ $description }}</ui:text>

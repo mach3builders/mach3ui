@@ -164,7 +164,7 @@
         @if ($isLink)
             <a class="{{ $aiLinkClasses }}" {{ $attributes->except(['class', 'data-*']) }} href="{{ $href }}"
                 @if ($disabled || $loading) aria-disabled="true" tabindex="-1" @endif>
-                @include('ui::button._content', [
+                @include('ui::components.button._content', [
                     'icon' => $icon,
                     'iconColorClass' => $iconColorClass,
                     'iconTrailingValue' => $iconTrailingValue,
@@ -175,7 +175,7 @@
         @else
             <button class="{{ $aiClasses }}" {{ $attributes->except(['class', 'data-*']) }} type="{{ $type }}"
                 @if ($disabled) disabled @endif>
-                @include('ui::button._content', [
+                @include('ui::components.button._content', [
                     'icon' => $icon,
                     'iconColorClass' => $iconColorClass,
                     'iconTrailingValue' => $iconTrailingValue,
@@ -189,7 +189,7 @@
     <a class="{{ $linkClasses }}" {{ $attributes->except('class') }} href="{{ $href }}"
         @if ($disabled || $loading) aria-disabled="true" tabindex="-1" @endif
         @if ($active) data-active @endif data-button>
-        @include('ui::button._content', [
+        @include('ui::components.button._content', [
             'icon' => $icon,
             'iconColorClass' => $iconColorClass,
             'iconTrailingValue' => $iconTrailingValue,
@@ -201,7 +201,7 @@
     <button class="{{ $classes }}" {{ $attributes->except('class') }} type="{{ $type }}"
         @if ($disabled) disabled @endif @if ($active) data-active @endif
         data-button>
-        @include('ui::button._content', [
+        @include('ui::components.button._content', [
             'icon' => $icon,
             'iconColorClass' => $iconColorClass,
             'iconTrailingValue' => $iconTrailingValue,

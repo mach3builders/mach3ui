@@ -69,4 +69,61 @@ return [
         'title' => 'Geen gegevens gevonden',
         'description' => 'Geen resultaten gevonden die aan je criteria voldoen.',
     ],
+
+    // Layout banner
+    'banner' => [
+        'logged_in_as' => 'Je bent ingelogd als',
+        'switch_account' => 'Terug naar eigen account',
+    ],
+
+    // Layout app
+    'layout' => [
+        'applications' => 'Applicaties',
+        'dashboard' => 'Dashboard',
+        'profile' => 'Profiel',
+        'settings' => 'Instellingen',
+        'logout' => 'Uitloggen',
+        'theme' => 'Thema',
+        'page_title' => 'Paginatitel',
+    ],
+
+    // Selectbox
+    'selectbox' => [
+        'placeholder' => 'Selecteer een optie...',
+        'search_placeholder' => 'Zoeken...',
+        'no_results' => 'Geen resultaten gevonden',
+    ],
+
+    // Rich text editor
+    'rich_text_editor' => [
+        'placeholder' => 'Schrijf iets...',
+        'bold' => 'Vet',
+        'italic' => 'Cursief',
+        'strikethrough' => 'Doorhalen',
+        'inline_code' => 'Inline code',
+        'heading_1' => 'Kop 1',
+        'heading_2' => 'Kop 2',
+        'heading_3' => 'Kop 3',
+        'bullet_list' => 'Opsomming',
+        'numbered_list' => 'Genummerde lijst',
+        'quote' => 'Citaat',
+        'code_block' => 'Codeblok',
+        'link' => 'Link',
+        'image' => 'Afbeelding',
+        'horizontal_rule' => 'Horizontale lijn',
+        'undo' => 'Ongedaan maken',
+        'redo' => 'Opnieuw',
+        'insert_link' => 'Link invoegen',
+        'insert_image' => 'Afbeelding invoegen',
+        'characters' => ':count tekens',
+    ],
+
+    // App switcher
+    'app_switcher' => [
+        'title' => 'Wissel van applicatie',
+        'hint_cycle' => 'wissel',
+        'hint_release' => 'loslaten',
+        'hint_select' => 'selecteer',
+        'hint_close' => 'sluiten',
+    ],
 ];

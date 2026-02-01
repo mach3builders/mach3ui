@@ -6,7 +6,8 @@
 
 @php
     $wireModel = $attributes->wire('model');
-    $wireModelValue = $wireModel?->value();
+    $hasWireModel = $wireModel && method_exists($wireModel, 'value');
+    $wireModelValue = $hasWireModel ? $wireModel->value() : null;
     $name = $attributes->get('name') ?? $wireModelValue;
 
     $wrapperClasses = Ui::classes()->merge($attributes->only('class'));

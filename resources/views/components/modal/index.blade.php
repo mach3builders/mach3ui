@@ -7,9 +7,9 @@
 
 @php
     $wireModel = $attributes->wire('model');
-    $hasWireModel = (bool) $wireModel?->directive;
-    $wireModelValue = $wireModel?->value();
-    $isLive = $wireModel?->hasModifier('live');
+    $hasWireModel = $wireModel && method_exists($wireModel, 'value');
+    $wireModelValue = $hasWireModel ? $wireModel->value() : null;
+    $isLive = $hasWireModel && $wireModel->hasModifier('live');
 
     $headerSlot = $__laravel_slots['header'] ?? null;
     $alertSlot = $__laravel_slots['alert'] ?? null;

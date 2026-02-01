@@ -1,7 +1,7 @@
 @props([
     'id' => null,
     'name' => 'content',
-    'placeholder' => 'Write something...',
+    'placeholder' => null,
     'showCharacterCount' => false,
     'toolbar' => 'full',
     'value' => null,
@@ -9,6 +9,7 @@
 ])
 
 @php
+    $placeholder = $placeholder ?? __('ui::ui.rich_text_editor.placeholder');
     $editorId = $id ?? 'rich-text-editor-' . Str::random(8);
 
     $classes = Ui::classes()
@@ -29,22 +30,22 @@
     ];
 
     $tools = [
-        'bold' => ['icon' => 'bold', 'title' => 'Bold'],
-        'italic' => ['icon' => 'italic', 'title' => 'Italic'],
-        'strike' => ['icon' => 'strikethrough', 'title' => 'Strikethrough'],
-        'code' => ['icon' => 'code', 'title' => 'Inline code'],
-        'heading-1' => ['icon' => 'heading-1', 'title' => 'Heading 1'],
-        'heading-2' => ['icon' => 'heading-2', 'title' => 'Heading 2'],
-        'heading-3' => ['icon' => 'heading-3', 'title' => 'Heading 3'],
-        'bullet-list' => ['icon' => 'list', 'title' => 'Bullet list'],
-        'ordered-list' => ['icon' => 'list-ordered', 'title' => 'Numbered list'],
-        'blockquote' => ['icon' => 'quote', 'title' => 'Quote'],
-        'code-block' => ['icon' => 'file-code', 'title' => 'Code block'],
-        'link' => ['icon' => 'link', 'title' => 'Link', 'popover' => true],
-        'image' => ['icon' => 'image', 'title' => 'Image', 'popover' => true],
-        'horizontal-rule' => ['icon' => 'minus', 'title' => 'Horizontal rule'],
-        'undo' => ['icon' => 'undo-2', 'title' => 'Undo'],
-        'redo' => ['icon' => 'redo-2', 'title' => 'Redo'],
+        'bold' => ['icon' => 'bold', 'title' => __('ui::ui.rich_text_editor.bold')],
+        'italic' => ['icon' => 'italic', 'title' => __('ui::ui.rich_text_editor.italic')],
+        'strike' => ['icon' => 'strikethrough', 'title' => __('ui::ui.rich_text_editor.strikethrough')],
+        'code' => ['icon' => 'code', 'title' => __('ui::ui.rich_text_editor.inline_code')],
+        'heading-1' => ['icon' => 'heading-1', 'title' => __('ui::ui.rich_text_editor.heading_1')],
+        'heading-2' => ['icon' => 'heading-2', 'title' => __('ui::ui.rich_text_editor.heading_2')],
+        'heading-3' => ['icon' => 'heading-3', 'title' => __('ui::ui.rich_text_editor.heading_3')],
+        'bullet-list' => ['icon' => 'list', 'title' => __('ui::ui.rich_text_editor.bullet_list')],
+        'ordered-list' => ['icon' => 'list-ordered', 'title' => __('ui::ui.rich_text_editor.numbered_list')],
+        'blockquote' => ['icon' => 'quote', 'title' => __('ui::ui.rich_text_editor.quote')],
+        'code-block' => ['icon' => 'file-code', 'title' => __('ui::ui.rich_text_editor.code_block')],
+        'link' => ['icon' => 'link', 'title' => __('ui::ui.rich_text_editor.link'), 'popover' => true],
+        'image' => ['icon' => 'image', 'title' => __('ui::ui.rich_text_editor.image'), 'popover' => true],
+        'horizontal-rule' => ['icon' => 'minus', 'title' => __('ui::ui.rich_text_editor.horizontal_rule')],
+        'undo' => ['icon' => 'undo-2', 'title' => __('ui::ui.rich_text_editor.undo')],
+        'redo' => ['icon' => 'redo-2', 'title' => __('ui::ui.rich_text_editor.redo')],
     ];
 
     $groups = is_array($toolbar) ? $toolbar : $toolbarGroups[$toolbar] ?? $toolbarGroups['full'];
@@ -73,26 +74,31 @@
                                     id="{{ $editorId }}-{{ $tool }}-popover"
                                     data-rich-text-editor-popover="{{ $tool }}" popover>
                                     @if ($tool === 'link')
-                                        <div class="rich-text-editor-popover-title">Insert Link</div>
+                                        <div class="rich-text-editor-popover-title">
+                                            {{ __('ui::ui.rich_text_editor.insert_link') }}</div>
 
                                         <input type="url" class="rich-text-editor-popover-input"
                                             placeholder="https://example.com" />
 
                                         <div class="rich-text-editor-popover-actions">
-                                            <ui:button variant="danger" size="sm" data-action="remove">Remove
+                                            <ui:button variant="danger" size="sm" data-action="remove">
+                                                {{ __('ui::ui.remove') }}
                                             </ui:button>
 
-                                            <ui:button variant="primary" size="sm" data-action="apply">Apply
+                                            <ui:button variant="primary" size="sm" data-action="apply">
+                                                {{ __('ui::ui.apply') }}
                                             </ui:button>
                                         </div>
                                     @elseif ($tool === 'image')
-                                        <div class="rich-text-editor-popover-title">Insert Image</div>
+                                        <div class="rich-text-editor-popover-title">
+                                            {{ __('ui::ui.rich_text_editor.insert_image') }}</div>
 
                                         <input type="url" class="rich-text-editor-popover-input"
                                             placeholder="https://example.com/image.jpg" />
 
                                         <div class="rich-text-editor-popover-actions">
-                                            <ui:button variant="primary" size="sm" data-action="apply">Insert
+                                            <ui:button variant="primary" size="sm" data-action="apply">
+                                                {{ __('ui::ui.insert') }}
                                             </ui:button>
                                         </div>
                                     @endif
@@ -114,7 +120,8 @@
 
     @if ($showCharacterCount)
         <div class="rich-text-editor-footer">
-            <span class="rich-text-editor-character-count">0 characters</span>
+            <span class="rich-text-editor-character-count"
+                data-characters-text="{{ __('ui::ui.rich_text_editor.characters') }}">{{ __('ui::ui.rich_text_editor.characters', ['count' => 0]) }}</span>
         </div>
     @endif
 

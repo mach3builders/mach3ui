@@ -50,16 +50,24 @@ resources/views/components/  # 72 Blade UI components
 - **IDs**: Generate unique IDs with `$id = uniqid('component-');`
 
 ### Livewire Wire Model
-Extract wire:model using the official Livewire API:
+Extract wire:model using the custom `wire()` macro (defined in `UiServiceProvider`):
 
 ```blade
 @php
     $wireModel = $attributes->wire('model');
-    $hasWireModel = (bool) $wireModel?->directive;
-    $wireModelValue = $wireModel?->value();
-    $isLive = $wireModel?->hasModifier('live');
+    $hasWireModel = $wireModel && method_exists($wireModel, 'value');
+    $wireModelValue = $hasWireModel ? $wireModel->value() : null;
+    $isLive = $hasWireModel && $wireModel->hasModifier('live');
 @endphp
 ```
+
+**Important**: Use `method_exists()` to check for wire:model presence. The `wire()` macro returns `null` when no `wire:model` attribute exists, but in some contexts it may return a stdClass without methods. Using `method_exists()` safely handles both cases.
+
+The returned object (when present) has:
+- `directive` - the full attribute key (e.g., `wire:model.live`)
+- `value` - the bound property name (e.g., `email`)
+- `modifiers` - array of modifiers (e.g., `['live']`)
+- `hasModifier(string $mod)` - check if a modifier exists
 
 ### Component Structure
 ```
