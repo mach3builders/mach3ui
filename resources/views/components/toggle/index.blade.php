@@ -47,8 +47,12 @@
         default => '[&>span]:inline-flex [&>span]:items-center [&>span]:gap-2',
     };
 
-    $iconClasses = Ui::classes()->add($iconSizeClass)->add($iconColorClass);
-    $iconActiveClasses = Ui::classes()->add($iconSizeClass)->add($iconColorActiveClass);
+    $iconClasses = Ui::classes()
+        ->add($iconSizeClass)
+        ->add($iconColorClass ?? '');
+    $iconActiveClasses = Ui::classes()
+        ->add($iconSizeClass)
+        ->add($iconColorActiveClass ?? '');
 
     $xData = $state ? null : '{ on: ' . ($active ? 'true' : 'false') . ' }';
     $clickHandler = $hasCustomHandler ? [] : ['x-on:click' => $stateVar . ' = !' . $stateVar];

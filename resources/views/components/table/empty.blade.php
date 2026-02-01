@@ -8,19 +8,25 @@
 @php
     $resolvedTitle = $title ?? __('ui::ui.table_empty.title');
     $resolvedDescription = $description ?? __('ui::ui.table_empty.description');
+
+    $cellClasses = Ui::classes()->add('py-12 text-center')->merge($attributes->only('class'));
+
+    $iconClasses = Ui::classes()->add('mx-auto mb-3 size-12 text-gray-300')->add('dark:text-gray-600');
+
+    $titleClasses = Ui::classes()->add('text-sm font-medium text-gray-900')->add('dark:text-white');
+
+    $descriptionClasses = Ui::classes()->add('mt-1 text-sm text-gray-500')->add('dark:text-gray-400');
 @endphp
 
-<tr>
-    <td colspan="{{ $colspan }}" class="py-12 text-center">
-        <div class="mb-3 text-gray-300 dark:text-gray-600">
-            <ui:icon :name="$icon" class="mx-auto size-12" />
-        </div>
+<tr data-table-empty>
+    <td colspan="{{ $colspan }}" class="{{ $cellClasses }}" {{ $attributes->except('class') }}>
+        <ui:icon :name="$icon" :class="$iconClasses" />
 
-        <p class="text-sm font-medium text-gray-900 dark:text-white">
+        <p class="{{ $titleClasses }}" data-table-empty-title>
             {{ $resolvedTitle }}
         </p>
 
-        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+        <p class="{{ $descriptionClasses }}" data-table-empty-description>
             {{ $resolvedDescription }}
         </p>
 

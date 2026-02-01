@@ -4,12 +4,18 @@
 ])
 
 @php
+    $id = uniqid('switch-');
+
+    // Wire:model support
     $wireModel = $attributes->wire('model');
     $hasWireModel = $wireModel && method_exists($wireModel, 'value');
-    $wireModelValue = $hasWireModel ? $wireModel->value() : null;
-    $name = $attributes->get('name') ?? $wireModelValue;
+    $name = $attributes->get('name') ?? ($hasWireModel ? $wireModel->value() : null);
 
-    $id = $attributes->get('id') ?? ($name ? 'switch-' . $name : 'switch-' . uniqid());
+    // Determine if we have label content
+    $hasLabel = $label || $description;
+
+    // Classes
+    $wrapperClasses = Ui::classes()->add('flex items-start gap-3')->merge($attributes->only('class'));
 
     $trackClasses = Ui::classes()
         ->add('relative inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full transition-colors')
@@ -17,9 +23,14 @@
         ->add('dark:bg-gray-620')
         ->add('has-[:checked]:bg-blue-500')
         ->add('dark:has-[:checked]:bg-blue-600')
+        ->add('has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-blue-600/20 has-[:focus-visible]:ring-offset-2')
+        ->add('dark:has-[:focus-visible]:ring-blue-500/20 dark:has-[:focus-visible]:ring-offset-gray-900')
         ->add('has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50');
 
-    $trackClassesMerged = Ui::classes($trackClasses)->merge($attributes->only('class'));
+    // Merge user classes onto track when no wrapper (track is root element)
+    if (!$hasLabel) {
+        $trackClasses = $trackClasses->merge($attributes->only('class'));
+    }
 
     $thumbClasses = Ui::classes()
         ->add(
@@ -28,38 +39,49 @@
         ->add('bg-white')
         ->add('peer-checked:translate-x-4');
 
-    $wrapperClasses = Ui::classes()->add('flex items-start gap-3')->merge($attributes->only('class'));
     $inputClasses = Ui::classes()->add('peer sr-only');
 
-    $labelTextClasses = Ui::classes()->add('text-sm font-medium text-gray-800')->add('dark:text-gray-100');
-    $descriptionClasses = Ui::classes()->add('text-sm text-gray-500')->add('dark:text-gray-400');
+    $labelWrapperClasses = Ui::classes()->add('flex flex-col gap-0.5');
+
+    $labelTextClasses = Ui::classes()->add('text-sm font-medium')->add('text-gray-800')->add('dark:text-gray-100');
+
+    $descriptionClasses = Ui::classes()->add('text-sm')->add('text-gray-500')->add('dark:text-gray-400');
+
+    // Attributes to pass to input
+    $inputAttributes = $attributes->except([
+        'class',
+        'data-*',
+        'name',
+        'wire:model',
+        'wire:model.live',
+        'wire:model.blur',
+        'wire:model.change',
+    ]);
 @endphp
 
-@if ($label || $description)
+@if ($hasLabel)
     <div class="{{ $wrapperClasses }}" {{ $attributes->only('data-*') }} data-switch data-control>
-        <label for="{{ $id }}" class="{{ $trackClasses }}">
-            <input type="checkbox" role="switch" id="{{ $id }}"
+        <label for="{{ $id }}" class="{{ $trackClasses }}" data-switch-track>
+            <input type="checkbox" role="switch" id="{{ $id }}" class="{{ $inputClasses }}"
                 @if ($name) name="{{ $name }}" @endif
-                {{ $attributes->except(['class', 'data-*', 'name']) }} class="{{ $inputClasses }}" />
-
-            <span class="{{ $thumbClasses }}"></span>
+                @if ($hasWireModel) {{ $wireModel }} @endif {{ $inputAttributes }} data-switch-input />
+            <span class="{{ $thumbClasses }}" data-switch-thumb></span>
         </label>
 
-        <label for="{{ $id }}" class="flex flex-col gap-0.5">
+        <label for="{{ $id }}" class="{{ $labelWrapperClasses }}" data-switch-label>
             <span class="{{ $labelTextClasses }}">{{ $label }}</span>
 
             @if ($description)
-                <span class="{{ $descriptionClasses }}">{{ $description }}</span>
+                <span class="{{ $descriptionClasses }}" data-switch-description>{{ $description }}</span>
             @endif
         </label>
     </div>
 @else
-    <label for="{{ $id }}" class="{{ $trackClassesMerged }}" {{ $attributes->only('data-*') }} data-switch
-        data-control>
-        <input type="checkbox" role="switch" id="{{ $id }}"
+    <label for="{{ $id }}" class="{{ $trackClasses }}" {{ $attributes->only('data-*') }} data-switch
+        data-control data-switch-track>
+        <input type="checkbox" role="switch" id="{{ $id }}" class="{{ $inputClasses }}"
             @if ($name) name="{{ $name }}" @endif
-            {{ $attributes->except(['class', 'data-*', 'name']) }} class="{{ $inputClasses }}" />
-
-        <span class="{{ $thumbClasses }}"></span>
+            @if ($hasWireModel) {{ $wireModel }} @endif {{ $inputAttributes }} data-switch-input />
+        <span class="{{ $thumbClasses }}" data-switch-thumb></span>
     </label>
 @endif

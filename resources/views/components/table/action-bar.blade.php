@@ -1,17 +1,23 @@
 @props([])
 
 @php
-    $classes = Ui::classes()->add('flex items-center gap-4 mb-4');
+    $searchSlot = $__laravel_slots['search'] ?? null;
+
+    $classes = Ui::classes()->add('flex items-center gap-4 mb-4')->merge($attributes->only('class'));
+
+    $actionsClasses = Ui::classes()->add('flex items-center gap-2');
+
+    $searchClasses = Ui::classes()->add('ml-auto');
 @endphp
 
-<div {{ $attributes->class($classes) }} data-table-action-bar>
-    <div class="flex items-center gap-2">
+<div class="{{ $classes }}" {{ $attributes->except('class') }} data-table-action-bar>
+    <div class="{{ $actionsClasses }}" data-table-action-bar-actions>
         {{ $slot }}
     </div>
 
-    @if (isset($search))
-        <div class="ml-auto">
-            {{ $search }}
+    @if ($searchSlot)
+        <div class="{{ $searchClasses }}" data-table-action-bar-search>
+            {{ $searchSlot }}
         </div>
     @endif
 </div>

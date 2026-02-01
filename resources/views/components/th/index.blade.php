@@ -10,10 +10,15 @@
 
     $classes = Ui::classes()
         ->add('px-4 py-3 text-xs font-medium tracking-wide whitespace-nowrap uppercase')
-        ->add($isSorted ? 'text-gray-900 dark:text-white' : 'text-gray-500 dark:text-gray-400')
-        ->when($align === 'left' && !$fit, 'text-left')
-        ->when($align === 'center' || $fit, 'text-center')
-        ->when($align === 'right', 'text-right')
+        ->add($isSorted ? 'text-gray-900' : 'text-gray-500')
+        ->add($isSorted ? 'dark:text-white' : 'dark:text-gray-400')
+        ->add(
+            match ($align) {
+                'center' => 'text-center',
+                'right' => 'text-right',
+                default => $fit ? 'text-center' : 'text-left',
+            },
+        )
         ->when($fit, 'w-0')
         ->when($sortable, 'cursor-pointer select-none')
         ->when($sortable && !$isSorted, 'hover:text-gray-700 dark:hover:text-gray-200')
@@ -24,7 +29,8 @@
 
     $iconClasses = Ui::classes()
         ->add('size-4 shrink-0 transition-transform')
-        ->unless($isSorted, 'text-gray-300 dark:text-gray-600')
+        ->add($isSorted ? '' : 'text-gray-300')
+        ->add($isSorted ? '' : 'dark:text-gray-600')
         ->when($sorted === 'desc', 'rotate-180');
 @endphp
 
@@ -32,7 +38,6 @@
     @if ($sortable)
         <span class="inline-flex items-center gap-1">
             {{ $slot }}
-
             <ui:icon name="chevron-up" :class="$iconClasses" />
         </span>
     @else

@@ -1,7 +1,7 @@
 @props([
     'clickable' => false,
     'nested' => false,
-    'selected' => false,
+    'selected' => null,
 ])
 
 @php
@@ -12,14 +12,21 @@
         $attributes->has('x-on:click') ||
         $attributes->whereStartsWith('@click')->isNotEmpty();
 
+    // Check if selected is an Alpine expression (string) or a static boolean
+    $isAlpineSelected = is_string($selected) && $selected !== '';
+    $isStaticSelected = $selected === true;
+
+    $selectedClasses = '*:bg-gray-10 dark:*:bg-gray-790';
+
     $classes = Ui::classes()
         ->add('group')
-        ->when($isClickable, 'cursor-pointer transition-colors hover:[&_td]:bg-gray-20 dark:hover:[&_td]:bg-gray-790')
-        ->when($selected, '[&_td]:bg-gray-10 dark:[&_td]:bg-gray-790')
+        ->when($isClickable, 'cursor-pointer *:transition-colors hover:*:bg-gray-20 dark:hover:*:bg-gray-790')
+        ->when($isStaticSelected, $selectedClasses)
         ->merge($attributes->only('class'));
 @endphp
 
 <tr class="{{ $classes }}" {{ $attributes->except('class') }}
+    @if ($isAlpineSelected) x-bind:class="{{ $selected }} && '{{ $selectedClasses }}'" @endif
     @if ($nested) x-show="expanded" x-cloak @endif data-tr>
     {{ $slot }}
 </tr>
