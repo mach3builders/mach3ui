@@ -18,6 +18,18 @@
     $id = uniqid('datepicker-');
     $locale = $locale ?? app()->getLocale();
 
+    // Extract x-model attribute
+    $xModel = null;
+    foreach ($attributes as $key => $val) {
+        if (str_starts_with($key, 'x-model')) {
+            $xModel = $val;
+            break;
+        }
+    }
+
+    // Use x-model value as name if no name provided
+    $resolvedName = $name ?? $xModel;
+
     $localeData = [
         'weekdays' => __('ui::ui.weekdays', [], $locale),
         'months' => __('ui::ui.months', [], $locale),
@@ -80,7 +92,7 @@
 @endphp
 
 <div class="{{ $classes }}" {{ $attributes->only('data-*') }} style="anchor-scope: --datepicker-trigger;"
-    x-data="{
+    x-modelable="value" {{ $attributes->whereStartsWith('x-model') }} x-data="{
         value: @js($value),
         displayValue: @js($displayValue),
         viewYear: null,
@@ -103,6 +115,18 @@
                     this.viewMonth = min.getMonth();
                 }
             }
+    
+            // Sync displayValue when value changes externally via x-model
+            this.$watch('value', (newVal) => {
+                if (newVal) {
+                    const parsed = this.parseDate(newVal);
+                    if (parsed) {
+                        this.displayValue = this.formatDisplay(parsed);
+                    }
+                } else {
+                    this.displayValue = '';
+                }
+            });
         },
     
         parseDate(str) {
@@ -281,7 +305,7 @@
         <ui:icon name="calendar" class="ml-auto size-4 shrink-0 text-gray-400 dark:text-gray-500" />
     </button>
 
-    <input type="hidden" x-ref="input" @if ($name) name="{{ $name }}" @endif
+    <input type="hidden" x-ref="input" @if ($resolvedName) name="{{ $resolvedName }}" @endif
         :value="value" {{ $attributes->whereStartsWith('wire:model') }} @disabled($disabled) />
 
     <div class="{{ $calendarClasses }}" x-ref="calendar" x-on:toggle="if ($event.newState === 'open') onOpen()"

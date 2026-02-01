@@ -23,6 +23,19 @@
     $id = uniqid('daterange-');
     $locale = $locale ?? app()->getLocale();
 
+    // Extract x-model attribute
+    $xModel = null;
+    foreach ($attributes as $key => $val) {
+        if (str_starts_with($key, 'x-model')) {
+            $xModel = $val;
+            break;
+        }
+    }
+
+    // Derive names from x-model if not explicitly set
+    $resolvedStartName = $startName !== 'start_date' ? $startName : ($xModel ? "{$xModel}[start]" : $startName);
+    $resolvedEndName = $endName !== 'end_date' ? $endName : ($xModel ? "{$xModel}[end]" : $endName);
+
     $localeData = [
         'weekdays' => __('ui::ui.weekdays', [], $locale),
         'months' => __('ui::ui.months', [], $locale),
@@ -97,7 +110,7 @@
 @endphp
 
 <div class="{{ $classes }}" {{ $attributes->only('data-*') }} style="anchor-scope: --daterange-trigger;"
-    x-data="{
+    x-modelable="range" {{ $attributes->whereStartsWith('x-model') }} x-data="{
         startDate: @js($startValue),
         endDate: @js($endValue),
         startDisplay: @js($startDisplayValue),
@@ -114,6 +127,16 @@
         months: @js($localeData['months']),
         monthsShort: @js(array_map(fn($m) => substr($m, 0, 3), $localeData['months'])),
         displayFormat: @js($resolvedDisplayFormat),
+    
+        get range() {
+            return { start: this.startDate, end: this.endDate };
+        },
+        set range(val) {
+            this.startDate = val?.start || null;
+            this.endDate = val?.end || null;
+            this.startDisplay = this.startDate ? this.formatDisplay(this.parseDate(this.startDate)) : null;
+            this.endDisplay = this.endDate ? this.formatDisplay(this.parseDate(this.endDate)) : null;
+        },
     
         init() {
             const today = new Date();
@@ -366,10 +389,10 @@
         <ui:icon name="calendar" class="ml-auto size-4 shrink-0 text-gray-400 dark:text-gray-500" />
     </button>
 
-    <input type="hidden" x-ref="startInput" name="{{ $startName }}" :value="startDate"
+    <input type="hidden" x-ref="startInput" name="{{ $resolvedStartName }}" :value="startDate"
         @if ($startModel) wire:model="{{ $startModel }}" @endif @disabled($disabled) />
 
-    <input type="hidden" x-ref="endInput" name="{{ $endName }}" :value="endDate"
+    <input type="hidden" x-ref="endInput" name="{{ $resolvedEndName }}" :value="endDate"
         @if ($endModel) wire:model="{{ $endModel }}" @endif @disabled($disabled) />
 
     <div class="{{ $calendarClasses }}" x-ref="calendar" x-on:toggle="if ($event.newState === 'open') onOpen()"

@@ -15,7 +15,16 @@
     $hasWireModel = $wireModel && method_exists($wireModel, 'value');
     $wireModelValue = $hasWireModel ? $wireModel->value() : null;
 
-    $name = $name ?? $wireModelValue;
+    // Extract x-model attribute
+    $xModel = null;
+    foreach ($attributes as $key => $val) {
+        if (str_starts_with($key, 'x-model')) {
+            $xModel = $val;
+            break;
+        }
+    }
+
+    $name = $name ?? ($wireModelValue ?? $xModel);
     $id = $attributes->get('id') ?? ($name ? 'select-' . $name : ($label ? 'select-' . Str::random(8) : null));
     $hasError = $name && $errors->has($name);
 

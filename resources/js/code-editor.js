@@ -281,7 +281,12 @@ function initAllCodeEditors(root = document) {
 // Initialize on page load
 initAllCodeEditors();
 
-// Livewire support
+// Reinitialize after Livewire navigation (wire:navigate)
+document.addEventListener("livewire:navigated", () => {
+    initAllCodeEditors();
+});
+
+// Livewire support for morphing
 if (typeof Livewire !== "undefined") {
     Livewire.hook("morph.added", ({ el }) => {
         if (el.matches?.(".code-editor")) {

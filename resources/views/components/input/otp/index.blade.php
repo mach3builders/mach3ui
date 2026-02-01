@@ -12,7 +12,17 @@
     $wireModel = $attributes->wire('model');
     $hasWireModel = $wireModel && method_exists($wireModel, 'value');
     $wireModelValue = $hasWireModel ? $wireModel->value() : null;
-    $name = $attributes->get('name') ?? $wireModelValue;
+
+    // Extract x-model attribute
+    $xModel = null;
+    foreach ($attributes as $key => $val) {
+        if (str_starts_with($key, 'x-model')) {
+            $xModel = $val;
+            break;
+        }
+    }
+
+    $name = $attributes->get('name') ?? ($wireModelValue ?? $xModel);
 
     $id = $attributes->get('id') ?? ($name ? 'input-otp-' . $name : 'input-otp-' . uniqid());
 
@@ -127,11 +137,11 @@
         if (!char) return '';
         return this.private ? '•' : char;
     }
-}" class="{{ $wrapperClasses }}" {{ $attributes->except(['id', 'name', 'value', 'class']) }}
-    data-input-otp data-control>
+}" x-modelable="value" {{ $attributes->whereStartsWith('x-model') }}
+    class="{{ $wrapperClasses }}" {{ $attributes->only('data-*') }} data-input-otp data-control>
     <input type="hidden" x-ref="hidden" id="{{ $id }}"
         @if ($name) name="{{ $name }}" @endif :value="value"
-        {{ $attributes->only(['wire:model', 'wire:model.live', 'wire:model.blur', 'wire:model.defer', 'x-model']) }} />
+        {{ $attributes->whereStartsWith('wire:model') }} />
 
     @if ($slot->isNotEmpty())
         {{ $slot }}

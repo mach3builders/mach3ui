@@ -25,6 +25,7 @@
     $resolvedClearText = $clearText ?? __('ui::ui.clear', [], $locale);
     $resolvedNowText = $nowText ?? __('ui::ui.now', [], $locale);
 
+    // Extract wire:model attribute
     $wireModelAttr = null;
     foreach (
         ['wire:model.live', 'wire:model.blur', 'wire:model.change', 'wire:model.debounce', 'wire:model']
@@ -37,7 +38,17 @@
     }
     $wireModelValue = $wireModelAttr ? $attributes->get($wireModelAttr) : null;
     $wireModelLive = $wireModelAttr && str_contains($wireModelAttr, '.live');
-    $name = $attributes->get('name') ?? $wireModelValue;
+
+    // Extract x-model attribute
+    $xModel = null;
+    foreach ($attributes as $key => $val) {
+        if (str_starts_with($key, 'x-model')) {
+            $xModel = $val;
+            break;
+        }
+    }
+
+    $resolvedName = $attributes->get('name') ?? ($wireModelValue ?? $xModel);
 
     $classes = Ui::classes()
         ->add('relative inline-block select-none [anchor-scope:--timepicker-trigger]')
@@ -124,7 +135,7 @@
             }
         });
     }
-}" x-modelable="value"
+}" x-modelable="value" {{ $attributes->whereStartsWith('x-model') }}
     x-on:toggle.document="if ($event.target === $refs.dropdown && $event.newState === 'open') scrollToSelected()"
     class="{{ $classes }}" {{ $attributes->only('data-*') }} data-timepicker data-control>
     <button type="button" popovertarget="{{ $pickerId }}" @if ($disabled) disabled @endif
@@ -138,7 +149,7 @@
         <ui:icon name="clock" class="ml-auto size-4 shrink-0 text-gray-400 dark:text-gray-500" />
     </button>
 
-    <input type="hidden" x-model="value" @if ($name) name="{{ $name }}" @endif
+    <input type="hidden" x-model="value" @if ($resolvedName) name="{{ $resolvedName }}" @endif
         @if ($disabled) disabled @endif />
 
     @if (!$disabled)

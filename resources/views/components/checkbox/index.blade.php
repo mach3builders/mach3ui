@@ -8,7 +8,17 @@
     $wireModel = $attributes->wire('model');
     $hasWireModel = $wireModel && method_exists($wireModel, 'value');
     $wireModelValue = $hasWireModel ? $wireModel->value() : null;
-    $name = $attributes->get('name') ?? $wireModelValue;
+
+    // Extract x-model attribute
+    $xModel = null;
+    foreach ($attributes as $key => $val) {
+        if (str_starts_with($key, 'x-model')) {
+            $xModel = $val;
+            break;
+        }
+    }
+
+    $name = $attributes->get('name') ?? ($wireModelValue ?? $xModel);
 
     $wrapperClasses = Ui::classes()->merge($attributes->only('class'));
 

@@ -10,7 +10,17 @@
     $wireModel = $attributes->wire('model');
     $hasWireModel = $wireModel && method_exists($wireModel, 'value');
     $wireModelValue = $hasWireModel ? $wireModel->value() : null;
-    $name = $attributes->get('name') ?? ($wireModelValue ?? 'tags');
+
+    // Extract x-model attribute
+    $xModel = null;
+    foreach ($attributes as $key => $val) {
+        if (str_starts_with($key, 'x-model')) {
+            $xModel = $val;
+            break;
+        }
+    }
+
+    $name = $attributes->get('name') ?? ($wireModelValue ?? ($xModel ?? 'tags'));
 
     $resolvedPlaceholder = $placeholder ?? __('ui::ui.input_tags.placeholder');
     $tagsArray = is_array($tags) ? $tags : (is_string($tags) ? json_decode($tags, true) ?? [] : []);
@@ -80,8 +90,9 @@
             this.$dispatch('tags:change', { tags: this.tags });
         });
     },
-}" x-on:click="$refs.input.focus()" class="{{ $containerClasses }}"
-    {{ $attributes->except('class') }} data-input-tags data-control>
+}" x-modelable="tags" {{ $attributes->whereStartsWith('x-model') }}
+    x-on:click="$refs.input.focus()" class="{{ $containerClasses }}" {{ $attributes->only('data-*') }} data-input-tags
+    data-control>
     <template x-for="(tag, index) in tags" :key="index">
         <span class="{{ $tagClasses }}" x-bind:data-value="tag">
             <span x-text="tag"></span>
