@@ -152,7 +152,7 @@
 @endphp
 
 @if ($isAi)
-    <div class="{{ $aiWrapperClasses }}" {{ $attributes->except('class') }} data-button>
+    <div class="{{ $aiWrapperClasses }}" {{ $attributes->only('data-*') }} data-button>
         {{-- Glow effect --}}
         <span
             class="absolute inset-0 animate-[shimmer_5s_ease-in-out_infinite] rounded-full bg-[linear-gradient(90deg,theme(colors.orange.500),theme(colors.pink.500),theme(colors.violet.500),theme(colors.cyan.500),theme(colors.orange.500))] bg-[length:200%_100%] opacity-25 blur-sm"></span>
@@ -162,7 +162,7 @@
             class="absolute inset-0 animate-[shimmer_5s_ease-in-out_infinite] rounded-full bg-[linear-gradient(90deg,theme(colors.orange.500),theme(colors.pink.500),theme(colors.violet.500),theme(colors.cyan.500),theme(colors.orange.500))] bg-[length:200%_100%]"></span>
 
         @if ($isLink)
-            <a class="{{ $aiLinkClasses }}" href="{{ $href }}"
+            <a class="{{ $aiLinkClasses }}" {{ $attributes->except(['class', 'data-*']) }} href="{{ $href }}"
                 @if ($disabled || $loading) aria-disabled="true" tabindex="-1" @endif>
                 @include('ui::button._content', [
                     'icon' => $icon,
@@ -173,7 +173,7 @@
                 ])
             </a>
         @else
-            <button class="{{ $aiClasses }}" type="{{ $type }}"
+            <button class="{{ $aiClasses }}" {{ $attributes->except(['class', 'data-*']) }} type="{{ $type }}"
                 @if ($disabled) disabled @endif>
                 @include('ui::button._content', [
                     'icon' => $icon,

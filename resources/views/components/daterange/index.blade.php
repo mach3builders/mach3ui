@@ -96,7 +96,7 @@
         ->add('dark:text-gray-300 dark:hover:bg-gray-750');
 @endphp
 
-<div class="{{ $classes }}" {{ $attributes->except('class') }} style="anchor-scope: --daterange-trigger;"
+<div class="{{ $classes }}" {{ $attributes->only('data-*') }} style="anchor-scope: --daterange-trigger;"
     x-data="{
         startDate: @js($startValue),
         endDate: @js($endValue),

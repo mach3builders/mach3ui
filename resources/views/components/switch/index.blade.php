@@ -1,7 +1,5 @@
 @props([
-    'checked' => false,
     'description' => null,
-    'disabled' => false,
     'label' => null,
     'name' => null,
 ])
@@ -34,11 +32,10 @@
 @endphp
 
 @if ($label || $description)
-    <div class="{{ $wrapperClasses }}" {{ $attributes->except('class') }} data-switch>
+    <div class="{{ $wrapperClasses }}" {{ $attributes->only('data-*') }} data-switch>
         <label for="{{ $id }}" class="{{ $trackClasses }}">
             <input type="checkbox" role="switch" id="{{ $id }}"
-                @if ($name) name="{{ $name }}" @endif class="{{ $inputClasses }}"
-                @checked($checked) @disabled($disabled) />
+                {{ $attributes->except(['class', 'data-*'])->merge(['name' => $name]) }} class="{{ $inputClasses }}" />
 
             <span class="{{ $thumbClasses }}"></span>
         </label>
@@ -52,11 +49,9 @@
         </label>
     </div>
 @else
-    <label for="{{ $id }}" class="{{ $trackClassesMerged }}" {{ $attributes->except('class') }}
-        data-switch>
+    <label for="{{ $id }}" class="{{ $trackClassesMerged }}" {{ $attributes->only('data-*') }} data-switch>
         <input type="checkbox" role="switch" id="{{ $id }}"
-            @if ($name) name="{{ $name }}" @endif class="{{ $inputClasses }}"
-            @checked($checked) @disabled($disabled) />
+            {{ $attributes->except(['class', 'data-*'])->merge(['name' => $name]) }} class="{{ $inputClasses }}" />
 
         <span class="{{ $thumbClasses }}"></span>
     </label>

@@ -20,9 +20,9 @@
     $name = $name ?? $attributes->whereStartsWith('wire:model')->first();
     $hasError = $name && $errors->has($name);
 
-    $containerClasses = Ui::classes()->add(
-        'relative select-none inline-block w-full [anchor-scope:--selectbox-trigger]',
-    );
+    $containerClasses = Ui::classes()
+        ->add('relative select-none inline-block w-full [anchor-scope:--selectbox-trigger]')
+        ->merge($attributes->only('class'));
 
     $triggerClasses = Ui::classes()
         ->add(
@@ -62,41 +62,39 @@
     <ui:field>
         <ui:label>{{ $label }}</ui:label>
 
-        <div class="{{ $containerClasses }}"
-            {{ $attributes->except(['class', 'wire:model', 'wire:model.live', 'wire:model.blur', 'wire:model.change']) }}
-            x-data="{
-                value: @if ($wireModelValue) (typeof $wire !== 'undefined' ? $wire.entangle('{{ $wireModelValue }}'){{ $wireModelLive ? '.live' : '' }} : '{{ $value }}') @else '{{ $value }}' @endif,
-                search: '',
-                options: {{ Js::from($optionsArray) }},
-                hasSlot: {{ $hasSlot ? 'true' : 'false' }},
-                init() {
-                    if (this.hasSlot) {
-                        this.options = {};
-                        this.$refs.options.querySelectorAll('[data-value]').forEach(el => {
-                            this.options[el.dataset.value] = el.textContent.trim();
-                        });
-                    }
-                },
-                get selectedLabel() {
-                    return this.options[this.value] || null;
-                },
-                get filteredOptions() {
-                    if (!this.search) return Object.entries(this.options);
-                    return Object.entries(this.options).filter(([key, label]) =>
-                        label.toLowerCase().includes(this.search.toLowerCase())
-                    );
-                },
-                select(val) {
-                    this.value = val;
-                    this.$refs.menu.hidePopover();
-                    this.$dispatch('input', val);
-                },
-                updateAriaSelected() {
+        <div class="{{ $containerClasses }}" {{ $attributes->only('data-*') }} x-data="{
+            value: @if ($wireModelValue) (typeof $wire !== 'undefined' ? $wire.entangle('{{ $wireModelValue }}'){{ $wireModelLive ? '.live' : '' }} : '{{ $value }}') @else '{{ $value }}' @endif,
+            search: '',
+            options: {{ Js::from($optionsArray) }},
+            hasSlot: {{ $hasSlot ? 'true' : 'false' }},
+            init() {
+                if (this.hasSlot) {
+                    this.options = {};
                     this.$refs.options.querySelectorAll('[data-value]').forEach(el => {
-                        el.setAttribute('aria-selected', el.dataset.value === this.value);
+                        this.options[el.dataset.value] = el.textContent.trim();
                     });
                 }
-            }"
+            },
+            get selectedLabel() {
+                return this.options[this.value] || null;
+            },
+            get filteredOptions() {
+                if (!this.search) return Object.entries(this.options);
+                return Object.entries(this.options).filter(([key, label]) =>
+                    label.toLowerCase().includes(this.search.toLowerCase())
+                );
+            },
+            select(val) {
+                this.value = val;
+                this.$refs.menu.hidePopover();
+                this.$dispatch('input', val);
+            },
+            updateAriaSelected() {
+                this.$refs.options.querySelectorAll('[data-value]').forEach(el => {
+                    el.setAttribute('aria-selected', el.dataset.value === this.value);
+                });
+            }
+        }"
             x-on:toggle.window="if ($event.target === $refs.menu && $event.newState === 'closed') search = ''"
             x-effect="updateAriaSelected()" data-selectbox>
             <button type="button" class="{{ $triggerClasses }}" popovertarget="{{ $id }}"
@@ -150,41 +148,39 @@
         @endif
     </ui:field>
 @else
-    <div class="{{ $containerClasses }}"
-        {{ $attributes->except(['class', 'wire:model', 'wire:model.live', 'wire:model.blur', 'wire:model.change']) }}
-        x-data="{
-            value: @if ($wireModelValue) (typeof $wire !== 'undefined' ? $wire.entangle('{{ $wireModelValue }}'){{ $wireModelLive ? '.live' : '' }} : '{{ $value }}') @else '{{ $value }}' @endif,
-            search: '',
-            options: {{ Js::from($optionsArray) }},
-            hasSlot: {{ $hasSlot ? 'true' : 'false' }},
-            init() {
-                if (this.hasSlot) {
-                    this.options = {};
-                    this.$refs.options.querySelectorAll('[data-value]').forEach(el => {
-                        this.options[el.dataset.value] = el.textContent.trim();
-                    });
-                }
-            },
-            get selectedLabel() {
-                return this.options[this.value] || null;
-            },
-            get filteredOptions() {
-                if (!this.search) return Object.entries(this.options);
-                return Object.entries(this.options).filter(([key, label]) =>
-                    label.toLowerCase().includes(this.search.toLowerCase())
-                );
-            },
-            select(val) {
-                this.value = val;
-                this.$refs.menu.hidePopover();
-                this.$dispatch('input', val);
-            },
-            updateAriaSelected() {
+    <div class="{{ $containerClasses }}" {{ $attributes->only('data-*') }} x-data="{
+        value: @if ($wireModelValue) (typeof $wire !== 'undefined' ? $wire.entangle('{{ $wireModelValue }}'){{ $wireModelLive ? '.live' : '' }} : '{{ $value }}') @else '{{ $value }}' @endif,
+        search: '',
+        options: {{ Js::from($optionsArray) }},
+        hasSlot: {{ $hasSlot ? 'true' : 'false' }},
+        init() {
+            if (this.hasSlot) {
+                this.options = {};
                 this.$refs.options.querySelectorAll('[data-value]').forEach(el => {
-                    el.setAttribute('aria-selected', el.dataset.value === this.value);
+                    this.options[el.dataset.value] = el.textContent.trim();
                 });
             }
-        }"
+        },
+        get selectedLabel() {
+            return this.options[this.value] || null;
+        },
+        get filteredOptions() {
+            if (!this.search) return Object.entries(this.options);
+            return Object.entries(this.options).filter(([key, label]) =>
+                label.toLowerCase().includes(this.search.toLowerCase())
+            );
+        },
+        select(val) {
+            this.value = val;
+            this.$refs.menu.hidePopover();
+            this.$dispatch('input', val);
+        },
+        updateAriaSelected() {
+            this.$refs.options.querySelectorAll('[data-value]').forEach(el => {
+                el.setAttribute('aria-selected', el.dataset.value === this.value);
+            });
+        }
+    }"
         x-on:toggle.window="if ($event.target === $refs.menu && $event.newState === 'closed') search = ''"
         x-effect="updateAriaSelected()" data-selectbox>
         <button type="button" class="{{ $triggerClasses }}" popovertarget="{{ $id }}"

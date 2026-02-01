@@ -64,7 +64,7 @@
         this.lightboxSrc = '';
         this.lightboxName = '';
     }
-}" class="{{ $classes }}" {{ $attributes->except('class') }} data-file-upload>
+}" class="{{ $classes }}" {{ $attributes->only('data-*') }} data-file-upload>
     <div class="relative flex min-h-32 cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed p-6 transition-colors border-gray-140 bg-white hover:border-gray-400 hover:bg-gray-20 dark:border-gray-700 dark:bg-gray-800 dark:hover:border-gray-600 dark:hover:bg-gray-820"
         :class="{ 'border-blue-500! bg-blue-50! dark:bg-blue-900/20!': dragover }"
         x-on:dragover.prevent="dragover = true" x-on:dragleave.prevent="dragover = false"
@@ -75,7 +75,7 @@
 
         <p class="text-center text-xs text-gray-400 dark:text-gray-500">{{ $hintText }}</p>
 
-        <input type="file" x-ref="input" {{ $attributes->except('class') }} accept="{{ $accept }}"
+        <input type="file" x-ref="input" {{ $attributes->except(['class', 'data-*']) }} accept="{{ $accept }}"
             @if ($multiple) multiple @endif class="sr-only"
             x-on:change="handleFiles($event.target.files)" />
     </div>

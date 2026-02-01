@@ -126,9 +126,7 @@
     }
 }" x-modelable="value"
     x-on:toggle.document="if ($event.target === $refs.dropdown && $event.newState === 'open') scrollToSelected()"
-    class="{{ $classes }}"
-    {{ $attributes->except(['class', 'wire:model', 'wire:model.live', 'wire:model.blur', 'wire:model.change']) }}
-    data-timepicker>
+    class="{{ $classes }}" {{ $attributes->only('data-*') }} data-timepicker>
     <button type="button" popovertarget="{{ $pickerId }}" @if ($disabled) disabled @endif
         class="flex h-10 w-full items-center gap-2 rounded-md border px-3 text-sm shadow-xs [anchor-name:--timepicker-trigger]
                border-gray-140 bg-white text-gray-900 focus:border-gray-400 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50

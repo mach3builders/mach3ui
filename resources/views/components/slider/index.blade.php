@@ -48,7 +48,7 @@
         ->add('disabled:cursor-not-allowed disabled:opacity-50');
 @endphp
 
-<div class="{{ $classes }}"
+<div class="{{ $classes }}" {{ $attributes->only('data-*') }}
     @if ($showValue) x-data="{ value: @js($value), format(val) { return @js($valueFormat) ? @js($valueFormat).replace('{value}', val) : val; } }" @endif
     data-slider>
     @if ($label || $showValue)
@@ -65,7 +65,7 @@
     @endif
 
     <input class="{{ $trackClasses }}"
-        {{ $attributes->except('class')->merge([
+        {{ $attributes->except(['class', 'data-*'])->merge([
             'type' => 'range',
             'id' => $inputId,
             'name' => $name,
