@@ -4,15 +4,20 @@
 ])
 
 @php
-    $anchor_id = $href && str_starts_with($href, '#') ? substr($href, 1) : null;
+    $anchorId = $href && str_starts_with($href, '#') ? substr($href, 1) : null;
 
-    $common = '-ml-px border-l py-1 pl-4 text-[13px] leading-relaxed transition-colors';
-    $inactive =
-        'border-gray-150 text-gray-500 hover:text-gray-900 dark:border-gray-700 dark:text-gray-400 dark:hover:text-gray-200';
-    $active = 'border-gray-900 text-gray-900 dark:border-gray-200 dark:text-gray-200';
+    $classes = Ui::classes()->add('-ml-px border-l py-1 pl-4 text-[13px] leading-relaxed transition-colors');
+
+    $inactiveClasses = Ui::classes()
+        ->add('border-gray-150 text-gray-500 hover:text-gray-900')
+        ->add('dark:border-gray-700 dark:text-gray-400 dark:hover:text-gray-200');
+
+    $activeClasses = Ui::classes()
+        ->add('border-gray-900 text-gray-900')
+        ->add('dark:border-gray-200 dark:text-gray-200');
 @endphp
 
-<a {{ $attributes->class($common) }} href="{{ $href }}"
-    :class="activeId === '{{ $anchor_id }}' ? '{{ $active }}' : '{{ $inactive }}'" data-nav-item>
+<a class="{{ $classes }}" href="{{ $href }}"
+    :class="activeId === '{{ $anchorId }}' ? '{{ $activeClasses }}' : '{{ $inactiveClasses }}'" data-nav-item>
     <span class="flex-1">{{ $label ?? $slot }}</span>
 </a>

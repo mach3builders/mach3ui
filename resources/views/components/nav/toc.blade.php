@@ -4,18 +4,21 @@
     'title' => 'On this page',
 ])
 
+@php
+    $classes = Ui::classes()
+        ->add('hidden max-h-[calc(100vh-8rem)] overflow-y-auto lg:block')
+        ->merge($attributes->only('class'));
+@endphp
+
 @once
     <script>
         window.tocNavInit = function(el, offset, setActive) {
-            console.log('tocNavInit called');
             const links = el.querySelectorAll('[data-nav-item]');
             const ids = [...links].map(a => a.getAttribute('href')?.slice(1)).filter(Boolean);
-            console.log('Found ids:', ids);
 
             if (!ids.length) return;
 
             setActive(ids[0]);
-            console.log('Set initial active:', ids[0]);
 
             let lastActiveId = ids[0];
 
@@ -32,7 +35,6 @@
 
                 if (newActiveId !== lastActiveId) {
                     setActive(newActiveId);
-                    console.log('Active changed to:', newActiveId);
                     const link = el.querySelector('[data-nav-item][href="#' + newActiveId + '"]');
                     if (link) link.scrollIntoView({
                         block: 'nearest',
@@ -65,8 +67,9 @@
 {{-- blade-formatter-disable --}}
 <div
     x-data="{ activeId: '' }"
-    x-init="$nextTick(() => window.tocNavInit($el, {{ $offset }}, id => { activeId = id; console.log('activeId set to:', id); }))"
-    {{ $attributes->class(['hidden lg:block max-h-[calc(100vh-8rem)] overflow-y-auto']) }}
+    x-init="$nextTick(() => window.tocNavInit($el, {{ $offset }}, id => activeId = id))"
+    class="{{ $classes }}"
+    {{ $attributes->except('class') }}
     data-nav-toc
 >
 {{-- blade-formatter-enable --}}
