@@ -144,8 +144,8 @@
             'image' => $image,
             'imageSlot' => $imageSlot,
             'isHorizontal' => $isHorizontal,
-            'showOverlay' => false,
-            'title' => null,
+            'showOverlay' => $showOverlay,
+            'title' => $title,
         ])
     @endif
 </div>
