@@ -1,5 +1,4 @@
 @props([
-    'active' => false,
     'badge' => null,
     'description' => null,
     'flush' => false,
@@ -9,8 +8,8 @@
     'icon:color' => 'gray',
     'icon:size' => 'md',
     'image' => null,
-    'imageOverlay' => false,
-    'imagePosition' => 'top',
+    'image:overlay' => false,
+    'image:position' => 'top',
     'title' => null,
     'variant' => null,
 ])
@@ -19,6 +18,8 @@
     $iconBoxed = $__data['icon:boxed'] ?? false;
     $iconColor = $__data['icon:color'] ?? 'gray';
     $iconSize = $__data['icon:size'] ?? 'md';
+    $imageOverlay = $__data['image:overlay'] ?? false;
+    $imagePosition = $__data['image:position'] ?? 'top';
 
     $actionSlot = $__laravel_slots['action'] ?? null;
     $imageSlot = $__laravel_slots['image'] ?? null;
@@ -40,7 +41,6 @@
                 default => 'bg-gray-30 dark:bg-gray-830',
             },
         )
-        ->when($active, 'ring-2 ring-blue-600 dark:ring-blue-500')
         ->when($isHorizontal, 'flex flex-row')
         ->merge($attributes->only('class'));
 

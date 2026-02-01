@@ -1,11 +1,13 @@
 @props([
     'accept' => null,
-    'buttonText' => null,
+    'button:text' => null,
     'multiple' => false,
     'placeholder' => null,
 ])
 
 @php
+    $buttonText = $__data['button:text'] ?? null;
+
     $resolvedPlaceholder = $placeholder ?? __('ui::ui.input_file.placeholder');
     $resolvedButtonText = $buttonText ?? __('ui::ui.browse');
     $filesSelectedTemplate = __('ui::ui.input_file.files_selected');

@@ -1,7 +1,6 @@
 @props([
     'addon' => null,
     'addon:end' => null,
-    'copyable' => false,
     'help' => null,
     'icon' => null,
     'icon:end' => null,
@@ -22,7 +21,7 @@
     $hasIconTrailing = $iconTrailing !== null;
     $hasAddon = $addon !== null;
     $hasAddonTrailing = $addonTrailing !== null;
-    $hasTrailingElement = $hasIconTrailing || $copyable;
+    $hasTrailingElement = $hasIconTrailing;
 
     $inputClasses = Ui::classes()
         ->add('block w-full appearance-none border shadow-xs focus:outline-none')
@@ -68,8 +67,7 @@
                 @endif
 
                 @if ($hasIcon || $hasTrailingElement)
-                    <div class="relative w-full" data-input-wrapper
-                        @if ($copyable) x-data="{ copied: false }" @endif>
+                    <div class="relative w-full" data-input-wrapper>
                         @if ($hasIcon)
                             <div
                                 class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400 dark:text-gray-500">
@@ -78,18 +76,9 @@
                         @endif
 
                         <input type="{{ $type }}" id="{{ $id }}" class="{{ $inputClasses }}"
-                            {{ $attributes->except('class') }} @if ($copyable) x-ref="input" @endif
-                            data-input />
+                            {{ $attributes->except('class') }} data-input />
 
-                        @if ($copyable)
-                            <ui:button variant="ghost" size="sm"
-                                x-on:click="navigator.clipboard.writeText($refs.input.value); copied = true; setTimeout(() => copied = false, 2000)"
-                                class="absolute inset-y-0 right-0.5 my-auto">
-                                <ui:icon name="copy" x-show="!copied" />
-
-                                <ui:icon name="check" class="text-green-500" x-show="copied" x-cloak />
-                            </ui:button>
-                        @elseif ($hasIconTrailing)
+                        @if ($hasIconTrailing)
                             <div
                                 class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 dark:text-gray-500">
                                 <ui:icon :name="$iconTrailing" class="size-4" />
@@ -106,8 +95,7 @@
                 @endif
             </ui:input.group>
         @elseif ($hasIcon || $hasTrailingElement)
-            <div class="relative w-full" data-input-wrapper
-                @if ($copyable) x-data="{ copied: false }" @endif>
+            <div class="relative w-full" data-input-wrapper>
                 @if ($hasIcon)
                     <div
                         class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400 dark:text-gray-500">
@@ -116,18 +104,9 @@
                 @endif
 
                 <input type="{{ $type }}" id="{{ $id }}" class="{{ $inputClasses }}"
-                    {{ $attributes->except('class') }} @if ($copyable) x-ref="input" @endif
-                    data-input />
+                    {{ $attributes->except('class') }} data-input />
 
-                @if ($copyable)
-                    <ui:button variant="ghost" size="sm"
-                        x-on:click="navigator.clipboard.writeText($refs.input.value); copied = true; setTimeout(() => copied = false, 2000)"
-                        class="absolute inset-y-0 right-0.5 my-auto">
-                        <ui:icon name="copy" x-show="!copied" />
-
-                        <ui:icon name="check" class="text-green-500" x-show="copied" x-cloak />
-                    </ui:button>
-                @elseif ($hasIconTrailing)
+                @if ($hasIconTrailing)
                     <div
                         class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 dark:text-gray-500">
                         <ui:icon :name="$iconTrailing" class="size-4" />
@@ -155,8 +134,7 @@
             @endif
 
             @if ($hasIcon || $hasTrailingElement)
-                <div class="relative w-full" data-input-wrapper
-                    @if ($copyable) x-data="{ copied: false }" @endif>
+                <div class="relative w-full" data-input-wrapper>
                     @if ($hasIcon)
                         <div
                             class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400 dark:text-gray-500">
@@ -165,17 +143,9 @@
                     @endif
 
                     <input type="{{ $type }}" class="{{ $inputClasses }}" {{ $attributes->except('class') }}
-                        @if ($copyable) x-ref="input" @endif data-input />
+                        data-input />
 
-                    @if ($copyable)
-                        <ui:button variant="ghost" size="sm"
-                            x-on:click="navigator.clipboard.writeText($refs.input.value); copied = true; setTimeout(() => copied = false, 2000)"
-                            class="absolute inset-y-0 right-0.5 my-auto">
-                            <ui:icon name="copy" x-show="!copied" />
-
-                            <ui:icon name="check" class="text-green-500" x-show="copied" x-cloak />
-                        </ui:button>
-                    @elseif ($hasIconTrailing)
+                    @if ($hasIconTrailing)
                         <div
                             class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 dark:text-gray-500">
                             <ui:icon :name="$iconTrailing" class="size-4" />
@@ -192,8 +162,7 @@
             @endif
         </ui:input.group>
     @elseif ($hasIcon || $hasTrailingElement)
-        <div class="relative w-full" data-input-wrapper
-            @if ($copyable) x-data="{ copied: false }" @endif>
+        <div class="relative w-full" data-input-wrapper>
             @if ($hasIcon)
                 <div
                     class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400 dark:text-gray-500">
@@ -202,17 +171,9 @@
             @endif
 
             <input type="{{ $type }}" class="{{ $inputClasses }}" {{ $attributes->except('class') }}
-                @if ($copyable) x-ref="input" @endif data-input />
+                data-input />
 
-            @if ($copyable)
-                <ui:button variant="ghost" size="sm"
-                    x-on:click="navigator.clipboard.writeText($refs.input.value); copied = true; setTimeout(() => copied = false, 2000)"
-                    class="absolute inset-y-0 right-0.5 my-auto">
-                    <ui:icon name="copy" x-show="!copied" />
-
-                    <ui:icon name="check" class="text-green-500" x-show="copied" x-cloak />
-                </ui:button>
-            @elseif ($hasIconTrailing)
+            @if ($hasIconTrailing)
                 <div
                     class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 dark:text-gray-500">
                     <ui:icon :name="$iconTrailing" class="size-4" />

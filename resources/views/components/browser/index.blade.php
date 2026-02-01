@@ -1,5 +1,4 @@
 @props([
-    'code' => null,
     'height' => '600px',
     'src' => null,
     'title' => null,
@@ -17,18 +16,10 @@
 
     $titleClasses = Ui::classes()->add('flex-1 text-xs text-gray-500')->add('dark:text-gray-400');
 
-    $copyButtonClasses = Ui::classes()
-        ->add('text-gray-400 transition-colors hover:text-gray-600')
-        ->add('dark:text-gray-500 dark:hover:text-gray-300');
-
-    $copyIconClasses = Ui::classes()->add('size-4');
-    $copyIconSuccessClasses = Ui::classes()->add('size-4 text-green-500');
-
     $contentClasses = Ui::classes()->add('w-full overflow-auto rounded-md bg-white')->add('dark:bg-gray-900');
 @endphp
 
-<div @if ($code) x-data="{ copied: false, code: {{ Js::from($code) }} }" @endif
-    class="{{ $classes }}" {{ $attributes->except('class') }} data-browser>
+<div class="{{ $classes }}" {{ $attributes->except('class') }} data-browser>
     <header class="{{ $headerClasses }}" data-browser-header>
         <div class="flex gap-1.5">
             <span class="{{ $dotClasses }} bg-red-400"></span>
@@ -38,17 +29,6 @@
 
         @if ($title)
             <span class="{{ $titleClasses }}" data-browser-title>{{ $title }}</span>
-        @elseif ($code)
-            <span class="flex-1"></span>
-        @endif
-
-        @if ($code)
-            <button type="button"
-                x-on:click="navigator.clipboard.writeText(code); copied = true; setTimeout(() => copied = false, 2000)"
-                class="{{ $copyButtonClasses }}">
-                <ui:icon x-show="!copied" name="copy" :class="$copyIconClasses" />
-                <ui:icon x-show="copied" x-cloak name="check" :class="$copyIconSuccessClasses" />
-            </button>
         @endif
     </header>
 

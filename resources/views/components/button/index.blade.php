@@ -3,7 +3,7 @@
     'disabled' => false,
     'href' => null,
     'icon' => null,
-    'iconColor' => null,
+    'icon:color' => null,
     'iconTrailing' => null,
     'loading' => false,
     'size' => 'md',
@@ -13,6 +13,8 @@
 ])
 
 @php
+    $iconColor = $__data['icon:color'] ?? null;
+
     $iconTrailingSlot = $__laravel_slots['iconTrailing'] ?? null;
     $iconTrailingValue = $iconTrailingSlot ?? $iconTrailing;
     $iconColorClass = $iconColor

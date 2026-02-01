@@ -8,12 +8,14 @@
     'options' => [],
     'placeholder' => 'Select an option...',
     'search' => false,
-    'searchPlaceholder' => 'Search...',
+    'search:placeholder' => 'Search...',
     'size' => null,
     'value' => null,
 ])
 
 @php
+    $searchPlaceholder = $__data['search:placeholder'] ?? 'Search...';
+
     $id = 'selectbox-' . uniqid();
     $name = $name ?? $attributes->whereStartsWith('wire:model')->first();
     $hasError = $name && $errors->has($name);

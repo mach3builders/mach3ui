@@ -1,6 +1,5 @@
 @props([
     'code' => null,
-    'copyable' => true,
     'footer' => false,
     'header' => true,
     'language' => 'javascript',
@@ -44,13 +43,6 @@
         ->add('text-gray-500')
         ->add('dark:text-gray-400');
 
-    $copyButtonClasses = Ui::classes()
-        ->add('inline-flex size-7 items-center justify-center rounded')
-        ->add('text-gray-500 hover:bg-gray-100 hover:text-gray-700')
-        ->add('dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200')
-        ->add('focus:ring-1 focus:ring-offset-1 focus:outline-none focus:ring-gray-600')
-        ->add('dark:focus:ring-offset-gray-800');
-
     $footerClasses = Ui::classes()
         ->add('flex items-center justify-between border-t px-3 py-2')
         ->add('border-gray-140 bg-gray-30')
@@ -65,14 +57,6 @@
     @if ($header)
         <div class="{{ $headerClasses }}" data-code-editor-header>
             <span class="{{ $labelClasses }}">{{ $languageLabel }}</span>
-
-            @if ($copyable)
-                <div class="flex items-center gap-1">
-                    <button type="button" class="{{ $copyButtonClasses }}" data-code-editor-copy title="Copy code">
-                        <ui:icon name="copy" class="size-3.5" />
-                    </button>
-                </div>
-            @endif
         </div>
     @endif
 
