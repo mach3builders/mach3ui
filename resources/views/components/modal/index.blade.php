@@ -17,6 +17,14 @@
     $alertSlot = $__laravel_slots['alert'] ?? null;
     $footerSlot = $__laravel_slots['footer'] ?? null;
 
+    $sizeClasses = [
+        'sm' => 'max-w-md',
+        'md' => 'max-w-lg',
+        'lg' => 'max-w-2xl',
+        'xl' => 'max-w-4xl',
+        'full' => 'max-w-full mx-4',
+    ];
+
     $classes = Ui::classes()
         ->add('fixed inset-0 m-auto flex max-h-[90vh] w-full flex-col rounded-xl border shadow-2xl')
         ->add('border-transparent bg-white')
@@ -28,15 +36,7 @@
         )
         ->add('open:backdrop:opacity-100 open:backdrop:pointer-events-auto')
         ->add('dark:backdrop:bg-black/70')
-        ->add(
-            match ($size) {
-                'sm' => 'max-w-md',
-                'lg' => 'max-w-2xl',
-                'xl' => 'max-w-4xl',
-                'full' => 'max-w-full mx-4',
-                default => 'max-w-lg',
-            },
-        )
+        ->add($sizeClasses[$size] ?? $size)
         ->merge($attributes->only('class'));
 @endphp
 
