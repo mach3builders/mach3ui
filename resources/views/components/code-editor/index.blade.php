@@ -47,7 +47,9 @@
     $copyButtonClasses = Ui::classes()
         ->add('inline-flex size-7 items-center justify-center rounded')
         ->add('text-gray-500 hover:bg-gray-100 hover:text-gray-700')
-        ->add('dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200');
+        ->add('dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200')
+        ->add('focus:ring-1 focus:ring-offset-1 focus:outline-none focus:ring-gray-600')
+        ->add('dark:focus:ring-offset-gray-800');
 
     $footerClasses = Ui::classes()
         ->add('flex items-center justify-between border-t px-3 py-2')

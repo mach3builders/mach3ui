@@ -16,6 +16,8 @@
         ->add(
             'dark:border-gray-640 dark:bg-gray-800/80 dark:text-gray-200 dark:hover:bg-gray-800 dark:hover:text-white',
         )
+        ->add('focus:ring-1 focus:ring-offset-1 focus:outline-none focus:ring-gray-600')
+        ->add('dark:focus:ring-offset-gray-800')
         ->add('disabled:cursor-not-allowed disabled:opacity-50');
 
     $prevClasses = Ui::classes($controlClasses)->add('-translate-x-1/2');

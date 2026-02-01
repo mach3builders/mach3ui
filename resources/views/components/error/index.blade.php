@@ -1,11 +1,10 @@
 @props([
     'name' => null,
-    'message' => null,
     'bag' => 'default',
 ])
 
 @php
-    $errorMessage = $message ?? ($name ? $errors->getBag($bag)->first($name) : null);
+    $errorMessage = $slot->isNotEmpty() ? $slot : ($name ? $errors->getBag($bag)->first($name) : null);
 
     $classes = Ui::classes()
         ->add('flex items-center gap-1.5 text-xs')

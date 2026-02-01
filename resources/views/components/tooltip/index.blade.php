@@ -4,6 +4,16 @@
 ])
 
 @php
+    $classes = Ui::classes()->add('group/tooltip relative inline-block')->merge($attributes->only('class'));
+
+    $tooltipClasses = Ui::classes()
+        ->add('pointer-events-none absolute z-50 max-w-xs rounded-md px-3 py-1.5 text-xs font-medium whitespace-nowrap')
+        ->add('bg-gray-900 text-white')
+        ->add('dark:bg-gray-100 dark:text-gray-900')
+        ->add(
+            'opacity-0 transition-opacity duration-150 group-hover/tooltip:opacity-100 group-focus-within/tooltip:opacity-100',
+        );
+
     $positionStyles = [
         'top' => 'top: calc(anchor(top) - 0.5rem); left: anchor(center); translate: -50% -100%;',
         'top-start' => 'top: calc(anchor(top) - 0.5rem); left: anchor(left); translate: 0 -100%;',
@@ -37,7 +47,6 @@
         'right' => 'border-4 border-transparent border-r-gray-900 dark:border-r-gray-100',
     ];
 
-    $classes = Ui::classes()->add('group/tooltip relative inline-block')->merge($attributes->only('class'));
 @endphp
 
 <div class="{{ $classes }}" {{ $attributes->except('class') }} style="anchor-scope: --tooltip-trigger;" data-tooltip>
@@ -45,8 +54,7 @@
         {{ $slot }}
     </span>
 
-    <div class="pointer-events-none absolute z-50 max-w-xs rounded-md bg-gray-900 px-3 py-1.5 text-xs font-medium whitespace-nowrap text-white opacity-0 transition-opacity duration-150 group-hover/tooltip:opacity-100 group-focus-within/tooltip:opacity-100 dark:bg-gray-100 dark:text-gray-900"
-        style="position-anchor: --tooltip-trigger; {{ $positionStyles[$position] }}">
+    <div class="{{ $tooltipClasses }}" style="position-anchor: --tooltip-trigger; {{ $positionStyles[$position] }}">
         {{ $text }}
 
         <span class="absolute block {{ $arrowClasses[$position] }}" style="{{ $arrowPosition[$position] }}"></span>

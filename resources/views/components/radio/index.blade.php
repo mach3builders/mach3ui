@@ -18,7 +18,8 @@
         ->add('focus:outline-none focus:ring-2 focus:ring-blue-600/20 focus:ring-offset-0')
         ->add('dark:focus:ring-blue-500/20')
         ->add('disabled:cursor-not-allowed disabled:opacity-50')
-        ->when($description, 'mt-0.5');
+        ->when($description, 'mt-0.5')
+        ->merge($attributes->only('class'));
 
     $labelClasses = Ui::classes()
         ->add('group inline-flex gap-2.5 cursor-pointer has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50')
@@ -27,8 +28,8 @@
 
 @if ($label || $description)
     <label class="{{ $labelClasses }}">
-        <input type="radio" class="{{ Ui::classes($radioClasses)->merge($attributes->only('class')) }}"
-            {{ $attributes->except('class') }} @checked($checked) data-radio />
+        <input type="radio" class="{{ $radioClasses }}" {{ $attributes->except('class') }} @checked($checked)
+            data-radio />
 
         <span class="flex flex-col gap-0.5">
             @if ($label)
@@ -41,6 +42,6 @@
         </span>
     </label>
 @else
-    <input type="radio" class="{{ Ui::classes($radioClasses)->merge($attributes->only('class')) }}"
-        {{ $attributes->except('class') }} @checked($checked) data-radio />
+    <input type="radio" class="{{ $radioClasses }}" {{ $attributes->except('class') }} @checked($checked)
+        data-radio />
 @endif

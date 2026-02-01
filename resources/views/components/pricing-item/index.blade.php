@@ -9,6 +9,8 @@
 ])
 
 @php
+    $featuresSlot = $__laravel_slots['featuresSlot'] ?? null;
+
     $classes = Ui::classes()->add('pricing-item')->merge($attributes->only('class'));
     $titleClasses = Ui::classes()->add('card-title');
     $badgeClasses = Ui::classes()->add('badge');
@@ -46,7 +48,7 @@
                 @endif
             </div>
 
-            @if (isset($featuresSlot))
+            @if ($featuresSlot)
                 {{ $featuresSlot }}
             @elseif (count($features) > 0)
                 <ul class="{{ $featuresClasses }}">

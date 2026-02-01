@@ -17,6 +17,8 @@
         ->add('dark:has-[:checked]:bg-blue-600')
         ->add('has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50');
 
+    $trackClassesMerged = Ui::classes($trackClasses)->merge($attributes->only('class'));
+
     $thumbClasses = Ui::classes()
         ->add(
             'pointer-events-none inline-block h-4 w-4 translate-x-0.5 rounded-full shadow-sm transition-transform duration-200',
@@ -50,8 +52,8 @@
         </label>
     </div>
 @else
-    <label for="{{ $id }}" class="{{ Ui::classes($trackClasses)->merge($attributes->only('class')) }}"
-        {{ $attributes->except('class') }} data-switch>
+    <label for="{{ $id }}" class="{{ $trackClassesMerged }}" {{ $attributes->except('class') }}
+        data-switch>
         <input type="checkbox" role="switch" id="{{ $id }}"
             @if ($name) name="{{ $name }}" @endif class="{{ $inputClasses }}"
             @checked($checked) @disabled($disabled) />

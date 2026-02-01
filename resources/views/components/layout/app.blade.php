@@ -3,6 +3,13 @@
 ])
 
 @php
+    $sidebarLogoSlot = $__laravel_slots['sidebarLogo'] ?? null;
+    $sidebarWorkspaceSlot = $__laravel_slots['sidebarWorkspace'] ?? null;
+    $sidebarNavSlot = $__laravel_slots['sidebarNav'] ?? null;
+    $sidebarFooterSlot = $__laravel_slots['sidebarFooter'] ?? null;
+    $topbarActionsSlot = $__laravel_slots['topbarActions'] ?? null;
+    $topbarUserSlot = $__laravel_slots['topbarUser'] ?? null;
+
     $classes = Ui::classes()
         ->add('relative z-10')
         ->add($banner ? 'h-[calc(100vh-2.5rem)]' : 'h-screen')
@@ -25,7 +32,7 @@
         ->add($banner ? 'min-h-[calc(100vh-2.5rem)]' : 'min-h-screen');
 @endphp
 
-<div {{ $attributes->class($classes) }} x-data="{
+<div class="{{ $classes }}" {{ $attributes->except('class') }} x-data="{
     sideBarOpen: false,
     init() {
         window.addEventListener('resize', () => {
@@ -50,8 +57,8 @@
         @persist('sidebar')
             <ui:layout.sidebar>
                 <ui:layout.sidebar.header>
-                    @if (isset($sidebarLogo))
-                        <div class="flex items-center h-10">{{ $sidebarLogo }}</div>
+                    @if ($sidebarLogoSlot)
+                        <div class="flex items-center h-10">{{ $sidebarLogoSlot }}</div>
                     @else
                         <ui:dropdown class="w-full" position="right-start">
                             <ui:dropdown.trigger variant="ghost" class="px-3!">
@@ -80,13 +87,13 @@
                         </ui:dropdown>
                     @endif
 
-                    @if (isset($sidebarWorkspace))
-                        {{ $sidebarWorkspace }}
+                    @if ($sidebarWorkspaceSlot)
+                        {{ $sidebarWorkspaceSlot }}
                     @endif
                 </ui:layout.sidebar.header>
 
-                @if (isset($sidebarNav))
-                    {{ $sidebarNav }}
+                @if ($sidebarNavSlot)
+                    {{ $sidebarNavSlot }}
                 @else
                     <ui:layout.sidebar.nav>
                         <ui:nav>
@@ -95,9 +102,9 @@
                     </ui:layout.sidebar.nav>
                 @endif
 
-                @if (isset($sidebarFooter))
+                @if ($sidebarFooterSlot)
                     <ui:layout.sidebar.footer>
-                        {{ $sidebarFooter }}
+                        {{ $sidebarFooterSlot }}
                     </ui:layout.sidebar.footer>
                 @endif
             </ui:layout.sidebar>
@@ -110,16 +117,16 @@
                 </x-slot:breadcrumbs>
 
                 <x-slot:actions>
-                    @if (isset($topbarActions))
-                        {{ $topbarActions }}
+                    @if ($topbarActionsSlot)
+                        {{ $topbarActionsSlot }}
                     @else
                         <ui:button size="sm" icon="package" variant="outline-danger">{{ __('common.free') }}
                         </ui:button>
                     @endif
                 </x-slot:actions>
 
-                @if (isset($topbarUser))
-                    {{ $topbarUser }}
+                @if ($topbarUserSlot)
+                    {{ $topbarUserSlot }}
                 @else
                     <ui:dropdown position="bottom-end">
                         <ui:dropdown.trigger variant="ghost" class="px-2! py-1!">

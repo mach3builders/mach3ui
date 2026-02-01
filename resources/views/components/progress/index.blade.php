@@ -17,7 +17,10 @@
 
     $barClasses = Ui::classes()->add('flex items-center gap-4');
 
-    $stepBaseClasses = Ui::classes()->add('flex-1 py-2');
+    $stepBaseClasses = Ui::classes()
+        ->add('flex-1 py-2')
+        ->add('focus:ring-1 focus:ring-offset-1 focus:outline-none focus:ring-gray-600')
+        ->add('dark:focus:ring-offset-gray-800');
 
     $indicatorClasses = Ui::classes()->add('block h-1.5 rounded-full')->add('bg-gray-100')->add('dark:bg-gray-700');
 
@@ -44,7 +47,7 @@
                 $isActive = $i <= $current;
             @endphp
 
-            <button class="{{ $stepBaseClasses }}">
+            <button type="button" class="{{ $stepBaseClasses }}">
                 <span class="{{ $isActive ? $activeIndicatorClasses : $indicatorClasses }}"></span>
             </button>
         @endfor

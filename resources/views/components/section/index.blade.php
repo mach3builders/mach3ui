@@ -5,6 +5,8 @@
 ])
 
 @php
+    $headerSlot = $__laravel_slots['header'] ?? null;
+
     $isStacked = $variant === 'stacked';
     $isInline = $variant === 'inline';
 
@@ -25,10 +27,10 @@
 
 <div class="{{ $classes }}" {{ $attributes->except('class') }} data-section>
     <div class="{{ $wrapperClasses }}">
-        @if ($title || $description || isset($header))
+        @if ($title || $description || $headerSlot)
             <div class="{{ $headerClasses }}">
-                @if (isset($header))
-                    {{ $header }}
+                @if ($headerSlot)
+                    {{ $headerSlot }}
                 @else
                     @if ($title)
                         <h3 class="text-base font-semibold text-gray-900 dark:text-white">{{ $title }}</h3>

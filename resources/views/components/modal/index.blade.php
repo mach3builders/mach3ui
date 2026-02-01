@@ -6,8 +6,14 @@
 ])
 
 @php
-    $wireModel = $attributes->get('wire:model.live') ?? $attributes->get('wire:model');
-    $wireModelLive = $attributes->has('wire:model.live');
+    $wireModel = $attributes->wire('model');
+    $hasWireModel = (bool) $wireModel?->directive;
+    $wireModelValue = $wireModel?->value();
+    $isLive = $wireModel?->hasModifier('live');
+
+    $headerSlot = $__laravel_slots['header'] ?? null;
+    $alertSlot = $__laravel_slots['alert'] ?? null;
+    $footerSlot = $__laravel_slots['footer'] ?? null;
 
     $classes = Ui::classes()
         ->add('fixed inset-0 m-auto flex max-h-[90vh] w-full flex-col rounded-xl border shadow-2xl')
@@ -32,9 +38,9 @@
         ->merge($attributes->only('class'));
 @endphp
 
-<dialog class="{{ $classes }}" {{ $attributes->except(['class', 'wire:model', 'wire:model.live']) }}
+<dialog class="{{ $classes }}" {{ $attributes->except('class')->whereDoesntStartWith('wire:model') }}
     x-data="{
-        open: {{ $wireModel ? "(typeof \$wire !== 'undefined' ? \$wire.entangle('{$wireModel}')" . ($wireModel_live ? '.live' : '') . ' : false)' : 'false' }},
+        open: {{ $hasWireModel ? "(typeof \$wire !== 'undefined' ? \$wire.entangle('{$wireModelValue}')" . ($isLive ? '.live' : '') . ' : false)' : 'false' }},
         dialog: null,
         init() {
             this.dialog = this.$el;
@@ -49,7 +55,7 @@
                 window.$openModal = (id) => window.dispatchEvent(new CustomEvent('modal-open', { detail: id }));
                 window.$closeModal = (id) => window.dispatchEvent(new CustomEvent('modal-close', { detail: id }));
             }
-            @if($wireModel)
+            @if($hasWireModel)
             if (typeof $wire !== 'undefined') {
                 this.$watch('open', (value) => {
                     value ? this.dialog.showModal() : this.dialog.close();
@@ -73,10 +79,10 @@
     x-on:keydown.escape.prevent="closeModal()"
     data-modal
     >
-    @if ($title || isset($header))
+    @if ($title || $headerSlot)
         <ui:modal.header>
-            @if (isset($header))
-                {{ $header }}
+            @if ($headerSlot)
+                {{ $headerSlot }}
             @else
                 <div>
                     <ui:modal.title>{{ $title }}</ui:modal.title>
@@ -92,9 +98,9 @@
         </ui:modal.header>
     @endif
 
-    @if (isset($alert))
+    @if ($alertSlot)
         <div class="px-6">
-            {{ $alert }}
+            {{ $alertSlot }}
         </div>
     @endif
 
@@ -104,9 +110,9 @@
         </ui:modal.body>
     @endif
 
-    @if (isset($footer))
+    @if ($footerSlot)
         <ui:modal.footer>
-            {{ $footer }}
+            {{ $footerSlot }}
         </ui:modal.footer>
     @endif
 </dialog>

@@ -14,7 +14,8 @@
     $iconColor = $__data['icon:color'] ?? 'gray';
     $iconSize = $__data['icon:size'] ?? 'md';
 
-    $hasAction = isset($action);
+    $actionSlot = $__laravel_slots['action'] ?? null;
+    $hasAction = $actionSlot !== null;
     $hasIcon = $iconSlot || $icon;
 
     $classes = Ui::classes()
@@ -46,7 +47,7 @@
 
     @if ($hasAction)
         <div class="absolute right-3 top-4">
-            {{ $action }}
+            {{ $actionSlot }}
         </div>
     @endif
 </div>
