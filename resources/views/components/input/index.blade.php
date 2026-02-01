@@ -15,8 +15,8 @@
     $hasWireModel = $wireModel && method_exists($wireModel, 'value');
     $wireModelValue = $hasWireModel ? $wireModel->value() : null;
 
-    $id = $attributes->get('id') ?? ($label ? 'input-' . Str::random(8) : null);
     $name = $attributes->get('name') ?? $wireModelValue;
+    $id = $attributes->get('id') ?? ($name ? 'input-' . $name : ($label ? 'input-' . Str::random(8) : null));
     $hasError = $name && $errors->has($name);
 
     $iconEnd = $__data['icon:end'] ?? null;

@@ -10,8 +10,8 @@
     $hasWireModel = $wireModel && method_exists($wireModel, 'value');
     $wireModelValue = $hasWireModel ? $wireModel->value() : null;
 
-    $id = $attributes->get('id') ?? ($label ? 'textarea-' . Str::random(8) : null);
     $name = $attributes->get('name') ?? $wireModelValue;
+    $id = $attributes->get('id') ?? ($name ? 'textarea-' . $name : ($label ? 'textarea-' . Str::random(8) : null));
     $hasError = $name && $errors->has($name);
 
     $sizeClasses = match ($size) {

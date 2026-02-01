@@ -15,8 +15,8 @@
     $hasWireModel = $wireModel && method_exists($wireModel, 'value');
     $wireModelValue = $hasWireModel ? $wireModel->value() : null;
 
-    $id = $attributes->get('id') ?? ($label ? 'select-' . Str::random(8) : null);
     $name = $name ?? $wireModelValue;
+    $id = $attributes->get('id') ?? ($name ? 'select-' . $name : ($label ? 'select-' . Str::random(8) : null));
     $hasError = $name && $errors->has($name);
 
     $wrapperClasses = Ui::classes()->add('relative w-full')->merge($attributes->only('class'));
