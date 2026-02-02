@@ -26,7 +26,7 @@
     @if ($textOnly)
         {{-- Text-only button: spinner replaces text visually, text stays invisible for width --}}
         <span class="relative inline-flex items-center justify-center">
-            <span class="group-[[data-loading]]:invisible">{{ $slot }}</span>
+            <span class="inline-flex items-center gap-2 group-[[data-loading]]:invisible">{{ $slot }}</span>
             <ui:icon name="loader-circle"
                 class="absolute hidden animate-spin group-[[data-loading]]:inline-block {{ $defaultIconColor }}" />
         </span>
