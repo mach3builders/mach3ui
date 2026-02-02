@@ -3,12 +3,10 @@
     'value' => null,
 ])
 
-@php
-    $storeName = $name ? "tabs_{$name}" : null;
-@endphp
-
-<div {{ $attributes }}
-    x-show="{{ $storeName ? "Alpine.store('" . $storeName . "')?.active" : 'activeTab' }} === @js($value)"
-    x-cloak>
+<div
+    {{ $attributes }}
+    x-data
+    x-show="Alpine.store('tabs_{{ $name }}').active === '{{ $value }}'"
+>
     {{ $slot }}
 </div>

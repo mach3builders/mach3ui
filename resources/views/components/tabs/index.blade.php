@@ -6,8 +6,6 @@
 ])
 
 @php
-    $storeName = $name ? "tabs_{$name}" : null;
-
     $classes = Ui::classes()
         ->add('relative inline-flex items-center gap-1')
         ->add(
@@ -19,13 +17,16 @@
         ->merge($attributes->only('class'));
 @endphp
 
-<div class="{{ $classes }}" {{ $attributes->except('class') }} data-tabs="{{ $name }}"
-    data-variant="{{ $variant }}" data-size="{{ $size }}" x-data="{
-        activeTab: @js($default),
-        init() {
-            @if ($storeName) Alpine.store(@js($storeName), { active: this.activeTab });
-                this.$watch('activeTab', value => Alpine.store(@js($storeName)).active = value); @endif
-        }
-    }" x-modelable="activeTab">
+<div
+    {{ $attributes->except('class') }}
+    class="{{ $classes }}"
+    data-tabs
+    data-variant="{{ $variant }}"
+    data-size="{{ $size }}"
+    @if ($name)
+        x-data
+        x-init="Alpine.store('tabs_{{ $name }}', { active: '{{ $default }}' })"
+    @endif
+>
     {{ $slot }}
 </div>

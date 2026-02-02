@@ -3,6 +3,7 @@
     'disabled' => false,
     'icon' => null,
     'label' => null,
+    'name' => null,
     'route' => null,
     'value' => null,
 ])
@@ -10,6 +11,8 @@
 @php
     $isActive = $route ? request()->routeIs($route) : $active;
     $href = $route ? route($route) : null;
+    $tag = $route ? 'a' : 'button';
+    $useStore = $name && $value;
 
     $classes = Ui::classes()
         // Base
@@ -55,33 +58,29 @@
         ->add(
             '[[data-variant=boxed]_&]:dark:text-gray-400 [[data-variant=boxed]_&]:dark:hover:text-gray-100 [[data-variant=boxed]_&[data-active]]:dark:text-gray-100',
         )
-        // Disabled (button only)
-        ->unless($route, 'disabled:pointer-events-none disabled:opacity-50');
+        // Disabled
+        ->add('disabled:pointer-events-none disabled:opacity-50')
+        ->merge($attributes->only('class'));
 @endphp
 
-@if ($route)
-    <a {{ $attributes->class($classes) }} href="{{ $href }}" data-tabs-item
-        @if ($isActive) data-active @endif>
-        @if ($icon)
-            <ui:icon :name="$icon" />
-        @endif
+<{{ $tag }}
+    {{ $attributes->except('class') }}
+    class="{{ $classes }}"
+    @if ($route) href="{{ $href }}" @endif
+    @if ($tag === 'button') type="button" @endif
+    @if ($useStore)
+        x-data
+        :data-active="Alpine.store('tabs_{{ $name }}').active === '{{ $value }}'"
+        @click="Alpine.store('tabs_{{ $name }}').active = '{{ $value }}'"
+    @elseif ($isActive)
+        data-active
+    @endif
+    @if ($disabled) disabled @endif
+    data-tabs-item
+>
+    @if ($icon)
+        <ui:icon :name="$icon" />
+    @endif
 
-        {{ $label ?? $slot }}
-    </a>
-@else
-    <button {{ $attributes->class($classes) }} type="button" data-tabs-item
-        @if ($value) x-on:click="activeTab = @js($value)"
-            :data-active="activeTab === @js($value)"
-        @else
-            x-on:click="$el.dataset.active = true; $el.closest('[data-tabs]').querySelectorAll('[data-tabs-item]').forEach(t => t !== $el && delete t.dataset.active)"
-            @if ($active) data-active @endif
-        @endif
-        @if ($disabled) disabled @endif
-        >
-        @if ($icon)
-            <ui:icon :name="$icon" />
-        @endif
-
-        {{ $label ?? $slot }}
-    </button>
-@endif
+    {{ $label ?? $slot }}
+</{{ $tag }}>
