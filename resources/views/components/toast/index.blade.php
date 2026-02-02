@@ -22,15 +22,15 @@
         ->add(
             match ($variant) {
                 'info'
-                    => 'border-cyan-200 bg-cyan-50/90 [&>[data-toast-icon]]:text-cyan-600 dark:border-cyan-800/50 dark:bg-cyan-900/30 dark:[&>[data-toast-icon]]:text-cyan-500',
+                    => 'border-cyan-200 bg-cyan-50/90 [&>[data-toast-icon]]:text-cyan-600 [&_[data-toast-description]]:text-cyan-700 dark:border-cyan-800/50 dark:bg-cyan-900/30 dark:[&>[data-toast-icon]]:text-cyan-500 dark:[&_[data-toast-description]]:text-cyan-200',
                 'success'
-                    => 'border-green-200 bg-green-50/90 [&>[data-toast-icon]]:text-green-600 dark:border-green-800/50 dark:bg-green-900/30 dark:[&>[data-toast-icon]]:text-green-500',
+                    => 'border-green-200 bg-green-50/90 [&>[data-toast-icon]]:text-green-600 [&_[data-toast-description]]:text-green-700 dark:border-green-800/50 dark:bg-green-900/30 dark:[&>[data-toast-icon]]:text-green-500 dark:[&_[data-toast-description]]:text-green-200',
                 'warning'
-                    => 'border-amber-200 bg-amber-50/90 [&>[data-toast-icon]]:text-amber-600 dark:border-amber-800/50 dark:bg-amber-900/30 dark:[&>[data-toast-icon]]:text-amber-500',
+                    => 'border-amber-200 bg-amber-50/90 [&>[data-toast-icon]]:text-amber-600 [&_[data-toast-description]]:text-amber-700 dark:border-amber-800/50 dark:bg-amber-900/30 dark:[&>[data-toast-icon]]:text-amber-500 dark:[&_[data-toast-description]]:text-amber-200',
                 'danger'
-                    => 'border-red-200 bg-red-50/90 [&>[data-toast-icon]]:text-red-600 dark:border-red-800/50 dark:bg-red-900/30 dark:[&>[data-toast-icon]]:text-red-500',
+                    => 'border-red-200 bg-red-50/90 [&>[data-toast-icon]]:text-red-600 [&_[data-toast-description]]:text-red-700 dark:border-red-800/50 dark:bg-red-900/30 dark:[&>[data-toast-icon]]:text-red-500 dark:[&_[data-toast-description]]:text-red-200',
                 default
-                    => 'border-gray-100 bg-gray-20/90 text-gray-700 [&>[data-toast-icon]]:text-gray-500 dark:border-gray-700 dark:bg-gray-780/90 dark:text-gray-200 dark:[&>[data-toast-icon]]:text-gray-400',
+                    => 'border-gray-100 bg-gray-20/90 text-gray-700 [&>[data-toast-icon]]:text-gray-500 [&_[data-toast-description]]:text-gray-600 dark:border-gray-700 dark:bg-gray-780/90 dark:text-gray-200 dark:[&>[data-toast-icon]]:text-gray-400 dark:[&_[data-toast-description]]:text-gray-300',
             },
         )
         ->merge($attributes->only('class'));
