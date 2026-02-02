@@ -37,7 +37,7 @@
 @endphp
 
 <div class="{{ $classes }}" {{ $attributes->except('class') }} x-data="{ open: false }" x-init="$nextTick(() => open = true)"
-    x-show="open" x-transition:enter="transition ease-out duration-200"
+    x-show="open" x-cloak x-transition:enter="transition ease-out duration-200"
     x-transition:enter-start="opacity-0 translate-x-full" x-transition:enter-end="opacity-100 translate-x-0"
     x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 translate-x-0"
     x-transition:leave-end="opacity-0 translate-x-full" data-toast data-variant="{{ $variant }}">
@@ -46,7 +46,7 @@
             <ui:icon :name="$icon ?? $icons[$variant] ?? $icons['default']" class="mt-0.5 size-5" data-toast-icon />
         @endif
 
-        <div class="flex-1">
+        <div class="flex-1" data-toast-content>
             <ui:toast.title>{{ $title }}</ui:toast.title>
 
             @if ($description)

@@ -18,9 +18,11 @@
                 default
                     => 'text-gray-400 hover:bg-gray-100 hover:text-gray-600 dark:text-gray-500 dark:hover:bg-gray-700 dark:hover:text-gray-300',
             },
-        );
+        )
+        ->merge($attributes->only('class'));
 @endphp
 
-<button {{ $attributes->class($classes) }} type="button" x-on:click="open = false">
+<button class="{{ $classes }}" {{ $attributes->except('class') }} type="button" x-on:click="open = false"
+    data-toast-close>
     <ui:icon name="x" class="size-4" />
 </button>
