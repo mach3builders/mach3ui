@@ -37,5 +37,6 @@
         ->merge($attributes->only('class'));
 @endphp
 
-<{{ $tag }} class="{{ $classes }}" {{ $attributes->except('class') }} data-text>{{ $slot }}
+<{{ $tag }} {{ $attributes->except('class') }} class="{{ $classes }}" data-text>
+    {{ $slot }}
     </{{ $tag }}>
