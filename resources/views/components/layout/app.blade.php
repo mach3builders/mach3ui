@@ -60,7 +60,7 @@
                     <div class="flex items-center h-10">{{ $sidebarLogoSlot }}</div>
                 @else
                     <ui:dropdown class="w-full" position="right-start">
-                        <ui:dropdown.trigger variant="ghost" class="px-3!">
+                        <ui:dropdown.trigger variant="ghost" class="px-3">
                             <ui:logo />
                         </ui:dropdown.trigger>
 
@@ -133,7 +133,7 @@
                     {{ $topbarUserSlot }}
                 @else
                     <ui:dropdown position="bottom-end">
-                        <ui:dropdown.trigger variant="ghost" class="px-2! py-1!">
+                        <ui:dropdown.trigger variant="ghost" class="px-2 py-1">
                             <div class="flex items-center gap-2">
                                 <ui:avatar name="{{ auth()->user()?->name ?? 'John Doe' }}" size="sm" />
 
@@ -147,7 +147,7 @@
                         </ui:dropdown.trigger>
 
                         <ui:dropdown.menu>
-                            <ui:dropdown.header class="flex-col items-start gap-0!">
+                            <ui:dropdown.header class="flex-col items-start gap-0">
                                 <ui:text weight="medium">{{ auth()->user()?->name ?? 'John Doe' }}</ui:text>
 
                                 <ui:text size="xs" variant="muted">

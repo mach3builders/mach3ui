@@ -21,7 +21,7 @@
 
         <ui:tooltip :text="__('ui::ui.banner.switch_account')" position="bottom">
             <ui:button variant="ghost" size="sm" icon="log-out" :href="$switchUrl"
-                class="text-gray-100! dark:text-gray-980!" />
+                class="text-gray-100 dark:text-gray-980" />
         </ui:tooltip>
     </div>
 </div>
