@@ -86,7 +86,11 @@
             select(val) {
                 this.value = val;
                 this.$refs.menu.hidePopover();
-                this.$dispatch('input', val);
+                this.$nextTick(() => {
+                    this.$refs.input.value = val;
+                    this.$refs.input.dispatchEvent(new Event('input', { bubbles: true }));
+                    this.$refs.input.dispatchEvent(new Event('change', { bubbles: true }));
+                });
             },
             updateAriaSelected() {
                 this.$refs.options.querySelectorAll('[data-value]').forEach(el => {
@@ -106,7 +110,7 @@
             </button>
 
             <input type="hidden" @if ($name) name="{{ $name }}" @endif x-model="value"
-                @disabled($disabled) />
+                x-ref="input" @disabled($disabled) />
 
             <div id="{{ $id }}" x-ref="menu" popover
                 x-on:toggle="if ($event.newState === 'open' && $refs.searchInput) $refs.searchInput.focus()"
@@ -173,7 +177,11 @@
         select(val) {
             this.value = val;
             this.$refs.menu.hidePopover();
-            this.$dispatch('input', val);
+            this.$nextTick(() => {
+                this.$refs.input.value = val;
+                this.$refs.input.dispatchEvent(new Event('input', { bubbles: true }));
+                this.$refs.input.dispatchEvent(new Event('change', { bubbles: true }));
+            });
         },
         updateAriaSelected() {
             this.$refs.options.querySelectorAll('[data-value]').forEach(el => {
@@ -193,7 +201,7 @@
         </button>
 
         <input type="hidden" @if ($name) name="{{ $name }}" @endif x-model="value"
-            @disabled($disabled) />
+            x-ref="input" @disabled($disabled) />
 
         <div id="{{ $id }}" x-ref="menu" popover
             x-on:toggle="if ($event.newState === 'open' && $refs.searchInput) $refs.searchInput.focus()"

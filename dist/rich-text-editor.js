@@ -14670,7 +14670,7 @@ function Ni(n) {
     ],
     content: (t == null ? void 0 : t.value) || "",
     onUpdate: ({ editor: o }) => {
-      t && (t.value = o.getHTML()), Ro(o, i);
+      t && (t.value = o.getHTML(), t.dispatchEvent(new Event("input", { bubbles: !0 }))), Ro(o, i);
     },
     onCreate: ({ editor: o }) => {
       Ro(o, i);
