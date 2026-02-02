@@ -9,130 +9,72 @@
 ])
 
 @php
+    // Calculate visible page range
     $start = max(1, $current - floor($visible / 2));
     $end = min($total, $start + $visible - 1);
     $start = max(1, $end - $visible + 1);
-    $show_start_ellipsis = $start > 2;
-    $show_end_ellipsis = $end < $total - 1;
 
-    $item_classes = [
-        'inline-flex h-9 min-w-9 cursor-pointer items-center justify-center gap-2 rounded-md border px-3 text-sm font-medium [&_svg]:size-4 [&_svg]:shrink-0',
-        'bg-transparent text-gray-600',
-        'dark:text-gray-400',
-        'disabled:pointer-events-none disabled:opacity-25',
-    ];
+    // Determine if ellipsis should show
+    $showStartEllipsis = $start > 2;
+    $showEndEllipsis = $end < $total - 1;
 
-    $inactive_classes = [
-        'border-transparent',
-        'hover:bg-gray-40 hover:text-gray-900',
-        'dark:hover:bg-gray-760 dark:hover:text-gray-100',
-    ];
+    // Helper to generate page URL
+    $pageUrl = fn($page) => $href ? str_replace('{page}', $page, $href) : null;
 
-    $active_classes = [
-        'border-gray-120 bg-white text-gray-900 shadow-xs',
-        'dark:border-gray-690 dark:bg-gray-800 dark:text-gray-20',
-    ];
+    $classes = Ui::classes()->add('flex items-center gap-1')->merge($attributes->only('class'));
 
-    $page_url = fn($page) => $href ? str_replace('{page}', $page, $href) : null;
-    $x_click = fn($page) => $href ? null : "\$dispatch('page', {$page})";
-    $tag = $href ? 'a' : 'button';
-    $x_data = $href ? null : '';
+    $ellipsisClasses = 'inline-flex h-9 min-w-9 items-center justify-center text-sm text-gray-500 dark:text-gray-500';
 @endphp
 
-<nav
-    {{ $attributes->class(['flex items-center gap-1']) }}
-    data-pagination
-    @if ($x_data !== null) x-data @endif
->
+<nav class="{{ $classes }}" {{ $attributes->except('class') }}
+    @unless ($href) x-data @endunless data-pagination>
+    {{-- Previous button --}}
     @if ($controls)
-        @php
-            $prev_disabled = $current <= 1;
-        @endphp
-        <{{ $tag }}
-            @class([
-                ...$item_classes,
-                ...$inactive_classes,
-                'px-0' => !$prev,
-                'pointer-events-none opacity-25' => $prev_disabled,
-            ])
-            @if ($href)
-                href="{{ $prev_disabled ? '#' : $page_url($current - 1) }}"
-            @endif
-            @if ($href && $prev_disabled)
-                aria-disabled="true"
-                tabindex="-1"
-            @endif
-            @if (!$href)
-                x-on:click="{{ $x_click($current - 1) }}"
-            @endif
-            @if (!$href && $prev_disabled)
-                disabled
-            @endif
-        >
+        <ui:pagination.item :href="$pageUrl($current - 1)" :page="$current - 1" :disabled="$current <= 1"
+            :noPadding="!$prev">
             <ui:icon name="chevron-left" />
-            @if ($prev) {{ $prev }} @endif
-        </{{ $tag }}>
+            @if ($prev)
+                {{ $prev }}
+            @endif
+        </ui:pagination.item>
     @endif
 
+    {{-- First page (when not in visible range) --}}
     @if ($start > 1)
-        <{{ $tag }}
-            @class([...$item_classes, ...($current === 1 ? $active_classes : $inactive_classes)])
-            @if ($href) href="{{ $page_url(1) }}" @endif
-            @if (!$href) x-on:click="{{ $x_click(1) }}" @endif
-        >1</{{ $tag }}>
+        <ui:pagination.item :href="$pageUrl(1)" :page="1" :active="$current === 1">1
+        </ui:pagination.item>
     @endif
 
-    @if ($show_start_ellipsis)
-        <span class="inline-flex h-9 min-w-9 items-center justify-center text-sm text-gray-500 dark:text-gray-500">...</span>
+    {{-- Start ellipsis --}}
+    @if ($showStartEllipsis)
+        <span class="{{ $ellipsisClasses }}">...</span>
     @endif
 
+    {{-- Visible page range --}}
     @for ($i = $start; $i <= $end; $i++)
-        <{{ $tag }}
-            @class([...$item_classes, ...($current === $i ? $active_classes : $inactive_classes)])
-            @if ($href) href="{{ $page_url($i) }}" @endif
-            @if (!$href) x-on:click="{{ $x_click($i) }}" @endif
-        >{{ $i }}</{{ $tag }}>
+        <ui:pagination.item :href="$pageUrl($i)" :page="$i" :active="$current === $i">{{ $i }}
+        </ui:pagination.item>
     @endfor
 
-    @if ($show_end_ellipsis)
-        <span class="inline-flex h-9 min-w-9 items-center justify-center text-sm text-gray-500 dark:text-gray-500">...</span>
+    {{-- End ellipsis --}}
+    @if ($showEndEllipsis)
+        <span class="{{ $ellipsisClasses }}">...</span>
     @endif
 
+    {{-- Last page (when not in visible range) --}}
     @if ($end < $total)
-        <{{ $tag }}
-            @class([...$item_classes, ...($current === $total ? $active_classes : $inactive_classes)])
-            @if ($href) href="{{ $page_url($total) }}" @endif
-            @if (!$href) x-on:click="{{ $x_click($total) }}" @endif
-        >{{ $total }}</{{ $tag }}>
+        <ui:pagination.item :href="$pageUrl($total)" :page="$total" :active="$current === $total">
+            {{ $total }}</ui:pagination.item>
     @endif
 
+    {{-- Next button --}}
     @if ($controls)
-        @php
-            $next_disabled = $current >= $total;
-        @endphp
-        <{{ $tag }}
-            @class([
-                ...$item_classes,
-                ...$inactive_classes,
-                'px-0' => !$next,
-                'pointer-events-none opacity-25' => $next_disabled,
-            ])
-            @if ($href)
-                href="{{ $next_disabled ? '#' : $page_url($current + 1) }}"
+        <ui:pagination.item :href="$pageUrl($current + 1)" :page="$current + 1" :disabled="$current >= $total"
+            :noPadding="!$next">
+            @if ($next)
+                {{ $next }}
             @endif
-            @if ($href && $next_disabled)
-                aria-disabled="true"
-                tabindex="-1"
-            @endif
-            @if (!$href)
-                x-on:click="{{ $x_click($current + 1) }}"
-            @endif
-            @if (!$href && $next_disabled)
-                disabled
-            @endif
-        >
-            @if ($next) {{ $next }} @endif
             <ui:icon name="chevron-right" />
-        </{{ $tag }}>
+        </ui:pagination.item>
     @endif
 </nav>

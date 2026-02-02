@@ -37,6 +37,7 @@ function initRichTextEditor(element) {
         onUpdate: ({ editor }) => {
             if (hiddenInput) {
                 hiddenInput.value = editor.getHTML();
+                hiddenInput.dispatchEvent(new Event('input', { bubbles: true }));
             }
             updateCharacterCount(editor, characterCountEl);
         },

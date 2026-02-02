@@ -138,8 +138,6 @@ const languages = {
     sql: () => sql(),
 };
 
-const initialized = new WeakSet();
-
 function getLanguageExtension(lang) {
     const normalizedLang = lang?.toLowerCase().trim();
     if (normalizedLang && languages[normalizedLang]) {
@@ -149,18 +147,22 @@ function getLanguageExtension(lang) {
 }
 
 function initCodeEditor(element) {
-    if (initialized.has(element)) return;
-    initialized.add(element);
+    // Skip if already initialized and view is still valid
+    if (element.codeEditor?.dom?.parentNode) return;
 
-    const contentEl = element.querySelector(".code-editor-content");
+    const contentEl = element.querySelector("[data-code-editor-content]");
+    if (!contentEl) return;
+
+    // Clear any leftover content from previous initialization
+    contentEl.innerHTML = "";
     const hiddenInput = element.querySelector('input[type="hidden"], textarea');
-    const languageEl = element.querySelector(".code-editor-language");
-    const statusEl = element.querySelector(".code-editor-status");
+    const languageEl = element.querySelector("[data-code-editor-header] span");
+    const statusEl = element.querySelector("[data-code-editor-status]");
     const copyBtn = element.querySelector('[data-action="copy"]');
 
     const language = element.dataset.language || "javascript";
     const placeholder = element.dataset.placeholder || "";
-    const readOnly = element.hasAttribute("data-readonly") || element.classList.contains("code-editor-readonly");
+    const readOnly = element.hasAttribute("data-readonly");
     const initialContent = hiddenInput?.value || element.dataset.content || "";
 
     // Update language display
@@ -275,19 +277,24 @@ function updateStatus(state, statusEl) {
 }
 
 function initAllCodeEditors(root = document) {
-    root.querySelectorAll(".code-editor").forEach(initCodeEditor);
+    root.querySelectorAll("[data-code-editor]").forEach(initCodeEditor);
 }
 
 // Initialize on page load
 initAllCodeEditors();
 
-// Livewire support
+// Reinitialize after Livewire navigation (wire:navigate)
+document.addEventListener("livewire:navigated", () => {
+    initAllCodeEditors();
+});
+
+// Livewire support for morphing
 if (typeof Livewire !== "undefined") {
     Livewire.hook("morph.added", ({ el }) => {
-        if (el.matches?.(".code-editor")) {
+        if (el.matches?.("[data-code-editor]")) {
             initCodeEditor(el);
         }
-        el.querySelectorAll?.(".code-editor").forEach(initCodeEditor);
+        el.querySelectorAll?.("[data-code-editor]").forEach(initCodeEditor);
     });
 }
 
@@ -295,14 +302,21 @@ if (typeof Livewire !== "undefined") {
 const observer = new MutationObserver(() => {
     const newStyle = syntaxHighlighting(getHighlightExtension());
     const newBaseTheme = getBaseTheme();
-    editorViews.forEach((view) => {
+
+    // Filter out destroyed views and update valid ones
+    for (let i = editorViews.length - 1; i >= 0; i--) {
+        const view = editorViews[i];
+        if (!view.dom?.parentNode) {
+            editorViews.splice(i, 1);
+            continue;
+        }
         view.dispatch({
             effects: [
                 themeCompartment.reconfigure(newStyle),
                 baseThemeCompartment.reconfigure(newBaseTheme),
             ],
         });
-    });
+    }
 });
 
 observer.observe(document.documentElement, {

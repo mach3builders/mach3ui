@@ -1,51 +1,53 @@
 @props([
-    'padTop' => false,
+    'hasDescription' => true,
     'icon' => null,
-    'icon:slot' => null,
     'icon:boxed' => false,
     'icon:color' => 'gray',
     'icon:size' => 'md',
-    'hasDescription' => true,
+    'icon:slot' => null,
+    'padTop' => false,
 ])
 
 @php
-    $icon_slot = $__data['icon:slot'] ?? null;
-    $icon_boxed = $__data['icon:boxed'] ?? false;
-    $icon_color = $__data['icon:color'] ?? 'gray';
-    $icon_size = $__data['icon:size'] ?? 'md';
+    $iconSlot = $__data['icon:slot'] ?? null;
+    $iconBoxed = $__data['icon:boxed'] ?? false;
+    $iconColor = $__data['icon:color'] ?? 'gray';
+    $iconSize = $__data['icon:size'] ?? 'md';
 
-    $has_action = isset($action);
-    $has_icon = $icon_slot || $icon;
+    $actionSlot = $__laravel_slots['action'] ?? null;
+    $hasAction = $actionSlot !== null;
+    $hasIcon = $iconSlot || $icon;
+
+    $classes = Ui::classes()
+        ->add('flex gap-3 px-4.5 pb-5')
+        ->add($padTop ? 'pt-4' : 'pt-5')
+        ->when($hasAction, 'relative')
+        ->merge($attributes->only('class'));
+
+    $contentClasses = Ui::classes()
+        ->add('flex flex-1 flex-col gap-1.5')
+        ->when($hasIcon, 'min-w-0')
+        ->unless($hasDescription, 'justify-center');
 @endphp
 
-<div
-    {{ $attributes->class([
-        'flex gap-3 px-4.5 pb-5',
-        'pt-4' => $padTop,
-        'pt-5' => !$padTop,
-        'relative' => $has_action,
-    ]) }}>
-    @if ($has_icon)
+<div class="{{ $classes }}" {{ $attributes->except('class') }} data-card-header>
+    @if ($hasIcon)
         <div class="shrink-0">
-            @if ($icon_slot)
-                {{ $icon_slot }}
+            @if ($iconSlot)
+                {{ $iconSlot }}
             @else
-                <ui:icon :name="$icon" :boxed="$icon_boxed" :color="$icon_color" :size="$icon_size" />
+                <ui:icon :name="$icon" :boxed="$iconBoxed" :color="$iconColor" :size="$iconSize" />
             @endif
         </div>
     @endif
 
-    <div @class([
-        'flex flex-1 flex-col gap-1.5',
-        'min-w-0' => $has_icon,
-        'justify-center' => !$hasDescription,
-    ])>
+    <div class="{{ $contentClasses }}">
         {{ $slot }}
     </div>
 
-    @if ($has_action)
+    @if ($hasAction)
         <div class="absolute right-3 top-4">
-            {{ $action }}
+            {{ $actionSlot }}
         </div>
     @endif
 </div>

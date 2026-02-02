@@ -3,14 +3,21 @@
     'variant' => null,
 ])
 
-<div data-card-footer
-    {{ $attributes->class([
-        'rounded-b-lg border border-t-0 shadow-xs relative z-0',
-        'border-gray-60 bg-white dark:border-gray-760 dark:bg-gray-800' => $variant !== 'inverted',
-        'border-gray-80 bg-gray-30 dark:border-gray-700 dark:bg-gray-820' => $variant === 'inverted',
-    ]) }}>
+@php
+    $classes = Ui::classes()
+        ->add('relative z-0 rounded-b-lg border border-t-0 shadow-xs')
+        ->add(
+            match ($variant) {
+                'inverted' => 'border-gray-80 bg-gray-30 dark:border-gray-700 dark:bg-gray-820',
+                default => 'border-gray-60 bg-white dark:border-gray-760 dark:bg-gray-800',
+            },
+        )
+        ->merge($attributes->only('class'));
+@endphp
+
+<div class="{{ $classes }}" {{ $attributes->except('class') }} data-card-footer>
     @if ($divided)
-        <ui:divider variant="subtle" class="mt-4" />
+        <ui:divider class="bg-gray-60 mt-4 dark:bg-gray-740" />
     @endif
 
     <div class="flex items-center gap-2 px-4.5 py-4">

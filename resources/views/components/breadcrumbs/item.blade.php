@@ -7,33 +7,39 @@
 
 @php
     $url = $route ? route($route) : $href;
-    $is_active = $active || ($route && Route::is($route));
-    $is_link = $url && !$is_active;
+    $isActive = $active || ($route && Route::is($route));
+    $isLink = $url && !$isActive;
+
+    $separatorClasses = Ui::classes()
+        ->add('before:pointer-events-none before:absolute before:left-0 before:top-1/2 before:size-1.5')
+        ->add("before:-translate-y-1/2 before:rotate-45 before:border-r before:border-t before:content-['']")
+        ->add('before:border-gray-400')
+        ->add('dark:before:border-gray-500');
+
+    $linkClasses = Ui::classes()
+        ->add('relative hidden whitespace-nowrap pl-4 underline-offset-4 md:block md:pl-5')
+        ->add($separatorClasses)
+        ->add('text-gray-900 hover:text-gray-980 hover:underline')
+        ->add('dark:text-gray-100 dark:hover:text-gray-20')
+        ->merge($attributes->only('class'));
+
+    $spanClasses = Ui::classes()
+        ->add('relative max-w-48 truncate whitespace-nowrap pl-0 md:max-w-3xs md:pl-5')
+        ->add($separatorClasses)
+        ->add('before:hidden md:before:block')
+        ->add('text-gray-500')
+        ->add('dark:text-gray-400')
+        ->merge($attributes->only('class'));
 @endphp
 
-@if ($is_link)
-    <a
-        x-init="register(@js($url))"
-        {{ $attributes->class([
-            "relative hidden whitespace-nowrap pl-4 underline-offset-4 md:block md:pl-5",
-            "before:pointer-events-none before:absolute before:left-0 before:top-1/2 before:size-1.5 before:-translate-y-1/2 before:rotate-45 before:border-r before:border-t before:content-['']",
-            "before:border-gray-400",
-            "dark:before:border-gray-500",
-            "text-gray-900 hover:text-gray-980 hover:underline",
-            "dark:text-gray-100 dark:hover:text-gray-20",
-        ]) }}
-        href="{{ $url }}"
-    >{{ $label ?? $slot }}</a>
+@if ($isLink)
+    <a x-init="register(@js($url))" class="{{ $linkClasses }}" {{ $attributes->except('class') }} href="{{ $url }}"
+        data-breadcrumbs-item>
+        {{ $label ?? $slot }}
+    </a>
 @else
-    <span
-        x-init="register(null)"
-        {{ $attributes->class([
-            "relative max-w-48 truncate whitespace-nowrap pl-0 md:max-w-3xs md:pl-5",
-            "before:pointer-events-none before:absolute before:left-0 before:top-1/2 before:size-1.5 before:-translate-y-1/2 before:rotate-45 before:border-r before:border-t before:hidden before:content-[''] md:before:block",
-            "before:border-gray-400",
-            "dark:before:border-gray-500",
-            "text-gray-500",
-            "dark:text-gray-400",
-        ]) }}
-    >{{ $label ?? $slot }}</span>
+    <span x-init="register(null)" class="{{ $spanClasses }}" {{ $attributes->except('class') }} data-breadcrumbs-item
+        data-active>
+        {{ $label ?? $slot }}
+    </span>
 @endif

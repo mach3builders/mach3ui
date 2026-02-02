@@ -1,30 +1,37 @@
 @props([
-    'name' => null,
-    'size' => null,
-    'color' => 'gray',
     'boxed' => false,
+    'color' => 'gray',
+    'name' => null,
     'round' => false,
+    'size' => null,
     'stroke' => 2,
 ])
 
 @php
-    $size_classes = [
+    $effectiveSize = $size ?? 'sm';
+
+    // Icon sizes (used for simple mode and boxed icon)
+    $iconSize = match ($effectiveSize) {
         'xs' => 'size-3',
         'sm' => 'size-4',
         'md' => 'size-5',
         'lg' => 'size-6',
         'xl' => 'size-8',
-    ];
+        default => 'size-4',
+    };
 
-    $boxed_sizes = [
-        'xs' => ['box' => 'size-5', 'icon' => 'size-3'],
-        'sm' => ['box' => 'size-8', 'icon' => 'size-4'],
-        'md' => ['box' => 'size-10', 'icon' => 'size-5'],
-        'lg' => ['box' => 'size-12', 'icon' => 'size-6'],
-        'xl' => ['box' => 'size-14', 'icon' => 'size-8'],
-    ];
+    // Box container sizes
+    $boxSize = match ($effectiveSize) {
+        'xs' => 'size-5',
+        'sm' => 'size-8',
+        'md' => 'size-10',
+        'lg' => 'size-12',
+        'xl' => 'size-14',
+        default => 'size-8',
+    };
 
-    $boxed_colors = [
+    // Box colors (array is appropriate for many options)
+    $boxedColors = [
         'gray' => 'bg-gray-60 text-gray-600 dark:bg-gray-740 dark:text-gray-400',
         'blue' => 'bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400',
         'green' => 'bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400',
@@ -40,24 +47,28 @@
         'violet' => 'bg-violet-100 text-violet-600 dark:bg-violet-900/30 dark:text-violet-400',
     ];
 
-    $effective_size = $size ?? 'sm';
+    $boxClasses = Ui::classes()
+        ->add('flex items-center justify-center')
+        ->add($boxSize)
+        ->add(
+            match ($round) {
+                true => 'rounded-full',
+                default => 'rounded-lg',
+            },
+        )
+        ->add($boxedColors[$color] ?? $boxedColors['gray'])
+        ->merge($attributes->only('class'));
+
+    $iconClasses = Ui::classes()->add('shrink-0')->add($iconSize);
+
+    $simpleClasses = Ui::classes()->add('shrink-0')->when($size, $iconSize)->merge($attributes->only('class'));
 @endphp
 
 @if ($boxed)
-    <span
-        {{ $attributes->class([
-            'flex items-center justify-center',
-            $round ? 'rounded-full' : 'rounded-lg',
-            $boxed_sizes[$effective_size]['box'] ?? $boxed_sizes['sm']['box'],
-            $boxed_colors[$color] ?? $boxed_colors['gray'],
-        ]) }}
-        data-icon>
-        <x-dynamic-component :component="'lucide-' . $name" :stroke-width="$stroke" @class([
-            'shrink-0',
-            $boxed_sizes[$effective_size]['icon'] ?? $boxed_sizes['sm']['icon'],
-        ]) />
+    <span class="{{ $boxClasses }}" {{ $attributes->except('class') }} data-icon>
+        <x-dynamic-component :component="'lucide-' . $name" :stroke-width="$stroke" class="{{ $iconClasses }}" />
     </span>
 @else
-    <x-dynamic-component :component="'lucide-' . $name" :stroke-width="$stroke"
-        {{ $attributes->class(['shrink-0', $size_classes[$size] ?? null]) }} data-icon />
+    <x-dynamic-component :component="'lucide-' . $name" :stroke-width="$stroke" class="{{ $simpleClasses }}"
+        {{ $attributes->except('class') }} data-icon />
 @endif

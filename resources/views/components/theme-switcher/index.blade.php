@@ -1,46 +1,37 @@
-<div
-    class="flex gap-1"
-    data-theme-switcher
-    x-data="{
-        mode: localStorage.getItem('mach3ui-theme') || 'system',
-        setMode(mode) {
-            const html = document.documentElement;
-            const isSystem = !mode || mode === 'system';
+@props([])
 
-            if (isSystem) {
-                localStorage.removeItem('mach3ui-theme');
-                mode = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-            } else {
-                localStorage.setItem('mach3ui-theme', mode);
-            }
+@php
+    $classes = Ui::classes()->add('flex gap-1')->merge($attributes->only('class'));
 
-            html.classList.toggle('dark', mode === 'dark');
-            html.classList.toggle('light', mode === 'light');
+    $modes = [
+        'system' => 'monitor-cog',
+        'light' => 'sun',
+        'dark' => 'moon',
+    ];
+@endphp
+
+<div class="{{ $classes }}" {{ $attributes->except('class') }} data-theme-switcher x-data="{
+    mode: localStorage.getItem('mach3ui-theme') || 'system',
+
+    setMode(mode) {
+        const html = document.documentElement;
+        const isSystem = !mode || mode === 'system';
+
+        if (isSystem) {
+            localStorage.removeItem('mach3ui-theme');
+            mode = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        } else {
+            localStorage.setItem('mach3ui-theme', mode);
         }
-    }"
-    x-init="$watch('mode', value => setMode(value))"
->
-    <ui:button
-        icon="monitor-cog"
-        variant="ghost"
-        size="sm"
-        x-bind:data-active="mode === 'system' ? '' : null"
-        x-on:click="mode = 'system'"
-    />
 
-    <ui:button
-        icon="sun"
-        variant="ghost"
-        size="sm"
-        x-bind:data-active="mode === 'light' ? '' : null"
-        x-on:click="mode = 'light'"
-    />
-
-    <ui:button
-        icon="moon"
-        variant="ghost"
-        size="sm"
-        x-bind:data-active="mode === 'dark' ? '' : null"
-        x-on:click="mode = 'dark'"
-    />
+        html.classList.toggle('dark', mode === 'dark');
+        html.classList.toggle('light', mode === 'light');
+    }
+}"
+    x-init="$watch('mode', value => setMode(value))">
+    @foreach ($modes as $mode => $icon)
+        <ui:button :icon="$icon" variant="ghost" size="sm" :aria-label="ucfirst($mode).
+        ' mode'"
+            x-bind:data-active="mode === '{{ $mode }}' ? '' : null" x-on:click="mode = '{{ $mode }}'" />
+    @endforeach
 </div>

@@ -1,20 +1,12 @@
 @props([
-    'default' => null,
     'type' => 'multiple',
 ])
 
-<div
-    {{ $attributes->class(['flex flex-col select-none']) }}
-    @if ($type === 'single')
-        x-data="{
-            active: @js($default),
-            toggle(value) {
-                this.active = this.active === value ? null : value;
-            }
-        }"
-        data-accordion-type="single"
-    @endif
-    data-accordion
->
+@php
+    $classes = Ui::classes()->add('flex flex-col')->merge($attributes->only('class'));
+@endphp
+
+<div x-data="{ active: null }" x-on:accordion-toggle.stop="active = (active === $event.detail) ? null : $event.detail"
+    class="{{ $classes }}" {{ $attributes->except('class') }} data-accordion data-type="{{ $type }}">
     {{ $slot }}
 </div>

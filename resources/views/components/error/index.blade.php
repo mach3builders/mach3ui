@@ -1,21 +1,26 @@
 @props([
-    'name' => null,
-    'message' => null,
     'bag' => 'default',
+    'name' => null,
 ])
 
 @php
-    $error_message = $message ?? ($name ? $errors->getBag($bag)->first($name) : null);
+    $errorMessage = match (true) {
+        $slot->isNotEmpty() => $slot,
+        $name !== null => $errors->getBag($bag)->first($name),
+        default => null,
+    };
+
+    $classes = Ui::classes()
+        ->add('flex items-center gap-1.5 text-xs')
+        ->add('text-red-600')
+        ->add('dark:text-red-500')
+        ->merge($attributes->only('class'));
 @endphp
 
-@if ($error_message)
-    <p {{ $attributes->class([
-        'flex items-center gap-1.5 text-xs',
-        'text-red-600',
-        'dark:text-red-500',
-    ]) }} data-error>
+@if ($errorMessage)
+    <p class="{{ $classes }}" {{ $attributes->except('class') }} data-error>
         <ui:icon name="circle-alert" class="size-3.5 shrink-0" />
 
-        <span>{{ $error_message }}</span>
+        <span>{{ $errorMessage }}</span>
     </p>
 @endif

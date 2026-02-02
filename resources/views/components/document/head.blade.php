@@ -1,32 +1,20 @@
 @props([
+    'favicon' => 'favicon.ico',
+    'robots' => 'noindex, nofollow',
     'title' => null,
 ])
 
-<head>
+<head data-document-head>
     <title>{{ $title ?: View::yieldContent('title', config('app.name')) }}</title>
     <meta charset="utf-8" />
-    <meta name="robots" content="noindex, nofollow" />
+    <meta name="robots" content="{{ $robots }}" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" />
     <meta name="csrf-token" content="{{ csrf_token() }}" />
 
-    <link href="{{ asset('favicon.ico') }}" rel="shortcut icon" type="image/png" />
-    <link rel="preconnect" href="https://fonts.bunny.net" />
-    <link rel="stylesheet" href="https://fonts.bunny.net/css?family=inter:400,500,600,700|saira-semi-condensed:700&display=swap" />
+    <link href="{{ asset($favicon) }}" rel="shortcut icon" type="image/x-icon" />
 
-    <style>[x-cloak] {display: none}</style>
-
-    <script>
-        (function() {
-            function applyTheme() {
-                var t = localStorage.getItem('mach3ui-theme');
-                var d = t === 'dark' || (!t && matchMedia('(prefers-color-scheme:dark)').matches);
-                document.documentElement.classList.toggle('dark', d);
-            }
-            applyTheme();
-            document.addEventListener('livewire:navigate', applyTheme);
-            document.addEventListener('livewire:navigated', applyTheme);
-        })();
-    </script>
+    @uiStyles
+    @uiScripts
 
     @stack('scripts')
 

@@ -7,17 +7,23 @@
 @php
     $tag = $level ? 'h' . (int) $level : 'div';
 
-    $base_classes = ['scroll-mt-20 font-semibold tracking-tight'];
-
-    $size_classes = [
-        'base' => 'text-base',
-        'lg' => 'text-lg',
-        'xl' => 'text-xl',
-    ];
-
-    $color_classes = $muted ? 'text-gray-500 dark:text-gray-400' : 'text-gray-980 dark:text-gray-100';
+    $classes = Ui::classes()
+        ->add('scroll-mt-20 font-semibold')
+        ->add(
+            match ($size) {
+                'lg' => 'text-lg',
+                'xl' => 'text-xl',
+                default => 'text-base',
+            },
+        )
+        ->add(
+            match ($muted) {
+                true => 'text-gray-500 dark:text-gray-400',
+                default => 'text-gray-980 dark:text-gray-100',
+            },
+        )
+        ->merge($attributes->only('class'));
 @endphp
 
-<{{ $tag }}
-    {{ $attributes->class([...$base_classes, $size_classes[$size] ?? $size_classes['base'], $color_classes]) }}
-    data-heading>{{ $slot }}</{{ $tag }}>
+<{{ $tag }} class="{{ $classes }}" {{ $attributes->except('class') }} data-heading>{{ $slot }}
+    </{{ $tag }}>

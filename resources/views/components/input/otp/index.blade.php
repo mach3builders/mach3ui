@@ -2,7 +2,6 @@
     'disabled' => false,
     'length' => 6,
     'mode' => 'numeric',
-    'name' => null,
     'private' => false,
     'separator' => null,
     'size' => null,
@@ -10,6 +9,20 @@
 ])
 
 @php
+    $wireModel = $attributes->wire('model');
+    $hasWireModel = $wireModel && method_exists($wireModel, 'value');
+    $wireModelValue = $hasWireModel ? $wireModel->value() : null;
+
+    // Extract x-model attribute
+    $xModel = null;
+    foreach ($attributes as $key => $val) {
+        if (str_starts_with($key, 'x-model')) {
+            $xModel = $val;
+            break;
+        }
+    }
+
+    $name = $attributes->get('name') ?? ($wireModelValue ?? $xModel);
     $id = $attributes->get('id') ?? ($name ? 'input-otp-' . $name : 'input-otp-' . uniqid());
 
     $pattern = match ($mode) {
@@ -23,13 +36,29 @@
         default => 'numeric',
     };
 
-    $slot_size_classes = match ($size) {
+    $slotSizeClasses = match ($size) {
         'sm' => 'h-9 w-8 text-sm',
         'lg' => 'h-14 w-12 text-xl',
         default => 'h-12 w-10 text-lg',
     };
 
-    $wrapper_classes = ['flex items-center gap-2', 'opacity-50' => $disabled];
+    $wrapperClasses = Ui::classes()
+        ->add('flex items-center gap-2')
+        ->when($disabled, 'opacity-50')
+        ->merge($attributes->only('class'));
+
+    $slotClasses = Ui::classes()
+        ->add($slotSizeClasses)
+        ->add('relative -ml-px flex cursor-text items-center justify-center border font-medium transition-colors')
+        ->add('first:ml-0 first:rounded-l-lg last:rounded-r-lg')
+        ->add('border-gray-200 bg-white text-gray-900')
+        ->add('dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100');
+
+    $activeRingClasses = 'z-10 ring-1 ring-gray-400 dark:ring-gray-500';
+
+    $separatorClasses = Ui::classes()->add('flex items-center justify-center px-1');
+
+    $separatorDotClasses = Ui::classes()->add('h-1 w-2 rounded-full')->add('bg-gray-300')->add('dark:bg-gray-600');
 @endphp
 
 <div x-data="{
@@ -120,10 +149,11 @@
         if (!char) return '';
         return this.private ? '•' : char;
     }
-}" {{ $attributes->except(['id', 'name', 'value'])->class($wrapper_classes) }} data-input-otp>
+}" x-modelable="value" {{ $attributes->whereStartsWith('x-model') }}
+    class="{{ $wrapperClasses }}" {{ $attributes->only('data-*') }} data-input-otp data-control>
     <input type="hidden" x-ref="hidden" id="{{ $id }}"
         @if ($name) name="{{ $name }}" @endif :value="value"
-        {{ $attributes->only(['wire:model', 'wire:model.live', 'wire:model.blur', 'wire:model.defer', 'x-model']) }} />
+        {{ $attributes->whereStartsWith('wire:model') }} />
 
     @if ($slot->isNotEmpty())
         {{ $slot }}
@@ -135,30 +165,26 @@
         @foreach ($groups as $groupIndex => $group)
             <div class="flex items-center" data-input-otp-group>
                 @foreach ($group as $index)
-                    <div class="{{ $slot_size_classes }} relative -ml-px flex cursor-text items-center justify-center border font-medium transition-colors first:ml-0 first:rounded-l-lg last:rounded-r-lg border-gray-200 bg-white text-gray-900 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
-                        :class="{
-                            'z-10 ring-1 ring-gray-400 dark:ring-gray-500': activeIndex === {{ $index }},
-                        }"
-                        @click="focusIndex({{ $index }})" data-input-otp-slot>
+                    <div class="{{ $slotClasses }}"
+                        :class="{ '{{ $activeRingClasses }}': activeIndex === {{ $index }} }"
+                        x-on:click="focusIndex({{ $index }})" data-input-otp-slot>
                         <span x-text="displayChar(digits[{{ $index }}])"></span>
                     </div>
                 @endforeach
             </div>
 
             @if (!$loop->last)
-                <div class="flex items-center justify-center px-1" data-input-otp-separator>
-                    <div class="h-1 w-2 rounded-full bg-gray-300 dark:bg-gray-600"></div>
+                <div class="{{ $separatorClasses }}" data-input-otp-separator>
+                    <div class="{{ $separatorDotClasses }}"></div>
                 </div>
             @endif
         @endforeach
     @else
         <div class="flex items-center" data-input-otp-group>
             @for ($i = 0; $i < $length; $i++)
-                <div class="{{ $slot_size_classes }} relative -ml-px flex cursor-text items-center justify-center border font-medium transition-colors first:ml-0 first:rounded-l-lg last:rounded-r-lg border-gray-200 bg-white text-gray-900 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100"
-                    :class="{
-                        'z-10 ring-1 ring-gray-400 dark:ring-gray-500': activeIndex === {{ $i }},
-                    }"
-                    @click="focusIndex({{ $i }})" data-input-otp-slot>
+                <div class="{{ $slotClasses }}"
+                    :class="{ '{{ $activeRingClasses }}': activeIndex === {{ $i }} }"
+                    x-on:click="focusIndex({{ $i }})" data-input-otp-slot>
                     <span x-text="displayChar(digits[{{ $i }}])"></span>
                 </div>
             @endfor
@@ -166,6 +192,7 @@
     @endif
 
     <input type="text" inputmode="{{ $inputmode }}" autocomplete="one-time-code" x-ref="input" class="sr-only"
-        maxlength="{{ $length }}" @input="handleInput($event)" @keydown="handleKeydown($event)"
-        @focus="handleFocus()" @blur="handleBlur()" @paste="handlePaste($event)" @disabled($disabled) />
+        maxlength="{{ $length }}" x-on:input="handleInput($event)" x-on:keydown="handleKeydown($event)"
+        x-on:focus="handleFocus()" x-on:blur="handleBlur()" x-on:paste="handlePaste($event)"
+        @disabled($disabled) />
 </div>

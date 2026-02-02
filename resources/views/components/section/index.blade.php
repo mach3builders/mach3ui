@@ -1,47 +1,52 @@
 @props([
-    'title' => null,
     'description' => null,
+    'title' => null,
     'variant' => null,
 ])
 
 @php
-    $is_stacked = $variant === 'stacked';
-    $is_inline = $variant === 'inline';
+    $headerSlot = $__laravel_slots['header'] ?? null;
 
-    $wrapper_classes = [
-        'flex gap-3',
-        'flex-col' => !$is_inline,
-        'flex-row items-start gap-8' => $is_inline,
-        '@xl:flex-row @xl:items-start @xl:gap-8' => !$is_stacked && !$is_inline,
-    ];
+    $isInline = $variant === 'inline';
+    $isStacked = $variant === 'stacked';
+    $isResponsive = !$isInline && !$isStacked;
 
-    $header_classes = [
-        'flex flex-col gap-1',
-        'px-4' => !$is_inline,
-        'w-56 shrink-0 pt-4' => $is_inline,
-        '@xl:w-56 @xl:shrink-0 @xl:px-0 @xl:pt-4' => !$is_stacked && !$is_inline,
-    ];
+    $classes = Ui::classes()->add('@container [[data-section]+&]:mt-8')->merge($attributes->only('class'));
+
+    $wrapperClasses = Ui::classes()
+        ->add('flex gap-3')
+        ->add($isInline ? 'flex-row items-start gap-8' : 'flex-col')
+        ->when($isResponsive, '@xl:flex-row @xl:items-start @xl:gap-8');
+
+    $headerClasses = Ui::classes()
+        ->add('flex flex-col gap-1')
+        ->add($isInline ? 'w-56 shrink-0 pt-4' : 'px-4')
+        ->when($isResponsive, '@xl:w-56 @xl:shrink-0 @xl:px-0 @xl:pt-4');
+
+    $titleClasses = Ui::classes()->add('text-base font-semibold text-gray-900')->add('dark:text-white');
+
+    $descriptionClasses = Ui::classes()->add('text-sm text-gray-500')->add('dark:text-gray-400');
 @endphp
 
-<div {{ $attributes->class(['@container', '[[data-section]+&]:mt-8']) }} data-section>
-    <div @class($wrapper_classes)>
-        @if ($title || $description || isset($header))
-            <div @class($header_classes)>
-                @if (isset($header))
-                    {{ $header }}
+<div class="{{ $classes }}" {{ $attributes->except('class') }} data-section>
+    <div class="{{ $wrapperClasses }}" data-section-wrapper>
+        @if ($title || $description || $headerSlot)
+            <div class="{{ $headerClasses }}" data-section-header>
+                @if ($headerSlot)
+                    {{ $headerSlot }}
                 @else
                     @if ($title)
-                        <h3 class="text-base font-semibold text-gray-900 dark:text-white">{{ $title }}</h3>
+                        <h3 class="{{ $titleClasses }}" data-section-title>{{ $title }}</h3>
                     @endif
 
                     @if ($description)
-                        <p class="text-sm text-gray-500 dark:text-gray-400">{{ $description }}</p>
+                        <p class="{{ $descriptionClasses }}" data-section-description>{{ $description }}</p>
                     @endif
                 @endif
             </div>
         @endif
 
-        <ui:box variant="subtle" class="flex grow flex-col">
+        <ui:box variant="subtle" class="flex grow flex-col" data-section-content>
             {{ $slot }}
         </ui:box>
     </div>

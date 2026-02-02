@@ -6,7 +6,18 @@
 ])
 
 @php
-    $size_classes = [
+    $wireModel = $attributes->wire('model');
+    $hasWireModel = $wireModel && method_exists($wireModel, 'value');
+    $wireModelValue = $hasWireModel ? $wireModel->value() : null;
+    $isLive = $hasWireModel && $wireModel->hasModifier('live');
+
+    $openState = $hasWireModel ? "\$wire.entangle('{$wireModelValue}')" . ($isLive ? '.live' : '') : 'false';
+
+    $headerSlot = $__laravel_slots['header'] ?? null;
+    $alertSlot = $__laravel_slots['alert'] ?? null;
+    $footerSlot = $__laravel_slots['footer'] ?? null;
+
+    $sizeClasses = [
         'sm' => 'max-w-md',
         'md' => 'max-w-lg',
         'lg' => 'max-w-2xl',
@@ -14,68 +25,53 @@
         'full' => 'max-w-full mx-4',
     ];
 
-    $size_class = $size_classes[$size] ?? $size_classes['md'];
-    $wire_model = $attributes->get('wire:model.live') ?? $attributes->get('wire:model');
-    $wire_model_live = $attributes->has('wire:model.live');
+    $classes = Ui::classes()
+        ->add('fixed inset-0 m-auto flex max-h-[90vh] w-full flex-col rounded-xl border shadow-2xl')
+        ->add('border-transparent bg-white')
+        ->add('dark:border-gray-740 dark:bg-gray-800')
+        ->add('opacity-0 pointer-events-none transition-all duration-200 ease-out')
+        ->add('open:opacity-100 open:pointer-events-auto')
+        ->add(
+            'backdrop:bg-gray-900/50 backdrop:backdrop-blur-xs backdrop:opacity-0 backdrop:pointer-events-none backdrop:transition-all backdrop:duration-200 backdrop:ease-out',
+        )
+        ->add('open:backdrop:opacity-100 open:backdrop:pointer-events-auto')
+        ->add('dark:backdrop:bg-black/70')
+        ->add($sizeClasses[$size] ?? $size)
+        ->merge($attributes->only('class'));
 @endphp
 
-<dialog
-    {{ $attributes->class([
-        'fixed inset-0 m-auto flex max-h-[90vh] w-full flex-col rounded-xl border shadow-2xl',
-        'border-transparent bg-white',
-        'dark:border-gray-740 dark:bg-gray-800',
-        'opacity-0 pointer-events-none transition-all duration-200 ease-out',
-        'open:opacity-100 open:pointer-events-auto',
-        'backdrop:bg-gray-900/50 backdrop:backdrop-blur-xs backdrop:opacity-0 backdrop:pointer-events-none backdrop:transition-all backdrop:duration-200 backdrop:ease-out',
-        'open:backdrop:opacity-100 open:backdrop:pointer-events-auto',
-        'dark:backdrop:bg-black/70',
-        $size_class,
-    ])->except(['wire:model', 'wire:model.live']) }}
-    x-data="{
-        open: {{ $wire_model ? "(typeof \$wire !== 'undefined' ? \$wire.entangle('{$wire_model}')" . ($wire_model_live ? ".live" : "") . " : false)" : 'false' }},
-        dialog: null,
+<dialog class="{{ $classes }}" {{ $attributes->except('class')->whereDoesntStartWith('wire:model') }}
+    wire:ignore.self x-modelable="open" x-data="{
+        open: {{ $openState }},
         init() {
-            this.dialog = this.$el;
             const id = this.$el.id;
-            window.addEventListener('modal-open', (e) => {
-                if (e.detail === id) this.openModal();
-            });
-            window.addEventListener('modal-close', (e) => {
-                if (e.detail === id) this.closeModal();
-            });
-            if (!window.$openModal) {
-                window.$openModal = (id) => window.dispatchEvent(new CustomEvent('modal-open', { detail: id }));
-                window.$closeModal = (id) => window.dispatchEvent(new CustomEvent('modal-close', { detail: id }));
-            }
-            @if ($wire_model)
-                if (typeof $wire !== 'undefined') {
-                    this.$watch('open', (value) => {
-                        value ? this.dialog.showModal() : this.dialog.close();
-                    });
-                    if (this.open) this.dialog.showModal();
-                }
-            @endif
+    
+            this.$el.addEventListener('toggle', e => this.open = e.newState === 'open');
+            window.addEventListener('modal-open', e => e.detail === id && this.openModal());
+            window.addEventListener('modal-close', e => e.detail === id && this.closeModal());
+    
+            window.$openModal ??= id => window.dispatchEvent(new CustomEvent('modal-open', { detail: id }));
+            window.$closeModal ??= id => window.dispatchEvent(new CustomEvent('modal-close', { detail: id }));
+    
+            this.$watch('open', value => value ? this.$el.showModal() : this.$el.close());
+    
+            if (this.open) this.$el.showModal();
         },
         openModal() {
             document.querySelectorAll('[popover]:popover-open').forEach(p => p.hidePopover());
             this.open = true;
-            this.dialog.showModal();
         },
         closeModal() {
             this.open = false;
-            this.dialog.close();
         }
-    }"
-    @if ($closeable)
-        x-on:click="if ($event.target === $el) closeModal()"
+    }" x-on:keydown.escape.prevent="closeModal()" @if ($closeable)
+    x-on:click.self="closeModal()"
     @endif
-    x-on:keydown.escape.prevent="closeModal()"
-    data-modal
->
-    @if ($title || isset($header))
+    data-modal>
+    @if ($title || $headerSlot)
         <ui:modal.header>
-            @if (isset($header))
-                {{ $header }}
+            @if ($headerSlot)
+                {{ $headerSlot }}
             @else
                 <div>
                     <ui:modal.title>{{ $title }}</ui:modal.title>
@@ -86,13 +82,14 @@
                 </div>
             @endif
 
-            <ui:button variant="ghost" size="sm" icon="x" class="absolute top-4 right-4" x-on:click="closeModal()" />
+            <ui:button variant="ghost" size="sm" icon="x" class="absolute top-4 right-4"
+                x-on:click="closeModal()" />
         </ui:modal.header>
     @endif
 
-    @if (isset($alert))
+    @if ($alertSlot)
         <div class="px-6">
-            {{ $alert }}
+            {{ $alertSlot }}
         </div>
     @endif
 
@@ -102,9 +99,9 @@
         </ui:modal.body>
     @endif
 
-    @if (isset($footer))
+    @if ($footerSlot)
         <ui:modal.footer>
-            {{ $footer }}
+            {{ $footerSlot }}
         </ui:modal.footer>
     @endif
 </dialog>

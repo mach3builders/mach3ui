@@ -1,98 +1,84 @@
 @props([
-    'active' => false,
     'badge' => null,
     'description' => null,
     'flush' => false,
-    'horizontal' => false,
     'icon' => null,
     'icon:boxed' => false,
     'icon:color' => 'gray',
     'icon:size' => 'md',
     'image' => null,
-    'imageOverlay' => false,
-    'imagePosition' => 'top',
+    'image:overlay' => false,
+    'image:position' => 'top',
     'title' => null,
     'variant' => null,
 ])
 
 @php
-    $icon_boxed = $__data['icon:boxed'] ?? false;
-    $icon_color = $__data['icon:color'] ?? 'gray';
-    $icon_size = $__data['icon:size'] ?? 'md';
+    $iconBoxed = $__data['icon:boxed'] ?? false;
+    $iconColor = $__data['icon:color'] ?? 'gray';
+    $iconSize = $__data['icon:size'] ?? 'md';
+    $imageOverlay = $__data['image:overlay'] ?? false;
+    $imagePosition = $__data['image:position'] ?? 'top';
 
-    $action_slot = $__laravel_slots['action'] ?? null;
-    $image_slot = $__laravel_slots['image'] ?? null;
-    $has_image = $image_slot || $image;
-    $image_first = in_array($imagePosition, ['top', 'left']);
-    $is_horizontal = $horizontal || in_array($imagePosition, ['left', 'right']);
-    $show_overlay = $imageOverlay && $has_image && $title;
+    $actionSlot = $__laravel_slots['action'] ?? null;
+    $imageSlot = $__laravel_slots['image'] ?? null;
+    $iconSlot = $__laravel_slots['icon'] ?? null;
+
+    $hasImage = $imageSlot || $image;
+    $imageFirst = in_array($imagePosition, ['top', 'left']);
+    $isHorizontal = in_array($imagePosition, ['left', 'right']);
+    $showOverlay = $imageOverlay && $hasImage && $title;
+    $hasIcon = $iconSlot || $icon;
+    $showHeader = isset($header) || ($title && !$showOverlay) || ($description && $showOverlay) || $hasIcon;
+    $showFooter = isset($footer);
+
+    $classes = Ui::classes()
+        ->add('rounded-xl p-1.5')
+        ->add(
+            match ($variant) {
+                'inverted' => 'bg-white shadow-xs dark:bg-gray-800',
+                default => 'bg-gray-30 dark:bg-gray-830',
+            },
+        )
+        ->when($isHorizontal, 'flex flex-row gap-1.5')
+        ->merge($attributes->only('class'));
+
+    $actionHeaderClasses = Ui::classes()
+        ->add('relative flex gap-3 px-4.5 pb-5')
+        ->add($hasImage && $imageFirst ? 'pt-4' : 'pt-5');
+
+    $actionContentClasses = Ui::classes()->add('flex flex-1 flex-col gap-1.5')->unless($description, 'justify-center');
 @endphp
 
-<div {{ $attributes->class([
-    'rounded-xl p-1.5',
-    'bg-gray-30 dark:bg-gray-830' => $variant !== 'inverted',
-    'bg-white shadow-xs dark:bg-gray-800' => $variant === 'inverted',
-    'ring-2 ring-blue-600 dark:ring-blue-500' => $active,
-    'flex flex-row' => $is_horizontal,
-]) }}
-    data-card data-variant="{{ $variant }}">
-    @if ($has_image && $image_first)
-        @if ($image_slot)
-            <div
-                {{ $image_slot->attributes->class([
-                    'relative overflow-hidden rounded-lg',
-                    'w-1/3 shrink-0 [&>img]:h-full' => $is_horizontal,
-                ]) }}>
-                {{ $image_slot }}
-            </div>
-        @else
-            <div @class([
-                'relative overflow-hidden rounded-lg',
-                'w-1/3 shrink-0 [&>img]:h-full' => $is_horizontal,
-            ])>
-                <img src="{{ $image }}" alt="" class="w-full object-cover" />
-
-                @if ($show_overlay)
-                    <div class="absolute inset-0 flex items-end bg-linear-to-t from-black/80 to-transparent p-4">
-                        <ui:card.title class="text-white">{{ $title }}</ui:card.title>
-                    </div>
-                @endif
-            </div>
-        @endif
+<div class="{{ $classes }}" {{ $attributes->except('class') }} data-card data-variant="{{ $variant }}">
+    @if ($hasImage && $imageFirst)
+        @include('ui::components.card._image', [
+            'image' => $image,
+            'imageSlot' => $imageSlot,
+            'isHorizontal' => $isHorizontal,
+            'showOverlay' => $showOverlay,
+            'title' => $title,
+        ])
     @endif
 
-    @php
-        $icon_slot = $__laravel_slots['icon'] ?? null;
-        $has_icon = $icon_slot || $icon;
-        $show_header = isset($header) || ($title && !$show_overlay) || ($description && $show_overlay) || $has_icon;
-        $show_footer = isset($footer);
-    @endphp
-
-    <div class="flex flex-1 flex-col h-full">
-        @if ($show_header)
-            @if ($action_slot && !isset($header))
-                <div @class([
-                    'relative flex gap-3 px-4.5 pb-5',
-                    'pt-4' => $has_image && $image_first,
-                    'pt-5' => !$has_image || !$image_first,
-                ])>
-                    @if ($has_icon)
+    <div class="flex h-full flex-1 flex-col">
+        @if ($showHeader)
+            @if ($actionSlot && !isset($header))
+                <div class="{{ $actionHeaderClasses }}" data-card-header>
+                    @if ($hasIcon)
                         <div class="shrink-0">
-                            @if ($icon_slot)
-                                {{ $icon_slot }}
+                            @if ($iconSlot)
+                                {{ $iconSlot }}
                             @else
-                                <ui:icon :name="$icon" :boxed="$icon_boxed" :color="$icon_color"
-                                    :size="$icon_size" />
+                                <ui:icon :name="$icon" :boxed="$iconBoxed" :color="$iconColor"
+                                    :size="$iconSize" />
                             @endif
                         </div>
                     @endif
 
-                    <div @class([
-                        'flex flex-1 flex-col gap-1.5',
-                        'justify-center' => !$description,
-                    ])>
+                    <div class="{{ $actionContentClasses }}">
                         <div class="flex items-center gap-2">
-                            @if ($title && !$show_overlay)
+                            @if ($title && !$showOverlay)
                                 <ui:card.title>{{ $title }}</ui:card.title>
                             @endif
 
@@ -107,17 +93,17 @@
                     </div>
 
                     <div class="absolute right-3 top-4">
-                        {{ $action_slot }}
+                        {{ $actionSlot }}
                     </div>
                 </div>
             @else
-                <ui:card.header :pad-top="!$has_image || !$image_first" :icon="$icon" :icon:slot="$icon_slot"
-                    :icon:boxed="$icon_boxed" :icon:color="$icon_color" :icon:size="$icon_size"
+                <ui:card.header :pad-top="!$hasImage || !$imageFirst" :icon="$icon" :icon:slot="$iconSlot"
+                    :icon:boxed="$iconBoxed" :icon:color="$iconColor" :icon:size="$iconSize"
                     :has-description="(bool) $description"
                     :attributes="isset($header) ? $header->attributes : new \Illuminate\View\ComponentAttributeBag([])">
                     @if (isset($header))
                         {{ $header }}
-                    @elseif ($title && !$show_overlay)
+                    @elseif ($title && !$showOverlay)
                         @if ($badge)
                             <div class="flex items-center justify-between">
                                 <ui:card.title>{{ $title }}</ui:card.title>
@@ -131,7 +117,7 @@
                         @if ($description)
                             <ui:card.description>{{ $description }}</ui:card.description>
                         @endif
-                    @elseif ($has_icon && !$title && !$description)
+                    @elseif ($hasIcon && !$title && !$description)
                         {{-- Icon only, no content needed --}}
                     @else
                         <ui:card.description>{{ $description }}</ui:card.description>
@@ -146,29 +132,20 @@
             </ui:card.content>
         @endif
 
-        @if ($show_footer)
+        @if ($showFooter)
             <ui:card.footer :variant="$variant" :attributes="$footer->attributes">
                 {{ $footer }}
             </ui:card.footer>
         @endif
     </div>
 
-    @if ($has_image && !$image_first)
-        @if ($image_slot)
-            <div
-                {{ $image_slot->attributes->class([
-                    'relative overflow-hidden rounded-lg',
-                    'w-1/3 shrink-0 [&>img]:h-full' => $is_horizontal,
-                ]) }}>
-                {{ $image_slot }}
-            </div>
-        @else
-            <div @class([
-                'relative overflow-hidden rounded-lg',
-                'w-1/3 shrink-0 [&>img]:h-full' => $is_horizontal,
-            ])>
-                <img src="{{ $image }}" alt="" class="w-full object-cover" />
-            </div>
-        @endif
+    @if ($hasImage && !$imageFirst)
+        @include('ui::components.card._image', [
+            'image' => $image,
+            'imageSlot' => $imageSlot,
+            'isHorizontal' => $isHorizontal,
+            'showOverlay' => $showOverlay,
+            'title' => $title,
+        ])
     @endif
 </div>

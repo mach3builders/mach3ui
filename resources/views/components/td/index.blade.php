@@ -5,39 +5,76 @@
     'highlight' => false,
 ])
 
-<td
-    {{ $attributes->class([
-        'px-4 align-top [&_svg]:size-5',
-        'py-3' => !$actions,
-        '[&:has(>[data-checkbox]:only-child)]:pt-3',
-        '[&:has(>[data-icon]:only-child)]:pt-3',
-        '[&:has(>[data-button]:only-child)]:pt-1.5',
-        '[&:has(>[data-toggle]:only-child)]:py-1.5',
-                'border-gray-60 bg-white text-gray-700',
-        'dark:border-gray-720 dark:bg-gray-800 dark:text-gray-200',
-        '[tr:first-child_&]:border-t',
-        '[&:first-child]:border-l',
-        '[&:last-child]:border-r',
-        '[tbody:not([data-expanded=false])_tr:last-child_&]:border-b',
-        '[tbody:last-of-type[data-expanded=false]_tr:first-child_&]:border-b',
-        '[tr+tr_&]:border-t',
-        '[tbody:first-of-type_tr:first-child_&:first-child]:rounded-tl-lg [tbody:first-of-type_tr:first-child_&:last-child]:rounded-tr-lg',
-        '[tbody:last-of-type:not([data-expanded=false])_tr:last-child_&:first-child]:rounded-bl-lg [tbody:last-of-type:not([data-expanded=false])_tr:last-child_&:last-child]:rounded-br-lg',
-        '[tbody:last-of-type[data-expanded=false]_tr:first-child_&:first-child]:rounded-bl-lg [tbody:last-of-type[data-expanded=false]_tr:first-child_&:last-child]:rounded-br-lg',
-        'text-left' => $align === 'left' && !$actions && !$fit,
-        'text-center' => $align === 'center' || $fit,
-        'text-right' => $align === 'right' || $actions,
-        'w-0' => $actions || $fit,
-        '[&:first-child]:pr-0 [&:not(:first-child):not(:last-child)]:px-0' => $fit,
-        'py-1.5 pr-1.5 [&:last-child]:pl-0' => $actions,
-        'font-medium text-gray-900 dark:text-white' => $highlight,
-        '[[data-variant=simple]_&]:px-3 [[data-variant=simple]_&]:py-2.5',
-        '[[data-variant=simple]_&:first-child]:font-medium [[data-variant=simple]_&:first-child]:text-gray-900 [[data-variant=simple]_&:first-child]:dark:text-white',
-    ]) }}
-    data-td
->
+@php
+    // Base classes
+    $classes = Ui::classes()->add('px-4 align-top [&_svg]:size-5')->unless($actions, 'py-3');
+
+    // Auto-adjust padding for single-child elements
+    $classes = $classes
+        ->add('has-[>[data-checkbox]:only-child]:pt-3')
+        ->add('has-[>[data-icon]:only-child]:pt-3')
+        ->add('has-[>[data-button]:only-child]:pt-1.5')
+        ->add('has-[>[data-toggle]:only-child]:py-1.5');
+
+    // Colors
+    $classes = $classes
+        ->add('border-gray-60 bg-white text-gray-700')
+        ->add('dark:border-gray-720 dark:bg-gray-800 dark:text-gray-200');
+
+    // Borders
+    $classes = $classes
+        ->add('[tr:first-child_&]:border-t')
+        ->add('first:border-l last:border-r')
+        ->add('[tr+tr_&]:border-t')
+        // Border-bottom alleen op laatste zichtbare row van laatste tbody
+        ->add('[tbody:last-of-type:not([data-expanded="false"])_tr:last-child_&]:border-b')
+        ->add('[tbody:last-of-type[data-expanded="false"]_tr:first-child_&]:border-b');
+
+    // Border radius - top corners op eerste tbody's eerste row
+$classes = $classes
+    ->add('[tbody:first-of-type_tr:first-child_&]:first:rounded-tl-lg')
+    ->add('[tbody:first-of-type_tr:first-child_&]:last:rounded-tr-lg');
+
+// Border radius - bottom corners op laatste tbody's laatste zichtbare row
+    $classes = $classes
+        ->add('[tbody:last-of-type:not([data-expanded="false"])_tr:last-child_&]:first:rounded-bl-lg')
+        ->add('[tbody:last-of-type:not([data-expanded="false"])_tr:last-child_&]:last:rounded-br-lg')
+        ->add('[tbody:last-of-type[data-expanded="false"]_tr:first-child_&]:first:rounded-bl-lg')
+        ->add('[tbody:last-of-type[data-expanded="false"]_tr:first-child_&]:last:rounded-br-lg');
+
+    // Alignment
+    $classes = $classes->add(
+        match (true) {
+            $align === 'center' || $fit => 'text-center',
+            $align === 'right' || $actions => 'text-right',
+            default => 'text-left',
+        },
+    );
+
+    // Fit & actions modifiers
+    $classes = $classes
+        ->when($actions || $fit, 'w-0')
+        ->when($fit, 'first:pr-0 not-first:not-last:px-0')
+        ->when($actions, 'py-1.5 pr-1.5 last:pl-0');
+
+    // Highlight
+    $classes = $classes->when($highlight, 'font-medium text-gray-900')->when($highlight, 'dark:text-white');
+
+    // Simple variant overrides
+    $classes = $classes
+        ->add('[[data-variant=simple]_&]:px-3 [[data-variant=simple]_&]:py-2.5')
+        ->add('[[data-variant=simple]_&]:first:font-medium [[data-variant=simple]_&]:first:text-gray-900')
+        ->add('[[data-variant=simple]_&]:first:dark:text-white');
+
+    // Merge user classes
+    $classes = $classes->merge($attributes->only('class'));
+
+    $actionsClasses = Ui::classes()->add('invisible inline-flex gap-1 group-hover:visible');
+@endphp
+
+<td class="{{ $classes }}" {{ $attributes->except('class') }} data-td>
     @if ($actions)
-        <div class="invisible inline-flex gap-1 group-hover:visible">
+        <div class="{{ $actionsClasses }}" data-td-actions>
             {{ $slot }}
         </div>
     @else

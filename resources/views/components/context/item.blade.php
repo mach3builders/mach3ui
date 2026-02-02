@@ -1,29 +1,22 @@
 @props([
     'active' => false,
+    'danger' => false,
     'href' => null,
     'icon' => null,
-    'icon:end' => null,
+    'iconTrailing' => null,
     'label' => null,
     'route' => null,
-    'variant' => 'default',
 ])
 
 @php
-    $icon_slot = $__laravel_slots['icon'] ?? null;
+    $iconSlot = $__laravel_slots['icon'] ?? null;
 @endphp
 
-<ui:nav.item
-    :active="$active"
-    :href="$href"
-    :icon="$icon"
-    :icon:end="$__data['icon:end'] ?? null"
-    :label="$label"
-    :route="$route"
-    :variant="$variant"
-    {{ $attributes }}
->
-    @if ($icon_slot)
-        <x-slot:icon>{{ $icon_slot }}</x-slot:icon>
+<ui:nav.item :active="$active" :danger="$danger" :href="$href" :icon="$icon"
+    :icon:end="$iconTrailing" :label="$label" :route="$route" role="menuitem"
+    x-on:click="$dispatch('context-close')" {{ $attributes }} data-context-item>
+    @if ($iconSlot)
+        <x-slot:icon>{{ $iconSlot }}</x-slot:icon>
     @endif
 
     {{ $slot }}

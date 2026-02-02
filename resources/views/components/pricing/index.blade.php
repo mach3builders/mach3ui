@@ -4,16 +4,7 @@
 ])
 
 @php
-    $gap_classes = [
-        'none' => 'gap-0',
-        'xs' => 'gap-1',
-        'sm' => 'gap-2',
-        'md' => 'gap-4',
-        'lg' => 'gap-6',
-        'xl' => 'gap-8',
-    ];
-
-    $column_classes = [
+    $columnClasses = [
         1 => 'grid-cols-1',
         2 => 'grid-cols-1 sm:grid-cols-2',
         3 => 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3',
@@ -21,15 +12,23 @@
         5 => 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5',
         6 => 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6',
     ];
+
+    $classes = Ui::classes()
+        ->add('grid')
+        ->add(
+            match ($gap) {
+                'none' => 'gap-0',
+                'xs' => 'gap-1',
+                'sm' => 'gap-2',
+                'lg' => 'gap-6',
+                'xl' => 'gap-8',
+                default => 'gap-4',
+            },
+        )
+        ->add($columnClasses[$columns] ?? null)
+        ->merge($attributes->only('class'));
 @endphp
 
-<div
-    {{ $attributes->class([
-        'grid',
-        $gap_classes[$gap] ?? $gap_classes['md'],
-        $column_classes[$columns] ?? null,
-    ]) }}
-    data-pricing
->
+<div class="{{ $classes }}" {{ $attributes->except('class') }} data-pricing>
     {{ $slot }}
 </div>
