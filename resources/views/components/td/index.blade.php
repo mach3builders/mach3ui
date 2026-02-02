@@ -25,18 +25,22 @@
     $classes = $classes
         ->add('[tr:first-child_&]:border-t')
         ->add('first:border-l last:border-r')
-        ->add('[tbody:not([data-expanded=false])_tr:last-child_&]:border-b')
-        ->add('[tbody:last-of-type[data-expanded=false]_tr:first-child_&]:border-b')
-        ->add('[tr+tr_&]:border-t');
+        ->add('[tr+tr_&]:border-t')
+        // Border-bottom alleen op laatste zichtbare row van laatste tbody
+        ->add('[tbody:last-of-type:not([data-expanded="false"])_tr:last-child_&]:border-b')
+        ->add('[tbody:last-of-type[data-expanded="false"]_tr:first-child_&]:border-b');
 
-    // Border radius
+    // Border radius - top corners op eerste tbody's eerste row
+$classes = $classes
+    ->add('[tbody:first-of-type_tr:first-child_&]:first:rounded-tl-lg')
+    ->add('[tbody:first-of-type_tr:first-child_&]:last:rounded-tr-lg');
+
+// Border radius - bottom corners op laatste tbody's laatste zichtbare row
     $classes = $classes
-        ->add('[tbody:first-of-type_tr:first-child_&]:first:rounded-tl-lg')
-        ->add('[tbody:first-of-type_tr:first-child_&]:last:rounded-tr-lg')
-        ->add('[tbody:last-of-type:not([data-expanded=false])_tr:last-child_&]:first:rounded-bl-lg')
-        ->add('[tbody:last-of-type:not([data-expanded=false])_tr:last-child_&]:last:rounded-br-lg')
-        ->add('[tbody:last-of-type[data-expanded=false]_tr:first-child_&]:first:rounded-bl-lg')
-        ->add('[tbody:last-of-type[data-expanded=false]_tr:first-child_&]:last:rounded-br-lg');
+        ->add('[tbody:last-of-type:not([data-expanded="false"])_tr:last-child_&]:first:rounded-bl-lg')
+        ->add('[tbody:last-of-type:not([data-expanded="false"])_tr:last-child_&]:last:rounded-br-lg')
+        ->add('[tbody:last-of-type[data-expanded="false"]_tr:first-child_&]:first:rounded-bl-lg')
+        ->add('[tbody:last-of-type[data-expanded="false"]_tr:first-child_&]:last:rounded-br-lg');
 
     // Alignment
     $classes = $classes->add(
