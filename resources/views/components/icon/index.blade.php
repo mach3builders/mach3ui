@@ -1,6 +1,6 @@
 @props([
     'boxed' => false,
-    'color' => 'gray',
+    'color' => null,
     'name' => null,
     'round' => false,
     'size' => null,
@@ -28,6 +28,22 @@
         default => 'size-8',
     };
 
+    $colors = [
+        'gray' => 'text-gray-500 dark:text-gray-400',
+        'blue' => 'text-blue-600 dark:text-blue-500',
+        'green' => 'text-green-600 dark:text-green-500',
+        'amber' => 'text-amber-600 dark:text-amber-500',
+        'red' => 'text-red-600 dark:text-red-500',
+        'yellow' => 'text-yellow-600 dark:text-yellow-500',
+        'purple' => 'text-purple-600 dark:text-purple-500',
+        'rose' => 'text-rose-600 dark:text-rose-500',
+        'indigo' => 'text-indigo-600 dark:text-indigo-500',
+        'cyan' => 'text-cyan-600 dark:text-cyan-500',
+        'teal' => 'text-teal-600 dark:text-teal-500',
+        'pink' => 'text-pink-600 dark:text-pink-500',
+        'violet' => 'text-violet-600 dark:text-violet-500',
+    ];
+
     $boxedColors = [
         'gray' => 'bg-gray-60 text-gray-600 dark:bg-gray-740 dark:text-gray-400',
         'blue' => 'bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400',
@@ -44,6 +60,8 @@
         'violet' => 'bg-violet-100 text-violet-600 dark:bg-violet-900/30 dark:text-violet-400',
     ];
 
+    $colorClass = $color ? $colors[$color] ?? "text-{$color}" : null;
+
     $boxClasses = Ui::classes()
         ->add('flex items-center justify-center')
         ->add($boxSize)
@@ -53,7 +71,7 @@
 
     $iconClasses = Ui::classes()->add('shrink-0')->add($iconSize);
 
-    $simpleClasses = Ui::classes()->add('shrink-0')->add($iconSize)->merge($attributes);
+    $simpleClasses = Ui::classes()->add('shrink-0')->add($iconSize)->when($colorClass, $colorClass ?? '')->merge($attributes);
 @endphp
 
 @if ($boxed)
