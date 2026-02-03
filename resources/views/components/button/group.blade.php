@@ -14,6 +14,6 @@
         ->merge($attributes);
 @endphp
 
-<div {{ $attributes->except('class') }} class="{{ $classes }}">
+<div data-button-group {{ $attributes->except('class') }} class="{{ $classes }}">
     {{ $slot }}
 </div>

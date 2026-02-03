@@ -1,0 +1,29 @@
+@props([])
+
+@php
+    $classes = Ui::classes()
+        ->add('relative flex min-h-6 items-center gap-2 text-xs md:gap-3')
+        ->merge($attributes);
+@endphp
+
+<nav
+    x-data="{
+        items: [],
+        register(url) {
+            this.items.push(url)
+        },
+        get parentUrl() {
+            return this.items.length > 1 ? this.items[this.items.length - 2] : null
+        },
+    }"
+    {{ $attributes->except('class') }}
+    class="{{ $classes }}"
+    aria-label="Breadcrumb"
+    data-breadcrumbs
+>
+    <template x-if="parentUrl">
+        <ui:button ::href="parentUrl" variant="subtle" size="xs" icon="chevron-left" class="md:hidden" />
+    </template>
+
+    {{ $slot }}
+</nav>

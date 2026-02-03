@@ -35,7 +35,7 @@
         ->add('group-data-[variant=bordered]:px-4');
 @endphp
 
-<div {{ $attributes->except('class') }} class="{{ $containerClasses }}">
+<div data-accordion-item {{ $attributes->except('class') }} class="{{ $containerClasses }}">
     <button type="button" id="{{ $triggerId }}" aria-controls="{{ $panelId }}"
         x-on:click="toggle('{{ $key }}')" :aria-expanded="isOpen('{{ $key }}')"
         @if ($disabled) disabled aria-disabled="true" @endif class="{{ $triggerClasses }}">

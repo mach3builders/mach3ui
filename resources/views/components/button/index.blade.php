@@ -73,7 +73,8 @@
     @if ($tag === 'button' && !$attributes->has('type')) type="button" @endif @if ($tag === 'button' && $disabled) disabled @endif
     @if ($tag === 'a' && $disabled) aria-disabled="true" tabindex="-1" @endif
     @if ($loading) aria-busy="true" data-loading @endif
-    @if ($active) data-active @endif {{ $attributes->except('class') }} class="{{ $classes }}">
+    @if ($active) data-active @endif data-button data-variant="{{ $variant }}"
+    {{ $attributes->except('class') }} class="{{ $classes }}">
     @if ($icon)
         <ui:icon :name="$icon" class="group-data-[loading]:hidden" />
         <ui:icon name="loader-circle" class="hidden animate-spin [animation-duration:1.5s] group-data-[loading]:block" />

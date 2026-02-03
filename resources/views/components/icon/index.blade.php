@@ -53,14 +53,11 @@
 
     $iconClasses = Ui::classes()->add('shrink-0')->add($iconSize);
 
-    $simpleClasses = Ui::classes()
-        ->add('shrink-0')
-        ->add($iconSize)
-        ->merge($attributes);
+    $simpleClasses = Ui::classes()->add('shrink-0')->add($iconSize)->merge($attributes);
 @endphp
 
 @if ($boxed)
-    <span {{ $attributes->except('class') }} class="{{ $boxClasses }}" data-icon>
+    <span {{ $attributes->except('class') }} class="{{ $boxClasses }}" data-icon data-color="{{ $color }}">
         <x-dynamic-component :component="'lucide-' . $name" :stroke-width="$stroke" class="{{ $iconClasses }}" />
     </span>
 @else
