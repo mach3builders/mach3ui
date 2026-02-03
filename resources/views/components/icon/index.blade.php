@@ -29,6 +29,7 @@
     };
 
     $colors = [
+        'inherit' => 'text-inherit',
         'gray' => 'text-gray-500 dark:text-gray-400',
         'blue' => 'text-blue-600 dark:text-blue-500',
         'green' => 'text-green-600 dark:text-green-500',

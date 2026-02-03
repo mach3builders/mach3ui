@@ -14,9 +14,10 @@
 
 @php
     $tag = $href ? 'a' : 'button';
-    $iconEnd = $__data['icon:end'] ?? null;
-    $iconColor = $__data['icon:color'] ?? null;
-    $iconEndColor = $__data['icon:end:color'] ?? null;
+    // Get colon props from $__data or fall back to $attributes
+    $iconEnd = $__data['icon:end'] ?? $attributes->get('icon:end');
+    $iconColor = $__data['icon:color'] ?? $attributes->get('icon:color');
+    $iconEndColor = $__data['icon:end:color'] ?? $attributes->get('icon:end:color');
     $isIconOnly = ($icon || $iconEnd) && $slot->isEmpty() && !($icon && $iconEnd);
     $hasText = $slot->isNotEmpty();
     $textOnly = !$icon && $hasText && !$iconEnd;
@@ -80,8 +81,8 @@
     @if ($active) data-active @endif data-button data-variant="{{ $variant }}"
     {{ $attributes->except('class') }} class="{{ $classes }}">
     @if ($icon)
-        <span @class(['relative inline-flex', "text-{$iconColor}" => $iconColor])>
-            <ui:icon :name="$icon"
+        <span class="relative inline-flex">
+            <ui:icon :name="$icon" :color="$iconColor"
                 class="transition-opacity duration-0 group-data-[loading]:opacity-0 group-data-[loading]:delay-200" />
             <ui:icon name="loader-circle"
                 class="absolute inset-0 animate-spin [animation-duration:1.5s] opacity-0 transition-opacity duration-0 group-data-[loading]:opacity-100 group-data-[loading]:delay-200" />
@@ -104,22 +105,14 @@
     @if ($iconEnd)
         @if (!$icon && !$hasText)
             {{-- Icon-only with only trailing icon: show spinner --}}
-            <span @class([
-                'relative inline-flex',
-                "text-{$iconEndColor}" => $iconEndColor,
-            ])>
-                <ui:icon :name="$iconEnd"
+            <span class="relative inline-flex">
+                <ui:icon :name="$iconEnd" :color="$iconEndColor"
                     class="transition-opacity duration-0 group-data-[loading]:opacity-0 group-data-[loading]:delay-200" />
                 <ui:icon name="loader-circle"
                     class="absolute inset-0 animate-spin [animation-duration:1.5s] opacity-0 transition-opacity duration-0 group-data-[loading]:opacity-100 group-data-[loading]:delay-200" />
             </span>
-        @elseif ($iconEndColor)
-            <span class="text-{{ $iconEndColor }}">
-                <ui:icon :name="$iconEnd"
-                    class="transition-opacity duration-0 group-data-[loading]:opacity-0 group-data-[loading]:delay-200" />
-            </span>
         @else
-            <ui:icon :name="$iconEnd"
+            <ui:icon :name="$iconEnd" :color="$iconEndColor"
                 class="transition-opacity duration-0 group-data-[loading]:opacity-0 group-data-[loading]:delay-200" />
         @endif
     @endif

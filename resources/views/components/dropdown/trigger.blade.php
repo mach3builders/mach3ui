@@ -1,21 +1,19 @@
 @props([
     'arrow' => 'chevrons-up-down',
+    'arrow:color' => 'gray',
     'icon' => null,
+    'icon:color' => null,
     'size' => 'md',
     'variant' => 'default',
 ])
 
-<ui:button
-    :icon="$icon"
-    :icon:end="$arrow"
-    icon:end:color="gray"
-    :size="$size"
-    :variant="$variant"
-    x-bind:popovertarget="id"
-    style="anchor-name: --dropdown-trigger;"
-    aria-haspopup="true"
-    data-dropdown-trigger
-    {{ $attributes }}
->
+@php
+    $arrowColor = $__data['arrow:color'] ?? ($attributes->get('arrow:color') ?? 'gray');
+    $iconColor = $__data['icon:color'] ?? $attributes->get('icon:color');
+@endphp
+
+<ui:button :$icon :$size :$variant icon:end="{{ $arrow }}" icon:end:color="{{ $arrowColor }}"
+    x-bind:popovertarget="id" style="anchor-name: --dropdown-trigger;" aria-haspopup="true" data-dropdown-trigger
+    {{ $attributes->except(['arrow:color', 'icon:color']) }}>
     {{ $slot }}
 </ui:button>
