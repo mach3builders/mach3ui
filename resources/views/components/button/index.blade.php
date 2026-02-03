@@ -72,8 +72,8 @@
 <{{ $tag }} @if ($href) href="{{ $href }}" @endif
     @if ($tag === 'button' && !$attributes->has('type')) type="button" @endif @if ($tag === 'button' && $disabled) disabled @endif
     @if ($tag === 'a' && $disabled) aria-disabled="true" tabindex="-1" @endif
-    @if ($active) data-active @endif @if ($loading) data-loading @endif
-    {{ $attributes->except('class') }} class="{{ $classes }}">
+    @if ($loading) aria-busy="true" data-loading @endif
+    @if ($active) data-active @endif {{ $attributes->except('class') }} class="{{ $classes }}">
     @if ($icon)
         <x-dynamic-component :component="'lucide-' . $icon" class="group-data-[loading]:hidden" />
         <x-dynamic-component component="lucide-loader-circle"

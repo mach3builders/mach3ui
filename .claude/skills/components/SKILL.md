@@ -165,6 +165,46 @@ Hooks voor styling skills:
 
 ---
 
+## Accessibility (ARIA)
+
+Alle componenten moeten toegankelijk zijn. Voeg altijd relevante ARIA attributen toe.
+
+### Per Component Type
+
+| Component | Vereiste ARIA |
+|-----------|---------------|
+| Button | `aria-disabled` (disabled link), `aria-busy` (loading), `aria-label` (icon-only) |
+| Button (toggle) | `aria-pressed` |
+| Input/Textarea/Select | `aria-invalid`, `aria-describedby` (error/hint) |
+| Modal | `role="dialog"`, `aria-modal`, `aria-labelledby` |
+| Dropdown | `aria-haspopup`, `aria-expanded` |
+| Accordion | `aria-expanded`, `aria-controls`, `role="region"`, `aria-labelledby` |
+| Tabs | `role="tablist"`, `role="tab"`, `role="tabpanel"`, `aria-selected`, `aria-controls` |
+| Alert | `role="alert"` (live region) of `role="status"` |
+
+### ID Conventies
+
+Gebruik consistente ID patronen voor `aria-controls` en `aria-labelledby`:
+
+```php
+$triggerId = "accordion-trigger-{$name}";
+$panelId = "accordion-panel-{$name}";
+```
+
+```blade
+<button id="{{ $triggerId }}" aria-controls="{{ $panelId }}" :aria-expanded="...">
+<div id="{{ $panelId }}" role="region" aria-labelledby="{{ $triggerId }}">
+```
+
+### Keyboard Navigatie
+
+- Focus states via `focus-visible:` (niet `focus:`) voor keyboard-only
+- `tabindex="-1"` voor disabled links
+- Escape sluit modals/dropdowns
+- Arrow keys voor tabs/menu items (optioneel)
+
+---
+
 ## Package ServiceProvider
 
 ```php
