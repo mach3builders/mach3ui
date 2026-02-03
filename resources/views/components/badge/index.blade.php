@@ -7,9 +7,12 @@
 
 @php
     $classes = Ui::classes()
-        ->add('inline-flex cursor-default select-none items-center gap-1 rounded-full border px-2 py-px text-xs font-medium')
+        ->add(
+            'inline-flex cursor-default select-none items-center gap-1 rounded-full border px-2 py-px text-xs font-medium',
+        )
         ->add($variant, [
             'default' => 'border-transparent bg-gray-900 text-white dark:bg-gray-50 dark:text-gray-900',
+            'primary' => 'border-transparent bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400',
             'secondary' => 'border-transparent bg-gray-60 text-gray-900 dark:bg-gray-720 dark:text-gray-50',
             'outline' => 'border-gray-120 bg-transparent text-gray-900 dark:border-gray-640 dark:text-gray-50',
             'info' => 'border-transparent bg-cyan-100 text-cyan-800 dark:bg-cyan-900/30 dark:text-cyan-400',
@@ -25,6 +28,7 @@
         ->add('-mr-0.5 ml-0.5 inline-flex size-4 shrink-0 items-center justify-center rounded-full')
         ->add($variant, [
             'default' => 'hover:bg-gray-700 dark:hover:bg-gray-300',
+            'primary' => 'hover:bg-blue-200 dark:hover:bg-blue-800/50',
             'secondary' => 'hover:bg-gray-140 dark:hover:bg-gray-600',
             'outline' => 'hover:bg-gray-100 dark:hover:bg-gray-700',
             'info' => 'hover:bg-cyan-200 dark:hover:bg-cyan-800/50',
