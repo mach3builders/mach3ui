@@ -282,3 +282,8 @@ html.dark {
     top: auto;
     left: anchor(left);
 }
+
+/* Inset button in input: smaller radius */
+[data-input-button] [data-button] {
+    border-radius: 0.25rem;
+}

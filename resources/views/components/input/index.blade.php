@@ -1,6 +1,7 @@
 @props([
     'addon' => null,
     'addon:end' => null,
+    'button' => null,
     'hint' => null,
     'icon' => null,
     'icon:end' => null,
@@ -30,6 +31,7 @@
     $hasIconEnd = $iconEnd !== null;
     $hasAddon = $addon !== null;
     $hasAddonEnd = $addonEnd !== null;
+    $hasButton = isset($button) && $button !== null;
 
     $inputClasses = Ui::classes()
         ->add('block w-full appearance-none border shadow-xs focus:outline-none')
@@ -62,7 +64,8 @@
             },
         )
         ->when($hasIcon, 'pl-10')
-        ->when($hasIconEnd, 'pr-10');
+        ->when($hasIconEnd, 'pr-10')
+        ->when($hasButton, 'pr-20');
 
     $wrapperClasses = Ui::classes()->add('relative w-full')->merge($attributes->only('class'));
 
@@ -74,8 +77,8 @@
         <ui:label :for="$id">{{ $label }}</ui:label>
 
         <x-ui::input._input :type="$type" :id="$id" :name="$name" :error="$error" :icon="$icon"
-            :icon-end="$iconEnd" :addon="$addon" :addon-end="$addonEnd" :input-classes="$inputClasses" :wrapper-classes="$wrapperClasses" :icon-wrapper-classes="$iconWrapperClasses"
-            :attributes="$attributes" />
+            :icon-end="$iconEnd" :addon="$addon" :addon-end="$addonEnd" :button="$button ?? null" :input-classes="$inputClasses" :wrapper-classes="$wrapperClasses"
+            :icon-wrapper-classes="$iconWrapperClasses" :attributes="$attributes" />
 
         @if ($hint)
             <ui:hint>{{ $hint }}</ui:hint>
@@ -87,6 +90,6 @@
     </ui:field>
 @else
     <x-ui::input._input :type="$type" :id="$id" :name="$name" :error="$error" :icon="$icon"
-        :icon-end="$iconEnd" :addon="$addon" :addon-end="$addonEnd" :input-classes="$inputClasses" :wrapper-classes="$wrapperClasses"
-        :icon-wrapper-classes="$iconWrapperClasses" :attributes="$attributes" />
+        :icon-end="$iconEnd" :addon="$addon" :addon-end="$addonEnd" :button="$button ?? null" :input-classes="$inputClasses"
+        :wrapper-classes="$wrapperClasses" :icon-wrapper-classes="$iconWrapperClasses" :attributes="$attributes" />
 @endif

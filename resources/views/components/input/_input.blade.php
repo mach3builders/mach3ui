@@ -2,6 +2,7 @@
     'addon' => null,
     'addonEnd' => null,
     'attributes' => null,
+    'button' => null,
     'error' => null,
     'icon' => null,
     'iconEnd' => null,
@@ -18,6 +19,7 @@
     $hasIconEnd = $iconEnd !== null;
     $hasAddon = $addon !== null;
     $hasAddonEnd = $addonEnd !== null;
+    $hasButton = $button !== null;
 @endphp
 
 @if ($hasAddon || $hasAddonEnd)
@@ -26,7 +28,7 @@
             <ui:input.addon>{{ $addon }}</ui:input.addon>
         @endif
 
-        @if ($hasIcon || $hasIconEnd)
+        @if ($hasIcon || $hasIconEnd || $hasButton)
             <div class="{{ $wrapperClasses }}" data-control>
                 @if ($hasIcon)
                     <div class="{{ $iconWrapperClasses }} left-0 pl-3">
@@ -34,38 +36,35 @@
                     </div>
                 @endif
 
-                <input
-                    type="{{ $type }}"
-                    @if($id) id="{{ $id }}" @endif
-                    @if($name) name="{{ $name }}" @endif
-                    @if($error) aria-invalid="true" @endif
-                    class="{{ $inputClasses }}"
-                    {{ $attributes->except(['class', 'name', 'id']) }}
-                />
+                <input type="{{ $type }}" @if ($id) id="{{ $id }}" @endif
+                    @if ($name) name="{{ $name }}" @endif
+                    @if ($error) aria-invalid="true" @endif class="{{ $inputClasses }}"
+                    {{ $attributes->except(['class', 'name', 'id']) }} />
 
                 @if ($hasIconEnd)
                     <div class="{{ $iconWrapperClasses }} right-0 pr-3">
                         <ui:icon :name="$iconEnd" class="size-4" />
                     </div>
                 @endif
+
+                @if ($hasButton)
+                    <div class="absolute inset-y-0 right-0 flex items-center pr-1" data-input-button>
+                        {{ $button }}
+                    </div>
+                @endif
             </div>
         @else
-            <input
-                type="{{ $type }}"
-                @if($id) id="{{ $id }}" @endif
-                @if($name) name="{{ $name }}" @endif
-                @if($error) aria-invalid="true" @endif
-                class="{{ $inputClasses }}"
-                {{ $attributes->except(['class', 'name', 'id']) }}
-                data-control
-            />
+            <input type="{{ $type }}" @if ($id) id="{{ $id }}" @endif
+                @if ($name) name="{{ $name }}" @endif
+                @if ($error) aria-invalid="true" @endif class="{{ $inputClasses }}"
+                {{ $attributes->except(['class', 'name', 'id']) }} data-control />
         @endif
 
         @if ($hasAddonEnd)
             <ui:input.addon>{{ $addonEnd }}</ui:input.addon>
         @endif
     </ui:input.group>
-@elseif ($hasIcon || $hasIconEnd)
+@elseif ($hasIcon || $hasIconEnd || $hasButton)
     <div class="{{ $wrapperClasses }}" data-control>
         @if ($hasIcon)
             <div class="{{ $iconWrapperClasses }} left-0 pl-3">
@@ -73,29 +72,26 @@
             </div>
         @endif
 
-        <input
-            type="{{ $type }}"
-            @if($id) id="{{ $id }}" @endif
-            @if($name) name="{{ $name }}" @endif
-            @if($error) aria-invalid="true" @endif
-            class="{{ $inputClasses }}"
-            {{ $attributes->except(['class', 'name', 'id']) }}
-        />
+        <input type="{{ $type }}" @if ($id) id="{{ $id }}" @endif
+            @if ($name) name="{{ $name }}" @endif
+            @if ($error) aria-invalid="true" @endif class="{{ $inputClasses }}"
+            {{ $attributes->except(['class', 'name', 'id']) }} />
 
         @if ($hasIconEnd)
             <div class="{{ $iconWrapperClasses }} right-0 pr-3">
                 <ui:icon :name="$iconEnd" class="size-4" />
             </div>
         @endif
+
+        @if ($hasButton)
+            <div class="absolute inset-y-0 right-0 flex items-center pr-1" data-input-button>
+                {{ $button }}
+            </div>
+        @endif
     </div>
 @else
-    <input
-        type="{{ $type }}"
-        @if($id) id="{{ $id }}" @endif
-        @if($name) name="{{ $name }}" @endif
-        @if($error) aria-invalid="true" @endif
-        class="{{ $inputClasses }}"
-        {{ $attributes->except(['class', 'name', 'id']) }}
-        data-control
-    />
+    <input type="{{ $type }}" @if ($id) id="{{ $id }}" @endif
+        @if ($name) name="{{ $name }}" @endif
+        @if ($error) aria-invalid="true" @endif class="{{ $inputClasses }}"
+        {{ $attributes->except(['class', 'name', 'id']) }} data-control />
 @endif
