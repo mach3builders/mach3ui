@@ -1,11 +1,5 @@
 @props([])
 
-@php
-    $classes = Ui::classes()
-        ->add('text-sm text-gray-500 dark:text-gray-400')
-        ->merge($attributes);
-@endphp
-
-<p {{ $attributes->except('class') }} class="{{ $classes }}" data-card-description>
+<ui:text variant="muted" {{ $attributes }} data-card-description>
     {{ $slot }}
-</p>
+</ui:text>

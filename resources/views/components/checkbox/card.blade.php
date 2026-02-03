@@ -9,9 +9,12 @@
 
 @php
     // Auto-detect name from wire:model of x-model
-    $name = $name
-        ?: (method_exists($attributes, 'wire') ? $attributes->wire('model')->value() : null)
-        ?: collect($attributes->getAttributes())->first(fn($v, $k) => str_starts_with($k, 'x-model'));
+    $name =
+        $name ?:
+        (method_exists($attributes, 'wire')
+            ? $attributes->wire('model')->value()
+            : null) ?:
+        collect($attributes->getAttributes())->first(fn($v, $k) => str_starts_with($k, 'x-model'));
 
     // SVG icons (fully URL encoded for Tailwind arbitrary values)
     $checkmarkSvg =
@@ -48,17 +51,18 @@
 @endphp
 
 <label class="{{ $cardClasses }}" {{ $attributes->only('data-*') }} data-checkbox-card data-control>
-    @if($icon)
-        <ui:icon :name="$icon" class="size-6 shrink-0 text-gray-500 dark:text-gray-400" data-checkbox-card-icon />
+    @if ($icon)
+        <ui:icon :name="$icon" class="size-6 shrink-0 text-gray-500 dark:text-gray-400"
+            data-checkbox-card-icon />
     @endif
 
     <div class="flex-1" data-checkbox-card-content>
-        @if($title)
+        @if ($title)
             <div class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ $title }}</div>
         @endif
 
-        @if($description)
-            <div class="mt-0.5 text-sm text-gray-500 dark:text-gray-400">{{ $description }}</div>
+        @if ($description)
+            <ui:text variant="muted" class="mt-0.5">{{ $description }}</ui:text>
         @endif
 
         {{ $slot }}
@@ -66,6 +70,6 @@
 
     <input type="checkbox" @if ($name) name="{{ $name }}" @endif
         {{ $attributes->except(['class', 'data-*', 'name']) }}
-        @if ($indeterminate) x-init="$el.indeterminate = true" @endif
-        class="{{ $checkboxClasses }}" data-checkbox />
+        @if ($indeterminate) x-init="$el.indeterminate = true" @endif class="{{ $checkboxClasses }}"
+        data-checkbox />
 </label>
