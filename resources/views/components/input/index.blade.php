@@ -12,17 +12,35 @@
     'variant' => 'default',
 ])
 
-@php
-    // Auto-detect name from wire:model or x-model
-    $name =
-        $name ?:
-        (method_exists($attributes, 'wire')
-            ? $attributes->wire('model')->value()
-            : null) ?:
-        collect($attributes->getAttributes())->first(fn($v, $k) => str_starts_with($k, 'x-model'));
+@aware(['id'])
 
-    $id = $attributes->get('id') ?? ($name ? 'input-' . $name : null);
-    $error = $name ? $errors->first($name) ?? null : null;
+@php
+    // Get wire:model or x-model value directly from attributes
+    $allAttrs = $attributes->getAttributes();
+    $wireModelValue = null;
+    $xModelValue = null;
+
+    foreach ($allAttrs as $key => $value) {
+        if (str_starts_with($key, 'wire:model')) {
+            $wireModelValue = $value;
+            break;
+        }
+    }
+
+    foreach ($allAttrs as $key => $value) {
+        if (str_starts_with($key, 'x-model')) {
+            $xModelValue = $value;
+            break;
+        }
+    }
+
+    // Name priority: prop > wire:model > x-model > field id
+    $inputName = $name ?: $wireModelValue ?: $xModelValue ?: $id;
+
+    // ID priority: explicit id attr > field id (@aware) > input name > auto-generated
+    $id = $attributes->get('id') ?? ($id ?? ($inputName ?? 'input-' . Str::random(8)));
+
+    $error = $inputName ? $errors->first($inputName) ?? null : null;
 
     $iconEnd = $__data['icon:end'] ?? null;
     $addonEnd = $__data['addon:end'] ?? null;
@@ -73,10 +91,10 @@
 @endphp
 
 @if ($label)
-    <ui:field>
-        <ui:label :for="$id">{{ $label }}</ui:label>
+    <ui:field :id="$id">
+        <ui:label>{{ $label }}</ui:label>
 
-        <x-ui::input._input :type="$type" :id="$id" :name="$name" :error="$error" :icon="$icon"
+        <x-ui::input._input :type="$type" :id="$id" :name="$inputName" :error="$error" :icon="$icon"
             :icon-end="$iconEnd" :addon="$addon" :addon-end="$addonEnd" :button="$button ?? null" :input-classes="$inputClasses" :wrapper-classes="$wrapperClasses"
             :icon-wrapper-classes="$iconWrapperClasses" :attributes="$attributes" />
 
@@ -84,12 +102,12 @@
             <ui:hint>{{ $hint }}</ui:hint>
         @endif
 
-        @if ($name)
-            <ui:error :name="$name" />
+        @if ($inputName)
+            <ui:error :name="$inputName" />
         @endif
     </ui:field>
 @else
-    <x-ui::input._input :type="$type" :id="$id" :name="$name" :error="$error" :icon="$icon"
+    <x-ui::input._input :type="$type" :id="$id" :name="$inputName" :error="$error" :icon="$icon"
         :icon-end="$iconEnd" :addon="$addon" :addon-end="$addonEnd" :button="$button ?? null" :input-classes="$inputClasses"
         :wrapper-classes="$wrapperClasses" :icon-wrapper-classes="$iconWrapperClasses" :attributes="$attributes" />
 @endif

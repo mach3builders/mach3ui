@@ -32,9 +32,17 @@ class ClassBuilder implements Stringable
         return new static;
     }
 
-    public function add(string $key, ?array $options = null): static
+    public function add(string|array $key, ?array $options = null): static
     {
-        $this->classes[] = $options[$key] ?? ($options === null ? $key : '');
+        $value = $options[$key] ?? ($options === null ? $key : '');
+
+        if (is_array($value)) {
+            foreach ($value as $class) {
+                $this->classes[] = $class;
+            }
+        } else {
+            $this->classes[] = $value;
+        }
 
         return $this;
     }

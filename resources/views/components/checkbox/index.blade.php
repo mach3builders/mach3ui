@@ -6,14 +6,36 @@
     'size' => 'md',
 ])
 
+@aware(['id'])
+
 @php
-    // Auto-detect name from wire:model of x-model voor error handling
-    $name = $name
-        ?: (method_exists($attributes, 'wire') ? $attributes->wire('model')->value() : null)
-        ?: collect($attributes->getAttributes())->first(fn($v, $k) => str_starts_with($k, 'x-model'));
+    // Get wire:model or x-model value directly from attributes
+    $allAttrs = $attributes->getAttributes();
+    $wireModelValue = null;
+    $xModelValue = null;
+
+    foreach ($allAttrs as $key => $value) {
+        if (str_starts_with($key, 'wire:model')) {
+            $wireModelValue = $value;
+            break;
+        }
+    }
+
+    foreach ($allAttrs as $key => $value) {
+        if (str_starts_with($key, 'x-model')) {
+            $xModelValue = $value;
+            break;
+        }
+    }
+
+    // Name priority: prop > wire:model > x-model > field id
+    $inputName = $name ?: $wireModelValue ?: $xModelValue ?: $id;
+
+    // ID priority: explicit id attr > field id (@aware) > input name > auto-generated
+    $id = $attributes->get('id') ?? ($id ?? ($inputName ?? 'checkbox-' . Str::random(8)));
 
     $hasLabel = $label || $description;
-    $error = $name ? ($errors->first($name) ?? null) : null;
+    $error = $inputName ? $errors->first($inputName) ?? null : null;
 
     // SVG icons (fully URL encoded for Tailwind arbitrary values)
     $checkmarkSvg =
@@ -71,11 +93,10 @@
         <label class="{{ $labelClasses }}">
     @endif
 
-    <input type="checkbox" @if ($name) name="{{ $name }}" @endif
-        {{ $attributes->except(['class', 'data-*', 'name']) }}
+    <input type="checkbox" id="{{ $id }}" @if ($inputName) name="{{ $inputName }}" @endif
         @if ($indeterminate) x-init="$el.indeterminate = true" @endif
         @if ($error) aria-invalid="true" @endif
-        class="{{ $checkboxClasses }}" />
+        {{ $attributes->except(['class', 'data-*', 'id', 'name']) }} class="{{ $checkboxClasses }}" />
 
     @if ($hasLabel)
         <span class="flex flex-col gap-0.5">

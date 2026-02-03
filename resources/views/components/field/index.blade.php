@@ -1,4 +1,5 @@
 @props([
+    'id' => null,
     'variant' => 'block',
 ])
 
