@@ -14,11 +14,11 @@
         ->add('flex items-center gap-1.5 text-xs')
         ->add('text-red-600')
         ->add('dark:text-red-500')
-        ->merge($attributes->only('class'));
+        ->merge($attributes);
 @endphp
 
 @if ($errorMessage)
-    <p class="{{ $classes }}" {{ $attributes->except('class') }} data-error>
+    <p {{ $attributes->except('class') }} class="{{ $classes }}" data-error>
         <ui:icon name="circle-alert" size="xs" class="shrink-0" />
 
         <span>{{ $errorMessage }}</span>

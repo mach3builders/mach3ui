@@ -44,7 +44,7 @@
         // Variant (includes [&[data-active]] styles)
         ->add($variant, [
             'default' =>
-                'border-gray-120 bg-white text-gray-700 shadow-xs hover:bg-gray-20 hover:text-gray-900 focus:ring-gray-200 focus:ring-offset-white dark:border-gray-690 dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-780 dark:hover:text-gray-20 dark:focus:ring-gray-600 dark:focus:ring-offset-gray-800 data-active:bg-gray-20 data-active:text-gray-900 dark:data-active:bg-gray-780 dark:data-active:text-gray-20',
+                'border-gray-100 bg-white text-gray-900 shadow-xs hover:border-gray-150 hover:bg-gray-30 focus:ring-gray-200 focus:ring-offset-white dark:border-gray-700 dark:bg-gray-780 dark:text-gray-100 dark:hover:border-gray-660 dark:hover:bg-gray-750 dark:focus:ring-gray-600 dark:focus:ring-offset-gray-800 data-active:border-gray-150 data-active:bg-gray-30 dark:data-active:border-gray-660 dark:data-active:bg-gray-750',
             'primary' =>
                 'border-transparent bg-blue-500 text-gray-20 shadow-xs hover:bg-blue-550 hover:text-white focus:ring-blue-600 focus:ring-offset-white dark:bg-blue-600 dark:hover:bg-blue-550 dark:focus:ring-offset-gray-800 data-active:bg-blue-550 data-active:text-white',
             'secondary' =>
@@ -58,6 +58,8 @@
             'ghost' =>
                 'border-transparent bg-transparent text-gray-900 hover:bg-gray-500/8 focus:ring-gray-400 focus:ring-offset-white dark:text-gray-100 dark:hover:bg-gray-500/10 dark:focus:ring-gray-500 dark:focus:ring-offset-gray-800 data-active:bg-gray-500/8 dark:data-active:bg-gray-500/10',
             // Outline variants
+            'outline' =>
+                'border-gray-100 bg-white text-gray-900 shadow-xs hover:border-gray-150 hover:bg-gray-30 focus:ring-gray-200 focus:ring-offset-white dark:border-gray-700 dark:bg-gray-780 dark:text-gray-100 dark:hover:border-gray-660 dark:hover:bg-gray-750 dark:focus:ring-gray-600 dark:focus:ring-offset-gray-800 data-active:border-gray-150 data-active:bg-gray-30 dark:data-active:border-gray-660 dark:data-active:bg-gray-750',
             'outline-info' =>
                 'border-cyan-300/50 bg-cyan-100/20 text-cyan-600 shadow-xs hover:border-cyan-400/50 hover:bg-cyan-100/30 hover:text-cyan-700 focus:ring-cyan-600 focus:ring-offset-white dark:border-cyan-800/50 dark:bg-cyan-900/20 dark:text-cyan-400 dark:hover:border-cyan-700/50 dark:hover:bg-cyan-900/30 dark:hover:text-cyan-300 dark:focus:ring-offset-gray-800 data-active:border-cyan-400/50 data-active:bg-cyan-100/30 data-active:text-cyan-700 dark:data-active:border-cyan-700/50 dark:data-active:bg-cyan-900/30 dark:data-active:text-cyan-300',
             'outline-success' =>
