@@ -2,6 +2,29 @@
 
 Alle componenten zijn unstyled. Styling wordt toegevoegd via `ui-styles` skill.
 
+---
+
+## Name Auto-Detection Pattern
+
+Voor form componenten: detecteer `name` automatisch uit `wire:model` of `x-model` voor error handling.
+
+```php
+$name = $name
+    ?: (method_exists($attributes, 'wire') ? $attributes->wire('model')->value() : null)
+    ?: collect($attributes->getAttributes())->first(fn($v, $k) => str_starts_with($k, 'x-model'));
+
+$error = $name ? ($errors->first($name) ?? null) : null;
+```
+
+**Waarom:**
+- `method_exists($attributes, 'wire')` — voorkomt errors als Livewire niet is geïnstalleerd
+- `$attributes->wire('model')->value()` — retourneert lege string als niet gezet (falsy voor `?:`)
+- `collect(...)->first()` — pakt x-model waarde (bijv. `x-model="foo"` → `"foo"`)
+
+**Prioriteit:** `name` prop → `wire:model` → `x-model`
+
+---
+
 ## Simpele Componenten
 
 ### Input
@@ -121,22 +144,85 @@ Alle componenten zijn unstyled. Styling wordt toegevoegd via `ui-styles` skill.
 
 ```blade
 @props([
+    'description' => null,
+    'indeterminate' => false,
     'label' => null,
     'name' => null,
 ])
 
+@php
+    // Auto-detect name (zie pattern hierboven)
+    $name = $name
+        ?: (method_exists($attributes, 'wire') ? $attributes->wire('model')->value() : null)
+        ?: collect($attributes->getAttributes())->first(fn($v, $k) => str_starts_with($k, 'x-model'));
+
+    $hasLabel = $label || $description;
+    $error = $name ? ($errors->first($name) ?? null) : null;
+@endphp
+
 <div>
-    <label>
-        <input
-            type="checkbox"
-            @if($name) name="{{ $name }}" id="{{ $name }}" @endif
-            {{ $attributes }}
-        >
-        @if($label)
-            <span>{{ $label }}</span>
-        @endif
-    </label>
+    @if($hasLabel)
+        <label>
+    @endif
+
+    <input
+        type="checkbox"
+        @if($name) name="{{ $name }}" id="{{ $name }}" @endif
+        @if($indeterminate) x-init="$el.indeterminate = true" @endif
+        @if($error) aria-invalid="true" @endif
+        {{ $attributes }}
+    >
+
+    @if($hasLabel)
+            <span>
+                @if($label)<span>{{ $label }}</span>@endif
+                @if($description)<span>{{ $description }}</span>@endif
+            </span>
+        </label>
+    @endif
+
+    @if($error)
+        <p role="alert">{{ $error }}</p>
+    @endif
 </div>
+```
+
+### Checkbox Card
+
+```blade
+@props([
+    'description' => null,
+    'icon' => null,
+    'indeterminate' => false,
+    'name' => null,
+    'reversed' => false,
+    'title' => null,
+])
+
+@php
+    $name = $name
+        ?: (method_exists($attributes, 'wire') ? $attributes->wire('model')->value() : null)
+        ?: collect($attributes->getAttributes())->first(fn($v, $k) => str_starts_with($k, 'x-model'));
+@endphp
+
+<label {{ $attributes->whereStartsWith('data-') }}>
+    @if($icon)
+        <ui:icon :name="$icon" />
+    @endif
+
+    <div>
+        @if($title)<div>{{ $title }}</div>@endif
+        @if($description)<div>{{ $description }}</div>@endif
+        {{ $slot }}
+    </div>
+
+    <input
+        type="checkbox"
+        @if($name) name="{{ $name }}" id="{{ $name }}" @endif
+        @if($indeterminate) x-init="$el.indeterminate = true" @endif
+        {{ $attributes->whereStartsWith(['wire:', 'x-model']) }}
+    >
+</label>
 ```
 
 ### Radio
