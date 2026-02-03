@@ -31,6 +31,7 @@ Paul werkt aan een Laravel UI component package voor Mach3 Builders die zowel me
 - Boolean zonder `is`/`has` prefix (`disabled`, niet `isDisabled`)
 - Standaard props: `name`, `label`, `placeholder`, `hint`, `error`, `variant`, `size`
 - Subcomponent props via colon syntax: `icon:end`, `label:position`
+- **Gebruik component props i.p.v. utility classes** — `<ui:icon size="xs">` niet `<ui:icon class="size-3">`
 
 ### UI::classes() Helper
 
