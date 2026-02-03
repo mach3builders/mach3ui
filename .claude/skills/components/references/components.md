@@ -552,12 +552,36 @@ Gebruik:
 
 ### Card
 
-```blade
-@props([])
+Subcomponenten: `card.header`, `card.title`, `card.description`, `card.body`, `card.footer`
 
-<div data-card {{ $attributes }}>
+```blade
+@props([
+    'description' => null,
+    'title' => null,
+    'variant' => 'default',
+])
+
+<div data-card data-variant="{{ $variant }}" {{ $attributes }}>
+    @if ($title || $description)
+        <ui:card.header>
+            @if ($title) <ui:card.title>{{ $title }}</ui:card.title> @endif
+            @if ($description) <ui:card.description>{{ $description }}</ui:card.description> @endif
+        </ui:card.header>
+    @endif
     {{ $slot }}
 </div>
+```
+
+**card.body** — Hoofdinhoud wrapper met `flush` prop voor geen padding
+```blade
+@props(['flush' => false, 'variant' => 'default'])
+<div data-card-body {{ $attributes }}>{{ $slot }}</div>
+```
+
+**card.footer** — Footer met optionele `divided` prop
+```blade
+@props(['divided' => false, 'variant' => 'default'])
+<div data-card-footer {{ $attributes }}>{{ $slot }}</div>
 ```
 
 ### Alert

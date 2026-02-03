@@ -15,6 +15,6 @@
         ->merge($attributes);
 @endphp
 
-<div {{ $attributes->except('class') }} class="{{ $classes }}" data-card-content>
+<div {{ $attributes->except('class') }} class="{{ $classes }}" data-card-body>
     {{ $slot }}
 </div>

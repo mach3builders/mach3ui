@@ -1,6 +1,6 @@
 @props([
     'brand' => 'Builders',
-    'color' => null,
+    'color' => 'gray',
     'href' => null,
     'image' => null,
     'size' => 'md',
@@ -30,6 +30,8 @@
             'orange' => 'text-orange-500',
             'emerald' => 'text-emerald-500',
             'cyan' => 'text-cyan-500',
+            'teal' => 'text-teal-500',
+            'lime' => 'text-lime-500',
             'red' => 'text-red-500',
             'purple' => 'text-purple-500',
             'pink' => 'text-pink-500',

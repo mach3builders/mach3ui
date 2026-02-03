@@ -572,25 +572,137 @@ Alle components gebruiken theme colors (`primary`, `secondary`, `danger`, etc.) 
 
 ## Card
 
+Subcomponenten: `card.header`, `card.title`, `card.description`, `card.body`, `card.footer`
+
+### card (index)
 ```blade
 @props([
-    'padding' => 'md',
+    'description' => null,
+    'title' => null,
+    'variant' => 'default', {{-- default | inverted --}}
 ])
 
 @php
-    $classes = UI::classes()
-        ->add('bg-white rounded border border-gray-200 shadow-sm dark:bg-gray-800 dark:border-gray-700')
-        ->add($padding, [
-            'none' => '',
-            'sm' => 'p-4',
-            'md' => 'p-6',
-            'lg' => 'p-8',
+    $classes = Ui::classes()
+        ->add('rounded-xl p-1.5')
+        ->add($variant, [
+            'default' => 'bg-gray-30 dark:bg-gray-830',
+            'inverted' => 'bg-white shadow-xs dark:bg-gray-800',
         ])
         ->merge($attributes);
 @endphp
 
-<div {{ $attributes->except('class') }} class="{{ $classes }}">
+<div {{ $attributes->except('class') }} class="{{ $classes }}" data-card data-variant="{{ $variant }}">
+    @if ($title || $description)
+        <ui:card.header>
+            @if ($title)
+                <ui:card.title>{{ $title }}</ui:card.title>
+            @endif
+            @if ($description)
+                <ui:card.description>{{ $description }}</ui:card.description>
+            @endif
+        </ui:card.header>
+    @endif
+
     {{ $slot }}
+</div>
+```
+
+### card.header
+```blade
+@props([
+    'icon' => null,
+    'icon:boxed' => false,
+    'icon:color' => 'gray',
+    'icon:size' => 'md',
+])
+
+@php
+    $classes = Ui::classes()
+        ->add('flex gap-3 px-4.5 pb-5 pt-5')
+        ->when($hasAction, 'relative')
+        ->merge($attributes);
+@endphp
+
+<div {{ $attributes->except('class') }} class="{{ $classes }}" data-card-header>
+    {{-- icon slot --}}
+    <div class="{{ $contentClasses }}">
+        {{ $slot }}
+    </div>
+    {{-- action slot --}}
+</div>
+```
+
+### card.title
+```blade
+@props([])
+
+@php
+    $classes = Ui::classes()
+        ->add('text-lg font-semibold leading-none tracking-tight text-gray-900 dark:text-white')
+        ->merge($attributes);
+@endphp
+
+<h3 {{ $attributes->except('class') }} class="{{ $classes }}" data-card-title>
+    {{ $slot }}
+</h3>
+```
+
+### card.description
+```blade
+<ui:text variant="muted" {{ $attributes }} data-card-description>
+    {{ $slot }}
+</ui:text>
+```
+
+### card.body
+```blade
+@props([
+    'flush' => false,
+    'variant' => 'default',
+])
+
+@php
+    $classes = Ui::classes()
+        ->add('relative z-10 flex-1 rounded-lg border shadow-xs')
+        ->add('[&:has(+[data-card-footer])]:rounded-b-none [&:has(+[data-card-footer])]:border-b-0 [&:has(+[data-card-footer])]:shadow-none')
+        ->add($variant, [
+            'default' => 'border-gray-60 bg-white dark:border-gray-740 dark:bg-gray-800',
+            'inverted' => 'border-gray-80 bg-gray-30 dark:border-gray-740 dark:bg-gray-820',
+        ])
+        ->unless($flush, 'px-4.5 py-4')
+        ->merge($attributes);
+@endphp
+
+<div {{ $attributes->except('class') }} class="{{ $classes }}" data-card-body>
+    {{ $slot }}
+</div>
+```
+
+### card.footer
+```blade
+@props([
+    'divided' => false,
+    'variant' => 'default',
+])
+
+@php
+    $classes = Ui::classes()
+        ->add('relative z-0 rounded-b-lg border border-t-0 shadow-xs')
+        ->add($variant, [
+            'default' => 'border-gray-60 bg-white dark:border-gray-760 dark:bg-gray-800',
+            'inverted' => 'border-gray-80 bg-gray-30 dark:border-gray-700 dark:bg-gray-820',
+        ])
+        ->merge($attributes);
+@endphp
+
+<div {{ $attributes->except('class') }} class="{{ $classes }}" data-card-footer>
+    @if ($divided)
+        <ui:divider />
+    @endif
+    <div class="flex items-center gap-2 px-4.5 py-4">
+        {{ $slot }}
+    </div>
 </div>
 ```
 
