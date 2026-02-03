@@ -24,6 +24,12 @@ Paul werkt aan een Laravel UI component package voor Mach3 Builders die zowel me
 | Complex      | Custom Select, Tags Input, Date Picker | Alpine ↔ Livewire brug nodig          |
 | Grijs gebied | Modal, Dropdown, Tabs, Accordion       | Alpine voor state, geen binding issue |
 
+### Nieuwe Componenten Bouwen
+
+1. **Skill references als basis** — Bouw vanuit `components` en `styles` skill references, niet kopiëren van `_old`
+2. **`_old` alleen voor styling** — Gebruik `_old` componenten alleen als visuele referentie voor kleuren/spacing, niet voor logica of structuur
+3. **Consistentie met bestaande componenten** — Volg patronen van al geïmplementeerde componenten in `resources/views/components`
+
 ### Props Conventies
 
 - Alfabetische volgorde in `@props([...])`
