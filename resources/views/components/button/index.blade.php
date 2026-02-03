@@ -76,16 +76,21 @@
     @if ($active) data-active @endif data-button data-variant="{{ $variant }}"
     {{ $attributes->except('class') }} class="{{ $classes }}">
     @if ($icon)
-        <ui:icon :name="$icon" class="group-data-[loading]:hidden" />
-        <ui:icon name="loader-circle" class="hidden animate-spin [animation-duration:1.5s] group-data-[loading]:block" />
+        <span class="relative inline-flex">
+            <ui:icon :name="$icon"
+                class="transition-opacity duration-0 group-data-[loading]:opacity-0 group-data-[loading]:delay-200" />
+            <ui:icon name="loader-circle"
+                class="absolute inset-0 animate-spin [animation-duration:1.5s] opacity-0 transition-opacity duration-0 group-data-[loading]:opacity-100 group-data-[loading]:delay-200" />
+        </span>
     @endif
     @if ($hasText)
         @if ($textOnly)
             {{-- Text-only: spinner replaces text visually, text stays for width --}}
             <span class="relative inline-flex items-center justify-center">
-                <span class="group-data-[loading]:invisible">{{ $slot }}</span>
+                <span
+                    class="transition-opacity duration-0 group-data-[loading]:opacity-0 group-data-[loading]:delay-200">{{ $slot }}</span>
                 <ui:icon name="loader-circle"
-                    class="absolute hidden animate-spin [animation-duration:1.5s] group-data-[loading]:block" />
+                    class="absolute animate-spin [animation-duration:1.5s] opacity-0 transition-opacity duration-0 group-data-[loading]:opacity-100 group-data-[loading]:delay-200" />
             </span>
         @else
             {{-- Has icon(s): text stays visible during loading --}}
@@ -93,11 +98,17 @@
         @endif
     @endif
     @if ($iconEnd)
-        <ui:icon :name="$iconEnd" class="group-data-[loading]:hidden" />
         @if (!$icon && !$hasText)
             {{-- Icon-only with only trailing icon: show spinner --}}
-            <ui:icon name="loader-circle"
-                class="hidden animate-spin [animation-duration:1.5s] group-data-[loading]:block" />
+            <span class="relative inline-flex">
+                <ui:icon :name="$iconEnd"
+                    class="transition-opacity duration-0 group-data-[loading]:opacity-0 group-data-[loading]:delay-200" />
+                <ui:icon name="loader-circle"
+                    class="absolute inset-0 animate-spin [animation-duration:1.5s] opacity-0 transition-opacity duration-0 group-data-[loading]:opacity-100 group-data-[loading]:delay-200" />
+            </span>
+        @else
+            <ui:icon :name="$iconEnd"
+                class="transition-opacity duration-0 group-data-[loading]:opacity-0 group-data-[loading]:delay-200" />
         @endif
     @endif
     </{{ $tag }}>
