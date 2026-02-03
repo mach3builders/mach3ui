@@ -74,6 +74,7 @@ $attributes->whereDoesntStartWith('wire:model')
 
 | Conventie | Voorbeeld |
 |-----------|-----------|
+| Alfabetische volgorde | `@props(['disabled' => false, 'name' => null, 'size' => 'md'])` |
 | camelCase | `labelPosition` |
 | Boolean zonder `is`/`has` | `disabled`, `required` |
 | Enkelvoud voor waarde | `variant`, `size` |
@@ -118,23 +119,29 @@ Props doorpassen aan nested componenten:
 ```blade
 @props([
     'icon' => null,
-    'icon:position' => 'left',
-    'icon:size' => 'md',
+    'icon:end' => null,
 ])
 
+@php
+    $iconEnd = $__data['icon:end'] ?? null;
+@endphp
+
 <button {{ $attributes }}>
-    @if($icon && $iconPosition === 'left')
-        <ui:icon :name="$icon" :size="$iconSize" />
+    @if($icon)
+        <ui:icon :name="$icon" />
     @endif
     {{ $slot }}
+    @if($iconEnd)
+        <ui:icon :name="$iconEnd" />
+    @endif
 </button>
 ```
 
 Gebruik:
 ```blade
-<ui:button icon="check" icon:position="right" icon:size="sm">
-    Opslaan
-</ui:button>
+<ui:button icon="check">Opslaan</ui:button>
+<ui:button icon:end="arrow-right">Verder</ui:button>
+<ui:button icon="download" icon:end="chevron-down">Export</ui:button>
 ```
 
 ### Regels

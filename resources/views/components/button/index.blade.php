@@ -1,12 +1,17 @@
 @props([
-    'variant' => 'default',
-    'size' => 'md',
-    'href' => null,
     'disabled' => false,
+    'href' => null,
+    'icon' => null,
+    'icon:end' => null,
+    'size' => 'md',
+    'square' => false,
+    'variant' => 'default',
 ])
 
 @php
     $tag = $href ? 'a' : 'button';
+    $iconEnd = $__data['icon:end'] ?? null;
+    $isIconOnly = ($icon || $iconEnd) && $slot->isEmpty() && !($icon && $iconEnd);
 
     $classes = Ui::classes()
         // Base
@@ -52,6 +57,8 @@
         ])
         // Disabled link styling
         ->when($href && $disabled, 'pointer-events-none opacity-50')
+        // Square (icon-only) styling
+        ->when($square || $isIconOnly, 'aspect-square px-0!')
         ->merge($attributes);
 @endphp
 
@@ -59,5 +66,11 @@
     @if ($tag === 'button' && !$attributes->has('type')) type="button" @endif @if ($tag === 'button' && $disabled) disabled @endif
     @if ($tag === 'a' && $disabled) aria-disabled="true" tabindex="-1" @endif {{ $attributes->except('class') }}
     class="{{ $classes }}">
+    @if ($icon)
+        <x-dynamic-component :component="'lucide-' . $icon" />
+    @endif
     {{ $slot }}
+    @if ($iconEnd)
+        <x-dynamic-component :component="'lucide-' . $iconEnd" />
+    @endif
     </{{ $tag }}>

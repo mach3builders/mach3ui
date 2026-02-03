@@ -26,10 +26,11 @@ Paul werkt aan een Laravel UI component package voor Mach3 Builders die zowel me
 
 ### Props Conventies
 
+- Alfabetische volgorde in `@props([...])`
 - camelCase naming
 - Boolean zonder `is`/`has` prefix (`disabled`, niet `isDisabled`)
 - Standaard props: `name`, `label`, `placeholder`, `hint`, `error`, `variant`, `size`
-- Subcomponent props via colon syntax: `icon:position`, `icon:size`
+- Subcomponent props via colon syntax: `icon:end`, `label:position`
 
 ### UI::classes() Helper
 
