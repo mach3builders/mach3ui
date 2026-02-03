@@ -75,16 +75,15 @@
     @if ($loading) aria-busy="true" data-loading @endif
     @if ($active) data-active @endif {{ $attributes->except('class') }} class="{{ $classes }}">
     @if ($icon)
-        <x-dynamic-component :component="'lucide-' . $icon" class="group-data-[loading]:hidden" />
-        <x-dynamic-component component="lucide-loader-circle"
-            class="hidden shrink-0 animate-spin [animation-duration:1.5s] group-data-[loading]:block" />
+        <ui:icon :name="$icon" class="group-data-[loading]:hidden" />
+        <ui:icon name="loader-circle" class="hidden animate-spin [animation-duration:1.5s] group-data-[loading]:block" />
     @endif
     @if ($hasText)
         @if ($textOnly)
             {{-- Text-only: spinner replaces text visually, text stays for width --}}
             <span class="relative inline-flex items-center justify-center">
                 <span class="group-data-[loading]:invisible">{{ $slot }}</span>
-                <x-dynamic-component component="lucide-loader-circle"
+                <ui:icon name="loader-circle"
                     class="absolute hidden animate-spin [animation-duration:1.5s] group-data-[loading]:block" />
             </span>
         @else
@@ -93,11 +92,11 @@
         @endif
     @endif
     @if ($iconEnd)
-        <x-dynamic-component :component="'lucide-' . $iconEnd" class="group-data-[loading]:hidden" />
+        <ui:icon :name="$iconEnd" class="group-data-[loading]:hidden" />
         @if (!$icon && !$hasText)
             {{-- Icon-only with only trailing icon: show spinner --}}
-            <x-dynamic-component component="lucide-loader-circle"
-                class="hidden shrink-0 animate-spin [animation-duration:1.5s] group-data-[loading]:block" />
+            <ui:icon name="loader-circle"
+                class="hidden animate-spin [animation-duration:1.5s] group-data-[loading]:block" />
         @endif
     @endif
     </{{ $tag }}>

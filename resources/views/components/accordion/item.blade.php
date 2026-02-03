@@ -40,7 +40,7 @@
         x-on:click="toggle('{{ $key }}')" :aria-expanded="isOpen('{{ $key }}')"
         @if ($disabled) disabled aria-disabled="true" @endif class="{{ $triggerClasses }}">
         <span>{{ $title }}</span>
-        <x-dynamic-component :component="'lucide-' . $icon" x-bind:class="isOpen('{{ $key }}') && 'rotate-180'"
+        <ui:icon :name="$icon" x-bind:class="isOpen('{{ $key }}') && 'rotate-180'"
             class="{{ $iconClasses }}" />
     </button>
 
