@@ -1,6 +1,6 @@
 @props([
     'size' => 'sm',
-    'storageKey' => 'theme',
+    'storageKey' => 'mach3ui-theme',
     'variant' => 'ghost',
 ])
 
