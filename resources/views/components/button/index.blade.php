@@ -14,6 +14,8 @@
 
 @php
     $tag = $href ? 'a' : 'button';
+    $isAi = $variant === 'ai';
+
     // Get colon props from $__data or fall back to $attributes
     $iconEnd = $__data['icon:end'] ?? $attributes->get('icon:end');
     $iconColor = $__data['icon:color'] ?? $attributes->get('icon:color');
@@ -22,26 +24,27 @@
     $hasText = $slot->isNotEmpty();
     $textOnly = !$icon && $hasText && !$iconEnd;
 
-    $classes = Ui::classes()
-        // Base
+    // Base classes shared between regular and AI buttons
+    $baseClasses = Ui::classes()
         ->add('group')
         ->add(
             'inline-flex cursor-pointer select-none items-center justify-center gap-2 whitespace-nowrap border font-semibold uppercase',
         )
-        ->add('rounded-md transition-colors duration-150')
-        ->add('focus:ring-1 focus:ring-offset-1 focus:outline-none')
         ->add('disabled:cursor-not-allowed disabled:opacity-50')
         ->add('[&>svg]:size-4 [&>svg]:shrink-0')
-        // Loading state
         ->when($loading, 'pointer-events-none')
-        // Size
         ->add($size, [
             'xs' => 'min-h-6 gap-1.5 px-2 text-[10px] [&>svg]:size-3.5 [&>span>svg]:size-3.5',
             'sm' => 'min-h-8 gap-1.5 px-3 text-xs [&>svg]:size-3.5 [&>span>svg]:size-3.5',
             'md' => 'min-h-10 px-4 py-2 text-xs [&>span>svg]:size-4',
             'lg' => 'min-h-12 gap-2.5 px-6 text-sm [&>svg]:size-5 [&>span>svg]:size-5',
         ])
-        // Variant (includes [&[data-active]] styles)
+        ->when($square || $isIconOnly, 'aspect-square px-0!');
+
+    // Regular button classes
+    $classes = Ui::classes($baseClasses)
+        ->add('rounded-md transition-colors duration-150')
+        ->add('focus:ring-1 focus:ring-offset-1 focus:outline-none')
         ->add($variant, [
             'default' =>
                 'border-gray-100 bg-white text-gray-900 shadow-xs hover:border-gray-150 hover:bg-gray-30 focus:ring-gray-200 focus:ring-offset-white dark:border-gray-700 dark:bg-gray-780 dark:text-gray-100 dark:hover:border-gray-660 dark:hover:bg-gray-750 dark:focus:ring-gray-600 dark:focus:ring-offset-gray-800 data-active:border-gray-150 data-active:bg-gray-30 dark:data-active:border-gray-660 dark:data-active:bg-gray-750',
@@ -57,7 +60,6 @@
                 'border-transparent bg-gray-500/10 text-gray-700 hover:bg-gray-500/15 focus:ring-gray-400 focus:ring-offset-white dark:text-gray-300 dark:focus:ring-gray-500 dark:focus:ring-offset-gray-800 data-active:bg-gray-500/15',
             'ghost' =>
                 'border-transparent bg-transparent text-gray-900 hover:bg-gray-500/8 focus:ring-gray-400 focus:ring-offset-white dark:text-gray-100 dark:hover:bg-gray-500/10 dark:focus:ring-gray-500 dark:focus:ring-offset-gray-800 data-active:bg-gray-500/8 dark:data-active:bg-gray-500/10',
-            // Outline variants
             'outline' =>
                 'border-gray-100 bg-white text-gray-900 shadow-xs hover:border-gray-150 hover:bg-gray-30 focus:ring-gray-200 focus:ring-offset-white dark:border-gray-700 dark:bg-gray-780 dark:text-gray-100 dark:hover:border-gray-660 dark:hover:bg-gray-750 dark:focus:ring-gray-600 dark:focus:ring-offset-gray-800 data-active:border-gray-150 data-active:bg-gray-30 dark:data-active:border-gray-660 dark:data-active:bg-gray-750',
             'outline-info' =>
@@ -68,54 +70,56 @@
                 'border-amber-300/50 bg-amber-100/20 text-amber-600 shadow-xs hover:border-amber-400/50 hover:bg-amber-100/30 hover:text-amber-700 focus:ring-amber-600 focus:ring-offset-white dark:border-amber-800/50 dark:bg-amber-900/20 dark:text-amber-400 dark:hover:border-amber-700/50 dark:hover:bg-amber-900/30 dark:hover:text-amber-300 dark:focus:ring-offset-gray-800 data-active:border-amber-400/50 data-active:bg-amber-100/30 data-active:text-amber-700 dark:data-active:border-amber-700/50 dark:data-active:bg-amber-900/30 dark:data-active:text-amber-300',
             'outline-danger' =>
                 'border-red-300/50 bg-red-100/20 text-red-600 shadow-xs hover:border-red-400/50 hover:bg-red-100/30 hover:text-red-700 focus:ring-red-600 focus:ring-offset-white dark:border-red-800/50 dark:bg-red-900/20 dark:text-red-400 dark:hover:border-red-700/50 dark:hover:bg-red-900/30 dark:hover:text-red-300 dark:focus:ring-offset-gray-800 data-active:border-red-400/50 data-active:bg-red-100/30 data-active:text-red-700 dark:data-active:border-red-700/50 dark:data-active:bg-red-900/30 dark:data-active:text-red-300',
+            'ai' => '', // AI uses separate wrapper styling
         ])
-        // Disabled link styling
         ->when($href && $disabled, 'pointer-events-none opacity-50')
-        // Square (icon-only) styling
-        ->when($square || $isIconOnly, 'aspect-square px-0!')
         ->merge($attributes);
+
+    // AI button wrapper classes
+    $aiWrapperClasses = Ui::classes()
+        ->add('group/ai relative inline-flex rounded-full p-0.5')
+        ->add('transition-transform duration-500 active:scale-[0.98]')
+        ->when($disabled, 'opacity-50 cursor-not-allowed')
+        ->merge($attributes);
+
+    // AI button inner classes
+    $aiClasses = Ui::classes($baseClasses)
+        ->add('relative z-10 w-full rounded-full border-transparent bg-white text-gray-900 focus:outline-none')
+        ->add('dark:bg-gray-900 dark:text-gray-100')
+        ->when($href && ($disabled || $loading), 'pointer-events-none');
+
+    // Gradient for AI button
+    $aiGradient =
+        'bg-[linear-gradient(90deg,theme(colors.orange.500),theme(colors.pink.500),theme(colors.violet.500),theme(colors.cyan.500),theme(colors.orange.500))]';
 @endphp
 
-<{{ $tag }} @if ($href) href="{{ $href }}" @endif
-    @if ($tag === 'button' && !$attributes->has('type')) type="button" @endif @if ($tag === 'button' && $disabled) disabled @endif
-    @if ($tag === 'a' && $disabled) aria-disabled="true" tabindex="-1" @endif
-    @if ($loading) aria-busy="true" data-loading @endif
-    @if ($active) data-active @endif data-button data-variant="{{ $variant }}"
-    {{ $attributes->except('class') }} class="{{ $classes }}">
-    @if ($icon)
-        <span class="relative inline-flex">
-            <ui:icon :name="$icon" :color="$iconColor"
-                class="transition-opacity duration-0 group-data-[loading]:opacity-0 group-data-[loading]:delay-200" />
-            <ui:icon name="loader-circle"
-                class="absolute inset-0 animate-spin [animation-duration:1.5s] opacity-0 transition-opacity duration-0 group-data-[loading]:opacity-100 group-data-[loading]:delay-200" />
-        </span>
-    @endif
-    @if ($hasText)
-        @if ($textOnly)
-            {{-- Text-only: spinner replaces text visually, text stays for width --}}
-            <span class="relative inline-flex items-center justify-center">
-                <span
-                    class="transition-opacity duration-0 group-data-[loading]:opacity-0 group-data-[loading]:delay-200">{{ $slot }}</span>
-                <ui:icon name="loader-circle"
-                    class="absolute animate-spin [animation-duration:1.5s] opacity-0 transition-opacity duration-0 group-data-[loading]:opacity-100 group-data-[loading]:delay-200" />
-            </span>
-        @else
-            {{-- Has icon(s): text stays visible during loading --}}
-            <span>{{ $slot }}</span>
-        @endif
-    @endif
-    @if ($iconEnd)
-        @if (!$icon && !$hasText)
-            {{-- Icon-only with only trailing icon: show spinner --}}
-            <span class="relative inline-flex">
-                <ui:icon :name="$iconEnd" :color="$iconEndColor"
-                    class="transition-opacity duration-0 group-data-[loading]:opacity-0 group-data-[loading]:delay-200" />
-                <ui:icon name="loader-circle"
-                    class="absolute inset-0 animate-spin [animation-duration:1.5s] opacity-0 transition-opacity duration-0 group-data-[loading]:opacity-100 group-data-[loading]:delay-200" />
-            </span>
-        @else
-            <ui:icon :name="$iconEnd" :color="$iconEndColor"
-                class="transition-opacity duration-0 group-data-[loading]:opacity-0 group-data-[loading]:delay-200" />
-        @endif
-    @endif
-    </{{ $tag }}>
+@if ($isAi)
+    {{-- AI Button with gradient border --}}
+    <div class="{{ $aiWrapperClasses }}" data-button data-variant="ai">
+        {{-- Glow effect --}}
+        <span
+            class="absolute inset-0 animate-[shimmer_5s_ease-in-out_infinite] rounded-full {{ $aiGradient }} bg-[length:200%_100%] opacity-25 blur-sm"></span>
+
+        {{-- Gradient border --}}
+        <span
+            class="absolute inset-0 animate-[shimmer_5s_ease-in-out_infinite] rounded-full {{ $aiGradient }} bg-[length:200%_100%]"></span>
+
+        <{{ $tag }} @if ($href) href="{{ $href }}" @endif
+            @if ($tag === 'button' && !$attributes->has('type')) type="button" @endif @if ($tag === 'button' && $disabled) disabled @endif
+            @if ($tag === 'a' && $disabled) aria-disabled="true" tabindex="-1" @endif
+            @if ($loading) aria-busy="true" data-loading @endif {{ $attributes->except('class') }}
+            class="{{ $aiClasses }}">
+            @include('ui::button._content')
+            </{{ $tag }}>
+    </div>
+@else
+    {{-- Regular Button --}}
+    <{{ $tag }} @if ($href) href="{{ $href }}" @endif
+        @if ($tag === 'button' && !$attributes->has('type')) type="button" @endif @if ($tag === 'button' && $disabled) disabled @endif
+        @if ($tag === 'a' && $disabled) aria-disabled="true" tabindex="-1" @endif
+        @if ($loading) aria-busy="true" data-loading @endif
+        @if ($active) data-active @endif data-button data-variant="{{ $variant }}"
+        {{ $attributes->except('class') }} class="{{ $classes }}">
+        @include('ui::button._content')
+        </{{ $tag }}>
+@endif
