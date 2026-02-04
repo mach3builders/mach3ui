@@ -1,5 +1,5 @@
 @if ($icon)
-    <span class="relative inline-flex">
+    <span class="icon-start relative inline-flex">
         <ui:icon :name="$icon" :color="$iconColor"
             class="transition-opacity duration-0 group-data-[loading]:opacity-0 group-data-[loading]:delay-200" />
         <ui:icon name="loader-circle"
@@ -23,7 +23,7 @@
 @if ($iconEnd)
     @if (!$icon && !$hasText)
         {{-- Icon-only with only trailing icon: show spinner --}}
-        <span class="relative inline-flex">
+        <span class="icon-end relative inline-flex ml-auto">
             <ui:icon :name="$iconEnd" :color="$iconEndColor"
                 class="transition-opacity duration-0 group-data-[loading]:opacity-0 group-data-[loading]:delay-200" />
             <ui:icon name="loader-circle"
@@ -31,6 +31,6 @@
         </span>
     @else
         <ui:icon :name="$iconEnd" :color="$iconEndColor"
-            class="transition-opacity duration-0 group-data-[loading]:opacity-0 group-data-[loading]:delay-200" />
+            class="icon-end transition-opacity ml-auto duration-0 group-data-[loading]:opacity-0 group-data-[loading]:delay-200" />
     @endif
 @endif

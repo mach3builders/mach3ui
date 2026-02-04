@@ -13,7 +13,8 @@
 @endphp
 
 <ui:button :$icon :$size :$variant icon:end="{{ $arrow }}" icon:end:color="{{ $arrowColor }}"
-    x-bind:popovertarget="id" style="anchor-name: --dropdown-trigger;" aria-haspopup="true" data-dropdown-trigger
+    x-bind:popovertarget="id" style="anchor-name: --dropdown-trigger;" aria-haspopup="true"
+    class="text-sm w-full normal-case justify-start" data-dropdown-trigger
     {{ $attributes->except(['arrow:color', 'icon:color']) }}>
     {{ $slot }}
 </ui:button>

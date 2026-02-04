@@ -15,7 +15,7 @@
 
     $triggerClasses = Ui::classes()
         ->add(
-            'flex w-full cursor-pointer items-center justify-between gap-3 py-4 text-left font-medium transition-colors',
+            'flex w-full cursor-pointer items-center justify-between gap-3 py-4 text-left font-semibold transition-colors',
         )
         ->add('text-gray-900 hover:text-gray-980 dark:text-gray-100 dark:hover:text-white')
         ->add(

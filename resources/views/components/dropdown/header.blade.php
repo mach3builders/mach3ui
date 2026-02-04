@@ -4,7 +4,9 @@
 
 @php
     $classes = Ui::classes()
-        ->add('px-3 py-2 text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500')
+        ->add('px-3 pt-2 pb-3 border-b text-xs font-semibold')
+        ->add('text-gray-980 border-gray-100')
+        ->add('dark:text-gray-100 dark:border-gray-700')
         ->merge($attributes);
 @endphp
 

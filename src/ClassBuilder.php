@@ -147,6 +147,10 @@ class ClassBuilder implements Stringable
             return self::$cache[$class] = [$mod, $pre];
         }
 
+        if (in_array($util, ['uppercase', 'lowercase', 'capitalize', 'normal-case'])) {
+            return self::$cache[$class] = [$mod, 'text-transform'];
+        }
+
         $first = explode('-', $util, 2)[0];
         static $colors = ['bg', 'border', 'ring', 'shadow', 'outline', 'fill', 'stroke', 'accent', 'caret', 'decoration', 'from', 'via', 'to', 'divide', 'placeholder'];
 
