@@ -70,7 +70,7 @@
     // Track styling (no user classes - those go on wrapper)
     $inputClasses = Ui::classes()
         ->add('h-1.5 w-full cursor-pointer appearance-none rounded-full')
-        ->add('bg-gray-200 dark:bg-gray-700')
+        ->add('bg-gray-100 dark:bg-gray-700')
         ->add($webkitThumb)
         ->add($mozThumb)
         ->add('focus:outline-none')

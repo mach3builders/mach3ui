@@ -43,7 +43,7 @@
         ->add('inline-flex cursor-pointer select-none items-center justify-center whitespace-nowrap border font-semibold uppercase')
         ->add('rounded-md transition-colors duration-150')
         ->add('focus-visible:ring-1 focus-visible:ring-offset-1 focus-visible:outline-none')
-        ->add('border-gray-100 bg-white text-gray-900 shadow-xs hover:border-gray-150 hover:bg-gray-30')
+        ->add('border-gray-100 bg-white text-gray-900 shadow-xs hover:border-gray-140 hover:bg-gray-20')
         ->add('dark:border-gray-700 dark:bg-gray-780 dark:text-gray-100 dark:hover:border-gray-660 dark:hover:bg-gray-750')
         ->add('focus-visible:ring-gray-200 focus-visible:ring-offset-white dark:focus-visible:ring-gray-600 dark:focus-visible:ring-offset-gray-800')
         ->add($size, [

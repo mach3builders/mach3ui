@@ -10,8 +10,8 @@
     $classes = Ui::classes()
         ->add('animate-pulse rounded')
         ->add($variant, [
-            'default' => 'bg-gray-200 dark:bg-gray-700',
-            'subtle' => 'bg-gray-100 dark:bg-gray-800',
+            'default' => 'bg-gray-120 dark:bg-gray-700',
+            'subtle' => 'bg-gray-40 dark:bg-gray-760',
         ])
         ->when($circle, 'rounded-full')
         ->merge($attributes);

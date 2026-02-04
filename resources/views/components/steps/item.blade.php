@@ -25,8 +25,8 @@
         ->add('flex size-8 items-center justify-center rounded-full border-2 text-sm font-medium transition-colors')
         ->add($status, [
             'done' => 'border-gray-900 bg-gray-900 text-white dark:border-gray-100 dark:bg-gray-100 dark:text-gray-900',
-            'current' => 'border-gray-900 bg-white text-gray-900 dark:border-gray-100 dark:bg-gray-900 dark:text-gray-100',
-            'pending' => 'border-gray-200 bg-white text-gray-500 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-400',
+            'current' => 'border-gray-900 bg-white text-gray-900 dark:border-gray-100 dark:bg-gray-800 dark:text-gray-100',
+            'pending' => 'border-gray-100 bg-white text-gray-500 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400',
         ])
         ->when(
             $isDone && $isClickable,

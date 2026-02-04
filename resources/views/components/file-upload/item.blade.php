@@ -43,14 +43,14 @@
 
     $tileClasses = Ui::classes()
         ->add('flex size-24 items-center justify-center rounded-lg border')
-        ->add('border-gray-200 bg-gray-100 dark:border-gray-700 dark:bg-gray-800');
+        ->add('border-gray-100 bg-gray-10 dark:border-gray-700 dark:bg-gray-810');
 
     $deleteClasses = Ui::classes()
         ->add(
             'group/delete absolute -top-2 -right-2 flex size-6 cursor-pointer items-center justify-center rounded-full border shadow-sm',
         )
-        ->add('border-gray-200 bg-white hover:border-red-300 hover:bg-red-50')
-        ->add('dark:border-gray-600 dark:bg-gray-700 dark:hover:border-red-500/50 dark:hover:bg-red-900/30');
+        ->add('border-gray-200 bg-white hover:border-red-600')
+        ->add('dark:border-gray-600 dark:bg-gray-820 dark:hover:border-red-500');
 @endphp
 
 <div class="{{ $wrapperClasses }}" {{ $attributes->except('class') }} x-data="{ lightboxOpen: false }" data-file-upload-item>

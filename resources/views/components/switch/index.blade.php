@@ -48,7 +48,7 @@
     // Track classes - the background pill
     $trackClasses = Ui::classes()
         ->add('shrink-0 cursor-pointer rounded-full')
-        ->add('bg-gray-200 dark:bg-gray-700')
+        ->add('bg-gray-100 dark:bg-gray-700')
         ->add('transition-colors duration-200 ease-in-out')
         ->add('group-has-[:checked]/switch:bg-blue-600 dark:group-has-[:checked]/switch:bg-blue-500')
         ->add('group-has-[:focus-visible]/switch:ring-2 group-has-[:focus-visible]/switch:ring-blue-600/20 group-has-[:focus-visible]/switch:ring-offset-0')
@@ -64,7 +64,7 @@
     // sm: 28px - 12px - 4px = 12px, md: 36px - 16px - 4px = 16px, lg: 44px - 20px - 4px = 20px
     $knobClasses = Ui::classes()
         ->add('pointer-events-none absolute rounded-full shadow')
-        ->add('bg-gray-400 group-has-[:checked]/switch:bg-white dark:bg-white')
+        ->add('bg-gray-800 group-has-[:checked]/switch:bg-white dark:bg-white')
         ->add('top-1/2 -translate-y-1/2')
         ->add('transition duration-200 ease-in-out')
         ->add($size, [

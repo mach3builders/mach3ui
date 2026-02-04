@@ -16,7 +16,7 @@
     $classes = Ui::classes()
         ->add('px-4 py-3')
         ->add('text-gray-700 dark:text-gray-200')
-        ->add('border-b border-gray-950/5 last:border-b-0 dark:border-white/5')
+        ->add('border-b border-gray-60 last:border-b-0 dark:border-gray-740')
         ->when($url, 'cursor-pointer hover:bg-black/[0.02] dark:hover:bg-white/[0.02]')
         ->when($hasLabelValue, 'flex items-center justify-between gap-4')
         ->merge($attributes);

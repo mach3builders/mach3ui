@@ -38,7 +38,7 @@
         ->merge($attributes->only('class'));
 
     $tagClasses = Ui::classes()
-        ->add('inline-flex items-center gap-1 rounded bg-gray-100 font-medium text-gray-700 select-none')
+        ->add('inline-flex items-center gap-1 rounded bg-gray-80 font-medium text-gray-700 select-none')
         ->add('dark:bg-gray-700 dark:text-gray-200')
         ->add($size, [
             'sm' => 'px-1.5 py-0 text-xs',
