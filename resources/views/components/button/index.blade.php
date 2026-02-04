@@ -109,7 +109,7 @@
             @if ($tag === 'a' && $disabled) aria-disabled="true" tabindex="-1" @endif
             @if ($loading) aria-busy="true" data-loading @endif {{ $attributes->except('class') }}
             class="{{ $aiClasses }}">
-            @include('ui::button._content')
+            @include('ui::components.button._content')
             </{{ $tag }}>
     </div>
 @else
@@ -120,6 +120,6 @@
         @if ($loading) aria-busy="true" data-loading @endif
         @if ($active) data-active @endif data-button data-variant="{{ $variant }}"
         {{ $attributes->except('class') }} class="{{ $classes }}">
-        @include('ui::button._content')
+        @include('ui::components.button._content')
         </{{ $tag }}>
 @endif
