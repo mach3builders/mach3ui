@@ -1,7 +1,13 @@
-@props([])
+@props([
+    'size' => 'sm',
+    'storageKey' => 'mach3ui-theme',
+    'variant' => 'ghost',
+])
 
 @php
-    $classes = Ui::classes()->add('flex gap-1')->merge($attributes->only('class'));
+    $classes = Ui::classes()
+        ->add('inline-flex gap-1')
+        ->merge($attributes);
 
     $modes = [
         'system' => 'monitor-cog',
@@ -10,28 +16,51 @@
     ];
 @endphp
 
-<div class="{{ $classes }}" {{ $attributes->except('class') }} data-theme-switcher x-data="{
-    mode: localStorage.getItem('mach3ui-theme') || 'system',
+<div
+    x-data="{
+        mode: localStorage.getItem('{{ $storageKey }}') || 'system',
 
-    setMode(mode) {
-        const html = document.documentElement;
-        const isSystem = !mode || mode === 'system';
+        init() {
+            this.applyTheme(this.mode)
+            this.$watch('mode', value => this.setMode(value))
 
-        if (isSystem) {
-            localStorage.removeItem('mach3ui-theme');
-            mode = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-        } else {
-            localStorage.setItem('mach3ui-theme', mode);
+            {{-- Listen for system preference changes --}}
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+                if (this.mode === 'system') this.applyTheme('system')
+            })
+        },
+
+        setMode(mode) {
+            if (!mode || mode === 'system') {
+                localStorage.removeItem('{{ $storageKey }}')
+            } else {
+                localStorage.setItem('{{ $storageKey }}', mode)
+            }
+            this.applyTheme(mode)
+        },
+
+        applyTheme(mode) {
+            const html = document.documentElement
+            const resolved = mode === 'system'
+                ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+                : mode
+
+            html.classList.toggle('dark', resolved === 'dark')
+            html.classList.toggle('light', resolved === 'light')
         }
-
-        html.classList.toggle('dark', mode === 'dark');
-        html.classList.toggle('light', mode === 'light');
-    }
-}"
-    x-init="$watch('mode', value => setMode(value))">
+    }"
+    {{ $attributes->except('class') }}
+    class="{{ $classes }}"
+    data-theme-switcher
+>
     @foreach ($modes as $mode => $icon)
-        <ui:button :icon="$icon" variant="ghost" size="sm" :aria-label="ucfirst($mode).
-        ' mode'"
-            x-bind:data-active="mode === '{{ $mode }}' ? '' : null" x-on:click="mode = '{{ $mode }}'" />
+        <ui:button
+            :icon="$icon"
+            :variant="$variant"
+            :size="$size"
+            :aria-label="ucfirst($mode) . ' mode'"
+            x-on:click="mode = '{{ $mode }}'"
+            x-bind:data-active="mode === '{{ $mode }}' ? '' : null"
+        />
     @endforeach
 </div>

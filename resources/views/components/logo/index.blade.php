@@ -1,57 +1,55 @@
 @props([
-    'color' => null,
+    'brand' => 'Builders',
+    'color' => 'gray',
     'href' => null,
     'image' => null,
-    'name' => 'Builders',
-    'size' => 'base',
+    'size' => 'md',
 ])
 
 @php
     $tag = $href ? 'a' : 'div';
 
-    $colorClasses = [
-        'gray' => 'text-gray-500',
-        'blue' => 'text-blue-500',
-        'orange' => 'text-orange-500',
-        'emerald' => 'text-emerald-500',
-        'cyan' => 'text-cyan-500',
-        'red' => 'text-red-500',
-        'purple' => 'text-purple-500',
-        'pink' => 'text-pink-500',
-        'yellow' => 'text-yellow-500',
-    ];
-
-    $brandClass = $color ? $colorClasses[$color] ?? $colorClasses['gray'] : 'text-brand';
-
     $classes = Ui::classes()
-        ->add(
-            'flex items-center gap-[0.1em] font-brand font-bold tracking-wide uppercase leading-none no-underline select-none',
-        )
-        ->add('text-gray-800')
-        ->add('dark:text-gray-50')
-        ->add(
-            match ($size) {
-                'sm' => 'text-sm',
-                'lg' => 'text-lg',
-                'xl' => 'text-xl',
-                '2xl' => 'text-2xl',
-                default => 'text-base',
-            },
-        )
-        ->merge($attributes->only('class'));
+        ->add('inline-flex items-center gap-[0.1em] font-brand font-bold uppercase leading-none tracking-wide select-none')
+        ->add('text-gray-800 dark:text-gray-50')
+        ->add($size, [
+            'sm' => 'text-sm',
+            'md' => 'text-base',
+            'lg' => 'text-lg',
+            'xl' => 'text-xl',
+            '2xl' => 'text-2xl',
+        ])
+        ->when($href, 'no-underline')
+        ->merge($attributes);
 
-    $brandClasses = Ui::classes()->add('-skew-x-12 font-semibold')->add($brandClass);
+    $accentClasses = Ui::classes()
+        ->add('-skew-x-12 font-semibold')
+        ->add($color, [
+            'gray' => 'text-gray-500',
+            'blue' => 'text-blue-500',
+            'orange' => 'text-orange-500',
+            'emerald' => 'text-emerald-500',
+            'cyan' => 'text-cyan-500',
+            'teal' => 'text-teal-500',
+            'lime' => 'text-lime-500',
+            'red' => 'text-red-500',
+            'purple' => 'text-purple-500',
+            'pink' => 'text-pink-500',
+            'yellow' => 'text-yellow-500',
+        ])
+        ->when(! $color, 'text-primary');
 @endphp
 
-<{{ $tag }} class="{{ $classes }}" @if ($href) href="{{ $href }}" @endif
-    {{ $attributes->except('class') }} data-logo>
+<{{ $tag }}
+    {{ $attributes->only(['wire:navigate', 'x-on:click', 'x-bind:href'])->merge($href ? ['href' => $href] : []) }}
+    class="{{ $classes }}"
+    data-logo
+>
     @if ($image)
-        <img src="{{ $image }}" alt="{{ $name }}" class="max-h-8" />
+        <img src="{{ $image }}" alt="{{ $brand }}" class="max-h-8" data-logo-image />
     @else
-        <span>Mach3</span>
-
-        <span class="{{ $brandClasses }}">III</span>
-
-        <span>{{ $name }}</span>
+        <span data-logo-prefix>Mach3</span>
+        <span class="{{ $accentClasses }}" data-logo-accent>III</span>
+        <span data-logo-brand>{{ $brand }}</span>
     @endif
-    </{{ $tag }}>
+</{{ $tag }}>

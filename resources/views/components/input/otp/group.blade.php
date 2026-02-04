@@ -1,5 +1,9 @@
 @props([])
 
-<div {{ $attributes->class(['flex items-center']) }} data-input-otp-group>
+@php
+    $classes = Ui::classes()->add('flex items-center')->merge($attributes->only('class'));
+@endphp
+
+<div {{ $attributes->except('class') }} class="{{ $classes }}" data-input-otp-group>
     {{ $slot }}
 </div>

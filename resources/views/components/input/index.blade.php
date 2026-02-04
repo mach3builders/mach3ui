@@ -1,32 +1,46 @@
 @props([
     'addon' => null,
     'addon:end' => null,
-    'help' => null,
+    'button' => null,
+    'hint' => null,
     'icon' => null,
     'icon:end' => null,
     'label' => null,
-    'size' => null,
+    'name' => null,
+    'size' => 'md',
     'type' => 'text',
-    'variant' => null,
+    'variant' => 'default',
 ])
 
-@php
-    $wireModel = $attributes->wire('model');
-    $hasWireModel = $wireModel && method_exists($wireModel, 'value');
-    $wireModelValue = $hasWireModel ? $wireModel->value() : null;
+@aware(['id'])
 
-    // Extract x-model attribute
-    $xModel = null;
-    foreach ($attributes as $key => $val) {
-        if (str_starts_with($key, 'x-model')) {
-            $xModel = $val;
+@php
+    // Get wire:model or x-model value directly from attributes
+    $allAttrs = $attributes->getAttributes();
+    $wireModelValue = null;
+    $xModelValue = null;
+
+    foreach ($allAttrs as $key => $value) {
+        if (str_starts_with($key, 'wire:model')) {
+            $wireModelValue = $value;
             break;
         }
     }
 
-    $name = $attributes->get('name') ?? ($wireModelValue ?? $xModel);
-    $id = $attributes->get('id') ?? ($name ? 'input-' . $name : ($label ? 'input-' . Str::random(8) : null));
-    $hasError = $name && $errors->has($name);
+    foreach ($allAttrs as $key => $value) {
+        if (str_starts_with($key, 'x-model')) {
+            $xModelValue = $value;
+            break;
+        }
+    }
+
+    // Name priority: prop > wire:model > x-model > field id
+    $inputName = $name ?: $wireModelValue ?: $xModelValue ?: $id;
+
+    // ID priority: explicit id attr > field id (@aware) > input name > auto-generated
+    $id = $attributes->get('id') ?? ($id ?? ($inputName ?? 'input-' . Str::random(8)));
+
+    $error = $inputName ? $errors->first($inputName) ?? null : null;
 
     $iconEnd = $__data['icon:end'] ?? null;
     $addonEnd = $__data['addon:end'] ?? null;
@@ -35,24 +49,23 @@
     $hasIconEnd = $iconEnd !== null;
     $hasAddon = $addon !== null;
     $hasAddonEnd = $addonEnd !== null;
-
-    $wrapperClasses = Ui::classes()
-        ->when($hasIcon || $hasIconEnd, 'relative w-full')
-        ->merge($attributes->only('class'));
+    $hasButton = isset($button) && $button !== null;
 
     $inputClasses = Ui::classes()
         ->add('block w-full appearance-none border shadow-xs focus:outline-none')
         ->add('disabled:cursor-not-allowed disabled:opacity-50')
+        ->add('autofill:shadow-[inset_0_0_0_1000px_white] autofill:[-webkit-text-fill-color:theme(colors.gray.900)]')
         ->add(
-            match ($size) {
-                'sm' => 'h-8 px-2.5 py-1.5 text-xs',
-                'lg' => 'h-12 px-4 py-3 text-base',
-                default => 'h-10 px-3 py-2 text-sm',
-            },
+            'dark:autofill:shadow-[inset_0_0_0_1000px_theme(colors.gray.800)] dark:autofill:[-webkit-text-fill-color:theme(colors.gray.100)]',
         )
+        ->add($size, [
+            'sm' => 'h-8 px-2.5 py-1.5 text-xs',
+            'md' => 'h-10 px-3 py-2 text-sm',
+            'lg' => 'h-12 px-4 py-3 text-base',
+        ])
         ->add(
             match (true) {
-                $hasError
+                (bool) $error
                     => 'border-red-500 bg-white text-gray-900 placeholder-gray-400 focus:border-red-500 dark:border-red-500 dark:bg-gray-800 dark:text-gray-100 dark:placeholder-gray-500 dark:focus:border-red-500',
                 $variant === 'inverted'
                     => 'border-gray-140 bg-gray-10 text-gray-900 placeholder-gray-400 focus:border-gray-400 dark:border-gray-700 dark:bg-gray-820 dark:text-gray-100 dark:placeholder-gray-500 dark:focus:border-gray-600',
@@ -63,145 +76,38 @@
         ->add(
             match (true) {
                 $hasAddon && $hasAddonEnd => 'rounded-none',
-                $hasAddon => 'rounded-none rounded-e-md border-l-0',
-                $hasAddonEnd => 'rounded-none rounded-s-md border-r-0',
+                $hasAddon => 'rounded-none rounded-e-md',
+                $hasAddonEnd => 'rounded-none rounded-s-md',
                 default => 'rounded-md',
             },
         )
         ->when($hasIcon, 'pl-10')
-        ->when($hasIconEnd, 'pr-10');
+        ->when($hasIconEnd, 'pr-10')
+        ->when($hasButton, 'pr-20');
+
+    $wrapperClasses = Ui::classes()->add('relative w-full')->merge($attributes->only('class'));
 
     $iconWrapperClasses = 'pointer-events-none absolute inset-y-0 flex items-center text-gray-400 dark:text-gray-500';
 @endphp
 
 @if ($label)
-    <ui:field>
-        <ui:label :for="$id">{{ $label }}</ui:label>
+    <ui:field :id="$id">
+        <ui:label>{{ $label }}</ui:label>
 
-        @if ($hasAddon || $hasAddonEnd)
-            <ui:input.group {{ $attributes->only('data-*') }} class="{{ $attributes->get('class') }}">
-                @if ($hasAddon)
-                    <ui:input.addon>{{ $addon }}</ui:input.addon>
-                @endif
+        <x-ui::input._input :type="$type" :id="$id" :name="$inputName" :error="$error" :icon="$icon"
+            :icon-end="$iconEnd" :addon="$addon" :addon-end="$addonEnd" :button="$button ?? null" :input-classes="$inputClasses" :wrapper-classes="$wrapperClasses"
+            :icon-wrapper-classes="$iconWrapperClasses" :attributes="$attributes" />
 
-                @if ($hasIcon || $hasIconEnd)
-                    <div class="relative w-full" data-input data-control>
-                        @if ($hasIcon)
-                            <div class="{{ $iconWrapperClasses }} left-0 pl-3">
-                                <ui:icon :name="$icon" class="size-4" />
-                            </div>
-                        @endif
-
-                        <input type="{{ $type }}" id="{{ $id }}"
-                            @if ($name) name="{{ $name }}" @endif
-                            class="{{ $inputClasses }}" {{ $attributes->except(['class', 'data-*', 'name']) }} />
-
-                        @if ($hasIconEnd)
-                            <div class="{{ $iconWrapperClasses }} right-0 pr-3">
-                                <ui:icon :name="$iconEnd" class="size-4" />
-                            </div>
-                        @endif
-                    </div>
-                @else
-                    <input type="{{ $type }}" id="{{ $id }}"
-                        @if ($name) name="{{ $name }}" @endif
-                        class="{{ $inputClasses }}" {{ $attributes->except(['class', 'data-*', 'name']) }}
-                        data-input />
-                @endif
-
-                @if ($hasAddonEnd)
-                    <ui:input.addon>{{ $addonEnd }}</ui:input.addon>
-                @endif
-            </ui:input.group>
-        @elseif ($hasIcon || $hasIconEnd)
-            <div class="{{ $wrapperClasses }}" {{ $attributes->only('data-*') }} data-input data-control>
-                @if ($hasIcon)
-                    <div class="{{ $iconWrapperClasses }} left-0 pl-3">
-                        <ui:icon :name="$icon" class="size-4" />
-                    </div>
-                @endif
-
-                <input type="{{ $type }}" id="{{ $id }}"
-                    @if ($name) name="{{ $name }}" @endif class="{{ $inputClasses }}"
-                    {{ $attributes->except(['class', 'data-*', 'name']) }} />
-
-                @if ($hasIconEnd)
-                    <div class="{{ $iconWrapperClasses }} right-0 pr-3">
-                        <ui:icon :name="$iconEnd" class="size-4" />
-                    </div>
-                @endif
-            </div>
-        @else
-            <div class="{{ $wrapperClasses }}" {{ $attributes->only('data-*') }} data-input data-control>
-                <input type="{{ $type }}" id="{{ $id }}"
-                    @if ($name) name="{{ $name }}" @endif class="{{ $inputClasses }}"
-                    {{ $attributes->except(['class', 'data-*', 'name']) }} />
-            </div>
+        @if ($hint)
+            <ui:hint>{{ $hint }}</ui:hint>
         @endif
 
-        @if ($help)
-            <ui:help>{{ $help }}</ui:help>
-        @endif
-
-        @if ($name)
-            <ui:error :name="$name" />
+        @if ($inputName)
+            <ui:error :name="$inputName" />
         @endif
     </ui:field>
 @else
-    @if ($hasAddon || $hasAddonEnd)
-        <ui:input.group {{ $attributes->only('data-*') }} class="{{ $attributes->get('class') }}">
-            @if ($hasAddon)
-                <ui:input.addon>{{ $addon }}</ui:input.addon>
-            @endif
-
-            @if ($hasIcon || $hasIconEnd)
-                <div class="relative w-full" data-input data-control>
-                    @if ($hasIcon)
-                        <div class="{{ $iconWrapperClasses }} left-0 pl-3">
-                            <ui:icon :name="$icon" class="size-4" />
-                        </div>
-                    @endif
-
-                    <input type="{{ $type }}"
-                        @if ($name) name="{{ $name }}" @endif
-                        class="{{ $inputClasses }}" {{ $attributes->except(['class', 'data-*', 'name']) }} />
-
-                    @if ($hasIconEnd)
-                        <div class="{{ $iconWrapperClasses }} right-0 pr-3">
-                            <ui:icon :name="$iconEnd" class="size-4" />
-                        </div>
-                    @endif
-                </div>
-            @else
-                <input type="{{ $type }}" @if ($name) name="{{ $name }}" @endif
-                    class="{{ $inputClasses }}" {{ $attributes->except(['class', 'data-*', 'name']) }} data-input />
-            @endif
-
-            @if ($hasAddonEnd)
-                <ui:input.addon>{{ $addonEnd }}</ui:input.addon>
-            @endif
-        </ui:input.group>
-    @elseif ($hasIcon || $hasIconEnd)
-        <div class="{{ $wrapperClasses }}" {{ $attributes->only('data-*') }} data-input data-control>
-            @if ($hasIcon)
-                <div class="{{ $iconWrapperClasses }} left-0 pl-3">
-                    <ui:icon :name="$icon" class="size-4" />
-                </div>
-            @endif
-
-            <input type="{{ $type }}" @if ($name) name="{{ $name }}" @endif
-                class="{{ $inputClasses }}" {{ $attributes->except(['class', 'data-*', 'name']) }} />
-
-            @if ($hasIconEnd)
-                <div class="{{ $iconWrapperClasses }} right-0 pr-3">
-                    <ui:icon :name="$iconEnd" class="size-4" />
-                </div>
-            @endif
-        </div>
-    @else
-        <div class="{{ $wrapperClasses }}" {{ $attributes->only('data-*') }} data-input data-control>
-            <input type="{{ $type }}" @if ($name) name="{{ $name }}" @endif
-                class="{{ $inputClasses }}" {{ $attributes->except(['class', 'data-*', 'name']) }} />
-        </div>
-    @endif
+    <x-ui::input._input :type="$type" :id="$id" :name="$inputName" :error="$error" :icon="$icon"
+        :icon-end="$iconEnd" :addon="$addon" :addon-end="$addonEnd" :button="$button ?? null" :input-classes="$inputClasses"
+        :wrapper-classes="$wrapperClasses" :icon-wrapper-classes="$iconWrapperClasses" :attributes="$attributes" />
 @endif

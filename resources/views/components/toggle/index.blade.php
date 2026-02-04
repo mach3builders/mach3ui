@@ -19,69 +19,49 @@
     $labelActive = $__data['label:active'] ?? null;
 
     // Computed state
-    $hasLabel = $label || $slot->isNotEmpty();
+    $hasLabel = $label || $labelActive || $slot->isNotEmpty();
     $needsIconSwap = $iconActive && $iconActive !== $icon;
     $needsColorSwap = $iconColorActive !== $iconColor;
     $needsLabelSwap = $labelActive && $labelActive !== $label;
     $needsDualIcons = $needsIconSwap || $needsColorSwap;
 
     // Alpine config
+    // If 'state' is provided, use external Alpine variable (e.g., from parent x-data)
+    // Otherwise, create local state with variable 'on'
     $alpineVar = $state ?? 'on';
-    $hasExternalHandler = $attributes->has('wire:click') || $attributes->has('x-on:click');
+    $hasExternalHandler = $attributes->has('wire:click') || $attributes->has('x-on:click') || $attributes->has('@click');
     $xData = $state ? null : "{ $alpineVar: " . ($active ? 'true' : 'false') . ' }';
     $clickHandler = $hasExternalHandler ? [] : ['x-on:click' => "$alpineVar = !$alpineVar"];
-
-    // Size mappings
-    $iconSize = match ($size) {
-        'xs', 'sm' => 'size-3.5',
-        'lg' => 'size-5',
-        default => 'size-4',
-    };
-
-    $spanGap = match ($size) {
-        'xs', 'sm' => '[&>span]:gap-1.5',
-        'lg' => '[&>span]:gap-2.5',
-        default => '[&>span]:gap-2',
-    };
-
-    // Color mapping
-    $colors = [
-        'success' => 'text-green-500',
-        'danger' => 'text-red-500',
-        'warning' => 'text-amber-500',
-        'info' => 'text-blue-500',
-        'secondary' => 'text-gray-400',
-    ];
-
-    // Classes
-    $buttonClasses = Ui::classes()->add('[&>span]:inline-flex [&>span]:items-center')->add($spanGap);
-
-    $iconClasses = Ui::classes()
-        ->add($iconSize)
-        ->when($iconColor, $colors[$iconColor] ?? '');
-
-    $iconActiveClasses = Ui::classes()
-        ->add($iconSize)
-        ->when($iconColorActive, $colors[$iconColorActive] ?? '');
 @endphp
 
-<ui:button :size="$size" :variant="$variant" :square="!$hasLabel" :class="$buttonClasses"
-    :x-data="$xData" {{ $attributes->merge($clickHandler) }} data-toggle>
-    @if ($icon)
-        @if ($needsDualIcons)
-            <ui:icon :name="$icon" :class="$iconClasses" x-show="!{{ $alpineVar }}" x-cloak />
-            <ui:icon :name="$iconActive ?? $icon" :class="$iconActiveClasses" x-show="{{ $alpineVar }}" x-cloak />
-        @else
-            <ui:icon :name="$icon" :class="$iconClasses" />
+<ui:button
+    :size="$size"
+    :variant="$variant"
+    :square="!$hasLabel"
+    :x-data="$xData"
+    :aria-pressed="$state ? null : ($active ? 'true' : 'false')"
+    x-bind:aria-pressed="{{ $alpineVar }}.toString()"
+    x-bind:data-active="{{ $alpineVar }}"
+    {{ $attributes->merge($clickHandler) }}
+    data-toggle
+>
+    <span class="inline-flex items-center gap-2">
+        @if ($icon)
+            @if ($needsDualIcons)
+                <ui:icon :name="$icon" :color="$iconColor" x-show="!{{ $alpineVar }}" x-cloak />
+                <ui:icon :name="$iconActive ?? $icon" :color="$iconColorActive" x-show="{{ $alpineVar }}" x-cloak />
+            @else
+                <ui:icon :name="$icon" :color="$iconColor" />
+            @endif
         @endif
-    @endif
 
-    @if ($needsLabelSwap)
-        <span x-show="!{{ $alpineVar }}" x-cloak>{{ $label }}</span>
-        <span x-show="{{ $alpineVar }}" x-cloak>{{ $labelActive }}</span>
-    @elseif ($label)
-        {{ $label }}
-    @endif
+        @if ($needsLabelSwap)
+            <span x-show="!{{ $alpineVar }}" x-cloak>{{ $label }}</span>
+            <span x-show="{{ $alpineVar }}" x-cloak>{{ $labelActive }}</span>
+        @elseif ($label)
+            <span>{{ $label }}</span>
+        @endif
 
-    {{ $slot }}
+        {{ $slot }}
+    </span>
 </ui:button>

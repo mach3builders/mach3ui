@@ -1,15 +1,16 @@
-@props([
-    'current' => 1,
-])
+@props([])
 
 @php
-    $classes = Ui::classes()->merge($attributes->only('class'));
-
-    $navClasses = Ui::classes()->add('flex items-center justify-center gap-3');
+    $classes = Ui::classes()
+        ->add('flex items-center justify-center gap-3')
+        ->merge($attributes);
 @endphp
 
-<div class="{{ $classes }}" {{ $attributes->except('class') }} data-steps data-current="{{ $current }}">
-    <nav class="{{ $navClasses }}" aria-label="Progress" data-steps-nav>
-        {{ $slot }}
-    </nav>
-</div>
+<nav
+    {{ $attributes->except('class') }}
+    class="{{ $classes }}"
+    aria-label="Progress"
+    data-steps
+>
+    {{ $slot }}
+</nav>

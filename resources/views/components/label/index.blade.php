@@ -1,9 +1,14 @@
+@aware(['id'])
+
 @props([
     'badge' => null,
     'for' => null,
 ])
 
 @php
+    // Use explicit for, or inherit from parent field
+    $for = $for ?? ($id ?? null);
+
     $classes = Ui::classes()
         ->add('inline-flex items-center gap-1.5 text-sm font-medium')
         ->add('text-gray-800')

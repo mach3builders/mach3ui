@@ -1,29 +1,41 @@
 @props([
     'disabled' => false,
+    'hint' => null,
+    'label' => null,
     'length' => 6,
     'mode' => 'numeric',
+    'name' => null,
     'private' => false,
     'separator' => null,
-    'size' => null,
+    'size' => 'md',
     'value' => '',
 ])
 
 @php
-    $wireModel = $attributes->wire('model');
-    $hasWireModel = $wireModel && method_exists($wireModel, 'value');
-    $wireModelValue = $hasWireModel ? $wireModel->value() : null;
+    // Extract wire:model value
+    $allAttrs = $attributes->getAttributes();
+    $wireModelValue = null;
+    $xModelValue = null;
 
-    // Extract x-model attribute
-    $xModel = null;
-    foreach ($attributes as $key => $val) {
-        if (str_starts_with($key, 'x-model')) {
-            $xModel = $val;
+    foreach ($allAttrs as $key => $attrValue) {
+        if (str_starts_with($key, 'wire:model')) {
+            $wireModelValue = $attrValue;
             break;
         }
     }
 
-    $name = $attributes->get('name') ?? ($wireModelValue ?? $xModel);
-    $id = $attributes->get('id') ?? ($name ? 'input-otp-' . $name : 'input-otp-' . uniqid());
+    foreach ($allAttrs as $key => $attrValue) {
+        if (str_starts_with($key, 'x-model')) {
+            $xModelValue = $attrValue;
+            break;
+        }
+    }
+
+    // Name priority: prop > wire:model > x-model
+    $inputName = $name ?: $wireModelValue ?: $xModelValue;
+    $id = $attributes->get('id') ?? ($inputName ? 'input-otp-' . $inputName : 'input-otp-' . Str::random(8));
+
+    $error = $inputName ? $errors->first($inputName) ?? null : null;
 
     $pattern = match ($mode) {
         'alphanumeric' => '[a-zA-Z0-9]',
@@ -43,156 +55,52 @@
     };
 
     $wrapperClasses = Ui::classes()
-        ->add('flex items-center gap-2')
+        ->add('inline-flex items-center gap-2')
         ->when($disabled, 'opacity-50')
         ->merge($attributes->only('class'));
 
     $slotClasses = Ui::classes()
         ->add($slotSizeClasses)
-        ->add('relative -ml-px flex cursor-text items-center justify-center border font-medium transition-colors')
-        ->add('first:ml-0 first:rounded-l-lg last:rounded-r-lg')
-        ->add('border-gray-200 bg-white text-gray-900')
-        ->add('dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100');
+        ->add('relative -ml-px flex cursor-text items-center justify-center border font-medium select-none')
+        ->add('first:ml-0 first:rounded-l-md last:rounded-r-md')
+        ->add(
+            match (true) {
+                (bool) $error
+                    => 'border-red-500 bg-white text-gray-900 dark:border-red-500 dark:bg-gray-800 dark:text-gray-100',
+                default
+                    => 'border-gray-140 bg-white text-gray-900 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100',
+            },
+        );
 
-    $activeRingClasses = 'z-10 ring-1 ring-gray-400 dark:ring-gray-500';
+    $activeRingClasses = match (true) {
+        (bool) $error => 'z-10 ring-1 ring-red-500 dark:ring-red-500',
+        default => 'z-10 ring-1 ring-gray-400 dark:ring-gray-500',
+    };
 
-    $separatorClasses = Ui::classes()->add('flex items-center justify-center px-1');
-
-    $separatorDotClasses = Ui::classes()->add('h-1 w-2 rounded-full')->add('bg-gray-300')->add('dark:bg-gray-600');
+    $separatorClasses = 'flex items-center justify-center px-1';
+    $separatorDotClasses = 'size-1.5 rounded-full bg-gray-300 dark:bg-gray-600';
 @endphp
 
-<div x-data="{
-    length: {{ $length }},
-    disabled: {{ $disabled ? 'true' : 'false' }},
-    private: {{ $private ? 'true' : 'false' }},
-    pattern: /{{ $pattern }}/,
-    digits: Array({{ $length }}).fill('').map((_, i) => '{{ $value }}'.charAt(i) || ''),
-    activeIndex: -1,
-    get value() {
-        return this.digits.join('');
-    },
-    set value(val) {
-        this.digits = Array(this.length).fill('').map((_, i) => val.charAt(i) || '');
-    },
-    focusIndex(index) {
-        if (this.disabled) return;
-        this.activeIndex = index;
-        this.$refs.input.focus();
-    },
-    handleInput(e) {
-        const val = e.target.value.split('').filter(c => this.pattern.test(c)).join('');
-        if (val) {
-            const chars = val.split('');
-            let index = this.activeIndex >= 0 ? this.activeIndex : 0;
-            chars.forEach(char => {
-                if (index < this.length) {
-                    this.digits[index] = char;
-                    index++;
-                }
-            });
-            this.activeIndex = Math.min(index, this.length - 1);
-            this.dispatchChange();
-        }
-        e.target.value = '';
-    },
-    handleKeydown(e) {
-        if (e.key === 'Backspace') {
-            e.preventDefault();
-            if (this.activeIndex >= 0) {
-                if (this.digits[this.activeIndex]) {
-                    this.digits[this.activeIndex] = '';
-                } else if (this.activeIndex > 0) {
-                    this.activeIndex--;
-                    this.digits[this.activeIndex] = '';
-                }
-                this.dispatchChange();
-            }
-        } else if (e.key === 'ArrowLeft' && this.activeIndex > 0) {
-            this.activeIndex--;
-        } else if (e.key === 'ArrowRight' && this.activeIndex < this.length - 1) {
-            this.activeIndex++;
-        } else if (e.key === 'Delete') {
-            e.preventDefault();
-            if (this.activeIndex >= 0 && this.activeIndex < this.length) {
-                this.digits[this.activeIndex] = '';
-                this.dispatchChange();
-            }
-        }
-    },
-    handleFocus() {
-        if (this.activeIndex < 0) {
-            const firstEmpty = this.digits.findIndex(d => d === '');
-            this.activeIndex = firstEmpty >= 0 ? firstEmpty : this.length - 1;
-        }
-    },
-    handleBlur() {
-        this.activeIndex = -1;
-    },
-    handlePaste(e) {
-        e.preventDefault();
-        const paste = (e.clipboardData || window.clipboardData).getData('text').split('').filter(c => this.pattern.test(c)).join('');
-        if (paste) {
-            const chars = paste.split('').slice(0, this.length);
-            chars.forEach((char, i) => {
-                this.digits[i] = char;
-            });
-            this.activeIndex = Math.min(chars.length, this.length - 1);
-            this.dispatchChange();
-        }
-    },
-    dispatchChange() {
-        this.$nextTick(() => {
-            this.$refs.hidden.dispatchEvent(new Event('input', { bubbles: true }));
-        });
-    },
-    displayChar(char) {
-        if (!char) return '';
-        return this.private ? '•' : char;
-    }
-}" x-modelable="value" {{ $attributes->whereStartsWith('x-model') }}
-    class="{{ $wrapperClasses }}" {{ $attributes->only('data-*') }} data-input-otp data-control>
-    <input type="hidden" x-ref="hidden" id="{{ $id }}"
-        @if ($name) name="{{ $name }}" @endif :value="value"
-        {{ $attributes->whereStartsWith('wire:model') }} />
+@if ($label)
+    <ui:field :id="$id">
+        <ui:label>{{ $label }}</ui:label>
 
-    @if ($slot->isNotEmpty())
-        {{ $slot }}
-    @elseif ($separator)
-        @php
-            $groups = collect(range(0, $length - 1))->chunk($separator);
-        @endphp
+        <x-ui::input.otp._otp :id="$id" :name="$inputName" :length="$length" :mode="$mode" :pattern="$pattern"
+            :inputmode="$inputmode" :disabled="$disabled" :private="$private" :value="$value" :error="$error" :separator="$separator"
+            :wrapper-classes="$wrapperClasses" :slot-classes="$slotClasses" :active-ring-classes="$activeRingClasses" :separator-classes="$separatorClasses" :separator-dot-classes="$separatorDotClasses"
+            :attributes="$attributes" :slot="$slot" />
 
-        @foreach ($groups as $groupIndex => $group)
-            <div class="flex items-center" data-input-otp-group>
-                @foreach ($group as $index)
-                    <div class="{{ $slotClasses }}"
-                        :class="{ '{{ $activeRingClasses }}': activeIndex === {{ $index }} }"
-                        x-on:click="focusIndex({{ $index }})" data-input-otp-slot>
-                        <span x-text="displayChar(digits[{{ $index }}])"></span>
-                    </div>
-                @endforeach
-            </div>
+        @if ($hint)
+            <ui:hint>{{ $hint }}</ui:hint>
+        @endif
 
-            @if (!$loop->last)
-                <div class="{{ $separatorClasses }}" data-input-otp-separator>
-                    <div class="{{ $separatorDotClasses }}"></div>
-                </div>
-            @endif
-        @endforeach
-    @else
-        <div class="flex items-center" data-input-otp-group>
-            @for ($i = 0; $i < $length; $i++)
-                <div class="{{ $slotClasses }}"
-                    :class="{ '{{ $activeRingClasses }}': activeIndex === {{ $i }} }"
-                    x-on:click="focusIndex({{ $i }})" data-input-otp-slot>
-                    <span x-text="displayChar(digits[{{ $i }}])"></span>
-                </div>
-            @endfor
-        </div>
-    @endif
-
-    <input type="text" inputmode="{{ $inputmode }}" autocomplete="one-time-code" x-ref="input" class="sr-only"
-        maxlength="{{ $length }}" x-on:input="handleInput($event)" x-on:keydown="handleKeydown($event)"
-        x-on:focus="handleFocus()" x-on:blur="handleBlur()" x-on:paste="handlePaste($event)"
-        @disabled($disabled) />
-</div>
+        @if ($inputName)
+            <ui:error :name="$inputName" />
+        @endif
+    </ui:field>
+@else
+    <x-ui::input.otp._otp :id="$id" :name="$inputName" :length="$length" :mode="$mode" :pattern="$pattern"
+        :inputmode="$inputmode" :disabled="$disabled" :private="$private" :value="$value" :error="$error"
+        :separator="$separator" :wrapper-classes="$wrapperClasses" :slot-classes="$slotClasses" :active-ring-classes="$activeRingClasses" :separator-classes="$separatorClasses"
+        :separator-dot-classes="$separatorDotClasses" :attributes="$attributes" :slot="$slot" />
+@endif

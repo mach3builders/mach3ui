@@ -1,4 +1,7 @@
-@props(['index', 'size' => null])
+@props([
+    'index',
+    'size' => 'md',
+])
 
 @php
     $classes = Ui::classes()
@@ -9,15 +12,16 @@
                 default => 'h-12 w-10 text-lg',
             },
         )
-        ->add('relative flex cursor-text items-center justify-center border-y border-r font-medium transition-colors')
-        ->add('first:rounded-l-lg first:border-l last:rounded-r-lg')
-        ->add('border-gray-200 bg-white text-gray-900')
-        ->add('dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100');
+        ->add('relative -ml-px flex cursor-text items-center justify-center border font-medium transition-colors select-none')
+        ->add('first:ml-0 first:rounded-l-md last:rounded-r-md')
+        ->add('border-gray-140 bg-white text-gray-900')
+        ->add('dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100')
+        ->merge($attributes->only('class'));
 @endphp
 
-<div {{ $attributes->class($classes) }}
+<div {{ $attributes->except('class') }} class="{{ $classes }}"
     :class="{
-        'z-10 ring-2 ring-offset-0 ring-gray-900 dark:ring-gray-100': activeIndex === {{ $index }},
+        'z-10 ring-1 ring-gray-400 dark:ring-gray-500': activeIndex === {{ $index }},
     }"
     x-on:click="focusIndex({{ $index }})" data-input-otp-slot>
     <span x-text="displayChar(digits[{{ $index }}])"></span>

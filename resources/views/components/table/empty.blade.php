@@ -6,8 +6,8 @@
 ])
 
 @php
-    $resolvedTitle = $title ?? __('ui::ui.table_empty.title');
-    $resolvedDescription = $description ?? __('ui::ui.table_empty.description');
+    $resolvedTitle = $title ?? 'No results found';
+    $resolvedDescription = $description ?? 'Try adjusting your search or filters.';
 
     $cellClasses = Ui::classes()->add('py-12 text-center')->merge($attributes->only('class'));
 

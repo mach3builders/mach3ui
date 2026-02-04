@@ -1,82 +1,109 @@
 @props([
     'description' => null,
     'label' => null,
+    'name' => null,
+    'size' => 'md',
 ])
 
-@php
-    $wireModel = $attributes->wire('model');
-    $hasWireModel = $wireModel && method_exists($wireModel, 'value');
-    $wireModelValue = $hasWireModel ? $wireModel->value() : null;
+@aware(['id'])
 
-    // Extract x-model attribute for name fallback
-    $xModel = null;
-    foreach ($attributes as $key => $val) {
-        if (str_starts_with($key, 'x-model')) {
-            $xModel = $val;
+@php
+    // Get wire:model or x-model value directly from attributes
+    $allAttrs = $attributes->getAttributes();
+    $wireModelValue = null;
+    $xModelValue = null;
+
+    foreach ($allAttrs as $key => $value) {
+        if (str_starts_with($key, 'wire:model')) {
+            $wireModelValue = $value;
             break;
         }
     }
 
-    $name = $attributes->get('name') ?? ($wireModelValue ?? $xModel);
+    foreach ($allAttrs as $key => $value) {
+        if (str_starts_with($key, 'x-model')) {
+            $xModelValue = $value;
+            break;
+        }
+    }
+
+    // Name priority: prop > wire:model > x-model > field id
+    $inputName = $name ?: $wireModelValue ?: $xModelValue ?: $id;
+
+    // ID priority: explicit id attr > field id (@aware) > input name > auto-generated
+    $id = $attributes->get('id') ?? ($id ?? ($inputName ?? 'radio-' . Str::random(8)));
+
     $hasLabel = $label || $description;
+    $error = $inputName ? $errors->first($inputName) ?? null : null;
 
-    // Wrapper
-    $classes = Ui::classes()->merge($attributes->only('class'));
+    // SVG icon for checked state (white dot)
+    $dotSvg = "url('data:image/svg+xml,%3csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%225%22%20fill%3D%22white%22%2F%3E%3C%2Fsvg%3E')";
 
-    // Radio input
+    $wrapperClasses = Ui::classes()->merge($attributes->only('class'));
+
     $radioClasses = Ui::classes()
-        ->add('size-[18px] shrink-0 appearance-none rounded-full border cursor-pointer bg-center bg-no-repeat')
+        ->add('shrink-0 cursor-pointer appearance-none rounded-full border bg-center bg-no-repeat')
         ->add('border-gray-300 bg-white')
         ->add('dark:border-gray-600 dark:bg-gray-800')
-        ->add('checked:border-blue-600 checked:bg-blue-600 checked:bg-[length:14px]')
+        ->add("checked:border-blue-600 checked:bg-blue-600 checked:bg-[{$dotSvg}]")
         ->add('dark:checked:border-blue-500 dark:checked:bg-blue-500')
-        ->add(
-            "checked:bg-[url('data:image/svg+xml,%3csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%225%22%20fill%3D%22white%22%2F%3E%3C%2Fsvg%3E')]",
-        )
         ->add('focus:outline-none focus:ring-2 focus:ring-blue-600/20 focus:ring-offset-0')
         ->add('dark:focus:ring-blue-500/20')
         ->add('disabled:cursor-not-allowed disabled:opacity-50')
+        ->add($size, [
+            'sm' => 'size-4 checked:bg-[length:10px]',
+            'md' => 'size-5 checked:bg-[length:14px]',
+            'lg' => 'size-6 checked:bg-[length:16px]',
+        ])
         ->when($description, 'mt-0.5')
         ->unless($hasLabel, 'block');
 
-    // Label wrapper
     $labelClasses = Ui::classes()
-        ->add('group inline-flex gap-2.5 cursor-pointer')
+        ->add('group inline-flex cursor-pointer gap-2.5')
         ->add('has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50')
         ->add($description ? 'items-start' : 'items-center');
 
-    // Text content
-    $textWrapperClasses = Ui::classes()->add('flex flex-col gap-0.5');
+    $labelTextClasses = Ui::classes()
+        ->add('font-medium text-gray-900 dark:text-gray-100')
+        ->add($size, [
+            'sm' => 'text-xs',
+            'md' => 'text-sm',
+            'lg' => 'text-base',
+        ]);
 
-    $labelTextClasses = Ui::classes()->add('text-sm font-medium')->add('text-gray-900')->add('dark:text-gray-100');
-
-    $descriptionClasses = Ui::classes()->add('text-sm')->add('text-gray-500')->add('dark:text-gray-400');
+    $descriptionClasses = Ui::classes()
+        ->add('text-gray-500 dark:text-gray-400')
+        ->add($size, [
+            'sm' => 'text-xs',
+            'md' => 'text-sm',
+            'lg' => 'text-sm',
+        ]);
 @endphp
 
-<div class="{{ $classes }}" {{ $attributes->only('data-*') }} data-radio data-control>
+<div class="{{ $wrapperClasses }}" {{ $attributes->only('data-*') }} data-radio data-control>
     @if ($hasLabel)
-        <label class="{{ $labelClasses }}" data-radio-label>
-            <input type="radio" class="{{ $radioClasses }}"
-                @if ($name) name="{{ $name }}" @endif
-                {{ $attributes->except(['class', 'data-*', 'name']) }} data-radio-input />
-
-            <span class="{{ $textWrapperClasses }}" data-radio-text>
-                @if ($label)
-                    <span class="{{ $labelTextClasses }}">{{ $label }}</span>
-                @endif
-
-                @if ($description)
-                    <span class="{{ $descriptionClasses }}">{{ $description }}</span>
-                @endif
-            </span>
-        </label>
-    @else
-        <input type="radio" class="{{ $radioClasses }}"
-            @if ($name) name="{{ $name }}" @endif
-            {{ $attributes->except(['class', 'data-*', 'name']) }} data-radio-input />
+        <label class="{{ $labelClasses }}">
     @endif
 
-    @if ($name)
-        <ui:error :name="$name" />
+    <input type="radio" id="{{ $id }}" @if ($inputName) name="{{ $inputName }}" @endif
+        @if ($error) aria-invalid="true" @endif
+        {{ $attributes->except(['class', 'data-*', 'id', 'name']) }} class="{{ $radioClasses }}" />
+
+    @if ($hasLabel)
+        <span class="flex flex-col gap-0.5">
+            @if ($label)
+                <span class="{{ $labelTextClasses }}">{{ $label }}</span>
+            @endif
+            @if ($description)
+                <span class="{{ $descriptionClasses }}">{{ $description }}</span>
+            @endif
+        </span>
+        </label>
+    @endif
+
+    @if ($error)
+        <p role="alert" class="mt-1 flex items-center gap-1.5 text-xs text-danger">
+            {{ $error }}
+        </p>
     @endif
 </div>

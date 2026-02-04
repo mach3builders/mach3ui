@@ -1,82 +1,72 @@
 @props([
-    'current' => 1,
-    'href' => null,
-    'percent' => true,
-    'text' => true,
-    'total' => 4,
+    'label' => null,
+    'max' => 100,
+    'showValue' => false,
+    'size' => 'md',
+    'value' => 0,
+    'variant' => 'primary',
 ])
 
 @php
-    $safeTotal = max(1, $total);
-    $percentage = round(($current / $safeTotal) * 100);
+    $safeMax = max(1, $max);
+    $percentage = min(100, max(0, round(($value / $safeMax) * 100)));
 
-    // Helper to generate step URL
-    $stepUrl = fn($step) => $href ? str_replace('{step}', $step, $href) : null;
-    $tag = $href ? 'a' : 'button';
+    $containerClasses = Ui::classes()
+        ->add('flex w-full flex-col gap-1.5')
+        ->merge($attributes);
 
-    // Container
-    $classes = Ui::classes()->add('flex w-full flex-col')->merge($attributes->only('class'));
+    $labelClasses = Ui::classes()
+        ->add('flex items-center justify-between text-sm font-medium text-gray-700 dark:text-gray-300');
 
-    // Text section
-    $textClasses = Ui::classes()
-        ->add('flex items-center justify-between text-xs font-bold')
-        ->add('text-gray-400')
-        ->add('dark:text-gray-340');
+    $trackClasses = Ui::classes()
+        ->add('w-full overflow-hidden rounded-full')
+        ->add('bg-gray-100 dark:bg-gray-700')
+        ->add($size, [
+            'xs' => 'h-1',
+            'sm' => 'h-1.5',
+            'md' => 'h-2',
+            'lg' => 'h-3',
+            'xl' => 'h-4',
+        ]);
 
-    // Bar section
-    $barClasses = Ui::classes()->add('flex items-center gap-4');
-
-    // Step (active = clickable, inactive = static)
-    $stepBaseClasses = 'group flex-1 py-3';
-
-    $stepActiveClasses = Ui::classes()->add($stepBaseClasses)->add('cursor-pointer');
-
-    $stepInactiveClasses = Ui::classes()->add($stepBaseClasses);
-
-    // Indicator (shared base)
-    $indicatorBaseClasses = 'block h-1.5 rounded-full transition-colors';
-
-    $indicatorActiveClasses = Ui::classes()
-        ->add($indicatorBaseClasses)
-        ->add('bg-gray-240 group-hover:bg-gray-300')
-        ->add('dark:bg-gray-540 dark:group-hover:bg-gray-460');
-
-    $indicatorInactiveClasses = Ui::classes()->add($indicatorBaseClasses)->add('bg-gray-100')->add('dark:bg-gray-700');
+    $barClasses = Ui::classes()
+        ->add('h-full rounded-full transition-all duration-300 ease-out')
+        ->add($variant, [
+            'primary' => 'bg-blue-500 dark:bg-blue-600',
+            'secondary' => 'bg-gray-700 dark:bg-gray-300',
+            'success' => 'bg-green-600 dark:bg-green-500',
+            'warning' => 'bg-amber-500 dark:bg-amber-400',
+            'danger' => 'bg-red-600 dark:bg-red-500',
+        ]);
 @endphp
 
-<div class="{{ $classes }}" {{ $attributes->except('class') }}
-    @unless ($href) x-data @endunless data-progress>
-    {{-- Progress text --}}
-    @if ($text)
-        <div class="{{ $textClasses }}" data-progress-text>
-            <div data-progress-count>{{ $current }} / {{ $total }}</div>
+<div {{ $attributes->except('class') }} class="{{ $containerClasses }}" data-progress data-variant="{{ $variant }}">
+    @if ($label || $showValue)
+        <div class="{{ $labelClasses }}" data-progress-label>
+            @if ($label)
+                <span>{{ $label }}</span>
+            @else
+                <span></span>
+            @endif
 
-            @if ($percent)
-                <div data-progress-percent>{{ $percentage }}%</div>
+            @if ($showValue)
+                <span data-progress-value>{{ $percentage }}%</span>
             @endif
         </div>
     @endif
 
-    {{-- Progress bar --}}
-    <div class="{{ $barClasses }}" data-progress-bar>
-        @for ($i = 1; $i <= $safeTotal; $i++)
-            @php
-                $isActive = $i <= $current;
-                $stepClasses = $isActive ? $stepActiveClasses : $stepInactiveClasses;
-                $indicatorClasses = $isActive ? $indicatorActiveClasses : $indicatorInactiveClasses;
-            @endphp
-
-            @if ($isActive)
-                <{{ $tag }} @if ($href) href="{{ $stepUrl($i) }}" @endif
-                    @if (!$href) type="button" x-on:click="$dispatch('step', {{ $i }})" @endif
-                    class="{{ $stepClasses }}" data-progress-step data-step="{{ $i }}" data-active>
-                    <span class="{{ $indicatorClasses }}" data-progress-indicator></span>
-                    </{{ $tag }}>
-                @else
-                    <span class="{{ $stepClasses }}" data-progress-step data-step="{{ $i }}">
-                        <span class="{{ $indicatorClasses }}" data-progress-indicator></span>
-                    </span>
-            @endif
-        @endfor
+    <div
+        class="{{ $trackClasses }}"
+        role="progressbar"
+        aria-valuenow="{{ $value }}"
+        aria-valuemin="0"
+        aria-valuemax="{{ $max }}"
+        data-progress-track
+    >
+        <div
+            class="{{ $barClasses }}"
+            style="width: {{ $percentage }}%"
+            data-progress-bar
+        ></div>
     </div>
 </div>

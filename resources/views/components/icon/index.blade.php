@@ -1,6 +1,6 @@
 @props([
     'boxed' => false,
-    'color' => 'gray',
+    'color' => null,
     'name' => null,
     'round' => false,
     'size' => null,
@@ -10,7 +10,6 @@
 @php
     $effectiveSize = $size ?? 'sm';
 
-    // Icon sizes (used for simple mode and boxed icon)
     $iconSize = match ($effectiveSize) {
         'xs' => 'size-3',
         'sm' => 'size-4',
@@ -20,7 +19,6 @@
         default => 'size-4',
     };
 
-    // Box container sizes
     $boxSize = match ($effectiveSize) {
         'xs' => 'size-5',
         'sm' => 'size-8',
@@ -30,7 +28,33 @@
         default => 'size-8',
     };
 
-    // Box colors (array is appropriate for many options)
+    // Map semantic names to Tailwind colors
+    $colorAliases = [
+        'primary' => 'blue',
+        'secondary' => 'gray',
+        'danger' => 'red',
+        'warning' => 'amber',
+        'success' => 'green',
+    ];
+    $resolvedColor = $colorAliases[$color] ?? $color;
+
+    $colors = [
+        'inherit' => 'text-inherit',
+        'gray' => 'text-gray-500 dark:text-gray-400',
+        'blue' => 'text-blue-600 dark:text-blue-500',
+        'green' => 'text-green-600 dark:text-green-500',
+        'amber' => 'text-amber-600 dark:text-amber-500',
+        'red' => 'text-red-600 dark:text-red-500',
+        'yellow' => 'text-yellow-600 dark:text-yellow-500',
+        'purple' => 'text-purple-600 dark:text-purple-500',
+        'rose' => 'text-rose-600 dark:text-rose-500',
+        'indigo' => 'text-indigo-600 dark:text-indigo-500',
+        'cyan' => 'text-cyan-600 dark:text-cyan-500',
+        'teal' => 'text-teal-600 dark:text-teal-500',
+        'pink' => 'text-pink-600 dark:text-pink-500',
+        'violet' => 'text-violet-600 dark:text-violet-500',
+    ];
+
     $boxedColors = [
         'gray' => 'bg-gray-60 text-gray-600 dark:bg-gray-740 dark:text-gray-400',
         'blue' => 'bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400',
@@ -47,28 +71,29 @@
         'violet' => 'bg-violet-100 text-violet-600 dark:bg-violet-900/30 dark:text-violet-400',
     ];
 
+    $colorClass = $resolvedColor ? $colors[$resolvedColor] ?? "text-{$resolvedColor}" : null;
+
     $boxClasses = Ui::classes()
         ->add('flex items-center justify-center')
         ->add($boxSize)
-        ->add(
-            match ($round) {
-                true => 'rounded-full',
-                default => 'rounded-lg',
-            },
-        )
-        ->add($boxedColors[$color] ?? $boxedColors['gray'])
-        ->merge($attributes->only('class'));
+        ->add($round ? 'rounded-full' : 'rounded-lg')
+        ->add($boxedColors[$resolvedColor] ?? $boxedColors['gray'])
+        ->merge($attributes);
 
     $iconClasses = Ui::classes()->add('shrink-0')->add($iconSize);
 
-    $simpleClasses = Ui::classes()->add('shrink-0')->when($size, $iconSize)->merge($attributes->only('class'));
+    $simpleClasses = Ui::classes()
+        ->add('shrink-0')
+        ->add($iconSize)
+        ->when($colorClass, $colorClass ?? '')
+        ->merge($attributes);
 @endphp
 
 @if ($boxed)
-    <span class="{{ $boxClasses }}" {{ $attributes->except('class') }} data-icon>
+    <span {{ $attributes->except('class') }} class="{{ $boxClasses }}" data-icon data-color="{{ $color }}">
         <x-dynamic-component :component="'lucide-' . $name" :stroke-width="$stroke" class="{{ $iconClasses }}" />
     </span>
 @else
-    <x-dynamic-component :component="'lucide-' . $name" :stroke-width="$stroke" class="{{ $simpleClasses }}"
-        {{ $attributes->except('class') }} data-icon />
+    <x-dynamic-component :component="'lucide-' . $name" :stroke-width="$stroke" {{ $attributes->except('class') }}
+        class="{{ $simpleClasses }}" data-icon />
 @endif

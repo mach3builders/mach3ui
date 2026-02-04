@@ -1,15 +1,19 @@
-@props([])
+@props([
+    'attached' => true,
+])
 
 @php
     $classes = Ui::classes()
         ->add('inline-flex')
-        ->add('*:rounded-none *:border-l-0')
-        ->add('*:first:rounded-l-md *:first:border-l')
-        ->add('*:last:rounded-r-md')
-        ->add('*:focus:z-10 *:focus-visible:z-10')
-        ->merge($attributes->only('class'));
+        ->add('[&>*:focus]:z-10 [&>*:focus-visible]:z-10')
+        ->when(
+            $attached,
+            '[&>*]:rounded-none [&>*:first-child]:rounded-l-md [&>*:last-child]:rounded-r-md [&>*:not(:first-child)]:-ml-px',
+        )
+        ->when(!$attached, 'gap-2')
+        ->merge($attributes);
 @endphp
 
-<div class="{{ $classes }}" {{ $attributes->except('class') }} data-button-group>
+<div data-button-group {{ $attributes->except('class') }} class="{{ $classes }}">
     {{ $slot }}
 </div>

@@ -3,9 +3,9 @@
 @php
     $classes = Ui::classes()
         ->add('relative flex shrink-0 items-center justify-between gap-4 px-6 py-4')
-        ->merge($attributes->only('class'));
+        ->merge($attributes);
 @endphp
 
-<div class="{{ $classes }}" {{ $attributes->except('class') }} data-modal-header>
+<div data-modal-header {{ $attributes->except('class') }} class="{{ $classes }}">
     {{ $slot }}
 </div>

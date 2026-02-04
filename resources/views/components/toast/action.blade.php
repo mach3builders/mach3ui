@@ -1,9 +1,11 @@
 @props([])
 
 @php
-    $classes = Ui::classes()->add('mt-4 flex gap-2')->merge($attributes->only('class'));
+    $classes = Ui::classes()
+        ->add('mt-4 flex gap-2')
+        ->merge($attributes);
 @endphp
 
-<div class="{{ $classes }}" {{ $attributes->except('class') }} data-toast-action>
+<div {{ $attributes->except('class') }} class="{{ $classes }}" data-toast-action>
     {{ $slot }}
 </div>

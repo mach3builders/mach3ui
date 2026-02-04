@@ -1,42 +1,33 @@
-@props([
-    'icon' => null,
-    'iconColorClass' => null,
-    'iconEndValue' => null,
-    'isAi' => false,
-    'loading' => false,
-])
-
-@php
-    $hasIcon = $icon && is_string($icon);
-    $hasText = $slot->isNotEmpty();
-    $hasEndIcon = $iconEndValue && is_string($iconEndValue);
-    $textOnly = !$hasIcon && $hasText;
-    $defaultIconColor = $iconColorClass ?? ($isAi ? 'text-gray-500' : null);
-@endphp
-
-{{-- Leading icon: swaps to spinner when loading --}}
-@if ($hasIcon)
-    <ui:icon :name="$icon" class="group-[[data-loading]]:hidden {{ $defaultIconColor }}" />
-    <ui:icon name="loader-circle"
-        class="hidden animate-spin group-[[data-loading]]:inline-block {{ $defaultIconColor }}" />
+@if ($icon)
+    <span class="icon-start relative inline-flex">
+        <ui:icon :name="$icon" :color="$iconColor" class="group-data-[loading]:opacity-0" />
+        <ui:icon name="loader-circle"
+            class="absolute inset-0 animate-spin [animation-duration:1.5s] opacity-0 group-data-[loading]:opacity-100" />
+    </span>
 @endif
-
-{{-- Text content --}}
 @if ($hasText)
     @if ($textOnly)
-        {{-- Text-only button: spinner replaces text visually, text stays invisible for width --}}
+        {{-- Text-only: spinner replaces text visually, text stays for width --}}
         <span class="relative inline-flex items-center justify-center">
-            <span class="inline-flex items-center gap-2 group-[[data-loading]]:invisible">{{ $slot }}</span>
+            <span class="group-data-[loading]:opacity-0 inline-flex items-center justify-center">{{ $slot }}</span>
             <ui:icon name="loader-circle"
-                class="absolute hidden animate-spin group-[[data-loading]]:inline-block {{ $defaultIconColor }}" />
+                class="absolute animate-spin [animation-duration:1.5s] opacity-0 group-data-[loading]:opacity-100" />
         </span>
     @else
-        {{-- Has icon: text stays visible during loading --}}
+        {{-- Has icon(s): text stays visible during loading --}}
         <span>{{ $slot }}</span>
     @endif
 @endif
-
-{{-- End icon: hides when loading --}}
-@if ($hasEndIcon)
-    <ui:icon :name="$iconEndValue" class="ml-auto group-[[data-loading]]:hidden {{ $defaultIconColor }}" />
+@if ($iconEnd)
+    @if (!$icon && !$hasText)
+        {{-- Icon-only with only trailing icon: show spinner --}}
+        <span class="icon-end relative inline-flex ml-auto">
+            <ui:icon :name="$iconEnd" :color="$iconEndColor" class="group-data-[loading]:opacity-0" />
+            <ui:icon name="loader-circle"
+                class="absolute inset-0 animate-spin [animation-duration:1.5s] opacity-0 group-data-[loading]:opacity-100" />
+        </span>
+    @else
+        <ui:icon :name="$iconEnd" :color="$iconEndColor"
+            class="icon-end ml-auto group-data-[loading]:opacity-0" />
+    @endif
 @endif

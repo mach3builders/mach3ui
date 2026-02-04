@@ -2,12 +2,10 @@
 
 @php
     $classes = Ui::classes()
-        ->add('font-semibold leading-6')
-        ->add('text-gray-900')
-        ->add('dark:text-white')
-        ->merge($attributes->only('class'));
+        ->add('font-semibold leading-6 text-gray-900 dark:text-white')
+        ->merge($attributes);
 @endphp
 
-<div class="{{ $classes }}" {{ $attributes->except('class') }} data-toast-title>
+<div {{ $attributes->except('class') }} class="{{ $classes }}" data-toast-title>
     {{ $slot }}
 </div>

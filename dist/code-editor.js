@@ -19247,7 +19247,7 @@ function kf() {
       backgroundColor: "transparent"
     },
     ".cm-activeLine": {
-      backgroundColor: n ? "oklch(1 0 0 / 0.035)" : "oklch(0.5 0 0 / 0.025)"
+      backgroundColor: n ? "oklch(1 0 0 / 0.035)" : "oklch(0.5 0 0 / 0.06)"
     }
   });
 }

@@ -19,7 +19,7 @@
 
 @if ($errorMessage)
     <p class="{{ $classes }}" {{ $attributes->except('class') }} data-error>
-        <ui:icon name="circle-alert" class="size-3.5 shrink-0" />
+        <ui:icon name="circle-alert" size="xs" class="shrink-0" />
 
         <span>{{ $errorMessage }}</span>
     </p>

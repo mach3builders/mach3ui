@@ -118,7 +118,7 @@ function getBaseTheme() {
             backgroundColor: "transparent",
         },
         ".cm-activeLine": {
-            backgroundColor: isDark ? "oklch(1 0 0 / 0.035)" : "oklch(0.5 0 0 / 0.025)",
+            backgroundColor: isDark ? "oklch(1 0 0 / 0.035)" : "oklch(0.5 0 0 / 0.06)",
         },
     });
 }
@@ -223,6 +223,8 @@ function initCodeEditor(element) {
         extensions.push(EditorView.updateListener.of((update) => {
             if (update.docChanged) {
                 hiddenInput.value = update.state.doc.toString();
+                // Dispatch input event for Alpine x-model and Livewire wire:model
+                hiddenInput.dispatchEvent(new Event("input", { bubbles: true }));
                 updateStatus(update.state, statusEl);
             }
         }));

@@ -2,15 +2,40 @@
     'description' => null,
     'indeterminate' => false,
     'label' => null,
+    'name' => null,
+    'size' => 'md',
 ])
 
+@aware(['id'])
+
 @php
-    $wireModel = $attributes->wire('model');
-    $hasWireModel = $wireModel && method_exists($wireModel, 'value');
-    $wireModelValue = $hasWireModel ? $wireModel->value() : null;
-    $xModel = collect($attributes->getAttributes())->first(fn($val, $key) => str_starts_with($key, 'x-model'));
-    $name = $attributes->get('name') ?? ($wireModelValue ?? $xModel);
+    // Get wire:model or x-model value directly from attributes
+    $allAttrs = $attributes->getAttributes();
+    $wireModelValue = null;
+    $xModelValue = null;
+
+    foreach ($allAttrs as $key => $value) {
+        if (str_starts_with($key, 'wire:model')) {
+            $wireModelValue = $value;
+            break;
+        }
+    }
+
+    foreach ($allAttrs as $key => $value) {
+        if (str_starts_with($key, 'x-model')) {
+            $xModelValue = $value;
+            break;
+        }
+    }
+
+    // Name priority: prop > wire:model > x-model > field id
+    $inputName = $name ?: $wireModelValue ?: $xModelValue ?: $id;
+
+    // ID priority: explicit id attr > field id (@aware) > input name > auto-generated
+    $id = $attributes->get('id') ?? ($id ?? ($inputName ?? 'checkbox-' . Str::random(8)));
+
     $hasLabel = $label || $description;
+    $error = $inputName ? $errors->first($inputName) ?? null : null;
 
     // SVG icons (fully URL encoded for Tailwind arbitrary values)
     $checkmarkSvg =
@@ -20,19 +45,32 @@
 
     $wrapperClasses = Ui::classes()->merge($attributes->only('class'));
 
+    $bgSize = match ($size) {
+        'sm' => '12px',
+        'lg' => '18px',
+        default => '16px',
+    };
+
     $checkboxClasses = Ui::classes()
-        ->add('size-5 shrink-0 cursor-pointer appearance-none rounded-[5px] border bg-center bg-no-repeat')
+        ->add('shrink-0 cursor-pointer appearance-none rounded-[5px] border bg-center bg-no-repeat')
         ->add('border-gray-300 bg-white')
         ->add('dark:border-gray-600 dark:bg-gray-800')
-        ->add("checked:border-blue-600 checked:bg-blue-600 checked:bg-[length:16px] checked:bg-[{$checkmarkSvg}]")
+        ->add(
+            'checked:border-blue-600 checked:bg-blue-600 checked:[background-image:var(--check-icon)] checked:[background-size:var(--check-size)]',
+        )
         ->add('dark:checked:border-blue-500 dark:checked:bg-blue-500')
         ->add(
-            "indeterminate:border-blue-600 indeterminate:bg-blue-600 indeterminate:bg-[length:16px] indeterminate:bg-[{$indeterminateSvg}]",
+            'indeterminate:border-blue-600 indeterminate:bg-blue-600 indeterminate:[background-image:var(--indet-icon)] indeterminate:[background-size:var(--check-size)]',
         )
         ->add('dark:indeterminate:border-blue-500 dark:indeterminate:bg-blue-500')
         ->add('focus:outline-none focus:ring-2 focus:ring-blue-600/20 focus:ring-offset-0')
         ->add('dark:focus:ring-blue-500/20')
         ->add('disabled:cursor-not-allowed disabled:opacity-50')
+        ->add($size, [
+            'sm' => 'size-4 rounded',
+            'md' => 'size-5',
+            'lg' => 'size-6 rounded-md',
+        ])
         ->when($description, 'mt-0.5')
         ->unless($hasLabel, 'block');
 
@@ -40,6 +78,22 @@
         ->add('group inline-flex cursor-pointer gap-2.5')
         ->add('has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50')
         ->add($description ? 'items-start' : 'items-center');
+
+    $labelTextClasses = Ui::classes()
+        ->add('font-medium text-gray-900 dark:text-gray-100')
+        ->add($size, [
+            'sm' => 'text-xs',
+            'md' => 'text-sm',
+            'lg' => 'text-base',
+        ]);
+
+    $descriptionClasses = Ui::classes()
+        ->add('text-gray-500 dark:text-gray-400')
+        ->add($size, [
+            'sm' => 'text-xs',
+            'md' => 'text-sm',
+            'lg' => 'text-sm',
+        ]);
 @endphp
 
 <div class="{{ $wrapperClasses }}" {{ $attributes->only('data-*') }} data-checkbox data-control>
@@ -47,23 +101,27 @@
         <label class="{{ $labelClasses }}">
     @endif
 
-    <input type="checkbox" @if ($name) name="{{ $name }}" @endif
-        {{ $attributes->except(['class', 'data-*', 'name']) }}
-        @if ($indeterminate) x-init="$el.indeterminate = true" @endif class="{{ $checkboxClasses }}" />
+    <input type="checkbox" id="{{ $id }}" @if ($inputName) name="{{ $inputName }}" @endif
+        @if ($indeterminate) x-init="$el.indeterminate = true" @endif
+        @if ($error) aria-invalid="true" @endif
+        style="--check-icon: {{ $checkmarkSvg }}; --indet-icon: {{ $indeterminateSvg }}; --check-size: {{ $bgSize }}"
+        {{ $attributes->except(['class', 'data-*', 'id', 'name']) }} class="{{ $checkboxClasses }}" />
 
     @if ($hasLabel)
         <span class="flex flex-col gap-0.5">
             @if ($label)
-                <span class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ $label }}</span>
+                <span class="{{ $labelTextClasses }}">{{ $label }}</span>
             @endif
             @if ($description)
-                <span class="text-sm text-gray-500 dark:text-gray-400">{{ $description }}</span>
+                <span class="{{ $descriptionClasses }}">{{ $description }}</span>
             @endif
         </span>
         </label>
     @endif
 
-    @if ($name)
-        <ui:error :name="$name" />
+    @if ($error)
+        <p role="alert" class="mt-1 flex items-center gap-1.5 text-xs text-danger">
+            {{ $error }}
+        </p>
     @endif
 </div>

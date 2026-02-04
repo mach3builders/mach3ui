@@ -1,20 +1,17 @@
-@props(['term', 'value' => null])
+@props(['label', 'value' => null])
 
 @php
-    $classes = Ui::classes()->add('flex items-baseline gap-2')->merge($attributes->only('class'));
+    $classes = Ui::classes()->add('flex items-baseline gap-2')->merge($attributes);
 
-    $termClasses = Ui::classes()->add('shrink-0')->add('text-gray-500')->add('dark:text-gray-400');
+    $labelClasses = Ui::classes()->add('shrink-0 text-gray-500 dark:text-gray-400');
 
-    $dividerClasses = Ui::classes()
-        ->add('flex-1 border-b border-dotted')
-        ->add('border-gray-300')
-        ->add('dark:border-gray-600');
+    $dividerClasses = Ui::classes()->add('flex-1 border-b border-dotted border-gray-300 dark:border-gray-600');
 
-    $valueClasses = Ui::classes()->add('text-right font-medium')->add('text-gray-900')->add('dark:text-white');
+    $valueClasses = Ui::classes()->add('text-right font-medium text-gray-900 dark:text-white');
 @endphp
 
-<div class="{{ $classes }}" {{ $attributes->except('class') }} data-definition-list-item>
-    <dt class="{{ $termClasses }}" data-definition-list-term>{{ $term }}</dt>
-    <span class="{{ $dividerClasses }}" data-definition-list-divider></span>
+<div {{ $attributes->except('class') }} class="{{ $classes }}" data-definition-list-item>
+    <dt class="{{ $labelClasses }}" data-definition-list-label>{{ $label }}</dt>
+    <span class="{{ $dividerClasses }}" data-definition-list-divider aria-hidden="true"></span>
     <dd class="{{ $valueClasses }}" data-definition-list-value>{{ $value ?? $slot }}</dd>
 </div>

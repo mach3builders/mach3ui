@@ -34,7 +34,7 @@
         ->when($sorted === 'desc', 'rotate-180');
 @endphp
 
-<th class="{{ $classes }}" {{ $attributes->except('class') }} data-th>
+<th class="{{ $classes }}" {{ $attributes->except('class') }} @if($sorted) aria-sort="{{ $sorted === 'asc' ? 'ascending' : 'descending' }}" @endif data-th>
     @if ($sortable)
         <span class="inline-flex items-center gap-1">
             {{ $slot }}

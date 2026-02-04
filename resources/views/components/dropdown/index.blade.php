@@ -5,10 +5,17 @@
 @php
     $id = uniqid('dropdown-');
 
-    $classes = Ui::classes()->add('relative inline-block select-none')->merge($attributes->only('class'));
+    $classes = Ui::classes()
+        ->add('relative inline-block select-none')
+        ->merge($attributes);
 @endphp
 
-<div class="{{ $classes }}" {{ $attributes->except('class') }} x-data="{ open: false, id: '{{ $id }}', position: '{{ $position }}' }"
-    style="anchor-scope: --dropdown-trigger;" data-dropdown>
+<div
+    x-data="{ open: false, id: '{{ $id }}', position: '{{ $position }}' }"
+    style="anchor-scope: --dropdown-trigger;"
+    data-dropdown
+    {{ $attributes->except('class') }}
+    class="{{ $classes }}"
+>
     {{ $slot }}
 </div>

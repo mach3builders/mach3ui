@@ -1,18 +1,20 @@
 @props([
-    'checked' => false,
     'description' => null,
     'icon' => null,
     'indeterminate' => false,
+    'name' => null,
     'reversed' => false,
     'title' => null,
 ])
 
 @php
-    $wireModel = $attributes->wire('model');
-    $hasWireModel = $wireModel && method_exists($wireModel, 'value');
-    $wireModelValue = $hasWireModel ? $wireModel->value() : null;
-    $xModel = collect($attributes->getAttributes())->first(fn($val, $key) => str_starts_with($key, 'x-model'));
-    $name = $attributes->get('name') ?? ($wireModelValue ?? $xModel);
+    // Auto-detect name from wire:model of x-model
+    $name =
+        $name ?:
+        (method_exists($attributes, 'wire')
+            ? $attributes->wire('model')->value()
+            : null) ?:
+        collect($attributes->getAttributes())->first(fn($v, $k) => str_starts_with($k, 'x-model'));
 
     // SVG icons (fully URL encoded for Tailwind arbitrary values)
     $checkmarkSvg =
@@ -31,16 +33,18 @@
         ->add('has-[:focus]:ring-2 has-[:focus]:ring-blue-600/20')
         ->add('dark:has-[:focus]:ring-blue-500/20')
         ->add('has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50')
-        ->merge($attributes->only('class'));
+        ->merge($attributes);
 
     $checkboxClasses = Ui::classes()
         ->add('size-5 shrink-0 cursor-pointer appearance-none rounded-[5px] border bg-center bg-no-repeat')
         ->add('border-gray-300 bg-white')
         ->add('dark:border-gray-600 dark:bg-gray-800')
-        ->add("checked:border-blue-600 checked:bg-blue-600 checked:bg-[length:16px] checked:bg-[{$checkmarkSvg}]")
+        ->add(
+            'checked:border-blue-600 checked:bg-blue-600 checked:[background-image:var(--check-icon)] checked:[background-size:var(--check-size)]',
+        )
         ->add('dark:checked:border-blue-500 dark:checked:bg-blue-500')
         ->add(
-            "indeterminate:border-blue-600 indeterminate:bg-blue-600 indeterminate:bg-[length:16px] indeterminate:bg-[{$indeterminateSvg}]",
+            'indeterminate:border-blue-600 indeterminate:bg-blue-600 indeterminate:[background-image:var(--indet-icon)] indeterminate:[background-size:var(--check-size)]',
         )
         ->add('dark:indeterminate:border-blue-500 dark:indeterminate:bg-blue-500')
         ->add('focus:outline-none')
@@ -48,7 +52,7 @@
         ->when($reversed, 'order-first');
 @endphp
 
-<label class="{{ $cardClasses }}" {{ $attributes->except('class') }} data-checkbox-card data-control>
+<label class="{{ $cardClasses }}" {{ $attributes->only('data-*') }} data-checkbox-card data-control>
     @if ($icon)
         <ui:icon :name="$icon" class="size-6 shrink-0 text-gray-500 dark:text-gray-400"
             data-checkbox-card-icon />
@@ -60,13 +64,15 @@
         @endif
 
         @if ($description)
-            <div class="mt-0.5 text-sm text-gray-500 dark:text-gray-400">{{ $description }}</div>
+            <ui:text variant="muted" class="mt-0.5">{{ $description }}</ui:text>
         @endif
 
         {{ $slot }}
     </div>
 
     <input type="checkbox" @if ($name) name="{{ $name }}" @endif
-        @checked($checked) @if ($indeterminate) x-init="$el.indeterminate = true" @endif
+        {{ $attributes->except(['class', 'data-*', 'name']) }}
+        @if ($indeterminate) x-init="$el.indeterminate = true" @endif
+        style="--check-icon: {{ $checkmarkSvg }}; --indet-icon: {{ $indeterminateSvg }}; --check-size: 16px"
         class="{{ $checkboxClasses }}" data-checkbox />
 </label>

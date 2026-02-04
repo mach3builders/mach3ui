@@ -1,9 +1,19 @@
-@props([])
+@props([
+    'variant' => 'default',
+])
 
 @php
-    $classes = Ui::classes()->add('text-gray-600')->add('dark:text-gray-300')->merge($attributes->only('class'));
+    $classes = Ui::classes()
+        ->add($variant, [
+            'default' => 'text-gray-600 dark:text-gray-300',
+            'info' => 'text-cyan-700 dark:text-cyan-200',
+            'success' => 'text-green-700 dark:text-green-200',
+            'warning' => 'text-amber-700 dark:text-amber-200',
+            'danger' => 'text-red-700 dark:text-red-200',
+        ])
+        ->merge($attributes);
 @endphp
 
-<div class="{{ $classes }}" {{ $attributes->except('class') }} data-toast-description>
+<div {{ $attributes->except('class') }} class="{{ $classes }}" data-toast-description>
     {{ $slot }}
 </div>

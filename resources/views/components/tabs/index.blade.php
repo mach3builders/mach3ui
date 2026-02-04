@@ -6,27 +6,40 @@
 ])
 
 @php
-    $classes = Ui::classes()
-        ->add('relative inline-flex items-center gap-1')
-        ->add(
-            match ($variant) {
-                'boxed' => 'rounded-lg border border-gray-60 bg-gray-30 p-1 dark:border-gray-770 dark:bg-gray-820',
-                default => 'border-b border-gray-60 dark:border-gray-740',
-            },
-        )
-        ->merge($attributes->only('class'));
+    $classes = Ui::classes()->merge($attributes);
 @endphp
 
 <div
-    {{ $attributes->except('class') }}
-    class="{{ $classes }}"
+    @if ($name)
+        x-data="Alpine.store('tabs_{{ $name }}', { active: '{{ $default }}' }) && {
+            init() {
+                if (!$store['tabs_{{ $name }}'].active) {
+                    $store['tabs_{{ $name }}'].active = $el.querySelector('[data-tabs-tab]')?.dataset.value;
+                }
+            }
+        }"
+    @else
+        x-data="{
+            active: '{{ $default }}',
+            init() {
+                if (!this.active) {
+                    this.active = this.$el.querySelector('[data-tabs-tab]')?.dataset.value;
+                }
+            },
+            select(value) {
+                this.active = value
+            },
+            isActive(value) {
+                return this.active === value
+            }
+        }"
+    @endif
     data-tabs
+    data-tabs-name="{{ $name }}"
     data-variant="{{ $variant }}"
     data-size="{{ $size }}"
-    @if ($name)
-        x-data
-        x-init="Alpine.store('tabs_{{ $name }}', { active: '{{ $default }}' })"
-    @endif
+    {{ $attributes->except('class') }}
+    class="{{ $classes }}"
 >
     {{ $slot }}
 </div>

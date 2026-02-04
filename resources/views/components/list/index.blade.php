@@ -1,9 +1,11 @@
 @props([])
 
 @php
-    $classes = Ui::classes()->add('m-0 flex list-none flex-col p-0')->merge($attributes->only('class'));
+    $classes = Ui::classes()
+        ->add('flex flex-col')
+        ->merge($attributes);
 @endphp
 
-<div class="{{ $classes }}" {{ $attributes->except('class') }} data-list>
+<div {{ $attributes->except('class') }} class="{{ $classes }}" data-list>
     {{ $slot }}
 </div>
