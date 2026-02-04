@@ -16,8 +16,8 @@
     aria-labelledby="{{ $tabId }}"
     @if ($name)
         x-data
-        x-show="Alpine.store('tabs_{{ $name }}').active === '{{ $value }}'"
-        :tabindex="Alpine.store('tabs_{{ $name }}').active === '{{ $value }}' ? 0 : -1"
+        x-show="Alpine.store('tabs_{{ $name }}')?.active === '{{ $value }}'"
+        :tabindex="Alpine.store('tabs_{{ $name }}')?.active === '{{ $value }}' ? 0 : -1"
     @else
         x-show="isActive('{{ $value }}')"
         :tabindex="isActive('{{ $value }}') ? 0 : -1"

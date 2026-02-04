@@ -64,10 +64,10 @@
 
 <button type="button" role="tab" id="{{ $tabId }}" aria-controls="{{ $panelId }}"
     @if ($name)
-        x-on:click="Alpine.store('tabs_{{ $name }}').active = '{{ $value }}'"
-        :aria-selected="(Alpine.store('tabs_{{ $name }}').active === '{{ $value }}').toString()"
-        :tabindex="Alpine.store('tabs_{{ $name }}').active === '{{ $value }}' ? 0 : -1"
-        x-effect="$el.toggleAttribute('data-active', Alpine.store('tabs_{{ $name }}').active === '{{ $value }}')"
+        x-on:click="Alpine.store('tabs_{{ $name }}') && (Alpine.store('tabs_{{ $name }}').active = '{{ $value }}')"
+        :aria-selected="(Alpine.store('tabs_{{ $name }}')?.active === '{{ $value }}').toString()"
+        :tabindex="Alpine.store('tabs_{{ $name }}')?.active === '{{ $value }}' ? 0 : -1"
+        x-effect="$el.toggleAttribute('data-active', Alpine.store('tabs_{{ $name }}')?.active === '{{ $value }}')"
     @else
         x-on:click="select('{{ $value }}')"
         :aria-selected="isActive('{{ $value }}').toString()"
