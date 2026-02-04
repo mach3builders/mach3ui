@@ -223,6 +223,8 @@ function initCodeEditor(element) {
         extensions.push(EditorView.updateListener.of((update) => {
             if (update.docChanged) {
                 hiddenInput.value = update.state.doc.toString();
+                // Dispatch input event for Alpine x-model and Livewire wire:model
+                hiddenInput.dispatchEvent(new Event("input", { bubbles: true }));
                 updateStatus(update.state, statusEl);
             }
         }));

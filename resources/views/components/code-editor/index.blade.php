@@ -64,8 +64,8 @@
     $showHeader = $header || $headerSlot;
     $showFooter = $footer || $footerSlot;
 
-    // Wire model attributes to pass through
-    $wireModifiers = ['wire:model', 'wire:model.live', 'wire:model.blur', 'wire:model.change', 'wire:model.debounce'];
+    // Model attributes to pass through
+    $modelAttrs = ['wire:model', 'wire:model.live', 'wire:model.blur', 'wire:model.change', 'wire:model.debounce', 'x-model', 'x-model.lazy', 'x-model.debounce'];
 
     // Container classes
     $containerClasses = Ui::classes()
@@ -127,7 +127,7 @@
         <div
             id="{{ $id }}"
             class="{{ $containerClasses }}"
-            {{ $attributes->except(['class', 'id', ...$wireModifiers]) }}
+            {{ $attributes->except(['class', 'id', ...$modelAttrs]) }}
             data-code-editor
             data-language="{{ $language }}"
             @if ($placeholder) data-placeholder="{{ $placeholder }}" @endif
@@ -158,7 +158,7 @@
             <textarea
                 class="hidden"
                 @if ($editorName) name="{{ $editorName }}" @endif
-                {{ $attributes->only($wireModifiers) }}
+                {{ $attributes->only($modelAttrs) }}
             >{{ $slot }}</textarea>
         </div>
 
@@ -174,7 +174,7 @@
     <div
         id="{{ $id }}"
         class="{{ $containerClasses }}"
-        {{ $attributes->except(['class', 'id', ...$wireModifiers]) }}
+        {{ $attributes->except(['class', 'id', ...$modelAttrs]) }}
         data-code-editor
         data-language="{{ $language }}"
         @if ($placeholder) data-placeholder="{{ $placeholder }}" @endif
@@ -206,7 +206,7 @@
         <textarea
             class="hidden"
             @if ($editorName) name="{{ $editorName }}" @endif
-            {{ $attributes->only($wireModifiers) }}
+            {{ $attributes->only($modelAttrs) }}
         >{{ $slot }}</textarea>
     </div>
 @endif
