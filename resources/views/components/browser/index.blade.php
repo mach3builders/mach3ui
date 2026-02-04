@@ -6,8 +6,8 @@
 
 @php
     $classes = UI::classes()
-        ->add('overflow-hidden rounded-lg border border-gray-200 bg-gray-50')
-        ->add('dark:border-gray-700 dark:bg-gray-900')
+        ->add('overflow-hidden rounded-lg border border-gray-120 bg-gray-40')
+        ->add('dark:border-gray-690 dark:bg-gray-830')
         ->merge($attributes);
 
     $headerClasses = UI::classes()
@@ -24,12 +24,14 @@
         ->add('px-4 pb-4');
 
     $contentClasses = UI::classes()
-        ->add('w-full overflow-auto rounded-md bg-white')
-        ->add('dark:bg-gray-800');
+        ->add('w-full overflow-auto rounded-md border')
+        ->add('bg-white border-gray-80')
+        ->add('dark:border-gray-720 dark:bg-gray-800');
 
     $iframeClasses = UI::classes()
-        ->add('w-full rounded-md border-0 bg-white')
-        ->add('dark:bg-gray-800');
+        ->add('w-full rounded-md border')
+        ->add('bg-white border-gray-80')
+        ->add('dark:border-gray-720 dark:bg-gray-800');
 @endphp
 
 <div {{ $attributes->except('class') }} class="{{ $classes }}" data-browser>

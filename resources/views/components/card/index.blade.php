@@ -9,7 +9,7 @@
         ->add('rounded-xl p-1.5')
         ->add($variant, [
             'default' => 'bg-gray-30 dark:bg-gray-830',
-            'inverted' => 'bg-white shadow-xs dark:bg-gray-800',
+            'inverted' => 'bg-white dark:bg-gray-800',
         ])
         ->merge($attributes);
 @endphp

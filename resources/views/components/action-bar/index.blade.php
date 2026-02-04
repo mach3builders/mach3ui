@@ -8,7 +8,7 @@
 
     $classes = Ui::classes()
         ->add('inline-flex h-10 items-center gap-1 rounded-lg border p-1')
-        ->add('border-gray-200 bg-gray-20 dark:border-gray-700 dark:bg-gray-820')
+        ->add('border-gray-100 bg-gray-20 dark:border-gray-700 dark:bg-gray-820')
         ->merge($attributes);
 
     $countClasses = Ui::classes()

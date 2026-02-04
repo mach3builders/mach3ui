@@ -47,7 +47,7 @@
         ->add('focus:ring-1 focus:ring-offset-1 focus:outline-none')
         ->add($variant, [
             'default' =>
-                'border-gray-100 bg-white text-gray-900 shadow-xs hover:border-gray-150 hover:bg-gray-30 focus:ring-gray-200 focus:ring-offset-white dark:border-gray-700 dark:bg-gray-780 dark:text-gray-100 dark:hover:border-gray-660 dark:hover:bg-gray-750 dark:focus:ring-gray-600 dark:focus:ring-offset-gray-800 data-active:border-gray-150 data-active:bg-gray-30 dark:data-active:border-gray-660 dark:data-active:bg-gray-750',
+                'border-gray-100 bg-white text-gray-900 shadow-xs hover:border-gray-140 hover:bg-gray-20 focus:ring-gray-200 focus:ring-offset-white dark:border-gray-700 dark:bg-gray-780 dark:text-gray-100 dark:hover:border-gray-660 dark:hover:bg-gray-750 dark:focus:ring-gray-600 dark:focus:ring-offset-gray-800 data-active:border-gray-150 data-active:bg-gray-30 dark:data-active:border-gray-660 dark:data-active:bg-gray-750',
             'primary' =>
                 'border-transparent bg-blue-500 text-gray-20 shadow-xs hover:bg-blue-550 hover:text-white focus:ring-blue-600 focus:ring-offset-white dark:bg-blue-600 dark:hover:bg-blue-550 dark:focus:ring-offset-gray-800 data-active:bg-blue-550 data-active:text-white',
             'secondary' =>

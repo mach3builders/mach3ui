@@ -17,7 +17,7 @@
 
     $classes = Ui::classes()
         ->add('fixed m-0 hidden min-w-52 flex-col gap-1 rounded-lg border p-1 shadow-lg')
-        ->add('border-gray-100 bg-white')
+        ->add('border-gray-80 bg-white')
         ->add('dark:border-gray-740 dark:bg-gray-790')
         ->add('[&:popover-open]:flex')
         ->merge($attributes);

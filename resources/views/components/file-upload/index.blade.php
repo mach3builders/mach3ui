@@ -48,8 +48,8 @@
         ->add(
             'group/dropzone relative flex min-h-32 cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed p-6',
         )
-        ->add('border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50')
-        ->add('dark:border-gray-700 dark:bg-gray-800 dark:hover:border-gray-600 dark:hover:bg-gray-750')
+        ->add('border-gray-140 bg-white hover:border-gray-200 hover:bg-gray-10')
+        ->add('dark:border-gray-700 dark:bg-gray-800 dark:hover:border-gray-660 dark:hover:bg-gray-790')
         ->when((bool) $error, 'border-red-500 dark:border-red-500');
 
     $tileClasses = Ui::classes()
