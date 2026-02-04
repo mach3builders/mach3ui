@@ -5,12 +5,11 @@
 
 @php
     $classes = Ui::classes()
-        ->add('divide-y')
         ->add($variant, [
-            'default' => 'divide-gray-200 dark:divide-gray-700',
+            'default' => 'divide-y divide-gray-100 dark:divide-gray-700',
             'bordered' =>
-                'group divide-gray-200 rounded-lg bg-gray-20 dark:bg-gray-820 border border-gray-200 dark:divide-gray-700 dark:border-gray-700',
-            'separated' => 'divide-transparent space-y-2 bg-gray-20 dark:bg-gray-820',
+                'group divide-y divide-gray-100 rounded-lg bg-gray-20 dark:bg-gray-820 border border-gray-100 dark:divide-gray-700 dark:border-gray-700',
+            'separated' => 'group space-y-2',
         ])
         ->merge($attributes);
 @endphp
