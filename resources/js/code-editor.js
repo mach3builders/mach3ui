@@ -120,9 +120,6 @@ function getBaseTheme() {
         ".cm-activeLine": {
             backgroundColor: isDark ? "oklch(1 0 0 / 0.035)" : "oklch(0.5 0 0 / 0.06)",
         },
-        ".cm-cursor, .cm-dropCursor": {
-            borderLeftColor: isDark ? "#ffffff" : "#000000",
-        },
     });
 }
 

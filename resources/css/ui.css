@@ -309,3 +309,8 @@ html.dark {
 [data-input-button] [data-button] {
     border-radius: 0.25rem;
 }
+
+/* Code editor cursor */
+.dark .cm-cursor {
+    border-left-color: #ffffff !important;
+}

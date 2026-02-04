@@ -19248,9 +19248,6 @@ function kf() {
     },
     ".cm-activeLine": {
       backgroundColor: n ? "oklch(1 0 0 / 0.035)" : "oklch(0.5 0 0 / 0.06)"
-    },
-    ".cm-cursor, .cm-dropCursor": {
-      borderLeftColor: n ? "#ffffff" : "#000000"
     }
   });
 }
