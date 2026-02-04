@@ -63,18 +63,19 @@
 @endphp
 
 <button type="button" role="tab" id="{{ $tabId }}" aria-controls="{{ $panelId }}"
-    @if ($name) x-data
+    @if ($name)
         x-on:click="Alpine.store('tabs_{{ $name }}').active = '{{ $value }}'"
         :aria-selected="(Alpine.store('tabs_{{ $name }}').active === '{{ $value }}').toString()"
         :tabindex="Alpine.store('tabs_{{ $name }}').active === '{{ $value }}' ? 0 : -1"
-        x-bind:data-active="Alpine.store('tabs_{{ $name }}').active === '{{ $value }}' || undefined"
+        x-effect="$el.toggleAttribute('data-active', Alpine.store('tabs_{{ $name }}').active === '{{ $value }}')"
     @else
         x-on:click="select('{{ $value }}')"
         :aria-selected="isActive('{{ $value }}').toString()"
         :tabindex="isActive('{{ $value }}') ? 0 : -1"
-        x-bind:data-active="isActive('{{ $value }}') || undefined" @endif
+        x-bind:data-active="isActive('{{ $value }}') || undefined"
+    @endif
     @if ($disabled) disabled aria-disabled="true" @endif {{ $attributes->except('class') }}
-    class="{{ $classes }}" data-tabs-tab>
+    class="{{ $classes }}" data-tabs-tab data-value="{{ $value }}">
     @if ($icon)
         <ui:icon :name="$icon" />
     @endif
