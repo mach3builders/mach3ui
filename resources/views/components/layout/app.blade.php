@@ -76,7 +76,7 @@
                                         </span>
 
                                         <div class="flex flex-col">
-                                            <ui:text weight="semibold">Mach3{{ $name }}</ui:text>
+                                            <ui:text weight="semibold" class="text-gray-980 dark:text-gray-100">Mach3{{ $name }}</ui:text>
                                             @if (isset($options['description']))
                                                 <ui:text size="xs" variant="muted">{{ $options['description'] }}
                                                 </ui:text>
@@ -124,8 +124,7 @@
                     @if ($topbarActionsSlot)
                         {{ $topbarActionsSlot }}
                     @else
-                        <ui:button size="sm" icon="package" variant="outline-danger">{{ __('common.free') }}
-                        </ui:button>
+                        <ui:button size="sm" icon="package" variant="outline-danger">{{ __('common.free') }}</ui:button>
                     @endif
                 </x-slot:actions>
 
@@ -159,7 +158,7 @@
                             <ui:dropdown.item href="#" icon="settings" :label="__('ui::ui.layout.settings')" />
 
                             <ui:dropdown.item href="#" icon="log-out" :label="__('ui::ui.layout.logout')"
-                                danger />
+                                variant="danger" />
 
                             <ui:divider variant="subtle" />
 
