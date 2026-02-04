@@ -4,23 +4,29 @@ const chartInstances = new Map();
 
 function getThemeColors() {
     const style = getComputedStyle(document.documentElement);
+    const isDark = document.documentElement.classList.contains("dark");
 
     // Use Tailwind CSS color variables with fallbacks to Tailwind defaults
-    return [
-        style.getPropertyValue("--color-blue-500").trim() || "#3b82f6",
-        style.getPropertyValue("--color-emerald-500").trim() || "#10b981",
-        style.getPropertyValue("--color-amber-500").trim() || "#f59e0b",
-        style.getPropertyValue("--color-rose-500").trim() || "#f43f5e",
-        style.getPropertyValue("--color-violet-500").trim() || "#8b5cf6",
-        style.getPropertyValue("--color-cyan-500").trim() || "#06b6d4",
-    ];
+    return {
+        series: [
+            style.getPropertyValue("--color-blue-500").trim() || "#3b82f6",
+            style.getPropertyValue("--color-emerald-500").trim() || "#10b981",
+            style.getPropertyValue("--color-amber-500").trim() || "#f59e0b",
+            style.getPropertyValue("--color-rose-500").trim() || "#f43f5e",
+            style.getPropertyValue("--color-violet-500").trim() || "#8b5cf6",
+            style.getPropertyValue("--color-cyan-500").trim() || "#06b6d4",
+        ],
+        // Chart.js doesn't support oklch(), use rgba fallbacks
+        gridLine: isDark ? "rgba(255, 255, 255, 0.08)" : "rgba(0, 0, 0, 0.1)",
+        axisLabel: isDark ? "rgba(255, 255, 255, 0.5)" : "rgba(0, 0, 0, 0.5)",
+    };
 }
 
-function getBackgroundColor(type, colors, index) {
-    const color = colors[index % colors.length];
+function getBackgroundColor(type, seriesColors, index) {
+    const color = seriesColors[index % seriesColors.length];
 
     if (type === "pie" || type === "doughnut") {
-        return colors;
+        return seriesColors;
     }
 
     if (type === "bar") {
@@ -38,16 +44,33 @@ function getBackgroundColor(type, colors, index) {
     return color;
 }
 
-function prepareDataset(dataset, type, colors, index) {
+function prepareDataset(dataset, type, seriesColors, index) {
     return {
         ...dataset,
-        backgroundColor: dataset.backgroundColor ?? getBackgroundColor(type, colors, index),
-        borderColor: dataset.borderColor ?? colors[index % colors.length],
+        backgroundColor: dataset.backgroundColor ?? getBackgroundColor(type, seriesColors, index),
+        borderColor: dataset.borderColor ?? seriesColors[index % seriesColors.length],
         borderWidth: dataset.borderWidth ?? 2,
         tension: dataset.tension ?? 0.3,
         fill: dataset.fill ?? type === "area",
         pointRadius: dataset.pointRadius ?? (type === "line" || type === "area" ? 3 : 0),
         pointHoverRadius: dataset.pointHoverRadius ?? 5,
+    };
+}
+
+function isRadialChart(type) {
+    return type === "pie" || type === "doughnut";
+}
+
+function getScalesConfig(gridLine, axisLabel) {
+    return {
+        x: {
+            ticks: { color: axisLabel },
+            grid: { color: gridLine },
+        },
+        y: {
+            ticks: { color: axisLabel },
+            grid: { color: gridLine },
+        },
     };
 }
 
@@ -74,29 +97,55 @@ function initChart(element) {
         return;
     }
 
-    const colors = getThemeColors();
+    const { series: seriesColors, gridLine, axisLabel } = getThemeColors();
+    const isRadial = isRadialChart(type);
+
+    // Deep merge options, ensuring our theme colors are applied
+    const baseOptions = {
+        responsive: true,
+        maintainAspectRatio: !element.dataset.chartHeight,
+        plugins: {
+            legend: {
+                display: datasets.length > 1,
+                position: "bottom",
+                labels: {
+                    usePointStyle: true,
+                    padding: 16,
+                    color: axisLabel,
+                },
+            },
+        },
+    };
+
+    // Add scales for non-radial charts
+    if (!isRadial) {
+        baseOptions.scales = {
+            x: {
+                ...options.scales?.x,
+                ticks: { color: axisLabel, ...options.scales?.x?.ticks },
+                grid: { color: gridLine, ...options.scales?.x?.grid },
+            },
+            y: {
+                ...options.scales?.y,
+                ticks: { color: axisLabel, ...options.scales?.y?.ticks },
+                grid: { color: gridLine, ...options.scales?.y?.grid },
+            },
+        };
+    }
+
+    const chartOptions = {
+        ...baseOptions,
+        ...options,
+        ...(baseOptions.scales && { scales: baseOptions.scales }),
+    };
 
     const chart = new Chart(canvas.getContext("2d"), {
         type: chartType,
         data: {
             labels,
-            datasets: datasets.map((dataset, index) => prepareDataset(dataset, type, colors, index)),
+            datasets: datasets.map((dataset, index) => prepareDataset(dataset, type, seriesColors, index)),
         },
-        options: {
-            responsive: true,
-            maintainAspectRatio: !element.dataset.chartHeight,
-            plugins: {
-                legend: {
-                    display: datasets.length > 1,
-                    position: "bottom",
-                    labels: {
-                        usePointStyle: true,
-                        padding: 16,
-                    },
-                },
-            },
-            ...options,
-        },
+        options: chartOptions,
     });
 
     chartInstances.set(element, chart);
@@ -104,12 +153,13 @@ function initChart(element) {
     // Store update function on element for external access
     element.chartInstance = chart;
     element.updateChart = (newData, newLabels = null) => {
+        const { series: currentColors } = getThemeColors();
         if (newLabels !== null) {
             chart.data.labels = newLabels;
         }
         chart.data.datasets = newData.map((dataset, index) => ({
             ...chart.data.datasets[index],
-            ...prepareDataset(dataset, type, colors, index),
+            ...prepareDataset(dataset, type, currentColors, index),
         }));
         chart.update("none");
     };
@@ -173,15 +223,32 @@ document.addEventListener("chart:update", (event) => {
 
 // Watch for dark mode changes and update all charts
 const observer = new MutationObserver(() => {
-    const colors = getThemeColors();
+    const { series: seriesColors, gridLine, axisLabel } = getThemeColors();
 
     chartInstances.forEach((chart, element) => {
         const type = element.dataset.chartType || "line";
+        const isRadial = isRadialChart(type);
+
+        // Update dataset colors
         chart.data.datasets = chart.data.datasets.map((dataset, index) => ({
             ...dataset,
-            backgroundColor: getBackgroundColor(type, colors, index),
-            borderColor: colors[index % colors.length],
+            backgroundColor: getBackgroundColor(type, seriesColors, index),
+            borderColor: seriesColors[index % seriesColors.length],
         }));
+
+        // Update legend label colors
+        if (chart.options.plugins?.legend?.labels) {
+            chart.options.plugins.legend.labels.color = axisLabel;
+        }
+
+        // Update scales for non-radial charts
+        if (!isRadial && chart.options.scales) {
+            chart.options.scales.x.ticks.color = axisLabel;
+            chart.options.scales.x.grid.color = gridLine;
+            chart.options.scales.y.ticks.color = axisLabel;
+            chart.options.scales.y.grid.color = gridLine;
+        }
+
         chart.update("none");
     });
 });
