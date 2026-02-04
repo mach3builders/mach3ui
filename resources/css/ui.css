@@ -259,10 +259,32 @@ html.dark {
     translate: 0 -100%;
 }
 
-@position-try --selectbox-top {
+@position-try --selectbox-top-start {
     bottom: calc(anchor(top) + 0.25rem);
     top: auto;
     left: anchor(left);
+    right: auto;
+}
+
+@position-try --selectbox-top-end {
+    bottom: calc(anchor(top) + 0.25rem);
+    top: auto;
+    right: anchor(right);
+    left: auto;
+}
+
+@position-try --selectbox-bottom-start {
+    top: calc(anchor(bottom) + 0.25rem);
+    bottom: auto;
+    left: anchor(left);
+    right: auto;
+}
+
+@position-try --selectbox-bottom-end {
+    top: calc(anchor(bottom) + 0.25rem);
+    bottom: auto;
+    right: anchor(right);
+    left: auto;
 }
 
 @position-try --datepicker-top {
