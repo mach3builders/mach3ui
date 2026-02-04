@@ -1,4 +1,5 @@
 @props([
+    'name' => null,
     'value',
 ])
 
@@ -13,9 +14,15 @@
     role="tabpanel"
     id="{{ $panelId }}"
     aria-labelledby="{{ $tabId }}"
-    x-show="isActive('{{ $value }}')"
+    @if ($name)
+        x-data
+        x-show="Alpine.store('tabs_{{ $name }}').active === '{{ $value }}'"
+        :tabindex="Alpine.store('tabs_{{ $name }}').active === '{{ $value }}' ? 0 : -1"
+    @else
+        x-show="isActive('{{ $value }}')"
+        :tabindex="isActive('{{ $value }}') ? 0 : -1"
+    @endif
     x-cloak
-    :tabindex="isActive('{{ $value }}') ? 0 : -1"
     {{ $attributes->except('class') }}
     class="{{ $classes }}"
     data-tabs-panel

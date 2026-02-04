@@ -1,6 +1,7 @@
 @props([
     'disabled' => false,
     'icon' => null,
+    'name' => null,
     'value',
 ])
 
@@ -56,10 +57,18 @@
     role="tab"
     id="{{ $tabId }}"
     aria-controls="{{ $panelId }}"
-    x-on:click="select('{{ $value }}')"
-    :aria-selected="isActive('{{ $value }}').toString()"
-    :tabindex="isActive('{{ $value }}') ? 0 : -1"
-    x-bind:data-active="isActive('{{ $value }}') || undefined"
+    @if ($name)
+        x-data
+        x-on:click="Alpine.store('tabs_{{ $name }}').active = '{{ $value }}'"
+        :aria-selected="(Alpine.store('tabs_{{ $name }}').active === '{{ $value }}').toString()"
+        :tabindex="Alpine.store('tabs_{{ $name }}').active === '{{ $value }}' ? 0 : -1"
+        x-bind:data-active="Alpine.store('tabs_{{ $name }}').active === '{{ $value }}' || undefined"
+    @else
+        x-on:click="select('{{ $value }}')"
+        :aria-selected="isActive('{{ $value }}').toString()"
+        :tabindex="isActive('{{ $value }}') ? 0 : -1"
+        x-bind:data-active="isActive('{{ $value }}') || undefined"
+    @endif
     @if ($disabled) disabled aria-disabled="true" @endif
     {{ $attributes->except('class') }}
     class="{{ $classes }}"
