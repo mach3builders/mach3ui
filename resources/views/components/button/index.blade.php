@@ -77,7 +77,7 @@
 
     // AI button wrapper classes
     $aiWrapperClasses = Ui::classes()
-        ->add('group/ai relative inline-flex rounded-full p-0.5')
+        ->add('group/ai relative inline-flex rounded-full p-0.25')
         ->add('transition-transform duration-500 active:scale-[0.98]')
         ->when($disabled, 'opacity-50 cursor-not-allowed')
         ->merge($attributes);
