@@ -7,9 +7,7 @@
 @php
     $key = Str::slug($title);
 
-    $classes = Ui::classes()
-        ->add('group')
-        ->merge($attributes);
+    $classes = Ui::classes()->add('group')->merge($attributes);
 
     $triggerClasses = Ui::classes()
         ->add('flex w-full items-center gap-2 rounded-md px-3 py-2 text-[13px] leading-5 text-left')
@@ -23,32 +21,18 @@
         ->add('border-gray-200 dark:border-gray-700');
 @endphp
 
-<div
-    x-data="{ open: {{ $open ? 'true' : 'false' }} }"
-    data-nav-group
-    {{ $attributes->except('class') }}
-    class="{{ $classes }}"
->
-    <button
-        type="button"
-        x-on:click="open = !open"
-        :aria-expanded="open"
-        class="{{ $triggerClasses }}"
-    >
-        @if($icon)
+<div x-data="{ open: {{ $open ? 'true' : 'false' }} }" data-nav-group {{ $attributes->except('class') }} class="{{ $classes }}">
+    <button type="button" x-on:click="open = !open" :aria-expanded="open" class="{{ $triggerClasses }}">
+        @if ($icon)
             <ui:icon :name="$icon" />
         @endif
 
         <span class="flex-1">{{ $title }}</span>
 
-        <ui:icon
-            name="chevron-right"
-            class="transition-transform duration-200"
-            x-bind:class="open && 'rotate-90'"
-        />
+        <ui:icon name="chevron-right" x-bind:class="open && 'rotate-90'" />
     </button>
 
-    <div x-show="open" x-collapse x-cloak class="{{ $contentClasses }}">
+    <div x-show="open" x-cloak class="{{ $contentClasses }}">
         {{ $slot }}
     </div>
 </div>

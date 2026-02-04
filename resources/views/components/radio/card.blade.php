@@ -16,10 +16,11 @@
         collect($attributes->getAttributes())->first(fn($v, $k) => str_starts_with($k, 'x-model'));
 
     // SVG icon for checked state (white dot)
-    $dotSvg = "url('data:image/svg+xml,%3csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%225%22%20fill%3D%22white%22%2F%3E%3C%2Fsvg%3E')";
+    $dotSvg =
+        "url('data:image/svg+xml,%3csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%225%22%20fill%3D%22white%22%2F%3E%3C%2Fsvg%3E')";
 
     $cardClasses = Ui::classes()
-        ->add('group relative flex cursor-pointer items-start gap-3 rounded-lg border p-4 transition-colors')
+        ->add('group relative flex cursor-pointer items-start gap-3 rounded-lg border p-4')
         ->add('border-gray-200 bg-white')
         ->add('dark:border-gray-700 dark:bg-gray-800')
         ->add('hover:border-gray-300 hover:bg-gray-50')
@@ -44,8 +45,7 @@
 
 <label class="{{ $cardClasses }}" {{ $attributes->only('data-*') }} data-radio-card data-control>
     @if ($icon)
-        <ui:icon :name="$icon" class="size-6 shrink-0 text-gray-500 dark:text-gray-400"
-            data-radio-card-icon />
+        <ui:icon :name="$icon" class="size-6 shrink-0 text-gray-500 dark:text-gray-400" data-radio-card-icon />
     @endif
 
     <div class="flex-1" data-radio-card-content>
@@ -61,7 +61,5 @@
     </div>
 
     <input type="radio" @if ($name) name="{{ $name }}" @endif
-        {{ $attributes->except(['class', 'data-*', 'name']) }}
-        class="{{ $radioClasses }}"
-        data-radio />
+        {{ $attributes->except(['class', 'data-*', 'name']) }} class="{{ $radioClasses }}" data-radio />
 </label>

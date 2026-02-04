@@ -56,13 +56,11 @@
         'top-end' => "position-anchor: {$anchor}; bottom: calc(anchor(top) + {$offset}); top: auto; right: anchor(right); left: auto; position-try-fallbacks: --selectbox-bottom-end;",
     ];
 
-    $wrapperClasses = Ui::classes()
-        ->add('relative inline-block w-full')
-        ->merge($attributes?->only('class'));
+    $wrapperClasses = Ui::classes()->add('relative inline-block w-full')->merge($attributes?->only('class'));
 
     $triggerClasses = Ui::classes()
         ->add('flex w-full cursor-pointer items-center justify-between border shadow-xs')
-        ->add('rounded-md transition-colors')
+        ->add('rounded-md')
         ->add('focus:outline-none')
         ->add('disabled:cursor-not-allowed disabled:opacity-50')
         ->add($size, [
@@ -88,7 +86,7 @@
         ->add('[&:popover-open]:flex');
 
     $iconClasses = Ui::classes()
-        ->add('shrink-0 text-gray-400 transition-transform')
+        ->add('shrink-0 text-gray-400')
         ->add('dark:text-gray-500')
         ->add('group-data-[open]:rotate-180')
         ->add($size, [
@@ -107,236 +105,207 @@
         ->add('text-gray-900 placeholder-gray-400')
         ->add('dark:text-gray-100 dark:placeholder-gray-500');
 
-    $optionsClasses = Ui::classes()
-        ->add('flex max-h-60 flex-col gap-0.5 overflow-y-auto p-1');
+    $optionsClasses = Ui::classes()->add('flex max-h-60 flex-col gap-0.5 overflow-y-auto p-1');
 @endphp
 
-<div
-    x-data="{
-        open: false,
-        multiple: {{ $multiple ? 'true' : 'false' }},
-        searchable: {{ $searchable ? 'true' : 'false' }},
-        search: '',
-        @if ($usesEntangle)
-        value: $wire.entangle('{{ $wireModelValue }}'{{ $wireModelLive ? ', true' : '' }}),
+<div x-data="{
+    open: false,
+    multiple: {{ $multiple ? 'true' : 'false' }},
+    searchable: {{ $searchable ? 'true' : 'false' }},
+    search: '',
+    @if ($usesEntangle) value: $wire.entangle('{{ $wireModelValue }}'{{ $wireModelLive ? ', true' : '' }}),
         @else
-        value: {{ \Illuminate\Support\Js::from($initialValue) }},
-        @endif
-        labels: {},
-        placeholder: '{{ $placeholder ?? '' }}',
-        focusedIndex: -1,
+        value: {{ \Illuminate\Support\Js::from($initialValue) }}, @endif
+    labels: {},
+    placeholder: '{{ $placeholder ?? '' }}',
+    focusedIndex: -1,
 
-        get displayLabel() {
-            if (this.multiple) {
-                const count = Array.isArray(this.value) ? this.value.length : 0;
-                if (count === 0) return this.placeholder;
-                if (count === 1) return this.labels[this.value[0]] ?? this.placeholder;
-                return count + ' geselecteerd';
-            }
-            return this.labels[this.value] ?? this.placeholder;
-        },
+    get displayLabel() {
+        if (this.multiple) {
+            const count = Array.isArray(this.value) ? this.value.length : 0;
+            if (count === 0) return this.placeholder;
+            if (count === 1) return this.labels[this.value[0]] ?? this.placeholder;
+            return count + ' geselecteerd';
+        }
+        return this.labels[this.value] ?? this.placeholder;
+    },
 
-        get visibleOptions() {
-            const all = this.$refs.menu.querySelectorAll('[data-selectbox-option]:not([disabled])');
-            if (!this.searchable || !this.search.trim()) return all;
+    get visibleOptions() {
+        const all = this.$refs.menu.querySelectorAll('[data-selectbox-option]:not([disabled])');
+        if (!this.searchable || !this.search.trim()) return all;
 
-            const term = this.search.toLowerCase().trim();
-            return Array.from(all).filter(el => {
-                const text = (el.querySelector('[data-label]')?.textContent ?? el.textContent).toLowerCase();
-                return text.includes(term);
-            });
-        },
+        const term = this.search.toLowerCase().trim();
+        return Array.from(all).filter(el => {
+            const text = (el.querySelector('[data-label]')?.textContent ?? el.textContent).toLowerCase();
+            return text.includes(term);
+        });
+    },
 
-        get allOptions() {
-            return this.$refs.menu.querySelectorAll('[data-selectbox-option]:not([disabled])');
-        },
+    get allOptions() {
+        return this.$refs.menu.querySelectorAll('[data-selectbox-option]:not([disabled])');
+    },
 
-        isSelected(val) {
-            if (this.multiple) {
-                return Array.isArray(this.value) && this.value.includes(val);
-            }
-            return this.value == val;
-        },
+    isSelected(val) {
+        if (this.multiple) {
+            return Array.isArray(this.value) && this.value.includes(val);
+        }
+        return this.value == val;
+    },
 
-        select(val, label) {
-            if (this.multiple) {
-                if (!Array.isArray(this.value)) this.value = [];
-                const index = this.value.indexOf(val);
-                if (index === -1) {
-                    this.value = [...this.value, val];
-                    this.labels[val] = label;
-                } else {
-                    this.value = this.value.filter(v => v !== val);
-                }
-            } else {
-                this.value = val;
+    select(val, label) {
+        if (this.multiple) {
+            if (!Array.isArray(this.value)) this.value = [];
+            const index = this.value.indexOf(val);
+            if (index === -1) {
+                this.value = [...this.value, val];
                 this.labels[val] = label;
-                this.close();
-                this.$refs.trigger.focus();
-            }
-            this.$dispatch('change', { value: this.value });
-        },
-
-        toggle() {
-            if (this.open) {
-                this.close();
             } else {
-                this.open = true;
-                this.search = '';
-                this.$nextTick(() => {
-                    this.$refs.menu.showPopover();
-                    this.focusedIndex = this.findSelectedIndex();
-                    this.scrollToFocused();
-                });
+                this.value = this.value.filter(v => v !== val);
             }
-        },
+        } else {
+            this.value = val;
+            this.labels[val] = label;
+            this.close();
+            this.$refs.trigger.focus();
+        }
+        this.$dispatch('change', { value: this.value });
+    },
 
-        close() {
-            this.open = false;
-            this.focusedIndex = -1;
+    toggle() {
+        if (this.open) {
+            this.close();
+        } else {
+            this.open = true;
             this.search = '';
-            this.$refs.menu.hidePopover();
-        },
-
-        findSelectedIndex() {
-            const options = Array.from(this.visibleOptions);
-            const selectedVal = this.multiple
-                ? (Array.isArray(this.value) && this.value.length > 0 ? this.value[0] : null)
-                : this.value;
-            if (selectedVal === null) return -1;
-            return options.findIndex(el => el.dataset.value == selectedVal);
-        },
-
-        focusNext() {
-            if (!this.open) {
-                this.toggle();
-                return;
-            }
-            const options = this.visibleOptions;
-            this.focusedIndex = Math.min(this.focusedIndex + 1, options.length - 1);
-            this.scrollToFocused();
-        },
-
-        focusPrev() {
-            if (!this.open) {
-                this.toggle();
-                return;
-            }
-            this.focusedIndex = Math.max(this.focusedIndex - 1, 0);
-            this.scrollToFocused();
-        },
-
-        selectFocused() {
-            const options = Array.from(this.visibleOptions);
-            if (this.focusedIndex >= 0 && this.focusedIndex < options.length) {
-                options[this.focusedIndex].click();
-            }
-        },
-
-        scrollToFocused() {
-            const options = Array.from(this.visibleOptions);
-            if (options[this.focusedIndex]) {
-                options[this.focusedIndex].scrollIntoView({ block: 'nearest' });
-            }
-        },
-
-        updateVisibility() {
-            const term = this.search.toLowerCase().trim();
-            this.allOptions.forEach(el => {
-                if (!term) {
-                    el.style.display = '';
-                    return;
-                }
-                const text = (el.querySelector('[data-label]')?.textContent ?? el.textContent).toLowerCase();
-                el.style.display = text.includes(term) ? '' : 'none';
-            });
-            this.focusedIndex = -1;
-        },
-
-        init() {
-            // Set initial labels from selected options
             this.$nextTick(() => {
-                if (this.multiple && Array.isArray(this.value)) {
-                    this.value.forEach(val => {
-                        const option = this.$refs.menu.querySelector(`[data-selectbox-option][data-value='${val}']`);
-                        if (option) {
-                            this.labels[val] = option.querySelector('[data-label]')?.textContent?.trim() ?? option.textContent.trim();
-                        }
-                    });
-                } else if (this.value !== null) {
-                    const selected = this.$refs.menu.querySelector(`[data-selectbox-option][data-value='${this.value}']`);
-                    if (selected) {
-                        this.labels[this.value] = selected.querySelector('[data-label]')?.textContent?.trim() ?? selected.textContent.trim();
-                    }
-                }
+                this.$refs.menu.showPopover();
+                this.focusedIndex = this.findSelectedIndex();
+                this.scrollToFocused();
             });
         }
-    }"
-    x-on:keydown.escape.window="close()"
-    style="anchor-scope: {{ $anchor }};"
+    },
+
+    close() {
+        this.open = false;
+        this.focusedIndex = -1;
+        this.search = '';
+        this.$refs.menu.hidePopover();
+    },
+
+    findSelectedIndex() {
+        const options = Array.from(this.visibleOptions);
+        const selectedVal = this.multiple ?
+            (Array.isArray(this.value) && this.value.length > 0 ? this.value[0] : null) :
+            this.value;
+        if (selectedVal === null) return -1;
+        return options.findIndex(el => el.dataset.value == selectedVal);
+    },
+
+    focusNext() {
+        if (!this.open) {
+            this.toggle();
+            return;
+        }
+        const options = this.visibleOptions;
+        this.focusedIndex = Math.min(this.focusedIndex + 1, options.length - 1);
+        this.scrollToFocused();
+    },
+
+    focusPrev() {
+        if (!this.open) {
+            this.toggle();
+            return;
+        }
+        this.focusedIndex = Math.max(this.focusedIndex - 1, 0);
+        this.scrollToFocused();
+    },
+
+    selectFocused() {
+        const options = Array.from(this.visibleOptions);
+        if (this.focusedIndex >= 0 && this.focusedIndex < options.length) {
+            options[this.focusedIndex].click();
+        }
+    },
+
+    scrollToFocused() {
+        const options = Array.from(this.visibleOptions);
+        if (options[this.focusedIndex]) {
+            options[this.focusedIndex].scrollIntoView({ block: 'nearest' });
+        }
+    },
+
+    updateVisibility() {
+        const term = this.search.toLowerCase().trim();
+        this.allOptions.forEach(el => {
+            if (!term) {
+                el.style.display = '';
+                return;
+            }
+            const text = (el.querySelector('[data-label]')?.textContent ?? el.textContent).toLowerCase();
+            el.style.display = text.includes(term) ? '' : 'none';
+        });
+        this.focusedIndex = -1;
+    },
+
+    init() {
+        // Set initial labels from selected options
+        this.$nextTick(() => {
+            if (this.multiple && Array.isArray(this.value)) {
+                this.value.forEach(val => {
+                    const option = this.$refs.menu.querySelector(`[data-selectbox-option][data-value='${val}']`);
+                    if (option) {
+                        this.labels[val] = option.querySelector('[data-label]')?.textContent?.trim() ?? option.textContent.trim();
+                    }
+                });
+            } else if (this.value !== null) {
+                const selected = this.$refs.menu.querySelector(`[data-selectbox-option][data-value='${this.value}']`);
+                if (selected) {
+                    this.labels[this.value] = selected.querySelector('[data-label]')?.textContent?.trim() ?? selected.textContent.trim();
+                }
+            }
+        });
+    }
+}" x-on:keydown.escape.window="close()" style="anchor-scope: {{ $anchor }};"
     class="{{ $wrapperClasses }}"
     {{ $attributes?->except(['class', 'wire:model', 'wire:model.live', 'wire:model.blur', 'wire:model.defer', 'disabled']) }}
-    data-selectbox
-    @if ($multiple) data-multiple @endif
-    @if ($searchable) data-searchable @endif
+    data-selectbox @if ($multiple)
+    data-multiple
+    @endif
+    @if ($searchable)
+        data-searchable
+    @endif
     data-control
->
-    {{-- Trigger --}}
-    <button
-        type="button"
-        x-ref="trigger"
-        x-on:click="toggle()"
-        x-on:keydown.enter.prevent="open ? selectFocused() : toggle()"
-        x-on:keydown.space.prevent="open ? selectFocused() : toggle()"
-        x-on:keydown.arrow-down.prevent="focusNext()"
-        x-on:keydown.arrow-up.prevent="focusPrev()"
-        x-bind:data-open="open"
-        x-bind:aria-expanded="open"
-        popovertarget="{{ $menuId }}"
-        popovertargetaction="show"
-        @if ($id) id="{{ $id }}" @endif
-        @if ($error) aria-invalid="true" @endif
-        @if ($isDisabled) disabled @endif
-        style="anchor-name: {{ $anchor }};"
-        class="{{ $triggerClasses }} group"
-        aria-haspopup="listbox"
-        data-selectbox-trigger
     >
-        <span
-            x-text="displayLabel"
-            class="truncate text-left"
-            :class="(multiple ? (Array.isArray(value) && value.length === 0) : value === null) ? 'text-gray-400 dark:text-gray-500' : ''"
-        ></span>
+    {{-- Trigger --}}
+    <button type="button" x-ref="trigger" x-on:click="toggle()"
+        x-on:keydown.enter.prevent="open ? selectFocused() : toggle()"
+        x-on:keydown.space.prevent="open ? selectFocused() : toggle()" x-on:keydown.arrow-down.prevent="focusNext()"
+        x-on:keydown.arrow-up.prevent="focusPrev()" x-bind:data-open="open" x-bind:aria-expanded="open"
+        popovertarget="{{ $menuId }}" popovertargetaction="show"
+        @if ($id) id="{{ $id }}" @endif
+        @if ($error) aria-invalid="true" @endif @if ($isDisabled) disabled @endif
+        style="anchor-name: {{ $anchor }};" class="{{ $triggerClasses }} group" aria-haspopup="listbox"
+        data-selectbox-trigger>
+        <span x-text="displayLabel" class="truncate text-left"
+            :class="(multiple ? (Array.isArray(value) && value.length === 0) : value === null) ?
+            'text-gray-400 dark:text-gray-500' : ''"></span>
         <ui:icon name="chevron-down" class="{{ $iconClasses }}" />
     </button>
 
     {{-- Menu --}}
-    <div
-        popover
-        x-ref="menu"
+    <div popover x-ref="menu"
         x-on:toggle="open = $event.newState === 'open'; if ($event.newState === 'open' && searchable && $refs.search) $refs.search.focus()"
-        id="{{ $menuId }}"
-        role="listbox"
-        @if ($multiple) aria-multiselectable="true" @endif
-        style="{{ $positionStyles[$position] ?? $positionStyles['bottom-start'] }}"
-        class="{{ $menuClasses }}"
-        data-selectbox-menu
-    >
+        id="{{ $menuId }}" role="listbox" @if ($multiple) aria-multiselectable="true" @endif
+        style="{{ $positionStyles[$position] ?? $positionStyles['bottom-start'] }}" class="{{ $menuClasses }}"
+        data-selectbox-menu>
         @if ($searchable)
             <div class="{{ $searchWrapperClasses }}" data-selectbox-search-wrapper>
-                <ui:icon name="search" class="pointer-events-none absolute left-3 size-4 text-gray-400 dark:text-gray-500" />
-                <input
-                    type="text"
-                    x-ref="search"
-                    x-model="search"
-                    x-on:input="updateVisibility()"
-                    x-on:keydown.arrow-down.prevent="focusNext()"
-                    x-on:keydown.arrow-up.prevent="focusPrev()"
-                    x-on:keydown.enter.prevent="selectFocused()"
-                    placeholder="{{ $searchPlaceholder }}"
-                    class="{{ $searchClasses }}"
-                    data-selectbox-search
-                >
+                <ui:icon name="search"
+                    class="pointer-events-none absolute left-3 size-4 text-gray-400 dark:text-gray-500" />
+                <input type="text" x-ref="search" x-model="search" x-on:input="updateVisibility()"
+                    x-on:keydown.arrow-down.prevent="focusNext()" x-on:keydown.arrow-up.prevent="focusPrev()"
+                    x-on:keydown.enter.prevent="selectFocused()" placeholder="{{ $searchPlaceholder }}"
+                    class="{{ $searchClasses }}" data-selectbox-search>
             </div>
         @endif
 

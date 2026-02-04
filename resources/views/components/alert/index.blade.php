@@ -60,9 +60,8 @@
         ]);
 @endphp
 
-<div @if ($dismissable) x-data="{ show: true }" x-show="show" x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" @endif
-    {{ $attributes->except('class') }} class="{{ $classes }}" data-alert data-variant="{{ $variant }}"
-    role="alert">
+<div @if ($dismissable) x-data="{ show: true }" x-show="show" @endif {{ $attributes->except('class') }}
+    class="{{ $classes }}" data-alert data-variant="{{ $variant }}" role="alert">
     <ui:icon :name="$icon ?? $icons[$variant] ?? $icons['default']" class="{{ $iconClasses }}" />
 
     <div class="flex min-w-0 flex-1 flex-col gap-1">

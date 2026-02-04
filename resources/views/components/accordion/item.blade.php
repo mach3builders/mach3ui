@@ -14,9 +14,7 @@
     $containerClasses = Ui::classes()->add('group')->when($disabled, 'opacity-50')->merge($attributes);
 
     $triggerClasses = Ui::classes()
-        ->add(
-            'flex w-full cursor-pointer items-center justify-between gap-3 py-4 text-left font-semibold transition-colors',
-        )
+        ->add('flex w-full cursor-pointer items-center justify-between gap-3 py-4 text-left font-semibold')
         ->add('text-gray-900 hover:text-gray-980 dark:text-gray-100 dark:hover:text-white')
         ->add(
             'focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-900',
@@ -24,9 +22,7 @@
         ->add('group-data-[variant=bordered]:px-4')
         ->when($disabled, 'pointer-events-none');
 
-    $iconClasses = Ui::classes()->add(
-        'size-4 shrink-0 text-gray-400 transition-transform duration-200 dark:text-gray-500',
-    );
+    $iconClasses = Ui::classes()->add('size-4 shrink-0 text-gray-400 dark:text-gray-500');
 
     $contentClasses = Ui::classes()->add('overflow-hidden');
 
@@ -45,7 +41,7 @@
     </button>
 
     <div id="{{ $panelId }}" role="region" aria-labelledby="{{ $triggerId }}"
-        x-show="isOpen('{{ $key }}')" x-collapse x-cloak class="{{ $contentClasses }}">
+        x-show="isOpen('{{ $key }}')" x-cloak class="{{ $contentClasses }}">
         <div class="{{ $panelClasses }}">
             {{ $slot }}
         </div>

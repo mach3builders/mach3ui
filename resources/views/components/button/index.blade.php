@@ -43,7 +43,7 @@
 
     // Regular button classes
     $classes = Ui::classes($baseClasses)
-        ->add('rounded-md transition-colors duration-150')
+        ->add('rounded-md')
         ->add('focus:ring-1 focus:ring-offset-1 focus:outline-none')
         ->add($variant, [
             'default' =>

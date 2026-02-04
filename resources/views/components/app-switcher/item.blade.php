@@ -25,7 +25,9 @@
         ->merge($attributes);
 
     $logoClasses = Ui::classes()
-        ->add('flex size-9 shrink-0 items-center justify-center rounded-lg font-bold tracking-wide uppercase text-base leading-none select-none')
+        ->add(
+            'flex size-9 shrink-0 items-center justify-center rounded-lg font-bold tracking-wide uppercase text-base leading-none select-none',
+        )
         ->add('bg-gray-100 dark:bg-gray-700')
         ->add($color ? $colorClasses[$color] ?? '' : 'text-gray-400 dark:text-gray-500');
 
@@ -34,18 +36,10 @@
         ->add('bg-gray-100 dark:bg-gray-700');
 @endphp
 
-<div
-    x-data="{ index: null }"
-    x-init="index = items.indexOf($el) >= 0 ? items.indexOf($el) : items.length"
-    x-on:click="select(index); activate()"
-    :class="{ 'bg-gray-50 dark:bg-gray-700': selected === index }"
-    class="{{ $classes }}"
-    {{ $attributes->except('class') }}
-    data-app-switcher-item
-    data-href="{{ $href }}"
-    role="option"
-    tabindex="0"
->
+<div x-data="{ index: null }" x-init="index = items.indexOf($el) >= 0 ? items.indexOf($el) : items.length" x-on:click="select(index); activate()"
+    :class="{ 'bg-gray-50 dark:bg-gray-700': selected === index }" class="{{ $classes }}"
+    {{ $attributes->except('class') }} data-app-switcher-item data-href="{{ $href }}" role="option"
+    tabindex="0">
     @if ($icon)
         <div class="{{ $iconWrapperClasses }}">
             <ui:icon :name="$icon" size="sm" />
@@ -70,10 +64,6 @@
         @endif
     </div>
 
-    <ui:icon
-        name="check"
-        size="sm"
-        class="ml-auto text-blue-600 transition-opacity dark:text-blue-400"
-        x-bind:class="current === index ? 'opacity-100' : 'opacity-0'"
-    />
+    <ui:icon name="check" size="sm" class="ml-auto text-blue-600 dark:text-blue-400"
+        x-bind:class="current === index ? 'opacity-100' : 'opacity-0'" />
 </div>

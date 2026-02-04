@@ -61,12 +61,14 @@
 
     $slotClasses = Ui::classes()
         ->add($slotSizeClasses)
-        ->add('relative -ml-px flex cursor-text items-center justify-center border font-medium transition-colors select-none')
+        ->add('relative -ml-px flex cursor-text items-center justify-center border font-medium select-none')
         ->add('first:ml-0 first:rounded-l-md last:rounded-r-md')
         ->add(
             match (true) {
-                (bool) $error => 'border-red-500 bg-white text-gray-900 dark:border-red-500 dark:bg-gray-800 dark:text-gray-100',
-                default => 'border-gray-140 bg-white text-gray-900 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100',
+                (bool) $error
+                    => 'border-red-500 bg-white text-gray-900 dark:border-red-500 dark:bg-gray-800 dark:text-gray-100',
+                default
+                    => 'border-gray-140 bg-white text-gray-900 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100',
             },
         );
 
@@ -84,10 +86,9 @@
         <ui:label>{{ $label }}</ui:label>
 
         <x-ui::input.otp._otp :id="$id" :name="$inputName" :length="$length" :mode="$mode" :pattern="$pattern"
-            :inputmode="$inputmode" :disabled="$disabled" :private="$private" :value="$value" :error="$error"
-            :separator="$separator" :wrapper-classes="$wrapperClasses" :slot-classes="$slotClasses"
-            :active-ring-classes="$activeRingClasses" :separator-classes="$separatorClasses"
-            :separator-dot-classes="$separatorDotClasses" :attributes="$attributes" :slot="$slot" />
+            :inputmode="$inputmode" :disabled="$disabled" :private="$private" :value="$value" :error="$error" :separator="$separator"
+            :wrapper-classes="$wrapperClasses" :slot-classes="$slotClasses" :active-ring-classes="$activeRingClasses" :separator-classes="$separatorClasses" :separator-dot-classes="$separatorDotClasses"
+            :attributes="$attributes" :slot="$slot" />
 
         @if ($hint)
             <ui:hint>{{ $hint }}</ui:hint>
@@ -100,7 +101,6 @@
 @else
     <x-ui::input.otp._otp :id="$id" :name="$inputName" :length="$length" :mode="$mode" :pattern="$pattern"
         :inputmode="$inputmode" :disabled="$disabled" :private="$private" :value="$value" :error="$error"
-        :separator="$separator" :wrapper-classes="$wrapperClasses" :slot-classes="$slotClasses"
-        :active-ring-classes="$activeRingClasses" :separator-classes="$separatorClasses"
+        :separator="$separator" :wrapper-classes="$wrapperClasses" :slot-classes="$slotClasses" :active-ring-classes="$activeRingClasses" :separator-classes="$separatorClasses"
         :separator-dot-classes="$separatorDotClasses" :attributes="$attributes" :slot="$slot" />
 @endif
