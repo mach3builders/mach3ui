@@ -6,7 +6,8 @@
 ])
 
 @php
-    $iconBoxed = $__data['icon:boxed'] ?? false;
+    // Boolean attrs without value come as empty string or true
+    $iconBoxed = isset($__data['icon:boxed']) && $__data['icon:boxed'] !== false;
     $iconColor = $__data['icon:color'] ?? 'gray';
     $iconSize = $__data['icon:size'] ?? 'md';
 
@@ -16,14 +17,9 @@
     $hasIcon = $iconSlot || $icon;
     $hasAction = $actionSlot !== null;
 
-    $classes = Ui::classes()
-        ->add('flex gap-3 px-4.5 pb-5 pt-5')
-        ->when($hasAction, 'relative')
-        ->merge($attributes);
+    $classes = Ui::classes()->add('flex gap-3 px-4.5 pb-5 pt-5')->when($hasAction, 'relative')->merge($attributes);
 
-    $contentClasses = Ui::classes()
-        ->add('flex flex-1 flex-col gap-1.5')
-        ->when($hasIcon, 'min-w-0');
+    $contentClasses = Ui::classes()->add('flex flex-1 flex-col gap-1.5')->when($hasIcon, 'min-w-0');
 @endphp
 
 <div {{ $attributes->except('class') }} class="{{ $classes }}" data-card-header>

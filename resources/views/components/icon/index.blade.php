@@ -28,6 +28,16 @@
         default => 'size-8',
     };
 
+    // Map semantic names to Tailwind colors
+    $colorAliases = [
+        'primary' => 'blue',
+        'secondary' => 'gray',
+        'danger' => 'red',
+        'warning' => 'amber',
+        'success' => 'green',
+    ];
+    $resolvedColor = $colorAliases[$color] ?? $color;
+
     $colors = [
         'inherit' => 'text-inherit',
         'gray' => 'text-gray-500 dark:text-gray-400',
@@ -61,18 +71,22 @@
         'violet' => 'bg-violet-100 text-violet-600 dark:bg-violet-900/30 dark:text-violet-400',
     ];
 
-    $colorClass = $color ? $colors[$color] ?? "text-{$color}" : null;
+    $colorClass = $resolvedColor ? $colors[$resolvedColor] ?? "text-{$resolvedColor}" : null;
 
     $boxClasses = Ui::classes()
         ->add('flex items-center justify-center')
         ->add($boxSize)
         ->add($round ? 'rounded-full' : 'rounded-lg')
-        ->add($boxedColors[$color] ?? $boxedColors['gray'])
+        ->add($boxedColors[$resolvedColor] ?? $boxedColors['gray'])
         ->merge($attributes);
 
     $iconClasses = Ui::classes()->add('shrink-0')->add($iconSize);
 
-    $simpleClasses = Ui::classes()->add('shrink-0')->add($iconSize)->when($colorClass, $colorClass ?? '')->merge($attributes);
+    $simpleClasses = Ui::classes()
+        ->add('shrink-0')
+        ->add($iconSize)
+        ->when($colorClass, $colorClass ?? '')
+        ->merge($attributes);
 @endphp
 
 @if ($boxed)

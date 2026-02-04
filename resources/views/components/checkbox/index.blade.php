@@ -45,23 +45,31 @@
 
     $wrapperClasses = Ui::classes()->merge($attributes->only('class'));
 
+    $bgSize = match ($size) {
+        'sm' => '12px',
+        'lg' => '18px',
+        default => '16px',
+    };
+
     $checkboxClasses = Ui::classes()
         ->add('shrink-0 cursor-pointer appearance-none rounded-[5px] border bg-center bg-no-repeat')
         ->add('border-gray-300 bg-white')
         ->add('dark:border-gray-600 dark:bg-gray-800')
-        ->add("checked:border-blue-600 checked:bg-blue-600 checked:bg-[length:16px] checked:bg-[{$checkmarkSvg}]")
+        ->add(
+            'checked:border-blue-600 checked:bg-blue-600 checked:[background-image:var(--check-icon)] checked:[background-size:var(--check-size)]',
+        )
         ->add('dark:checked:border-blue-500 dark:checked:bg-blue-500')
         ->add(
-            "indeterminate:border-blue-600 indeterminate:bg-blue-600 indeterminate:bg-[length:16px] indeterminate:bg-[{$indeterminateSvg}]",
+            'indeterminate:border-blue-600 indeterminate:bg-blue-600 indeterminate:[background-image:var(--indet-icon)] indeterminate:[background-size:var(--check-size)]',
         )
         ->add('dark:indeterminate:border-blue-500 dark:indeterminate:bg-blue-500')
         ->add('focus:outline-none focus:ring-2 focus:ring-blue-600/20 focus:ring-offset-0')
         ->add('dark:focus:ring-blue-500/20')
         ->add('disabled:cursor-not-allowed disabled:opacity-50')
         ->add($size, [
-            'sm' => 'size-4 rounded checked:bg-[length:12px] indeterminate:bg-[length:12px]',
+            'sm' => 'size-4 rounded',
             'md' => 'size-5',
-            'lg' => 'size-6 rounded-md checked:bg-[length:18px] indeterminate:bg-[length:18px]',
+            'lg' => 'size-6 rounded-md',
         ])
         ->when($description, 'mt-0.5')
         ->unless($hasLabel, 'block');
@@ -96,6 +104,7 @@
     <input type="checkbox" id="{{ $id }}" @if ($inputName) name="{{ $inputName }}" @endif
         @if ($indeterminate) x-init="$el.indeterminate = true" @endif
         @if ($error) aria-invalid="true" @endif
+        style="--check-icon: {{ $checkmarkSvg }}; --indet-icon: {{ $indeterminateSvg }}; --check-size: {{ $bgSize }}"
         {{ $attributes->except(['class', 'data-*', 'id', 'name']) }} class="{{ $checkboxClasses }}" />
 
     @if ($hasLabel)

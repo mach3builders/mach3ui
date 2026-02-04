@@ -39,10 +39,12 @@
         ->add('size-5 shrink-0 cursor-pointer appearance-none rounded-[5px] border bg-center bg-no-repeat')
         ->add('border-gray-300 bg-white')
         ->add('dark:border-gray-600 dark:bg-gray-800')
-        ->add("checked:border-blue-600 checked:bg-blue-600 checked:bg-[length:16px] checked:bg-[{$checkmarkSvg}]")
+        ->add(
+            'checked:border-blue-600 checked:bg-blue-600 checked:[background-image:var(--check-icon)] checked:[background-size:var(--check-size)]',
+        )
         ->add('dark:checked:border-blue-500 dark:checked:bg-blue-500')
         ->add(
-            "indeterminate:border-blue-600 indeterminate:bg-blue-600 indeterminate:bg-[length:16px] indeterminate:bg-[{$indeterminateSvg}]",
+            'indeterminate:border-blue-600 indeterminate:bg-blue-600 indeterminate:[background-image:var(--indet-icon)] indeterminate:[background-size:var(--check-size)]',
         )
         ->add('dark:indeterminate:border-blue-500 dark:indeterminate:bg-blue-500')
         ->add('focus:outline-none')
@@ -70,6 +72,7 @@
 
     <input type="checkbox" @if ($name) name="{{ $name }}" @endif
         {{ $attributes->except(['class', 'data-*', 'name']) }}
-        @if ($indeterminate) x-init="$el.indeterminate = true" @endif class="{{ $checkboxClasses }}"
-        data-checkbox />
+        @if ($indeterminate) x-init="$el.indeterminate = true" @endif
+        style="--check-icon: {{ $checkmarkSvg }}; --indet-icon: {{ $indeterminateSvg }}; --check-size: 16px"
+        class="{{ $checkboxClasses }}" data-checkbox />
 </label>
