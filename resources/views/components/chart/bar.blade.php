@@ -1,5 +1,6 @@
 @props([
     'data' => [],
+    'datasets' => null,
     'height' => null,
     'horizontal' => false,
     'labels' => [],
@@ -9,21 +10,19 @@
 ])
 
 @php
-    $chartOptions = array_replace_recursive([
-        'indexAxis' => $horizontal ? 'y' : 'x',
-        'scales' => [
-            'x' => ['stacked' => $stacked],
-            'y' => ['stacked' => $stacked],
+    $data = $datasets ?? $data;
+
+    $chartOptions = array_replace_recursive(
+        [
+            'indexAxis' => $horizontal ? 'y' : 'x',
+            'scales' => [
+                'x' => ['stacked' => $stacked],
+                'y' => ['stacked' => $stacked],
+            ],
         ],
-    ], $options);
+        $options,
+    );
 @endphp
 
-<ui:chart
-    type="bar"
-    :data="$data"
-    :labels="$labels"
-    :height="$height"
-    :name="$name"
-    :options="$chartOptions"
-    {{ $attributes }}
-/>
+<ui:chart type="bar" :data="$data" :labels="$labels" :height="$height" :name="$name"
+    :options="$chartOptions" {{ $attributes }} />

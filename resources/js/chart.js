@@ -4,13 +4,15 @@ const chartInstances = new Map();
 
 function getThemeColors() {
     const style = getComputedStyle(document.documentElement);
+
+    // Use Tailwind CSS color variables with fallbacks to Tailwind defaults
     return [
-        style.getPropertyValue("--color-primary").trim() || "oklch(0.55 0.22 265)",
-        style.getPropertyValue("--color-success").trim() || "oklch(0.55 0.18 145)",
-        style.getPropertyValue("--color-warning").trim() || "oklch(0.75 0.18 85)",
-        style.getPropertyValue("--color-danger").trim() || "oklch(0.55 0.22 25)",
-        "oklch(0.6 0.15 200)",
-        "oklch(0.65 0.2 330)",
+        style.getPropertyValue("--color-blue-500").trim() || "#3b82f6",
+        style.getPropertyValue("--color-emerald-500").trim() || "#10b981",
+        style.getPropertyValue("--color-amber-500").trim() || "#f59e0b",
+        style.getPropertyValue("--color-rose-500").trim() || "#f43f5e",
+        style.getPropertyValue("--color-violet-500").trim() || "#8b5cf6",
+        style.getPropertyValue("--color-cyan-500").trim() || "#06b6d4",
     ];
 }
 
@@ -25,8 +27,15 @@ function getBackgroundColor(type, colors, index) {
         return color;
     }
 
-    // Line/Area: transparent fill
-    return color.replace(")", " / 0.1)").replace("oklch(", "oklch(");
+    // Line/Area: transparent fill - convert hex to rgba
+    if (color.startsWith("#")) {
+        const r = parseInt(color.slice(1, 3), 16);
+        const g = parseInt(color.slice(3, 5), 16);
+        const b = parseInt(color.slice(5, 7), 16);
+        return `rgba(${r}, ${g}, ${b}, 0.1)`;
+    }
+
+    return color;
 }
 
 function prepareDataset(dataset, type, colors, index) {
@@ -119,7 +128,11 @@ function initAllCharts(root = document) {
 }
 
 // Initialize on page load
-initAllCharts();
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", () => initAllCharts());
+} else {
+    initAllCharts();
+}
 
 // Reinitialize after Livewire navigation (wire:navigate)
 document.addEventListener("livewire:navigated", () => {
