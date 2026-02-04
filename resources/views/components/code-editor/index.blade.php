@@ -87,8 +87,8 @@
         ->add('flex items-center justify-between border-b px-3 py-2')
         ->add(
             match ($variant) {
-                'inverted' => 'border-gray-140 bg-gray-30 dark:border-gray-700 dark:bg-gray-830',
-                default => 'border-gray-140 bg-gray-30 dark:border-gray-700 dark:bg-gray-830',
+                'inverted' => 'border-gray-140 bg-gray-20 dark:border-gray-700 dark:bg-gray-820',
+                default => 'border-gray-140 bg-gray-20 dark:border-gray-700 dark:bg-gray-820',
             },
         );
 
