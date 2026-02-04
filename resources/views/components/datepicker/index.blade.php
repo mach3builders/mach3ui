@@ -9,6 +9,7 @@
     'minDate' => null,
     'name' => null,
     'placeholder' => null,
+    'showFooter' => false,
     'showSelects' => false,
     'size' => 'md',
     'value' => null,
@@ -68,39 +69,18 @@
         }
     }
 
-    $wrapperClasses = Ui::classes()
-        ->add('relative inline-block w-full select-none')
-        ->merge($attributes->only('class'));
+    $wrapperClasses = Ui::classes()->add('relative inline-block w-full select-none')->merge($attributes->only('class'));
 @endphp
 
 @if ($label)
     <ui:field :id="$id">
         <ui:label>{{ $label }}</ui:label>
 
-        <x-ui::datepicker._datepicker
-            :id="$id"
-            :name="$inputName"
-            :popover-id="$popoverId"
-            :value="$value"
-            :display-value="$displayValue"
-            :disabled="$disabled"
-            :error="$error"
-            :locale="$locale"
-            :months="$months"
-            :weekdays="$weekdays"
-            :display-format="$displayFormat"
-            :placeholder="$placeholder"
-            :clear-label="$clearLabel"
-            :today-label="$todayLabel"
-            :min-date="$minDate"
-            :max-date="$maxDate"
-            :clearable="$clearable"
-            :show-selects="$showSelects"
-            :size="$size"
-            :variant="$variant"
-            :wrapper-classes="$wrapperClasses"
-            :attributes="$attributes"
-        />
+        <x-ui::datepicker._datepicker :id="$id" :name="$inputName" :popover-id="$popoverId" :value="$value"
+            :display-value="$displayValue" :disabled="$disabled" :error="$error" :locale="$locale" :months="$months" :weekdays="$weekdays"
+            :display-format="$displayFormat" :placeholder="$placeholder" :clear-label="$clearLabel" :today-label="$todayLabel" :min-date="$minDate"
+            :max-date="$maxDate" :clearable="$clearable" :show-footer="$showFooter" :show-selects="$showSelects" :size="$size"
+            :variant="$variant" :wrapper-classes="$wrapperClasses" :attributes="$attributes" />
 
         @if ($hint)
             <ui:hint>{{ $hint }}</ui:hint>
@@ -111,28 +91,9 @@
         @endif
     </ui:field>
 @else
-    <x-ui::datepicker._datepicker
-        :id="$id"
-        :name="$inputName"
-        :popover-id="$popoverId"
-        :value="$value"
-        :display-value="$displayValue"
-        :disabled="$disabled"
-        :error="$error"
-        :locale="$locale"
-        :months="$months"
-        :weekdays="$weekdays"
-        :display-format="$displayFormat"
-        :placeholder="$placeholder"
-        :clear-label="$clearLabel"
-        :today-label="$todayLabel"
-        :min-date="$minDate"
-        :max-date="$maxDate"
-        :clearable="$clearable"
-        :show-selects="$showSelects"
-        :size="$size"
-        :variant="$variant"
-        :wrapper-classes="$wrapperClasses"
-        :attributes="$attributes"
-    />
+    <x-ui::datepicker._datepicker :id="$id" :name="$inputName" :popover-id="$popoverId" :value="$value"
+        :display-value="$displayValue" :disabled="$disabled" :error="$error" :locale="$locale" :months="$months"
+        :weekdays="$weekdays" :display-format="$displayFormat" :placeholder="$placeholder" :clear-label="$clearLabel" :today-label="$todayLabel"
+        :min-date="$minDate" :max-date="$maxDate" :clearable="$clearable" :show-footer="$showFooter" :show-selects="$showSelects"
+        :size="$size" :variant="$variant" :wrapper-classes="$wrapperClasses" :attributes="$attributes" />
 @endif

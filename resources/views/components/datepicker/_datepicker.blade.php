@@ -14,6 +14,7 @@
     'name',
     'placeholder',
     'popoverId',
+    'showFooter',
     'showSelects',
     'size',
     'todayLabel',
@@ -38,9 +39,12 @@
         ])
         ->add(
             match (true) {
-                (bool) $error => 'border-red-500 bg-white text-gray-900 focus:border-red-500 dark:border-red-500 dark:bg-gray-800 dark:text-gray-100',
-                $variant === 'inverted' => 'border-gray-140 bg-gray-10 text-gray-900 hover:border-gray-300 focus:border-gray-400 dark:border-gray-700 dark:bg-gray-820 dark:text-gray-100 dark:hover:border-gray-600 dark:focus:border-gray-500',
-                default => 'border-gray-140 bg-white text-gray-900 hover:border-gray-300 focus:border-gray-400 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 dark:hover:border-gray-600 dark:focus:border-gray-500',
+                (bool) $error
+                    => 'border-red-500 bg-white text-gray-900 focus:border-red-500 dark:border-red-500 dark:bg-gray-800 dark:text-gray-100',
+                $variant === 'inverted'
+                    => 'border-gray-140 bg-gray-10 text-gray-900 hover:border-gray-300 focus:border-gray-400 dark:border-gray-700 dark:bg-gray-820 dark:text-gray-100 dark:hover:border-gray-600 dark:focus:border-gray-500',
+                default
+                    => 'border-gray-140 bg-white text-gray-900 hover:border-gray-300 focus:border-gray-400 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 dark:hover:border-gray-600 dark:focus:border-gray-500',
             },
         );
 
@@ -60,7 +64,9 @@
 
     // Month/year selects
     $selectClasses = Ui::classes()
-        ->add('h-7 cursor-pointer appearance-none rounded-md border-0 bg-transparent px-2 text-sm font-medium outline-none')
+        ->add(
+            'h-7 cursor-pointer appearance-none rounded-md border-0 bg-transparent px-2 text-sm font-medium outline-none',
+        )
         ->add('text-gray-900 hover:bg-gray-100 focus:bg-gray-100')
         ->add('dark:text-gray-100 dark:hover:bg-gray-750 dark:focus:bg-gray-750');
 
@@ -76,46 +82,27 @@
         ->add('dark:text-gray-300 dark:hover:bg-gray-750');
 @endphp
 
-<div
-    x-data="datepicker({
-        value: @js($value),
-        displayValue: @js($displayValue),
-        displayFormat: @js($displayFormat),
-        minDate: @js($minDate),
-        maxDate: @js($maxDate),
-        months: @js($months),
-        placeholder: @js($placeholder),
-    })"
-    x-modelable="value"
+<div x-data="datepicker({
+    value: @js($value),
+    displayValue: @js($displayValue),
+    displayFormat: @js($displayFormat),
+    minDate: @js($minDate),
+    maxDate: @js($maxDate),
+    months: @js($months),
+    placeholder: @js($placeholder),
+})" x-modelable="value"
     {{ $attributes->only(['wire:model', 'wire:model.live', 'wire:model.blur', 'wire:model.defer', 'x-model']) }}
-    class="{{ $wrapperClasses }}"
-    style="anchor-scope: {{ $anchor }};"
-    data-datepicker
->
+    class="{{ $wrapperClasses }}" style="anchor-scope: {{ $anchor }};" data-datepicker>
     {{-- Trigger --}}
-    <button
-        type="button"
-        popovertarget="{{ $popoverId }}"
-        @disabled($disabled)
-        @if($error) aria-invalid="true" @endif
-        aria-haspopup="dialog"
-        style="anchor-name: {{ $anchor }};"
-        class="{{ $triggerClasses }}"
-        data-control
-    >
-        <span
-            x-text="displayValue || placeholder"
-            :class="{ 'text-gray-400 dark:text-gray-500': !displayValue }"
-            class="flex-1 truncate text-left"
-        ></span>
+    <button type="button" popovertarget="{{ $popoverId }}" @disabled($disabled)
+        @if ($error) aria-invalid="true" @endif aria-haspopup="dialog"
+        style="anchor-name: {{ $anchor }};" class="{{ $triggerClasses }}" data-control>
+        <span x-text="displayValue || placeholder" :class="{ 'text-gray-400 dark:text-gray-500': !displayValue }"
+            class="flex-1 truncate text-left"></span>
 
         @if ($clearable)
-            <button
-                type="button"
-                x-show="value"
-                x-on:click.stop="clear()"
-                class="text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300"
-            >
+            <button type="button" x-show="value" x-on:click.stop="clear()"
+                class="text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300">
                 <ui:icon name="x" size="sm" />
             </button>
         @endif
@@ -124,36 +111,19 @@
     </button>
 
     {{-- Hidden input --}}
-    <input
-        type="hidden"
-        x-ref="input"
-        @if($name) name="{{ $name }}" @endif
-        @if($id) id="{{ $id }}" @endif
-        :value="value"
-        @disabled($disabled)
-    />
+    <input type="hidden" x-ref="input" @if ($name) name="{{ $name }}" @endif
+        @if ($id) id="{{ $id }}" @endif :value="value"
+        @disabled($disabled) />
 
     {{-- Calendar popover --}}
-    <div
-        id="{{ $popoverId }}"
-        popover
-        x-ref="calendar"
-        x-on:toggle="onToggle($event)"
-        role="dialog"
-        aria-modal="true"
-        aria-label="Choose date"
+    <div id="{{ $popoverId }}" popover x-ref="calendar" x-on:toggle="onToggle($event)" role="dialog"
+        aria-modal="true" aria-label="Choose date"
         style="position-anchor: {{ $anchor }}; top: calc(anchor(bottom) + 0.25rem); left: anchor(left); position-try-fallbacks: --datepicker-top;"
-        class="{{ $calendarClasses }}"
-    >
+        class="{{ $calendarClasses }}">
         {{-- Header --}}
         <div class="flex items-center justify-between gap-2">
-            <button
-                type="button"
-                x-on:click="prevMonth()"
-                :disabled="!canGoPrev()"
-                aria-label="Previous month"
-                class="{{ $navButtonClasses }}"
-            >
+            <button type="button" x-on:click="prevMonth()" :disabled="!canGoPrev()" aria-label="Previous month"
+                class="{{ $navButtonClasses }}">
                 <ui:icon name="chevron-left" size="sm" />
             </button>
 
@@ -171,20 +141,12 @@
                     </select>
                 </div>
             @else
-                <div
-                    class="flex-1 text-center text-sm font-medium text-gray-900 dark:text-gray-100"
-                    x-text="months[viewMonth] + ' ' + viewYear"
-                    aria-live="polite"
-                ></div>
+                <div class="flex-1 text-center text-sm font-medium text-gray-900 dark:text-gray-100"
+                    x-text="months[viewMonth] + ' ' + viewYear" aria-live="polite"></div>
             @endif
 
-            <button
-                type="button"
-                x-on:click="nextMonth()"
-                :disabled="!canGoNext()"
-                aria-label="Next month"
-                class="{{ $navButtonClasses }}"
-            >
+            <button type="button" x-on:click="nextMonth()" :disabled="!canGoNext()" aria-label="Next month"
+                class="{{ $navButtonClasses }}">
                 <ui:icon name="chevron-right" size="sm" />
             </button>
         </div>
@@ -199,27 +161,21 @@
         {{-- Days grid --}}
         <div class="grid grid-cols-7 gap-1" role="grid">
             <template x-for="(day, index) in calendarDays()" :key="index">
-                <button
-                    type="button"
-                    x-on:click="selectDay(day)"
-                    :disabled="day.disabled"
-                    x-text="day.date"
-                    role="gridcell"
-                    :aria-selected="day.selected"
-                    :aria-current="day.today ? 'date' : false"
+                <button type="button" x-on:click="selectDay(day)" :disabled="day.disabled" x-text="day.date"
+                    role="gridcell" :aria-selected="day.selected" :aria-current="day.today ? 'date' : false"
                     :class="{
                         'text-gray-300 dark:text-gray-600': day.outside,
                         'font-semibold ring-1 ring-gray-300 dark:ring-gray-600': day.today && !day.selected,
-                        'font-semibold bg-gray-900 text-white hover:bg-gray-800 dark:bg-gray-100 dark:text-gray-900 dark:hover:bg-gray-200': day.selected,
+                        'font-semibold bg-gray-900 text-white hover:bg-gray-800 dark:bg-gray-100 dark:text-gray-900 dark:hover:bg-gray-200': day
+                            .selected,
                         'pointer-events-none opacity-50': day.disabled,
                     }"
-                    class="{{ $dayClasses }}"
-                ></button>
+                    class="{{ $dayClasses }}"></button>
             </template>
         </div>
 
         {{-- Footer --}}
-        @if ($clearable)
+        @if ($showFooter)
             <div class="flex items-center justify-between border-t border-gray-100 pt-3 dark:border-gray-740">
                 <ui:button variant="ghost" size="sm" x-on:click="clear()">{{ $clearLabel }}</ui:button>
                 <ui:button variant="ghost" size="sm" x-on:click="today()">{{ $todayLabel }}</ui:button>
@@ -328,8 +284,12 @@
                     },
 
                     dispatchChange() {
-                        this.$refs.input.dispatchEvent(new Event('input', { bubbles: true }));
-                        this.$refs.input.dispatchEvent(new Event('change', { bubbles: true }));
+                        this.$refs.input.dispatchEvent(new Event('input', {
+                            bubbles: true
+                        }));
+                        this.$refs.input.dispatchEvent(new Event('change', {
+                            bubbles: true
+                        }));
                     },
 
                     prevMonth() {
@@ -364,9 +324,13 @@
 
                     yearOptions() {
                         const currentYear = new Date().getFullYear();
-                        const minYear = this.minDate ? this.parseDate(this.minDate).getFullYear() : currentYear - 100;
-                        const maxYear = this.maxDate ? this.parseDate(this.maxDate).getFullYear() : currentYear + 10;
-                        return Array.from({ length: maxYear - minYear + 1 }, (_, i) => minYear + i);
+                        const minYear = this.minDate ? this.parseDate(this.minDate).getFullYear() :
+                            currentYear - 100;
+                        const maxYear = this.maxDate ? this.parseDate(this.maxDate).getFullYear() :
+                            currentYear + 10;
+                        return Array.from({
+                            length: maxYear - minYear + 1
+                        }, (_, i) => minYear + i);
                     },
 
                     calendarDays() {
