@@ -43,7 +43,7 @@
         @endif
 
         <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between lg:gap-6">
-            <div class="flex grow flex-col gap-1">
+            <div class="flex grow flex-col items-start gap-1">
                 @if (isset($header))
                     {{ $header }}
                 @else
