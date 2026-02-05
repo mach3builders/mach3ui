@@ -4,7 +4,6 @@ namespace Mach3Builders\Ui;
 
 use Illuminate\Support\Facades\Blade;
 use Illuminate\View\ComponentAttributeBag;
-use Mach3Builders\Ui\Commands\UiCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -20,8 +19,7 @@ class UiServiceProvider extends PackageServiceProvider
         $package
             ->name('ui')
             ->hasTranslations()
-            ->hasViews()
-            ->hasCommand(UiCommand::class);
+            ->hasViews();
     }
 
     public function packageBooted(): void
