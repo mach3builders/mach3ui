@@ -16,6 +16,9 @@ function benchmark(string $blade, int $iterations = 50): float
 }
 
 test('compare optimized vs old icon implementation', function () {
+    // Skip: _old component has been removed after optimization was validated
+    $this->markTestSkipped('Old icon component (_old) has been removed.');
+
     $iterations = 50;
 
     // Test optimized version (svg() helper)
