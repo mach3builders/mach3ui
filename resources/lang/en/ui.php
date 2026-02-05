@@ -92,6 +92,7 @@ return [
         'placeholder' => 'Select an option...',
         'search_placeholder' => 'Search...',
         'no_results' => 'No results found',
+        'no_selection' => 'No selection',
     ],
 
     // Rich text editor

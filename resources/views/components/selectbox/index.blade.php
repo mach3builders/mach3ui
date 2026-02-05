@@ -6,6 +6,8 @@
     'label' => null,
     'multiple' => false,
     'name' => null,
+    'nullable' => false,
+    'nullableLabel' => null,
     'placeholder' => null,
     'position' => 'bottom-start',
     'searchable' => false,
@@ -54,8 +56,9 @@
         <ui:label>{{ $label }}</ui:label>
 
         <x-ui::selectbox._selectbox :id="$id" :name="$selectName" :disabled="$disabled" :error="$error"
-            :multiple="$multiple" :placeholder="$placeholder" :position="$position" :searchable="$searchable" :search-placeholder="$searchPlaceholder" :size="$size"
-            :value="$initialValue" :variant="$variant" :attributes="$attributes">{{ $slot }}</x-ui::selectbox._selectbox>
+            :multiple="$multiple" :nullable="$nullable" :nullable-label="$nullableLabel" :placeholder="$placeholder" :position="$position" :searchable="$searchable"
+            :search-placeholder="$searchPlaceholder" :size="$size" :value="$initialValue" :variant="$variant"
+            :attributes="$attributes">{{ $slot }}</x-ui::selectbox._selectbox>
 
         @if ($hint)
             <ui:hint>{{ $hint }}</ui:hint>
@@ -67,7 +70,7 @@
     </ui:field>
 @else
     <x-ui::selectbox._selectbox :id="$id" :name="$selectName" :disabled="$disabled" :error="$error"
-        :multiple="$multiple" :placeholder="$placeholder" :position="$position" :searchable="$searchable" :search-placeholder="$searchPlaceholder"
-        :size="$size" :value="$initialValue" :variant="$variant"
+        :multiple="$multiple" :nullable="$nullable" :nullable-label="$nullableLabel" :placeholder="$placeholder" :position="$position"
+        :searchable="$searchable" :search-placeholder="$searchPlaceholder" :size="$size" :value="$initialValue" :variant="$variant"
         :attributes="$attributes">{{ $slot }}</x-ui::selectbox._selectbox>
 @endif

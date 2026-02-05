@@ -5,6 +5,8 @@
     'id' => null,
     'multiple' => false,
     'name' => null,
+    'nullable' => false,
+    'nullableLabel' => null,
     'placeholder' => null,
     'position' => 'bottom-start',
     'searchable' => false,
@@ -384,6 +386,11 @@
         @endif
 
         <div class="{{ $optionsClasses }}" data-selectbox-options>
+            @if ($nullable && !$multiple)
+                <ui:selectbox.option :value="null" class="text-gray-400 dark:text-gray-500">
+                    {{ $nullableLabel ?: __('ui::ui.selectbox.no_selection') }}
+                </ui:selectbox.option>
+            @endif
             {{ $slot }}
         </div>
     </div>
