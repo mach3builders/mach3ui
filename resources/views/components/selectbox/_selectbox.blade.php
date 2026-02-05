@@ -18,17 +18,34 @@
     $uniqueId = $id ?? 'selectbox-' . Str::random(8);
     $menuId = $uniqueId . '-menu';
 
-    // Check for wire:model
     $allAttrs = $attributes?->getAttributes() ?? [];
-    $wireModelKey = null;
-    $wireModelValue = null;
-    $wireModelLive = false;
 
+    // Check for wire:model
+    $wireModel = method_exists($attributes, 'wire') ? $attributes->wire('model')->value() : null;
+    $wireModelLive = false;
+    if (!$wireModel) {
+        foreach ($allAttrs as $attrKey => $attrValue) {
+            if (str_starts_with($attrKey, 'wire:model')) {
+                $wireModel = $attrValue;
+                $wireModelLive = str_contains($attrKey, '.live');
+                break;
+            }
+        }
+    } else {
+        // Check modifiers on the wire:model attribute
+        foreach ($allAttrs as $attrKey => $attrValue) {
+            if (str_starts_with($attrKey, 'wire:model') && str_contains($attrKey, '.live')) {
+                $wireModelLive = true;
+                break;
+            }
+        }
+    }
+
+    // Check for x-model
+    $xModel = null;
     foreach ($allAttrs as $attrKey => $attrValue) {
-        if (str_starts_with($attrKey, 'wire:model')) {
-            $wireModelKey = $attrKey;
-            $wireModelValue = $attrValue;
-            $wireModelLive = str_contains($attrKey, '.live');
+        if (str_starts_with($attrKey, 'x-model')) {
+            $xModel = $attrValue;
             break;
         }
     }
@@ -38,7 +55,6 @@
 
     // Check if Livewire is available
     $hasLivewire = class_exists(\Livewire\Livewire::class);
-    $usesEntangle = $hasLivewire && $wireModelValue;
 
     // Initial value handling
     $initialValue = $value;
@@ -108,17 +124,16 @@
     $optionsClasses = Ui::classes()->add('flex max-h-60 flex-col gap-0.5 overflow-y-auto p-1');
 @endphp
 
-<div wire:ignore x-data="{
+<div {{ $wireModel ? 'wire:ignore' : '' }} x-data="{
     open: false,
     multiple: {{ $multiple ? 'true' : 'false' }},
     searchable: {{ $searchable ? 'true' : 'false' }},
     search: '',
-    @if ($usesEntangle) value: $wire.entangle('{{ $wireModelValue }}'{{ $wireModelLive ? ', true' : '' }}),
-        @else
-        value: {{ \Illuminate\Support\Js::from($initialValue) }}, @endif
+    value: {{ \Illuminate\Support\Js::from($initialValue) }},
     labels: {},
     placeholder: '{{ $placeholder ?? '' }}',
     focusedIndex: -1,
+    _parentData: null,
 
     get displayLabel() {
         if (this.multiple) {
@@ -247,27 +262,86 @@
         this.focusedIndex = -1;
     },
 
-    init() {
-        // Set initial labels from selected options
-        this.$nextTick(() => {
-            if (this.multiple && Array.isArray(this.value)) {
-                this.value.forEach(val => {
-                    const option = this.$refs.menu.querySelector(`[data-selectbox-option][data-value='${val}']`);
+    updateLabelsForValue(val) {
+        if (this.multiple && Array.isArray(val)) {
+            val.forEach(v => {
+                if (!this.labels[v]) {
+                    const option = this.$refs.menu?.querySelector(`[data-selectbox-option][data-value='${v}']`);
                     if (option) {
-                        this.labels[val] = option.querySelector('[data-label]')?.textContent?.trim() ?? option.textContent.trim();
+                        this.labels[v] = option.querySelector('[data-label]')?.textContent?.trim() ?? option.textContent.trim();
                     }
-                });
-            } else if (this.value !== null) {
-                const selected = this.$refs.menu.querySelector(`[data-selectbox-option][data-value='${this.value}']`);
-                if (selected) {
-                    this.labels[this.value] = selected.querySelector('[data-label]')?.textContent?.trim() ?? selected.textContent.trim();
                 }
+            });
+        } else if (val !== null && val !== undefined && !this.labels[val]) {
+            const selected = this.$refs.menu?.querySelector(`[data-selectbox-option][data-value='${val}']`);
+            if (selected) {
+                this.labels[val] = selected.querySelector('[data-label]')?.textContent?.trim() ?? selected.textContent.trim();
+            }
+        }
+    },
+
+    init() {
+        @if($hasLivewire && $wireModel)
+        // Livewire: sync with wire:model
+        this.value = $wire.get('{{ $wireModel }}') ?? {{ $multiple ? '[]' : 'null' }};
+
+        // Watch for changes from Livewire (external updates)
+        $wire.$watch('{{ $wireModel }}', (newVal) => {
+            if (JSON.stringify(newVal) !== JSON.stringify(this.value)) {
+                this.value = newVal;
             }
         });
+
+        // Sync our changes back to Livewire
+        this.$watch('value', (newVal) => {
+            $wire.set('{{ $wireModel }}', newVal, {{ $wireModelLive ? 'true' : 'false' }});
+        });
+        @elseif($xModel)
+        // Alpine x-model: sync with parent scope
+        const parentEl = this.$el.closest('[x-data]:not([data-selectbox])');
+        if (parentEl) {
+            const parentData = Alpine.$data(parentEl);
+            let syncing = false;
+            let lastParentVal = undefined;
+
+            // Get initial value from parent
+            this.value = parentData['{{ $xModel }}'] ?? {{ $multiple ? '[]' : 'null' }};
+            lastParentVal = JSON.stringify(this.value);
+
+            // Sync our changes to parent
+            this.$watch('value', (newVal) => {
+                if (syncing) return;
+                syncing = true;
+                parentData['{{ $xModel }}'] = newVal;
+                lastParentVal = JSON.stringify(newVal);
+                this.$nextTick(() => syncing = false);
+            });
+
+            // Watch parent for external changes using effect
+            Alpine.effect(() => {
+                const parentVal = parentData['{{ $xModel }}'];
+                const parentValStr = JSON.stringify(parentVal);
+                if (!syncing && parentValStr !== lastParentVal) {
+                    syncing = true;
+                    lastParentVal = parentValStr;
+                    this.value = parentVal ?? {{ $multiple ? '[]' : 'null' }};
+                    this.$nextTick(() => syncing = false);
+                }
+            });
+        }
+        @endif
+
+        // Watch for value changes and update labels
+        this.$watch('value', (newVal) => {
+            this.$nextTick(() => this.updateLabelsForValue(newVal));
+        });
+
+        // Set initial labels from selected options
+        this.$nextTick(() => this.updateLabelsForValue(this.value));
     }
-}" x-on:keydown.escape.window="close()" style="anchor-scope: {{ $anchor }};"
-    class="{{ $wrapperClasses }}"
-    {{ $attributes?->except(['class', 'wire:model', 'wire:model.live', 'wire:model.blur', 'wire:model.defer', 'disabled']) }}
+}" x-on:keydown.escape.window="close()"
+    style="anchor-scope: {{ $anchor }};" class="{{ $wrapperClasses }}"
+    {{ $attributes?->except(['class', 'wire:model', 'wire:model.live', 'wire:model.blur', 'wire:model.defer', 'x-model', 'x-model.debounce', 'x-model.lazy', 'x-model.throttle', 'disabled']) }}
     data-selectbox @if ($multiple)
     data-multiple
     @endif
