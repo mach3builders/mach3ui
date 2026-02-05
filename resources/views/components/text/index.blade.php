@@ -1,3 +1,5 @@
+@blaze
+
 @props([
     'size' => 'sm',
     'tag' => 'p',
@@ -33,4 +35,5 @@
         ->merge($attributes);
 @endphp
 
-<{{ $tag }} {{ $attributes->except('class') }} class="{{ $classes }}" data-text data-variant="{{ $variant }}">{{ $slot }}</{{ $tag }}>
+<{{ $tag }} {{ $attributes->except('class') }} class="{{ $classes }}" data-text
+    data-variant="{{ $variant }}">{{ $slot }}</{{ $tag }}>

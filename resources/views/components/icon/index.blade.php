@@ -1,3 +1,5 @@
+@blaze
+
 @props([
     'boxed' => false,
     'color' => null,

@@ -1,3 +1,5 @@
+@blaze
+
 @props([
     'href' => null,
     'icon' => null,
@@ -32,26 +34,22 @@
         ->add('[&>svg]:size-4 [&>svg]:shrink-0');
 @endphp
 
-<{{ $tag }}
-    @if($url) href="{{ $url }}" @endif
-    {{ $attributes->except('class') }}
-    class="{{ $classes }}"
-    data-list-item
->
-    @if($hasLabelValue)
+<{{ $tag }} @if ($url) href="{{ $url }}" @endif
+    {{ $attributes->except('class') }} class="{{ $classes }}" data-list-item>
+    @if ($hasLabelValue)
         <span class="{{ $labelClasses }}">
-            @if($icon)
+            @if ($icon)
                 <ui:icon :name="$icon" />
             @endif
 
             {{ $label ?? $slot }}
         </span>
 
-        @if($value || $iconEnd)
+        @if ($value || $iconEnd)
             <span class="{{ $valueClasses }}">
                 {{ $value }}
 
-                @if($iconEnd)
+                @if ($iconEnd)
                     <ui:icon :name="$iconEnd" />
                 @endif
             </span>
@@ -59,4 +57,4 @@
     @else
         {{ $slot }}
     @endif
-</{{ $tag }}>
+    </{{ $tag }}>

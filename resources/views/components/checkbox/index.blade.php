@@ -1,3 +1,5 @@
+@blaze
+
 @props([
     'description' => null,
     'indeterminate' => false,
@@ -31,7 +33,9 @@ $showName = isset($name);
 $inputName = $name ?: $wireModelValue ?: $xModelValue ?: $id;
 
 // ID priority: explicit id attr > field id (@aware) > input name > auto-generated
-$id = $attributes->get('id') ?? ($id ?? ($inputName ?? 'checkbox-' . Str::random(8)));
+$id =
+    $attributes->get('id') ??
+    ($id ?? ($inputName ?? Ui::uniqueId('checkbox')));
 
 $hasLabel = $label || $description;
 $error = $inputName ? $errors->first($inputName) ?? null : null;

@@ -1,3 +1,5 @@
+@blaze
+
 @props([
     'active' => false,
     'disabled' => false,

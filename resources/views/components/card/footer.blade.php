@@ -1,3 +1,5 @@
+@blaze
+
 @props([
     'divided' => false,
     'variant' => 'default',

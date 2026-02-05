@@ -68,23 +68,23 @@
 @endphp
 
 <div x-data="timepicker({
-        value: @js($value),
-        displayValue: @js($displayValue),
-        format: @js($format),
-        minTime: @js($minTime),
-        maxTime: @js($maxTime),
-        minuteStep: @js($minuteStep),
-        showSeconds: @js($showSeconds),
-        placeholder: @js($placeholder),
-        amLabel: @js($amLabel),
-        pmLabel: @js($pmLabel),
-    })" x-modelable="value"
+    value: @js($value),
+    displayValue: @js($displayValue),
+    format: @js($format),
+    minTime: @js($minTime),
+    maxTime: @js($maxTime),
+    minuteStep: @js($minuteStep),
+    showSeconds: @js($showSeconds),
+    placeholder: @js($placeholder),
+    amLabel: @js($amLabel),
+    pmLabel: @js($pmLabel),
+})" x-modelable="value"
     {{ $attributes->only(['wire:model', 'wire:model.live', 'wire:model.blur', 'wire:model.defer', 'x-model']) }}
     class="{{ $wrapperClasses }}" style="anchor-scope: {{ $anchor }};" data-timepicker>
     {{-- Trigger --}}
     <button type="button" popovertarget="{{ $popoverId }}" @disabled($disabled)
-        @if ($error) aria-invalid="true" @endif aria-haspopup="dialog" style="anchor-name: {{ $anchor }};"
-        class="{{ $triggerClasses }}" data-control>
+        @if ($error) aria-invalid="true" @endif aria-haspopup="dialog"
+        style="anchor-name: {{ $anchor }};" class="{{ $triggerClasses }}" data-control>
         <span x-text="displayValue || placeholder" :class="{ 'text-gray-400 dark:text-gray-500': !displayValue }"
             class="flex-1 truncate text-left"></span>
 
@@ -100,12 +100,13 @@
 
     {{-- Hidden input --}}
     <input type="hidden" x-ref="input" @if ($name) name="{{ $name }}" @endif
-        @if ($id) id="{{ $id }}" @endif :value="value" @disabled($disabled) />
+        @if ($id) id="{{ $id }}" @endif :value="value"
+        @disabled($disabled) />
 
     {{-- Time popover --}}
-    <div id="{{ $popoverId }}" popover x-ref="popover" x-on:toggle="onToggle($event)" role="dialog" aria-modal="true"
-        aria-label="Choose time"
-        style="position-anchor: {{ $anchor }}; top: calc(anchor(bottom) + 0.25rem); left: anchor(left); position-try-fallbacks: --timepicker-top;"
+    <div id="{{ $popoverId }}" popover x-ref="popover" x-on:toggle="onToggle($event)" role="dialog"
+        aria-modal="true" aria-label="Choose time"
+        style="position-anchor: {{ $anchor }}; inset: auto; top: calc(anchor(bottom) + 0.25rem); left: anchor(left); position-try-fallbacks: --timepicker-top;"
         class="{{ $popoverClasses }}">
 
         <div class="flex gap-2">
@@ -115,7 +116,8 @@
                     <button type="button" x-on:click="selectHour(hour.value)" :disabled="hour.disabled"
                         x-text="hour.label"
                         :class="{
-                            'font-semibold bg-gray-900 text-white hover:bg-gray-800 dark:bg-gray-100 dark:text-gray-900 dark:hover:bg-gray-200': hour.value === selectedHour,
+                            'font-semibold bg-gray-900 text-white hover:bg-gray-800 dark:bg-gray-100 dark:text-gray-900 dark:hover:bg-gray-200': hour
+                                .value === selectedHour,
                             'pointer-events-none opacity-50': hour.disabled,
                         }"
                         class="{{ $optionClasses }}"></button>
@@ -130,7 +132,8 @@
                     <button type="button" x-on:click="selectMinute(minute.value)" :disabled="minute.disabled"
                         x-text="minute.label"
                         :class="{
-                            'font-semibold bg-gray-900 text-white hover:bg-gray-800 dark:bg-gray-100 dark:text-gray-900 dark:hover:bg-gray-200': minute.value === selectedMinute,
+                            'font-semibold bg-gray-900 text-white hover:bg-gray-800 dark:bg-gray-100 dark:text-gray-900 dark:hover:bg-gray-200': minute
+                                .value === selectedMinute,
                             'pointer-events-none opacity-50': minute.disabled,
                         }"
                         class="{{ $optionClasses }}"></button>
@@ -146,7 +149,8 @@
                         <button type="button" x-on:click="selectSecond(second.value)" :disabled="second.disabled"
                             x-text="second.label"
                             :class="{
-                                'font-semibold bg-gray-900 text-white hover:bg-gray-800 dark:bg-gray-100 dark:text-gray-900 dark:hover:bg-gray-200': second.value === selectedSecond,
+                                'font-semibold bg-gray-900 text-white hover:bg-gray-800 dark:bg-gray-100 dark:text-gray-900 dark:hover:bg-gray-200': second
+                                    .value === selectedSecond,
                                 'pointer-events-none opacity-50': second.disabled,
                             }"
                             class="{{ $optionClasses }}"></button>
@@ -209,8 +213,10 @@
                             this.parseValue(this.value);
                         } else {
                             const now = new Date();
-                            this.selectedHour = this.format === '12' ? (now.getHours() % 12 || 12) : now.getHours();
-                            this.selectedMinute = Math.floor(now.getMinutes() / this.minuteStep) * this.minuteStep;
+                            this.selectedHour = this.format === '12' ? (now.getHours() % 12 || 12) : now
+                                .getHours();
+                            this.selectedMinute = Math.floor(now.getMinutes() / this.minuteStep) * this
+                                .minuteStep;
                             this.selectedSecond = 0;
                             this.period = now.getHours() >= 12 ? 'PM' : 'AM';
                         }
@@ -283,7 +289,8 @@
                         for (let i = start; i <= max; i++) {
                             result.push({
                                 value: i,
-                                label: this.format === '12' ? String(i) : String(i).padStart(2, '0'),
+                                label: this.format === '12' ? String(i) : String(i).padStart(2,
+                                    '0'),
                                 disabled: this.isHourDisabled(i),
                             });
                         }
@@ -375,33 +382,48 @@
                     now() {
                         const date = new Date();
                         const h = String(date.getHours()).padStart(2, '0');
-                        const m = String(Math.floor(date.getMinutes() / this.minuteStep) * this.minuteStep).padStart(2, '0');
+                        const m = String(Math.floor(date.getMinutes() / this.minuteStep) * this.minuteStep)
+                            .padStart(2, '0');
                         const s = String(date.getSeconds()).padStart(2, '0');
                         this.value = this.showSeconds ? `${h}:${m}:${s}` : `${h}:${m}`;
                         this.$refs.popover.hidePopover();
                     },
 
                     dispatchChange() {
-                        this.$refs.input.dispatchEvent(new Event('input', { bubbles: true }));
-                        this.$refs.input.dispatchEvent(new Event('change', { bubbles: true }));
+                        this.$refs.input.dispatchEvent(new Event('input', {
+                            bubbles: true
+                        }));
+                        this.$refs.input.dispatchEvent(new Event('change', {
+                            bubbles: true
+                        }));
                     },
 
                     scrollToSelected() {
                         // Scroll hours
                         if (this.$refs.hoursColumn) {
-                            const hourBtn = this.$refs.hoursColumn.querySelector(`button:nth-child(${this.format === '12' ? this.selectedHour : this.selectedHour + 1})`);
-                            if (hourBtn) hourBtn.scrollIntoView({ block: 'center' });
+                            const hourBtn = this.$refs.hoursColumn.querySelector(
+                                `button:nth-child(${this.format === '12' ? this.selectedHour : this.selectedHour + 1})`
+                            );
+                            if (hourBtn) hourBtn.scrollIntoView({
+                                block: 'center'
+                            });
                         }
                         // Scroll minutes
                         if (this.$refs.minutesColumn) {
                             const minuteIndex = Math.floor(this.selectedMinute / this.minuteStep) + 1;
-                            const minuteBtn = this.$refs.minutesColumn.querySelector(`button:nth-child(${minuteIndex})`);
-                            if (minuteBtn) minuteBtn.scrollIntoView({ block: 'center' });
+                            const minuteBtn = this.$refs.minutesColumn.querySelector(
+                                `button:nth-child(${minuteIndex})`);
+                            if (minuteBtn) minuteBtn.scrollIntoView({
+                                block: 'center'
+                            });
                         }
                         // Scroll seconds
                         if (this.$refs.secondsColumn) {
-                            const secondBtn = this.$refs.secondsColumn.querySelector(`button:nth-child(${this.selectedSecond + 1})`);
-                            if (secondBtn) secondBtn.scrollIntoView({ block: 'center' });
+                            const secondBtn = this.$refs.secondsColumn.querySelector(
+                                `button:nth-child(${this.selectedSecond + 1})`);
+                            if (secondBtn) secondBtn.scrollIntoView({
+                                block: 'center'
+                            });
                         }
                     },
                 }));

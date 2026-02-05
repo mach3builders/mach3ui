@@ -1,21 +1,16 @@
+@blaze
+
 @props([
     'position' => 'bottom-start',
 ])
 
 @php
-    $id = uniqid('dropdown-');
+    $id = Ui::uniqueId('dropdown');
 
-    $classes = Ui::classes()
-        ->add('relative inline-block select-none')
-        ->merge($attributes);
+    $classes = Ui::classes()->add('relative inline-block select-none')->merge($attributes->only('class'));
 @endphp
 
-<div
-    x-data="{ open: false, id: '{{ $id }}', position: '{{ $position }}' }"
-    style="anchor-scope: --dropdown-trigger;"
-    data-dropdown
-    {{ $attributes->except('class') }}
-    class="{{ $classes }}"
->
+<div class="{{ $classes }}" {{ $attributes->except('class') }} x-data="{ open: false, id: '{{ $id }}', position: '{{ $position }}' }"
+    style="anchor-scope: --dropdown-trigger;" data-dropdown>
     {{ $slot }}
 </div>

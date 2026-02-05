@@ -1,3 +1,5 @@
+@blaze
+
 @props([
     'active' => false,
     'icon' => null,
@@ -29,22 +31,15 @@
     // If 'state' is provided, use external Alpine variable (e.g., from parent x-data)
     // Otherwise, create local state with variable 'on'
     $alpineVar = $state ?? 'on';
-    $hasExternalHandler = $attributes->has('wire:click') || $attributes->has('x-on:click') || $attributes->has('@click');
+    $hasExternalHandler =
+        $attributes->has('wire:click') || $attributes->has('x-on:click') || $attributes->has('@click');
     $xData = $state ? null : "{ $alpineVar: " . ($active ? 'true' : 'false') . ' }';
     $clickHandler = $hasExternalHandler ? [] : ['x-on:click' => "$alpineVar = !$alpineVar"];
 @endphp
 
-<ui:button
-    :size="$size"
-    :variant="$variant"
-    :square="!$hasLabel"
-    :x-data="$xData"
-    :aria-pressed="$state ? null : ($active ? 'true' : 'false')"
-    x-bind:aria-pressed="{{ $alpineVar }}.toString()"
-    x-bind:data-active="{{ $alpineVar }}"
-    {{ $attributes->merge($clickHandler) }}
-    data-toggle
->
+<ui:button :size="$size" :variant="$variant" :square="!$hasLabel" :x-data="$xData"
+    :aria-pressed="$state ? null : ($active ? 'true' : 'false')" x-bind:aria-pressed="{{ $alpineVar }}.toString()"
+    x-bind:data-active="{{ $alpineVar }}" {{ $attributes->merge($clickHandler) }} data-toggle>
     <span class="inline-flex items-center gap-2">
         @if ($icon)
             @if ($needsDualIcons)

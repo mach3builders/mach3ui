@@ -1,3 +1,5 @@
+@blaze
+
 @props([
     'icon' => null,
 ])
@@ -10,7 +12,7 @@
 @endphp
 
 <div {{ $attributes->except('class') }} class="{{ $classes }}" data-nav-title>
-    @if($icon)
+    @if ($icon)
         <ui:icon :name="$icon" color="gray" />
     @endif
 

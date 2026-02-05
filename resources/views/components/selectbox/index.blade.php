@@ -1,3 +1,5 @@
+@blaze
+
 @props([
     'disabled' => false,
     'hint' => null,
@@ -42,7 +44,7 @@
     $selectName = $name ?: $wireModelValue ?: $xModelValue ?: $id;
 
     // ID priority: explicit id attr > field id (@aware) > select name > auto-generated
-    $id = $attributes->get('id') ?? ($id ?? ($selectName ?? 'selectbox-' . Str::random(8)));
+    $id = $attributes->get('id') ?? ($id ?? ($selectName ?? Ui::uniqueId('selectbox')));
 
     $error = $selectName ? $errors->first($selectName) ?? null : null;
 @endphp
@@ -51,21 +53,9 @@
     <ui:field :id="$id">
         <ui:label>{{ $label }}</ui:label>
 
-        <x-ui::selectbox._selectbox
-            :id="$id"
-            :name="$selectName"
-            :disabled="$disabled"
-            :error="$error"
-            :multiple="$multiple"
-            :placeholder="$placeholder"
-            :position="$position"
-            :searchable="$searchable"
-            :search-placeholder="$searchPlaceholder"
-            :size="$size"
-            :value="$initialValue"
-            :variant="$variant"
-            :attributes="$attributes"
-        >{{ $slot }}</x-ui::selectbox._selectbox>
+        <x-ui::selectbox._selectbox :id="$id" :name="$selectName" :disabled="$disabled" :error="$error"
+            :multiple="$multiple" :placeholder="$placeholder" :position="$position" :searchable="$searchable" :search-placeholder="$searchPlaceholder" :size="$size"
+            :value="$initialValue" :variant="$variant" :attributes="$attributes">{{ $slot }}</x-ui::selectbox._selectbox>
 
         @if ($hint)
             <ui:hint>{{ $hint }}</ui:hint>
@@ -76,19 +66,8 @@
         @endif
     </ui:field>
 @else
-    <x-ui::selectbox._selectbox
-        :id="$id"
-        :name="$selectName"
-        :disabled="$disabled"
-        :error="$error"
-        :multiple="$multiple"
-        :placeholder="$placeholder"
-        :position="$position"
-        :searchable="$searchable"
-        :search-placeholder="$searchPlaceholder"
-        :size="$size"
-        :value="$initialValue"
-        :variant="$variant"
-        :attributes="$attributes"
-    >{{ $slot }}</x-ui::selectbox._selectbox>
+    <x-ui::selectbox._selectbox :id="$id" :name="$selectName" :disabled="$disabled" :error="$error"
+        :multiple="$multiple" :placeholder="$placeholder" :position="$position" :searchable="$searchable" :search-placeholder="$searchPlaceholder"
+        :size="$size" :value="$initialValue" :variant="$variant"
+        :attributes="$attributes">{{ $slot }}</x-ui::selectbox._selectbox>
 @endif

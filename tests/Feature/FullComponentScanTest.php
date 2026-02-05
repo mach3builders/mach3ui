@@ -98,10 +98,10 @@ test('full component performance scan', function () {
         'tooltip' => '<ui:tooltip text="Tooltip"><ui:button>Hover</ui:button></ui:tooltip>',
 
         // Navigation
-        'breadcrumbs' => '<ui:breadcrumbs :items="[[\'label\' => \'Home\', \'url\' => \'/\']]" />',
+        'breadcrumbs' => '<ui:breadcrumbs><ui:breadcrumbs.item url="/">Home</ui:breadcrumbs.item></ui:breadcrumbs>',
         'pagination' => '<ui:pagination :total="100" :perPage="10" :currentPage="1" />',
         'nav' => '<ui:nav><ui:nav.item href="/">Home</ui:nav.item></ui:nav>',
-        'steps' => '<ui:steps :steps="[\'Step 1\', \'Step 2\']" :current="1" />',
+        'steps' => '<ui:steps><ui:steps.item>Step 1</ui:steps.item><ui:steps.item>Step 2</ui:steps.item></ui:steps>',
 
         // Progress
         'progress' => '<ui:progress :value="50" />',
@@ -112,10 +112,10 @@ test('full component performance scan', function () {
         'toaster' => '<ui:toaster />',
         'action-bar' => '<ui:action-bar>Actions</ui:action-bar>',
         'list' => '<ui:list><ui:list.item>Item</ui:list.item></ui:list>',
-        'definition-list' => '<ui:definition-list :items="[[\'term\' => \'A\', \'description\' => \'B\']]" />',
+        'definition-list' => '<ui:definition-list><ui:definition-list.item label="A">B</ui:definition-list.item></ui:definition-list>',
 
         // Heavy components (these might be slower)
-        'selectbox' => '<ui:selectbox name="test" :options="[\'a\' => \'A\', \'b\' => \'B\']" />',
+        'selectbox' => '<ui:selectbox name="test"><ui:selectbox.option value="a">A</ui:selectbox.option><ui:selectbox.option value="b">B</ui:selectbox.option></ui:selectbox>',
         'datepicker' => '<ui:datepicker name="test" />',
         'timepicker' => '<ui:timepicker name="test" />',
         'file-upload' => '<ui:file-upload name="test" />',
@@ -195,7 +195,7 @@ test('identify components over 1ms threshold', function () {
     $iterations = 20;
 
     $heavyComponents = [
-        'selectbox' => '<ui:selectbox name="test" :options="[\'a\' => \'A\', \'b\' => \'B\', \'c\' => \'C\']" />',
+        'selectbox' => '<ui:selectbox name="test"><ui:selectbox.option value="a">A</ui:selectbox.option><ui:selectbox.option value="b">B</ui:selectbox.option><ui:selectbox.option value="c">C</ui:selectbox.option></ui:selectbox>',
         'datepicker' => '<ui:datepicker name="test" />',
         'timepicker' => '<ui:timepicker name="test" />',
         'file-upload' => '<ui:file-upload name="test" />',

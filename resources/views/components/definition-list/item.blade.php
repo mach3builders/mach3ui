@@ -1,3 +1,5 @@
+@blaze
+
 @props(['label', 'value' => null])
 
 @php

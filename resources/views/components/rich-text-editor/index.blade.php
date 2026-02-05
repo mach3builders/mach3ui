@@ -1,3 +1,5 @@
+@blaze
+
 @props([
     'characterCount' => false,
     'hint' => null,
@@ -34,7 +36,9 @@
     $editorName = $name ?: $wireModelValue ?: $xModelValue ?: $id;
 
     // ID priority: explicit id attr > field id (@aware) > editor name > auto-generated
-    $id = $attributes->get('id') ?? ($id ?? ($editorName ?? 'rich-text-editor-' . Str::random(8)));
+    $id =
+        $attributes->get('id') ??
+        ($id ?? ($editorName ?? Ui::uniqueId('rich-text-editor')));
 
     $error = $editorName ? $errors->first($editorName) ?? null : null;
 
@@ -52,11 +56,8 @@
     <ui:field :id="$id">
         <ui:label>{{ $label }}</ui:label>
 
-        <div
-            class="{{ $wrapperClasses }}"
-            data-placeholder="{{ $placeholder }}"
-            {{ $attributes->except(['class', 'name', 'id']) }}
-        >
+        <div class="{{ $wrapperClasses }}" data-placeholder="{{ $placeholder }}"
+            {{ $attributes->except(['class', 'name', 'id']) }}>
             <x-ui::rich-text-editor.toolbar :groups="$toolbarGroups" />
 
             <div class="rich-text-editor-content"></div>
@@ -67,13 +68,9 @@
                 </div>
             @endif
 
-            <textarea
-                id="{{ $id }}"
-                @if ($editorName) name="{{ $editorName }}" @endif
+            <textarea id="{{ $id }}" @if ($editorName) name="{{ $editorName }}" @endif
                 @if ($error) aria-invalid="true" @endif
-                {{ $attributes->whereStartsWith(['wire:', 'x-model']) }}
-                class="sr-only"
-            >{{ $slot }}</textarea>
+                {{ $attributes->whereStartsWith(['wire:', 'x-model']) }} class="sr-only">{{ $slot }}</textarea>
         </div>
 
         @if ($hint)
@@ -85,11 +82,8 @@
         @endif
     </ui:field>
 @else
-    <div
-        class="{{ $wrapperClasses }}"
-        data-placeholder="{{ $placeholder }}"
-        {{ $attributes->except(['class', 'name', 'id']) }}
-    >
+    <div class="{{ $wrapperClasses }}" data-placeholder="{{ $placeholder }}"
+        {{ $attributes->except(['class', 'name', 'id']) }}>
         <x-ui::rich-text-editor.toolbar :groups="$toolbarGroups" />
 
         <div class="rich-text-editor-content"></div>
@@ -100,12 +94,8 @@
             </div>
         @endif
 
-        <textarea
-            id="{{ $id }}"
-            @if ($editorName) name="{{ $editorName }}" @endif
+        <textarea id="{{ $id }}" @if ($editorName) name="{{ $editorName }}" @endif
             @if ($error) aria-invalid="true" @endif
-            {{ $attributes->whereStartsWith(['wire:', 'x-model']) }}
-            class="sr-only"
-        >{{ $slot }}</textarea>
+            {{ $attributes->whereStartsWith(['wire:', 'x-model']) }} class="sr-only">{{ $slot }}</textarea>
     </div>
 @endif

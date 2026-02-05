@@ -1,3 +1,5 @@
+@blaze
+
 @props([
     'href' => null,
     'icon' => null,
