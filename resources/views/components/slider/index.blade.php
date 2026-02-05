@@ -15,20 +15,21 @@
 @aware(['id'])
 
 @php
+    // Detect x-model via native foreach (faster than collect()->first())
+    $xModel = null;
+    foreach ($attributes->getAttributes() as $k => $v) {
+        if (str_starts_with($k, 'x-model')) {
+            $xModel = $v;
+            break;
+        }
+    }
+
     // Name auto-detection (skill pattern)
-    $name =
-        $name ?:
-        (method_exists($attributes, 'wire')
-            ? $attributes->wire('model')->value()
-            : null) ?:
-        collect($attributes->getAttributes())->first(fn($v, $k) => str_starts_with($k, 'x-model'));
+    $wireModel = method_exists($attributes, 'wire') ? $attributes->wire('model')->value() : null;
+    $name = $name ?: $wireModel ?: $xModel;
 
     $id = $id ?? $name;
     $error = $name ? $errors->first($name) ?? null : null;
-
-    // Detect binding type for showValue
-    $wireModel = method_exists($attributes, 'wire') ? $attributes->wire('model')->value() : null;
-    $xModel = collect($attributes->getAttributes())->first(fn($v, $k) => str_starts_with($k, 'x-model'));
 
     // Determine value reference for x-text
     $valueRef = match (true) {
@@ -46,14 +47,15 @@
 
     // Helper to prefix classes with pseudo-element selector
     $prefixClasses = function (string $selector, string $classes): string {
-        return collect(explode(' ', $classes))
-            ->map(function ($class) use ($selector) {
+        return implode(
+            ' ',
+            array_map(function ($class) use ($selector) {
                 if (preg_match('/^((?:dark:|hover:|focus:)+)(.+)$/', $class, $matches)) {
                     return $matches[1] . $selector . ':' . $matches[2];
                 }
                 return $selector . ':' . $class;
-            })
-            ->implode(' ');
+            }, explode(' ', $classes)),
+        );
     };
 
     // Thumb styling

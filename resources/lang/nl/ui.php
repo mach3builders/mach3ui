@@ -92,6 +92,7 @@ return [
         'placeholder' => 'Selecteer een optie...',
         'search_placeholder' => 'Zoeken...',
         'no_results' => 'Geen resultaten gevonden',
+        'no_selection' => 'Geen selectie',
     ],
 
     // Rich text editor
