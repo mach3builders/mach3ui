@@ -45,24 +45,15 @@
         ->merge($attributes->only('class'));
 @endphp
 
-<div
-    id="{{ $id }}"
-    class="{{ $classes }}"
-    wire:ignore
-    x-data="uiCoder({
-        language: @js($language),
-        placeholder: @js($placeholder ?? ''),
-        readonly: @js($readonly),
-    })"
-    {{ $attributes->except(['class', 'id', ...$modelAttrs]) }}
->
+<div id="{{ $id }}" class="{{ $classes }}" wire:ignore x-data="uiCoder({
+    language: @js($language),
+    placeholder: @js($placeholder ?? ''),
+    readonly: @js($readonly),
+})"
+    {{ $attributes->except(['class', 'id', ...$modelAttrs]) }}>
     <div x-ref="editor"></div>
-    <textarea
-        x-ref="input"
-        class="sr-only"
-        @if ($editorName) name="{{ $editorName }}" @endif
-        {{ $attributes->only($modelAttrs) }}
-    >{{ $slot }}</textarea>
+    <textarea x-ref="input" class="sr-only" @if ($editorName) name="{{ $editorName }}" @endif
+        {{ $attributes->only($modelAttrs) }}>{{ $slot }}</textarea>
 
     @once
         <script type="module">
@@ -71,19 +62,31 @@
             async function loadModules() {
                 if (modules.loaded) return modules;
 
-                const [state, view, commands, language, highlight, autocomplete, langJs, langHtml, langCss] = await Promise.all([
-                    import('https://esm.sh/@codemirror/state@6'),
-                    import('https://esm.sh/@codemirror/view@6'),
-                    import('https://esm.sh/@codemirror/commands@6'),
-                    import('https://esm.sh/@codemirror/language@6'),
-                    import('https://esm.sh/@lezer/highlight@1'),
-                    import('https://esm.sh/@codemirror/autocomplete@6'),
-                    import('https://esm.sh/@codemirror/lang-javascript@6'),
-                    import('https://esm.sh/@codemirror/lang-html@6'),
-                    import('https://esm.sh/@codemirror/lang-css@6'),
-                ]);
+                const [state, view, commands, language, highlight, autocomplete, langJs, langHtml, langCss] = await Promise
+                    .all([
+                        import('https://esm.sh/@codemirror/state@6'),
+                        import('https://esm.sh/@codemirror/view@6'),
+                        import('https://esm.sh/@codemirror/commands@6'),
+                        import('https://esm.sh/@codemirror/language@6'),
+                        import('https://esm.sh/@lezer/highlight@1'),
+                        import('https://esm.sh/@codemirror/autocomplete@6'),
+                        import('https://esm.sh/@codemirror/lang-javascript@6'),
+                        import('https://esm.sh/@codemirror/lang-html@6'),
+                        import('https://esm.sh/@codemirror/lang-css@6'),
+                    ]);
 
-                Object.assign(modules, { state, view, commands, language, highlight, autocomplete, langJs, langHtml, langCss, loaded: true });
+                Object.assign(modules, {
+                    state,
+                    view,
+                    commands,
+                    language,
+                    highlight,
+                    autocomplete,
+                    langJs,
+                    langHtml,
+                    langCss,
+                    loaded: true
+                });
                 return modules;
             }
 
@@ -92,87 +95,249 @@
             }
 
             function getHighlightStyle(m) {
-                const { HighlightStyle } = m.language;
-                const { tags } = m.highlight;
+                const {
+                    HighlightStyle
+                } = m.language;
+                const {
+                    tags
+                } = m.highlight;
 
-                return isDarkMode()
-                    ? HighlightStyle.define([
-                        { tag: tags.keyword, color: '#569cd6' },
-                        { tag: tags.controlKeyword, color: '#c586c0' },
-                        { tag: tags.operatorKeyword, color: '#569cd6' },
-                        { tag: tags.operator, color: '#d4d4d4' },
-                        { tag: tags.number, color: '#b5cea8' },
-                        { tag: tags.string, color: '#ce9178' },
-                        { tag: tags.comment, color: '#6a9955', fontStyle: 'italic' },
-                        { tag: tags.variableName, color: '#9cdcfe' },
-                        { tag: tags.definition(tags.variableName), color: '#dcdcaa' },
-                        { tag: tags.function(tags.variableName), color: '#dcdcaa' },
-                        { tag: tags.propertyName, color: '#9cdcfe' },
-                        { tag: tags.typeName, color: '#4ec9b0' },
-                        { tag: tags.bool, color: '#569cd6' },
-                        { tag: tags.null, color: '#569cd6' },
-                        { tag: tags.punctuation, color: '#d4d4d4' },
-                        { tag: tags.tagName, color: '#569cd6' },
-                        { tag: tags.attributeName, color: '#9cdcfe' },
-                        { tag: tags.attributeValue, color: '#ce9178' },
-                        { tag: tags.angleBracket, color: '#808080' },
-                    ])
-                    : HighlightStyle.define([
-                        { tag: tags.keyword, color: '#0000ff' },
-                        { tag: tags.controlKeyword, color: '#af00db' },
-                        { tag: tags.operatorKeyword, color: '#0000ff' },
-                        { tag: tags.operator, color: '#000000' },
-                        { tag: tags.number, color: '#098658' },
-                        { tag: tags.string, color: '#a31515' },
-                        { tag: tags.comment, color: '#008000', fontStyle: 'italic' },
-                        { tag: tags.variableName, color: '#001080' },
-                        { tag: tags.definition(tags.variableName), color: '#795e26' },
-                        { tag: tags.function(tags.variableName), color: '#dcdcaa' },
-                        { tag: tags.propertyName, color: '#001080' },
-                        { tag: tags.typeName, color: '#267f99' },
-                        { tag: tags.bool, color: '#0000ff' },
-                        { tag: tags.null, color: '#0000ff' },
-                        { tag: tags.punctuation, color: '#000000' },
-                        { tag: tags.tagName, color: '#800000' },
-                        { tag: tags.attributeName, color: '#ff0000' },
-                        { tag: tags.attributeValue, color: '#0000ff' },
-                        { tag: tags.angleBracket, color: '#800000' },
+                return isDarkMode() ?
+                    HighlightStyle.define([{
+                            tag: tags.keyword,
+                            color: '#569cd6'
+                        },
+                        {
+                            tag: tags.controlKeyword,
+                            color: '#c586c0'
+                        },
+                        {
+                            tag: tags.operatorKeyword,
+                            color: '#569cd6'
+                        },
+                        {
+                            tag: tags.operator,
+                            color: '#d4d4d4'
+                        },
+                        {
+                            tag: tags.number,
+                            color: '#b5cea8'
+                        },
+                        {
+                            tag: tags.string,
+                            color: '#ce9178'
+                        },
+                        {
+                            tag: tags.comment,
+                            color: '#6a9955',
+                            fontStyle: 'italic'
+                        },
+                        {
+                            tag: tags.variableName,
+                            color: '#9cdcfe'
+                        },
+                        {
+                            tag: tags.definition(tags.variableName),
+                            color: '#dcdcaa'
+                        },
+                        {
+                            tag: tags.function(tags.variableName),
+                            color: '#dcdcaa'
+                        },
+                        {
+                            tag: tags.propertyName,
+                            color: '#9cdcfe'
+                        },
+                        {
+                            tag: tags.typeName,
+                            color: '#4ec9b0'
+                        },
+                        {
+                            tag: tags.bool,
+                            color: '#569cd6'
+                        },
+                        {
+                            tag: tags.null,
+                            color: '#569cd6'
+                        },
+                        {
+                            tag: tags.punctuation,
+                            color: '#d4d4d4'
+                        },
+                        {
+                            tag: tags.tagName,
+                            color: '#569cd6'
+                        },
+                        {
+                            tag: tags.attributeName,
+                            color: '#9cdcfe'
+                        },
+                        {
+                            tag: tags.attributeValue,
+                            color: '#ce9178'
+                        },
+                        {
+                            tag: tags.angleBracket,
+                            color: '#808080'
+                        },
+                    ]) :
+                    HighlightStyle.define([{
+                            tag: tags.keyword,
+                            color: '#0000ff'
+                        },
+                        {
+                            tag: tags.controlKeyword,
+                            color: '#af00db'
+                        },
+                        {
+                            tag: tags.operatorKeyword,
+                            color: '#0000ff'
+                        },
+                        {
+                            tag: tags.operator,
+                            color: '#000000'
+                        },
+                        {
+                            tag: tags.number,
+                            color: '#098658'
+                        },
+                        {
+                            tag: tags.string,
+                            color: '#a31515'
+                        },
+                        {
+                            tag: tags.comment,
+                            color: '#008000',
+                            fontStyle: 'italic'
+                        },
+                        {
+                            tag: tags.variableName,
+                            color: '#001080'
+                        },
+                        {
+                            tag: tags.definition(tags.variableName),
+                            color: '#795e26'
+                        },
+                        {
+                            tag: tags.function(tags.variableName),
+                            color: '#795e26'
+                        },
+                        {
+                            tag: tags.propertyName,
+                            color: '#001080'
+                        },
+                        {
+                            tag: tags.typeName,
+                            color: '#267f99'
+                        },
+                        {
+                            tag: tags.bool,
+                            color: '#0000ff'
+                        },
+                        {
+                            tag: tags.null,
+                            color: '#0000ff'
+                        },
+                        {
+                            tag: tags.punctuation,
+                            color: '#000000'
+                        },
+                        {
+                            tag: tags.tagName,
+                            color: '#800000'
+                        },
+                        {
+                            tag: tags.attributeName,
+                            color: '#ff0000'
+                        },
+                        {
+                            tag: tags.attributeValue,
+                            color: '#0000ff'
+                        },
+                        {
+                            tag: tags.angleBracket,
+                            color: '#800000'
+                        },
                     ]);
             }
 
             function getBaseTheme(m) {
-                const { EditorView } = m.view;
+                const {
+                    EditorView
+                } = m.view;
                 const dark = isDarkMode();
                 const styles = getComputedStyle(document.documentElement);
-                const bgColor = dark
-                    ? (styles.getPropertyValue('--color-gray-800').trim() || 'oklch(0.2 0.0084 248)')
-                    : '#ffffff';
-                const gutterBg = dark
-                    ? (styles.getPropertyValue('--color-gray-820').trim() || 'oklch(0.18 0.008 248)')
-                    : (styles.getPropertyValue('--color-gray-20').trim() || 'oklch(0.98 0.0024 248)');
-                const gutterColor = dark
-                    ? (styles.getPropertyValue('--color-gray-500').trim() || 'oklch(0.5 0.018 248)')
-                    : '#6e7681';
+                const bgColor = dark ?
+                    (styles.getPropertyValue('--color-gray-800').trim() || 'oklch(0.2 0.0084 248)') :
+                    '#ffffff';
+                const gutterBg = dark ?
+                    (styles.getPropertyValue('--color-gray-820').trim() || 'oklch(0.18 0.008 248)') :
+                    (styles.getPropertyValue('--color-gray-20').trim() || 'oklch(0.98 0.0024 248)');
+                const gutterColor = dark ?
+                    (styles.getPropertyValue('--color-gray-500').trim() || 'oklch(0.5 0.018 248)') :
+                    '#6e7681';
 
                 return EditorView.theme({
-                    '&': { backgroundColor: bgColor, fontSize: '13px' },
-                    '.cm-scroller': { fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace', lineHeight: '1.5' },
-                    '.cm-gutters': { backgroundColor: gutterBg, color: gutterColor, border: 'none', paddingRight: '8px', paddingTop: '8px', paddingBottom: '8px' },
-                    '.cm-content': { padding: '8px 0', caretColor: dark ? '#aeafad' : '#000000' },
-                    '.cm-lineNumbers .cm-gutterElement': { padding: '0 8px 0 16px', minWidth: '32px' },
-                    '.cm-activeLine': { backgroundColor: dark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.04)' },
-                    '.cm-activeLineGutter': { backgroundColor: 'transparent' },
-                    '.cm-cursor': { borderLeftColor: dark ? '#aeafad' : '#000000' },
-                    '&.cm-focused .cm-selectionBackground, .cm-selectionBackground': { backgroundColor: dark ? 'rgba(38,79,120,0.7)' : 'rgba(173,214,255,0.7)' },
-                    '.cm-placeholder': { color: dark ? '#6e6e6e' : '#a0a0a0' },
+                    '&': {
+                        backgroundColor: bgColor,
+                        fontSize: '13px'
+                    },
+                    '.cm-scroller': {
+                        fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',
+                        lineHeight: '1.5',
+                        maxHeight: '24rem',
+                        overflowY: 'auto'
+                    },
+                    '.cm-gutters': {
+                        backgroundColor: gutterBg,
+                        color: gutterColor,
+                        border: 'none',
+                        paddingRight: '8px',
+                        paddingTop: '8px',
+                        paddingBottom: '8px'
+                    },
+                    '.cm-content': {
+                        padding: '8px 0',
+                        caretColor: dark ? '#aeafad' : '#000000'
+                    },
+                    '.cm-lineNumbers .cm-gutterElement': {
+                        padding: '0 8px 0 16px',
+                        minWidth: '32px'
+                    },
+                    '.cm-activeLine': {
+                        backgroundColor: dark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.04)'
+                    },
+                    '.cm-activeLineGutter': {
+                        backgroundColor: 'transparent'
+                    },
+                    '.cm-cursor': {
+                        borderLeftColor: dark ? '#aeafad' : '#000000'
+                    },
+                    '&.cm-focused .cm-selectionBackground, .cm-selectionBackground': {
+                        backgroundColor: dark ? 'rgba(38,79,120,0.7)' : 'rgba(173,214,255,0.7)'
+                    },
+                    '.cm-placeholder': {
+                        color: dark ? '#6e6e6e' : '#a0a0a0'
+                    },
                 });
             }
 
             function getLanguageExtension(m, lang) {
-                const { javascript } = m.langJs;
-                const { html } = m.langHtml;
-                const { css } = m.langCss;
-                const languages = { javascript, js: javascript, html, css };
+                const {
+                    javascript
+                } = m.langJs;
+                const {
+                    html
+                } = m.langHtml;
+                const {
+                    css
+                } = m.langCss;
+                const languages = {
+                    javascript,
+                    js: javascript,
+                    html,
+                    css
+                };
                 return languages[lang?.toLowerCase()]?.() || null;
             }
 
@@ -207,11 +372,32 @@
                         const inputEl = this.$refs.input;
                         if (!editorEl) return;
 
-                        const { EditorState, Compartment } = m.state;
-                        const { EditorView, keymap, lineNumbers, highlightActiveLine, placeholder: placeholderExt } = m.view;
-                        const { defaultKeymap, history, historyKeymap, indentWithTab } = m.commands;
-                        const { syntaxHighlighting, bracketMatching, indentOnInput } = m.language;
-                        const { closeBrackets, closeBracketsKeymap } = m.autocomplete;
+                        const {
+                            EditorState,
+                            Compartment
+                        } = m.state;
+                        const {
+                            EditorView,
+                            keymap,
+                            lineNumbers,
+                            highlightActiveLine,
+                            placeholder: placeholderExt
+                        } = m.view;
+                        const {
+                            defaultKeymap,
+                            history,
+                            historyKeymap,
+                            indentWithTab
+                        } = m.commands;
+                        const {
+                            syntaxHighlighting,
+                            bracketMatching,
+                            indentOnInput
+                        } = m.language;
+                        const {
+                            closeBrackets,
+                            closeBracketsKeymap
+                        } = m.autocomplete;
 
                         this.themeCompartment = new Compartment();
                         this.baseThemeCompartment = new Compartment();
@@ -225,7 +411,8 @@
                             closeBrackets(),
                             indentOnInput(),
                             this.themeCompartment.of(syntaxHighlighting(getHighlightStyle(m))),
-                            keymap.of([...defaultKeymap, ...historyKeymap, ...closeBracketsKeymap, indentWithTab]),
+                            keymap.of([...defaultKeymap, ...historyKeymap, ...closeBracketsKeymap,
+                                indentWithTab]),
                             EditorView.lineWrapping,
                         ];
 
@@ -243,29 +430,40 @@
                             extensions.push(EditorView.updateListener.of((update) => {
                                 if (update.docChanged) {
                                     inputEl.value = update.state.doc.toString();
-                                    inputEl.dispatchEvent(new Event('input', { bubbles: true }));
+                                    inputEl.dispatchEvent(new Event('input', {
+                                        bubbles: true
+                                    }));
                                 }
                             }));
                         }
 
                         this.view = new EditorView({
-                            state: EditorState.create({ doc: this.content, extensions }),
+                            state: EditorState.create({
+                                doc: this.content,
+                                extensions
+                            }),
                             parent: editorEl,
                         });
 
                         // Watch dark mode changes
                         this.darkModeObserver = new MutationObserver(() => {
                             if (!this.view) return;
-                            const { syntaxHighlighting } = m.language;
+                            const {
+                                syntaxHighlighting
+                            } = m.language;
                             this.view.dispatch({
                                 effects: [
-                                    this.themeCompartment.reconfigure(syntaxHighlighting(getHighlightStyle(m))),
+                                    this.themeCompartment.reconfigure(syntaxHighlighting(
+                                        getHighlightStyle(m))),
                                     this.baseThemeCompartment.reconfigure(getBaseTheme(m)),
                                 ],
                             });
                         });
 
-                        this.darkModeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+                        this.darkModeObserver.observe(document.documentElement, {
+                            attributes: true,
+                            attributeFilter: ['class']
+                        });
                     },
                 }));
             }
