@@ -5,7 +5,7 @@ namespace Mach3Builders\Ui;
 use Illuminate\View\ComponentAttributeBag;
 use Stringable;
 
-class ClassBuilder implements Stringable
+final class ClassBuilder implements Stringable
 {
     protected array $classes = [];
 
@@ -29,7 +29,7 @@ class ClassBuilder implements Stringable
 
     public static function make(): static
     {
-        return new static;
+        return new self;
     }
 
     public function add(string|array|null $key, ?array $options = null): static
