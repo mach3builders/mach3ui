@@ -10,6 +10,7 @@
     'btnActiveClasses',
     'contentClasses',
     'wireModelValue',
+    'wireModelBlur' => false,
     'xModelKey' => null,
     'xModelValue' => null,
 ])
@@ -19,15 +20,118 @@
     x-data="uiEditor({
         content: @js((string) $slot),
         placeholder: @js($placeholder),
+        wireModel: @js($wireModelValue),
+        wireModelBlur: @js($wireModelBlur),
     })"
-    @if($wireModelValue)
-        x-init="$watch('content', value => $wire.set('{{ $wireModelValue }}', value))"
-    @endif
     @if($xModelKey && $xModelValue)
         x-modelable="content"
         {{ $xModelKey }}="{{ $xModelValue }}"
     @endif
 >
+    @once
+    <style>
+        /* Editor content styles */
+        .ui-editor-content > * + * { margin-top: 0.75rem; }
+        .ui-editor-content:focus-within { outline: none; }
+
+        /* Placeholder */
+        .ui-editor-content:empty::before {
+            content: attr(data-placeholder);
+            pointer-events: none;
+            float: left;
+            height: 0;
+            color: #9ca3af;
+        }
+        .dark .ui-editor-content:empty::before { color: #6b7280; }
+
+        /* Headings */
+        .ui-editor-content h1 { font-size: 1.5rem; font-weight: 700; color: #111827; }
+        .ui-editor-content h2 { font-size: 1.25rem; font-weight: 600; color: #111827; }
+        .ui-editor-content h3 { font-size: 1.125rem; font-weight: 600; line-height: 1.375; color: #111827; }
+        .dark .ui-editor-content h1,
+        .dark .ui-editor-content h2,
+        .dark .ui-editor-content h3 { color: #f3f4f6; }
+
+        /* Paragraphs */
+        .ui-editor-content p { line-height: 1.625; }
+
+        /* Inline formatting */
+        .ui-editor-content strong { font-weight: 600; color: #111827; }
+        .dark .ui-editor-content strong { color: #f3f4f6; }
+        .ui-editor-content em { font-style: italic; }
+        .ui-editor-content s { text-decoration: line-through; }
+
+        /* Links */
+        .ui-editor-content a { font-weight: 500; text-decoration: none; color: #2563eb; }
+        .ui-editor-content a:hover { text-decoration: underline; }
+        .dark .ui-editor-content a { color: #60a5fa; }
+
+        /* Lists */
+        .ui-editor-content ul { list-style-type: disc; padding-left: 1.25rem; }
+        .ui-editor-content ol { list-style-type: decimal; padding-left: 1.25rem; }
+        .ui-editor-content li { margin-top: 0.25rem; margin-bottom: 0.25rem; }
+
+        /* Blockquote */
+        .ui-editor-content blockquote {
+            border-left: 4px solid #d1d5db;
+            padding-left: 1rem;
+            font-style: italic;
+            color: #4b5563;
+        }
+        .dark .ui-editor-content blockquote { border-color: #4b5563; color: #9ca3af; }
+
+        /* Inline code */
+        .ui-editor-content code {
+            border-radius: 0.25rem;
+            padding: 0.125rem 0.375rem;
+            font-family: ui-monospace, monospace;
+            font-size: 0.75rem;
+            background-color: #f3f4f6;
+            color: #1f2937;
+        }
+        .dark .ui-editor-content code { background-color: #374151; color: #e5e7eb; }
+
+        /* Code block */
+        .ui-editor-content pre {
+            overflow-x: auto;
+            border-radius: 0.375rem;
+            padding: 1rem;
+            font-family: ui-monospace, monospace;
+            font-size: 0.75rem;
+            background-color: #111827;
+            color: #f3f4f6;
+        }
+        .dark .ui-editor-content pre { background-color: #030712; }
+        .ui-editor-content pre code { background-color: transparent; padding: 0; color: inherit; }
+
+        /* Horizontal rule */
+        .ui-editor-content hr { margin: 1.5rem 0; border-top: 1px solid #e5e7eb; }
+        .dark .ui-editor-content hr { border-color: #374151; }
+
+        /* Images */
+        .ui-editor-content img { max-width: 100%; border-radius: 0.375rem; cursor: pointer; }
+        .ui-editor-content img.is-selected { outline: 2px solid #3b82f6; outline-offset: 2px; }
+
+        /* Image resize overlay */
+        .ui-editor-img-resize { position: absolute; pointer-events: none; }
+        .ui-editor-img-resize-handle {
+            position: absolute;
+            width: 0.625rem;
+            height: 0.625rem;
+            border-radius: 0.125rem;
+            pointer-events: auto;
+            background-color: #3b82f6;
+            border: 2px solid white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+            cursor: nwse-resize;
+        }
+        .ui-editor-img-resize-handle.se { bottom: -5px; right: -5px; }
+        .ui-editor-img-resize-handle.sw { bottom: -5px; left: -5px; cursor: nesw-resize; }
+        .ui-editor-img-resize-handle.ne { top: -5px; right: -5px; cursor: nesw-resize; }
+        .ui-editor-img-resize-handle.nw { top: -5px; left: -5px; }
+    </style>
+    @endonce
+
     {{-- Toolbar --}}
     <div class="{{ $toolbarClasses }}">
         @foreach ($toolbarGroups as $index => $group)
@@ -212,6 +316,8 @@
         Alpine.data('uiEditor', (config) => ({
         content: config.content || '',
         placeholder: config.placeholder,
+        wireModel: config.wireModel || null,
+        wireModelBlur: config.wireModelBlur || false,
         charCount: 0,
         showLinkInput: false,
         linkInputPosition: '',
@@ -264,11 +370,29 @@
                     this.deselectImage();
                 }
             });
+
+            // Sync to Livewire on blur
+            if (this.wireModel && this.wireModelBlur) {
+                this.$refs.content.addEventListener('blur', () => {
+                    this.syncToWire();
+                });
+            }
+        },
+
+        syncToWire() {
+            if (this.wireModel && this.$wire) {
+                this.$wire.set(this.wireModel, this.content);
+            }
         },
 
         onInput() {
             this.content = this.$refs.content.innerHTML;
             this.updateCharCount();
+
+            // Sync to Livewire on every input if not blur mode
+            if (this.wireModel && !this.wireModelBlur) {
+                this.syncToWire();
+            }
         },
 
         onKeydown(e) {

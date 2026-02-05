@@ -9,15 +9,19 @@
 
 @php
     $allAttrs = $attributes->getAttributes();
+    $wireModelKey = null;
     $wireModelValue = null;
     $xModelValue = null;
 
     foreach ($allAttrs as $key => $value) {
         if (str_starts_with($key, 'wire:model')) {
+            $wireModelKey = $key;
             $wireModelValue = $value;
             break;
         }
     }
+
+    $wireModelBlur = $wireModelKey && str_contains($wireModelKey, '.blur');
 
     $xModelKey = null;
     foreach ($allAttrs as $key => $value) {
@@ -67,6 +71,7 @@
             :btn-active-classes="$btnActiveClasses"
             :content-classes="$contentClasses"
             :wire-model-value="$wireModelValue"
+            :wire-model-blur="$wireModelBlur"
             :x-model-key="$xModelKey"
             :x-model-value="$xModelValue"
         >{{ $slot }}</x-ui::editor._editor>
@@ -92,6 +97,7 @@
         :btn-active-classes="$btnActiveClasses"
         :content-classes="$contentClasses"
         :wire-model-value="$wireModelValue"
+        :wire-model-blur="$wireModelBlur"
         :x-model-key="$xModelKey"
         :x-model-value="$xModelValue"
     >{{ $slot }}</x-ui::editor._editor>
