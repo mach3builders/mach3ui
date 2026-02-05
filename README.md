@@ -28,23 +28,11 @@ A Laravel Blade UI component library that works seamlessly with and without Live
 composer require mach3builders/ui
 ```
 
-Optionally publish the config:
-
-```bash
-php artisan vendor:publish --tag="ui-config"
-```
-
-Optionally publish the views for customization:
-
-```bash
-php artisan vendor:publish --tag="ui-views"
-```
-
 ## Usage
 
 All components use the `ui:` prefix:
 
-```blade
+```html
 <ui:button>Click me</ui:button>
 
 <ui:input name="email" label="Email" placeholder="you@example.com" />
@@ -61,7 +49,7 @@ All components use the `ui:` prefix:
 
 Components automatically pass through `wire:` attributes:
 
-```blade
+```html
 <ui:input wire:model="email" name="email" label="Email" />
 
 <ui:select wire:model.live="country" name="country">
@@ -121,8 +109,8 @@ $classes = UI::classes()
 
 User classes automatically override base classes with the same Tailwind prefix:
 
-```blade
-{{-- User's px-6 overrides component's px-4 --}}
+```html
+<!-- User's px-6 overrides component's px-4 -->
 <ui:button class="px-6">Wide button</ui:button>
 ```
 
