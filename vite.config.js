@@ -7,7 +7,6 @@ export default defineConfig({
         lib: {
             entry: {
                 'code-editor': resolve(__dirname, 'resources/js/code-editor.js'),
-                'rich-text-editor': resolve(__dirname, 'resources/js/rich-text-editor.js'),
             },
             formats: ['es'],
         },
