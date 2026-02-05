@@ -1,3 +1,5 @@
+@blaze
+
 @props([
     'description' => null,
     'label' => null,
@@ -30,7 +32,8 @@ $showName = isset($name);
 $inputName = $name ?: $wireModelValue ?: $xModelValue ?: $id;
 
 // ID priority: explicit id attr > field id (@aware) > input name > auto-generated
-$id = $attributes->get('id') ?? ($id ?? ($inputName ?? 'radio-' . Str::random(8)));
+$id =
+    $attributes->get('id') ?? ($id ?? ($inputName ?? Ui::uniqueId('radio')));
 
 $hasLabel = $label || $description;
 $error = $inputName ? $errors->first($inputName) ?? null : null;

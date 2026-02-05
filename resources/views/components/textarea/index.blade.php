@@ -1,3 +1,5 @@
+@blaze
+
 @props([
     'autoResize' => true,
     'hint' => null,
@@ -34,7 +36,9 @@ $showName = isset($name);
 $textareaName = $name ?: $wireModelValue ?: $xModelValue ?: $id;
 
 // ID priority: explicit id attr > field id (@aware) > textarea name > auto-generated
-$id = $attributes->get('id') ?? ($id ?? ($textareaName ?? 'textarea-' . Str::random(8)));
+$id =
+    $attributes->get('id') ??
+    ($id ?? ($textareaName ?? Ui::uniqueId('textarea')));
 
 $error = $textareaName ? $errors->first($textareaName) ?? null : null;
 

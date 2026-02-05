@@ -1,3 +1,5 @@
+@blaze
+
 @props([
     'clearable' => false,
     'disabled' => false,
@@ -20,7 +22,7 @@
 @aware(['id'])
 
 @php
-    $popoverId = uniqid('timepicker-');
+    $popoverId = Ui::uniqueId('timepicker');
 
     // Get wire:model or x-model value
     $allAttrs = $attributes->getAttributes();
@@ -45,7 +47,7 @@
     $inputName = $name ?: $wireModelValue ?: $xModelValue ?: $id;
 
     // ID priority: explicit id attr > field id (@aware) > input name > auto-generated
-    $id = $attributes->get('id') ?? ($id ?? ($inputName ?? 'timepicker-' . Str::random(8)));
+    $id = $attributes->get('id') ?? ($id ?? ($inputName ?? Ui::uniqueId('timepicker-id')));
 
     $error = $inputName ? $errors->first($inputName) ?? null : null;
 
@@ -63,13 +65,9 @@
         try {
             $time = \Carbon\Carbon::parse($value);
             if ($format === '12') {
-                $displayValue = $showSeconds
-                    ? $time->format('g:i:s A')
-                    : $time->format('g:i A');
+                $displayValue = $showSeconds ? $time->format('g:i:s A') : $time->format('g:i A');
             } else {
-                $displayValue = $showSeconds
-                    ? $time->format('H:i:s')
-                    : $time->format('H:i');
+                $displayValue = $showSeconds ? $time->format('H:i:s') : $time->format('H:i');
             }
         } catch (\Exception) {
             $displayValue = $value;
@@ -83,31 +81,11 @@
     <ui:field :id="$id">
         <ui:label>{{ $label }}</ui:label>
 
-        <x-ui::timepicker._timepicker
-            :id="$id"
-            :name="$inputName"
-            :popover-id="$popoverId"
-            :value="$value"
-            :display-value="$displayValue"
-            :disabled="$disabled"
-            :error="$error"
-            :format="$format"
-            :placeholder="$placeholder"
-            :clear-label="$clearLabel"
-            :now-label="$nowLabel"
-            :am-label="$amLabel"
-            :pm-label="$pmLabel"
-            :min-time="$minTime"
-            :max-time="$maxTime"
-            :minute-step="$minuteStep"
-            :clearable="$clearable"
-            :show-footer="$showFooter"
-            :show-seconds="$showSeconds"
-            :size="$size"
-            :variant="$variant"
-            :wrapper-classes="$wrapperClasses"
-            :attributes="$attributes"
-        />
+        <x-ui::timepicker._timepicker :id="$id" :name="$inputName" :popover-id="$popoverId" :value="$value"
+            :display-value="$displayValue" :disabled="$disabled" :error="$error" :format="$format" :placeholder="$placeholder" :clear-label="$clearLabel"
+            :now-label="$nowLabel" :am-label="$amLabel" :pm-label="$pmLabel" :min-time="$minTime" :max-time="$maxTime"
+            :minute-step="$minuteStep" :clearable="$clearable" :show-footer="$showFooter" :show-seconds="$showSeconds" :size="$size"
+            :variant="$variant" :wrapper-classes="$wrapperClasses" :attributes="$attributes" />
 
         @if ($hint)
             <ui:hint>{{ $hint }}</ui:hint>
@@ -118,29 +96,9 @@
         @endif
     </ui:field>
 @else
-    <x-ui::timepicker._timepicker
-        :id="$id"
-        :name="$inputName"
-        :popover-id="$popoverId"
-        :value="$value"
-        :display-value="$displayValue"
-        :disabled="$disabled"
-        :error="$error"
-        :format="$format"
-        :placeholder="$placeholder"
-        :clear-label="$clearLabel"
-        :now-label="$nowLabel"
-        :am-label="$amLabel"
-        :pm-label="$pmLabel"
-        :min-time="$minTime"
-        :max-time="$maxTime"
-        :minute-step="$minuteStep"
-        :clearable="$clearable"
-        :show-footer="$showFooter"
-        :show-seconds="$showSeconds"
-        :size="$size"
-        :variant="$variant"
-        :wrapper-classes="$wrapperClasses"
-        :attributes="$attributes"
-    />
+    <x-ui::timepicker._timepicker :id="$id" :name="$inputName" :popover-id="$popoverId" :value="$value"
+        :display-value="$displayValue" :disabled="$disabled" :error="$error" :format="$format" :placeholder="$placeholder"
+        :clear-label="$clearLabel" :now-label="$nowLabel" :am-label="$amLabel" :pm-label="$pmLabel" :min-time="$minTime"
+        :max-time="$maxTime" :minute-step="$minuteStep" :clearable="$clearable" :show-footer="$showFooter" :show-seconds="$showSeconds"
+        :size="$size" :variant="$variant" :wrapper-classes="$wrapperClasses" :attributes="$attributes" />
 @endif

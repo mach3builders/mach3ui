@@ -31,6 +31,27 @@ class UiServiceProvider extends PackageServiceProvider
         $this->bootComponentPath();
         $this->bootTagCompiler();
         $this->bootAttributeMacros();
+        $this->bootBlazeDirectives();
+    }
+
+    /**
+     * Register @blaze, @unblaze, @endunblaze directives as no-ops
+     * when Livewire Blaze is not installed. When Blaze is installed,
+     * it will override these with its own implementation.
+     */
+    protected function bootBlazeDirectives(): void
+    {
+        // Only register fallback directives if Blaze is not installed
+        if (class_exists(\Livewire\Blaze\BlazeServiceProvider::class)) {
+            return;
+        }
+
+        // @blaze - marks component as cacheable (no-op without Blaze)
+        Blade::directive('blaze', fn () => '');
+
+        // @unblaze / @endunblaze - marks impure sections (no-op without Blaze)
+        Blade::directive('unblaze', fn () => '');
+        Blade::directive('endunblaze', fn () => '');
     }
 
     protected function bootComponentPath(): void

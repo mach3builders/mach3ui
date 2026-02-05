@@ -1,3 +1,5 @@
+@blaze
+
 @props([
     'dismissable' => false,
     'icon' => null,

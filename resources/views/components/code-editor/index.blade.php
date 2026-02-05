@@ -1,3 +1,5 @@
+@blaze
+
 @props([
     'footer' => false,
     'header' => true,
@@ -37,7 +39,9 @@
     $editorName = $name ?: $wireModelValue ?: $xModelValue ?: $id;
 
     // ID priority: explicit id attr > field id (@aware) > editor name > auto-generated
-    $id = $attributes->get('id') ?? ($id ?? ($editorName ?? 'code-editor-' . Str::random(8)));
+    $id =
+        $attributes->get('id') ??
+        ($id ?? ($editorName ?? Ui::uniqueId('code-editor')));
 
     $error = $editorName ? $errors->first($editorName) ?? null : null;
 
@@ -65,19 +69,25 @@
     $showFooter = $footer || $footerSlot;
 
     // Model attributes to pass through
-    $modelAttrs = ['wire:model', 'wire:model.live', 'wire:model.blur', 'wire:model.change', 'wire:model.debounce', 'x-model', 'x-model.lazy', 'x-model.debounce'];
+    $modelAttrs = [
+        'wire:model',
+        'wire:model.live',
+        'wire:model.blur',
+        'wire:model.change',
+        'wire:model.debounce',
+        'x-model',
+        'x-model.lazy',
+        'x-model.debounce',
+    ];
 
     // Container classes
     $containerClasses = Ui::classes()
         ->add('flex flex-col overflow-hidden rounded-md border shadow-xs')
         ->add(
             match (true) {
-                (bool) $error
-                    => 'border-red-500 dark:border-red-500',
-                $variant === 'inverted'
-                    => 'border-gray-140 bg-gray-10 dark:border-gray-700 dark:bg-gray-820',
-                default
-                    => 'border-gray-140 bg-white dark:border-gray-700 dark:bg-gray-800',
+                (bool) $error => 'border-red-500 dark:border-red-500',
+                $variant === 'inverted' => 'border-gray-140 bg-gray-10 dark:border-gray-700 dark:bg-gray-820',
+                default => 'border-gray-140 bg-white dark:border-gray-700 dark:bg-gray-800',
             },
         )
         ->merge($attributes->only('class'));
@@ -116,23 +126,18 @@
             },
         );
 
-    $statusClasses = Ui::classes()
-        ->add('text-xs text-gray-500 dark:text-gray-400');
+    $statusClasses = Ui::classes()->add('text-xs text-gray-500 dark:text-gray-400');
 @endphp
 
 @if ($label)
     <ui:field :id="$id">
         <ui:label>{{ $label }}</ui:label>
 
-        <div
-            id="{{ $id }}"
-            class="{{ $containerClasses }}"
-            {{ $attributes->except(['class', 'id', ...$modelAttrs]) }}
-            data-code-editor
+        <div id="{{ $id }}" class="{{ $containerClasses }}"
+            {{ $attributes->except(['class', 'id', ...$modelAttrs]) }} data-code-editor
             data-language="{{ $language }}"
             @if ($placeholder) data-placeholder="{{ $placeholder }}" @endif
-            @if ($readonly) data-readonly @endif
-        >
+            @if ($readonly) data-readonly @endif>
             @if ($showHeader)
                 <div class="{{ $headerClasses }}" data-code-editor-header>
                     @if ($headerSlot)
@@ -155,11 +160,8 @@
                 </div>
             @endif
 
-            <textarea
-                class="hidden"
-                @if ($editorName) name="{{ $editorName }}" @endif
-                {{ $attributes->only($modelAttrs) }}
-            >{{ $slot }}</textarea>
+            <textarea class="hidden" @if ($editorName) name="{{ $editorName }}" @endif
+                {{ $attributes->only($modelAttrs) }}>{{ $slot }}</textarea>
         </div>
 
         @if ($hint)
@@ -171,16 +173,11 @@
         @endif
     </ui:field>
 @else
-    <div
-        id="{{ $id }}"
-        class="{{ $containerClasses }}"
-        {{ $attributes->except(['class', 'id', ...$modelAttrs]) }}
-        data-code-editor
+    <div id="{{ $id }}" class="{{ $containerClasses }}"
+        {{ $attributes->except(['class', 'id', ...$modelAttrs]) }} data-code-editor
         data-language="{{ $language }}"
         @if ($placeholder) data-placeholder="{{ $placeholder }}" @endif
-        @if ($readonly) data-readonly @endif
-        data-control
-    >
+        @if ($readonly) data-readonly @endif data-control>
         @if ($showHeader)
             <div class="{{ $headerClasses }}" data-code-editor-header>
                 @if ($headerSlot)
@@ -203,10 +200,7 @@
             </div>
         @endif
 
-        <textarea
-            class="hidden"
-            @if ($editorName) name="{{ $editorName }}" @endif
-            {{ $attributes->only($modelAttrs) }}
-        >{{ $slot }}</textarea>
+        <textarea class="hidden" @if ($editorName) name="{{ $editorName }}" @endif
+            {{ $attributes->only($modelAttrs) }}>{{ $slot }}</textarea>
     </div>
 @endif

@@ -208,100 +208,96 @@ html.dark {
 }
 
 @position-try --dropdown-top-start {
+    inset: auto;
     bottom: calc(anchor(top) + 0.25rem);
-    top: auto;
     left: anchor(left);
 }
 
 @position-try --dropdown-top-end {
+    inset: auto;
     bottom: calc(anchor(top) + 0.25rem);
-    top: auto;
     left: anchor(right);
     translate: -100% 0;
 }
 
 @position-try --dropdown-bottom-start {
+    inset: auto;
     top: calc(anchor(bottom) + 0.25rem);
-    bottom: auto;
     left: anchor(left);
 }
 
 @position-try --dropdown-bottom-end {
+    inset: auto;
     top: calc(anchor(bottom) + 0.25rem);
-    bottom: auto;
     left: anchor(right);
     translate: -100% 0;
 }
 
 @position-try --dropdown-left-start {
+    inset: auto;
     top: anchor(top);
     right: calc(anchor(left) + 0.25rem);
-    left: auto;
 }
 
 @position-try --dropdown-left-end {
+    inset: auto;
     top: anchor(bottom);
     right: calc(anchor(left) + 0.25rem);
-    left: auto;
     translate: 0 -100%;
 }
 
 @position-try --dropdown-right-start {
+    inset: auto;
     top: anchor(top);
     left: calc(anchor(right) + 0.25rem);
-    right: auto;
 }
 
 @position-try --dropdown-right-end {
+    inset: auto;
     top: anchor(bottom);
     left: calc(anchor(right) + 0.25rem);
-    right: auto;
     translate: 0 -100%;
 }
 
 @position-try --selectbox-top-start {
+    inset: auto;
     bottom: calc(anchor(top) + 0.25rem);
-    top: auto;
     left: anchor(left);
-    right: auto;
 }
 
 @position-try --selectbox-top-end {
+    inset: auto;
     bottom: calc(anchor(top) + 0.25rem);
-    top: auto;
     right: anchor(right);
-    left: auto;
 }
 
 @position-try --selectbox-bottom-start {
+    inset: auto;
     top: calc(anchor(bottom) + 0.25rem);
-    bottom: auto;
     left: anchor(left);
-    right: auto;
 }
 
 @position-try --selectbox-bottom-end {
+    inset: auto;
     top: calc(anchor(bottom) + 0.25rem);
-    bottom: auto;
     right: anchor(right);
-    left: auto;
 }
 
 @position-try --datepicker-top {
+    inset: auto;
     bottom: calc(anchor(top) + 0.25rem);
-    top: auto;
     left: anchor(left);
 }
 
 @position-try --daterange-top {
+    inset: auto;
     bottom: calc(anchor(top) + 0.25rem);
-    top: auto;
     left: anchor(left);
 }
 
 @position-try --timepicker-top {
+    inset: auto;
     bottom: calc(anchor(top) + 0.25rem);
-    top: auto;
     left: anchor(left);
 }
 

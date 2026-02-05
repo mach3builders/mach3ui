@@ -1,3 +1,5 @@
+@blaze
+
 @props([
     'hint' => null,
     'label' => null,
@@ -13,7 +15,9 @@
 @php
     $inputName = $name ?: $id;
 
-    $id = $attributes->get('id') ?? ($id ?? ($inputName ?? 'input-tags-' . Str::random(8)));
+    $id =
+        $attributes->get('id') ??
+        ($id ?? ($inputName ?? Ui::uniqueId('input-tags')));
 
     $error = $inputName ? $errors->first($inputName) ?? null : null;
     $disabled = $attributes->has('disabled');

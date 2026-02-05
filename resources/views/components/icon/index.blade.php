@@ -1,3 +1,5 @@
+@blaze
+
 @props([
     'boxed' => false,
     'color' => null,
@@ -80,20 +82,25 @@
         ->add($boxedColors[$resolvedColor] ?? $boxedColors['gray'])
         ->merge($attributes);
 
-    $iconClasses = Ui::classes()->add('shrink-0')->add($iconSize);
+    $iconClasses = 'shrink-0 ' . $iconSize;
 
     $simpleClasses = Ui::classes()
         ->add('shrink-0')
         ->add($iconSize)
         ->when($colorClass, $colorClass ?? '')
         ->merge($attributes);
+
+    // Build SVG attributes - using svg() helper is faster than x-dynamic-component
+    $svgAttributes = array_filter([
+        'stroke-width' => $stroke,
+        'data-icon' => true,
+    ]);
 @endphp
 
 @if ($boxed)
     <span {{ $attributes->except('class') }} class="{{ $boxClasses }}" data-icon data-color="{{ $color }}">
-        <x-dynamic-component :component="'lucide-' . $name" :stroke-width="$stroke" class="{{ $iconClasses }}" />
+        {{ svg('lucide-' . $name, $iconClasses, $svgAttributes) }}
     </span>
 @else
-    <x-dynamic-component :component="'lucide-' . $name" :stroke-width="$stroke" {{ $attributes->except('class') }}
-        class="{{ $simpleClasses }}" data-icon />
+    {{ svg('lucide-' . $name, (string) $simpleClasses, array_merge($svgAttributes, $attributes->except('class')->getAttributes())) }}
 @endif

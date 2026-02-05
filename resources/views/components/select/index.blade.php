@@ -1,3 +1,5 @@
+@blaze
+
 @props([
     'hint' => null,
     'label' => null,
@@ -32,7 +34,9 @@ $showName = isset($name);
 $selectName = $name ?: $wireModelValue ?: $xModelValue ?: $id;
 
 // ID priority: explicit id attr > field id (@aware) > select name > auto-generated
-$id = $attributes->get('id') ?? ($id ?? ($selectName ?? 'select-' . Str::random(8)));
+$id =
+    $attributes->get('id') ??
+    ($id ?? ($selectName ?? Ui::uniqueId('select')));
 
 $error = $selectName ? $errors->first($selectName) ?? null : null;
 

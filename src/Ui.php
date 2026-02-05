@@ -8,6 +8,21 @@ use Illuminate\View\ComponentAttributeBag;
 class Ui
 {
     /**
+     * Static counter for generating unique IDs per request.
+     */
+    protected static int $idCounter = 0;
+
+    /**
+     * Generate a unique ID with the given prefix.
+     * Uses a static counter to ensure uniqueness while remaining deterministic
+     * (same render order = same IDs, which is good for Blaze caching).
+     */
+    public function uniqueId(string $prefix = 'ui'): string
+    {
+        return $prefix.'-'.++static::$idCounter;
+    }
+
+    /**
      * Create a new class builder instance.
      *
      * @param  string|array<int|string, mixed>|null  $classes

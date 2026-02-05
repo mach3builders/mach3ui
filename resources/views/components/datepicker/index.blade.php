@@ -1,3 +1,5 @@
+@blaze
+
 @props([
     'clearable' => false,
     'disabled' => false,
@@ -19,7 +21,7 @@
 @aware(['id'])
 
 @php
-    $popoverId = uniqid('datepicker-');
+    $popoverId = Ui::uniqueId('datepicker');
 
     // Get wire:model or x-model value
     $allAttrs = $attributes->getAttributes();
@@ -44,7 +46,7 @@
     $inputName = $name ?: $wireModelValue ?: $xModelValue ?: $id;
 
     // ID priority: explicit id attr > field id (@aware) > input name > auto-generated
-    $id = $attributes->get('id') ?? ($id ?? ($inputName ?? 'datepicker-' . Str::random(8)));
+    $id = $attributes->get('id') ?? ($id ?? ($inputName ?? Ui::uniqueId('datepicker-id')));
 
     $error = $inputName ? $errors->first($inputName) ?? null : null;
 

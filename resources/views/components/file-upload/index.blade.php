@@ -1,3 +1,5 @@
+@blaze
+
 @props([
     'accept' => null,
     'hint' => null,
@@ -33,7 +35,9 @@
     $inputName = $name ?: $wireModelValue ?: $xModelValue ?: $id;
 
     // ID priority: explicit id attr > field id (@aware) > input name > auto-generated
-    $id = $attributes->get('id') ?? ($id ?? ($inputName ?? 'file-upload-' . Str::random(8)));
+    $id =
+        $attributes->get('id') ??
+        ($id ?? ($inputName ?? Ui::uniqueId('file-upload')));
 
     $error = $inputName ? $errors->first($inputName) ?? null : null;
 

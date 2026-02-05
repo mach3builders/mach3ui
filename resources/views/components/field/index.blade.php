@@ -1,3 +1,5 @@
+@blaze
+
 @props([
     'id' => null,
     'variant' => 'block',

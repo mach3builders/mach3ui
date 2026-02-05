@@ -1,3 +1,5 @@
+@blaze
+
 @props([
     'size' => 'md',
 ])
@@ -15,4 +17,5 @@
         ->merge($attributes);
 @endphp
 
-<kbd {{ $attributes->except('class') }} class="{{ $classes }}" data-kbd data-size="{{ $size }}">{{ $slot }}</kbd>
+<kbd {{ $attributes->except('class') }} class="{{ $classes }}" data-kbd
+    data-size="{{ $size }}">{{ $slot }}</kbd>

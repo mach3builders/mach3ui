@@ -1,3 +1,5 @@
+@blaze
+
 @props([
     'circle' => false,
     'count' => 1,
@@ -16,17 +18,12 @@
         ->when($circle, 'rounded-full')
         ->merge($attributes);
 
-    $style = collect([
-        $width ? "width: {$width}" : null,
-        $height ? "height: {$height}" : null,
-    ])->filter()->implode('; ');
+    $style = collect([$width ? "width: {$width}" : null, $height ? "height: {$height}" : null])
+        ->filter()
+        ->implode('; ');
 @endphp
 
 @for ($i = 0; $i < $count; $i++)
-    <div
-        {{ $attributes->except('class') }}
-        class="{{ $classes }}"
-        @if ($style) style="{{ $style }}" @endif
-        data-skeleton
-    ></div>
+    <div {{ $attributes->except('class') }} class="{{ $classes }}"
+        @if ($style) style="{{ $style }}" @endif data-skeleton></div>
 @endfor

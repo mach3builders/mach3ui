@@ -1,3 +1,5 @@
+@blaze
+
 @props([
     'description' => null,
     'label' => null,
@@ -31,7 +33,8 @@
     $inputName = $name ?: $wireModelValue ?: $xModelValue ?: $id;
 
     // ID priority: explicit id attr > field id (@aware) > input name > auto-generated
-    $id = $attributes->get('id') ?? ($id ?? ($inputName ?? 'switch-' . Str::random(8)));
+    $id =
+        $attributes->get('id') ?? ($id ?? ($inputName ?? Ui::uniqueId('switch')));
 
     $hasLabel = $label || $description;
     $error = $inputName ? $errors->first($inputName) ?? null : null;
@@ -42,8 +45,7 @@
     $checkboxClasses = 'sr-only';
 
     // Switch wrapper - group for has-[:checked] selector
-    $switchClasses = Ui::classes()
-        ->add('group/switch relative inline-flex items-center');
+    $switchClasses = Ui::classes()->add('group/switch relative inline-flex items-center');
 
     // Track classes - the background pill
     $trackClasses = Ui::classes()
@@ -51,7 +53,9 @@
         ->add('bg-gray-100 dark:bg-gray-700')
         ->add('transition-colors duration-200 ease-in-out')
         ->add('group-has-[:checked]/switch:bg-blue-600 dark:group-has-[:checked]/switch:bg-blue-500')
-        ->add('group-has-[:focus-visible]/switch:ring-2 group-has-[:focus-visible]/switch:ring-blue-600/20 group-has-[:focus-visible]/switch:ring-offset-0')
+        ->add(
+            'group-has-[:focus-visible]/switch:ring-2 group-has-[:focus-visible]/switch:ring-blue-600/20 group-has-[:focus-visible]/switch:ring-offset-0',
+        )
         ->add('group-has-[:disabled]/switch:cursor-not-allowed group-has-[:disabled]/switch:opacity-50')
         ->add($size, [
             'sm' => 'h-4 w-7',
@@ -68,9 +72,12 @@
         ->add('top-1/2 -translate-y-1/2')
         ->add('transition duration-200 ease-in-out')
         ->add($size, [
-            'sm' => 'left-0.5 size-3 group-has-[:checked]/switch:translate-x-3 rtl:group-has-[:checked]/switch:-translate-x-3',
-            'md' => 'left-0.5 size-4 group-has-[:checked]/switch:translate-x-4 rtl:group-has-[:checked]/switch:-translate-x-4',
-            'lg' => 'left-0.5 size-5 group-has-[:checked]/switch:translate-x-5 rtl:group-has-[:checked]/switch:-translate-x-5',
+            'sm' =>
+                'left-0.5 size-3 group-has-[:checked]/switch:translate-x-3 rtl:group-has-[:checked]/switch:-translate-x-3',
+            'md' =>
+                'left-0.5 size-4 group-has-[:checked]/switch:translate-x-4 rtl:group-has-[:checked]/switch:-translate-x-4',
+            'lg' =>
+                'left-0.5 size-5 group-has-[:checked]/switch:translate-x-5 rtl:group-has-[:checked]/switch:-translate-x-5',
         ]);
 
     $labelWrapperClasses = Ui::classes()
@@ -98,8 +105,8 @@
 <div class="{{ $wrapperClasses }}" {{ $attributes->only('data-*') }} data-switch data-control>
     <label class="{{ $labelWrapperClasses }}">
         <span class="{{ $switchClasses }}">
-            <input type="checkbox" id="{{ $id }}" @if ($inputName) name="{{ $inputName }}" @endif
-                role="switch"
+            <input type="checkbox" id="{{ $id }}"
+                @if ($inputName) name="{{ $inputName }}" @endif role="switch"
                 @if ($error) aria-invalid="true" @endif
                 {{ $attributes->except(['class', 'data-*', 'id', 'name']) }} class="{{ $checkboxClasses }}" />
 
