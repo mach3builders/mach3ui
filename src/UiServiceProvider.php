@@ -19,10 +19,8 @@ class UiServiceProvider extends PackageServiceProvider
          */
         $package
             ->name('ui')
-            ->hasConfigFile()
             ->hasTranslations()
             ->hasViews()
-            ->hasMigration('create_ui_table')
             ->hasCommand(UiCommand::class);
     }
 
