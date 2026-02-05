@@ -12,8 +12,8 @@
 
     $panelClasses = Ui::classes()
         ->add('flex min-w-72 flex-col gap-2 rounded-xl border p-2 shadow-2xl')
-        ->add('border-gray-100 bg-white')
-        ->add('dark:border-gray-700 dark:bg-gray-800');
+        ->add('border-transparent bg-white')
+        ->add('dark:border-gray-740 dark:bg-gray-800');
 
     $titleClasses = Ui::classes()
         ->add('px-2 py-1.5 text-xs font-medium text-gray-500 dark:text-gray-400');
