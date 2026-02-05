@@ -56,7 +56,7 @@ class UiServiceProvider extends PackageServiceProvider
 
     protected function bootComponentPath(): void
     {
-        Blade::anonymousComponentNamespace(
+        Blade::anonymousComponentPath(
             realpath($this->package->basePath('/../resources/views/components')),
             'ui'
         );
