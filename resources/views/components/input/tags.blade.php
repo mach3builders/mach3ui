@@ -29,10 +29,13 @@
         ])
         ->add(
             match (true) {
-                (bool) $error => 'border-red-500 bg-white focus-within:border-red-500 dark:border-red-500 dark:bg-gray-800 dark:focus-within:border-red-500',
-                $variant === 'inverted' => 'border-gray-140 bg-gray-10 focus-within:border-gray-400 dark:border-gray-700 dark:bg-gray-820 dark:focus-within:border-gray-600',
-                default => 'border-gray-140 bg-white focus-within:border-gray-400 dark:border-gray-700 dark:bg-gray-800 dark:focus-within:border-gray-500',
-            }
+                (bool) $error
+                    => 'border-red-500 bg-white focus-within:border-red-500 dark:border-red-500 dark:bg-gray-800 dark:focus-within:border-red-500',
+                $variant === 'inverted'
+                    => 'border-gray-140 bg-gray-10 focus-within:border-gray-400 dark:border-gray-700 dark:bg-gray-820 dark:focus-within:border-gray-600',
+                default
+                    => 'border-gray-140 bg-white focus-within:border-gray-400 dark:border-gray-700 dark:bg-gray-800 dark:focus-within:border-gray-500',
+            },
         )
         ->when($disabled, 'cursor-not-allowed opacity-50')
         ->merge($attributes->only('class'));
@@ -67,16 +70,7 @@
 
     $passthrough = $attributes
         ->whereDoesntStartWith(['class'])
-        ->except([
-            'tags',
-            'label',
-            'hint',
-            'name',
-            'placeholder',
-            'size',
-            'variant',
-            'id',
-        ]);
+        ->except(['tags', 'label', 'hint', 'name', 'placeholder', 'size', 'variant', 'id']);
 @endphp
 
 <ui:field :id="$id">
@@ -84,50 +78,37 @@
         <ui:label>{{ $label }}</ui:label>
     @endif
 
-    <div
-        x-data="{
-            tags: @js($tagsArray),
-            input: '',
-
-            add() {
-                const value = this.input.trim();
-                if (value && !this.tags.includes(value)) {
-                    this.tags = [...this.tags, value];
-                }
-                this.input = '';
-            },
-
-            remove(index) {
-                this.tags = this.tags.filter((_, i) => i !== index);
+    <div wire:ignore x-data="{
+        tags: @js($tagsArray),
+        input: '',
+    
+        add() {
+            const value = this.input.trim();
+            if (value && !this.tags.includes(value)) {
+                this.tags = [...this.tags, value];
             }
-        }"
-        x-modelable="tags"
-        x-on:click="$refs.input.focus()"
-        class="{{ $containerClasses }}"
-        {{ $passthrough }}
-        data-control
-    >
+            this.input = '';
+        },
+    
+        remove(index) {
+            this.tags = this.tags.filter((_, i) => i !== index);
+        }
+    }" x-modelable="tags" x-on:click="$refs.input.focus()"
+        class="{{ $containerClasses }}" {{ $passthrough }} data-control>
         <template x-for="(tag, index) in tags" :key="tag + '-' + index">
             <span class="{{ $tagClasses }}">
                 <span x-text="tag"></span>
-                <button type="button" class="{{ $removeClasses }}" x-on:click.stop="remove(index)" @disabled($disabled)>
+                <button type="button" class="{{ $removeClasses }}" x-on:click.stop="remove(index)"
+                    @disabled($disabled)>
                     <ui:icon name="x" size="xs" />
                 </button>
             </span>
         </template>
 
-        <input
-            type="text"
-            x-ref="input"
-            x-model="input"
-            x-on:keydown.enter.prevent="add()"
+        <input type="text" x-ref="input" x-model="input" x-on:keydown.enter.prevent="add()"
             x-on:keydown.tab="if (input.trim()) { $event.preventDefault(); add(); }"
-            x-on:keydown.backspace="if (!input && tags.length) remove(tags.length - 1)"
-            x-on:blur="add()"
-            placeholder="{{ $placeholder }}"
-            class="{{ $inputClasses }}"
-            @disabled($disabled)
-        >
+            x-on:keydown.backspace="if (!input && tags.length) remove(tags.length - 1)" x-on:blur="add()"
+            placeholder="{{ $placeholder }}" class="{{ $inputClasses }}" @disabled($disabled)>
 
         @if ($inputName)
             <template x-for="(tag, index) in tags" :key="'hidden-' + tag + '-' + index">

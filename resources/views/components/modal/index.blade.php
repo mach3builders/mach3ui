@@ -16,7 +16,7 @@
 
     $panelClasses = Ui::classes()
         ->add('fixed inset-0 m-auto flex max-h-[90vh] w-full flex-col rounded-xl border shadow-2xl')
-        ->add('border-transparent bg-white dark:border-gray-700 dark:bg-gray-800')
+        ->add('border-transparent bg-white dark:border-gray-740 dark:bg-gray-800')
         ->add('opacity-0 pointer-events-none transition-all duration-200 ease-out')
         ->add('open:opacity-100 open:pointer-events-auto')
         ->add('backdrop:bg-gray-900/50 backdrop:backdrop-blur-sm backdrop:opacity-0 backdrop:pointer-events-none backdrop:transition-all backdrop:duration-200 backdrop:ease-out')

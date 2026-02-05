@@ -108,7 +108,7 @@
     $optionsClasses = Ui::classes()->add('flex max-h-60 flex-col gap-0.5 overflow-y-auto p-1');
 @endphp
 
-<div x-data="{
+<div wire:ignore x-data="{
     open: false,
     multiple: {{ $multiple ? 'true' : 'false' }},
     searchable: {{ $searchable ? 'true' : 'false' }},

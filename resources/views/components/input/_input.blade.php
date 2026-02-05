@@ -9,8 +9,10 @@
     'iconWrapperClasses' => '',
     'id' => null,
     'inputClasses' => '',
+    'isLive' => false,
     'name' => null,
     'type' => 'text',
+    'wireTarget' => null,
     'wrapperClasses' => '',
 ])
 
@@ -38,8 +40,10 @@
 
                 <input type="{{ $type }}" @if ($id) id="{{ $id }}" @endif
                     @if ($name) name="{{ $name }}" @endif
-                    @if ($error) aria-invalid="true" @endif class="{{ $inputClasses }}"
-                    {{ $attributes->except(['class', 'name', 'id']) }} />
+                    @if ($error) aria-invalid="true" @endif
+                    @if ($isLive) wire:loading.class="opacity-50" @endif
+                    @if ($isLive && $wireTarget) wire:target="{{ $wireTarget }}" @endif
+                    class="{{ $inputClasses }}" {{ $attributes->except(['class', 'name', 'id']) }} />
 
                 @if ($hasIconEnd)
                     <div class="{{ $iconWrapperClasses }} right-0 pr-3">
@@ -56,8 +60,10 @@
         @else
             <input type="{{ $type }}" @if ($id) id="{{ $id }}" @endif
                 @if ($name) name="{{ $name }}" @endif
-                @if ($error) aria-invalid="true" @endif class="{{ $inputClasses }}"
-                {{ $attributes->except(['class', 'name', 'id']) }} data-control />
+                @if ($error) aria-invalid="true" @endif
+                @if ($isLive) wire:loading.class="opacity-50" @endif
+                @if ($isLive && $wireTarget) wire:target="{{ $wireTarget }}" @endif
+                class="{{ $inputClasses }}" {{ $attributes->except(['class', 'name', 'id']) }} data-control />
         @endif
 
         @if ($hasAddonEnd)
@@ -74,7 +80,9 @@
 
         <input type="{{ $type }}" @if ($id) id="{{ $id }}" @endif
             @if ($name) name="{{ $name }}" @endif
-            @if ($error) aria-invalid="true" @endif class="{{ $inputClasses }}"
+            @if ($error) aria-invalid="true" @endif
+            @if ($isLive) wire:loading.class="opacity-50" @endif
+            @if ($isLive && $wireTarget) wire:target="{{ $wireTarget }}" @endif class="{{ $inputClasses }}"
             {{ $attributes->except(['class', 'name', 'id']) }} />
 
         @if ($hasIconEnd)
@@ -92,6 +100,8 @@
 @else
     <input type="{{ $type }}" @if ($id) id="{{ $id }}" @endif
         @if ($name) name="{{ $name }}" @endif
-        @if ($error) aria-invalid="true" @endif class="{{ $inputClasses }}"
+        @if ($error) aria-invalid="true" @endif
+        @if ($isLive) wire:loading.class="opacity-50" @endif
+        @if ($isLive && $wireTarget) wire:target="{{ $wireTarget }}" @endif class="{{ $inputClasses }}"
         {{ $attributes->except(['class', 'name', 'id']) }} data-control />
 @endif

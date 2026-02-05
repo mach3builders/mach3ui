@@ -30,4 +30,5 @@ phpstan.neon
 testbench.yaml
 /docs
 /coverage
+/resources/_flux
 .DS_Store
