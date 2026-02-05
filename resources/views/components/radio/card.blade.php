@@ -7,13 +7,17 @@
 ])
 
 @php
+    // Detect x-model via native foreach (faster than collect()->first())
+    $xModel = null;
+    foreach ($attributes->getAttributes() as $k => $v) {
+        if (str_starts_with($k, 'x-model')) {
+            $xModel = $v;
+            break;
+        }
+    }
+
     // Auto-detect name from wire:model or x-model
-    $name =
-        $name ?:
-        (method_exists($attributes, 'wire')
-            ? $attributes->wire('model')->value()
-            : null) ?:
-        collect($attributes->getAttributes())->first(fn($v, $k) => str_starts_with($k, 'x-model'));
+    $name = $name ?: (method_exists($attributes, 'wire') ? $attributes->wire('model')->value() : null) ?: $xModel;
 
     // SVG icon for checked state (white dot)
     $dotSvg =
