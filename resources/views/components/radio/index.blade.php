@@ -32,8 +32,7 @@ $showName = isset($name);
 $inputName = $name ?: $wireModelValue ?: $xModelValue ?: $id;
 
 // ID priority: explicit id attr > field id (@aware) > input name > auto-generated
-$id =
-    $attributes->get('id') ?? ($id ?? ($inputName ?? Ui::uniqueId('radio')));
+$id = $attributes->get('id') ?? ($id ?? ($inputName ?? Ui::uniqueId('radio')));
 
 $hasLabel = $label || $description;
 $error = $inputName ? $errors->first($inputName) ?? null : null;
@@ -107,7 +106,7 @@ $descriptionClasses = Ui::classes()
     @endif
 
     @if ($error)
-        <p role="alert" class="mt-1 flex items-center gap-1.5 text-xs text-danger">
+        <p role="alert" class="mt-1 flex items-center gap-1.5 text-xs text-red-600 dark:text-red-500">
             {{ $error }}
         </p>
     @endif

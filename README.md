@@ -1,49 +1,40 @@
 # Mach3Builders User Interface
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/mach3builders/ui.svg?style=flat-square)](https://packagist.org/packages/mach3builders/ui)
-[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/mach3builders/ui/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/mach3builders/ui/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/mach3builders/ui/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/mach3builders/ui/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
+[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/mach3builders/mach3ui/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/mach3builders/mach3ui/actions?query=workflow%3Arun-tests+branch%3Amain)
+[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/mach3builders/mach3ui/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/mach3builders/mach3ui/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/mach3builders/ui.svg?style=flat-square)](https://packagist.org/packages/mach3builders/ui)
 
-This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
+A Laravel Blade UI component library that works seamlessly with and without Livewire. Built with Alpine.js for interactivity and Tailwind CSS for styling.
 
-## Support us
+## Features
 
-[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/ui.jpg?t=1" width="419px" />](https://spatie.be/github-ad-click/ui)
+- 50+ ready-to-use Blade components
+- Works with vanilla Laravel and Livewire
+- `wire:model` support out of the box
+- Smart class merging with `UI::classes()`
+- Tailwind CSS 4 theming support
+- Lucide icons included
 
-We invest a lot of resources into creating [best in class open source packages](https://spatie.be/open-source). You can support us by [buying one of our paid products](https://spatie.be/open-source/support-us).
+## Requirements
 
-We highly appreciate you sending us a postcard from your hometown, mentioning which of our package(s) you are using. You'll find our address on [our contact page](https://spatie.be/about-us). We publish all received postcards on [our virtual postcard wall](https://spatie.be/open-source/postcards).
+- PHP 8.4+
+- Laravel 11 or 12
+- Tailwind CSS 4
 
 ## Installation
-
-You can install the package via composer:
 
 ```bash
 composer require mach3builders/ui
 ```
 
-You can publish and run the migrations with:
-
-```bash
-php artisan vendor:publish --tag="ui-migrations"
-php artisan migrate
-```
-
-You can publish the config file with:
+Optionally publish the config:
 
 ```bash
 php artisan vendor:publish --tag="ui-config"
 ```
 
-This is the contents of the published config file:
-
-```php
-return [
-];
-```
-
-Optionally, you can publish the views using
+Optionally publish the views for customization:
 
 ```bash
 php artisan vendor:publish --tag="ui-views"
@@ -51,9 +42,88 @@ php artisan vendor:publish --tag="ui-views"
 
 ## Usage
 
+All components use the `ui:` prefix:
+
+```blade
+<ui:button>Click me</ui:button>
+
+<ui:input name="email" label="Email" placeholder="you@example.com" />
+
+<ui:select name="country" label="Country">
+    <ui:select.option value="nl">Netherlands</ui:select.option>
+    <ui:select.option value="be">Belgium</ui:select.option>
+</ui:select>
+
+<ui:checkbox name="terms" label="I agree to the terms" />
+```
+
+### With Livewire
+
+Components automatically pass through `wire:` attributes:
+
+```blade
+<ui:input wire:model="email" name="email" label="Email" />
+
+<ui:select wire:model.live="country" name="country">
+    ...
+</ui:select>
+```
+
+## Available Components
+
+### Form
+
+`input`, `textarea`, `select`, `checkbox`, `radio`, `switch`, `datepicker`, `file-upload`, `field`, `label`, `hint`, `error`
+
+### Buttons
+
+`button`, `button.group`
+
+### Feedback
+
+`alert`, `badge`, `progress`, `skeleton`, `toast`, `toaster`
+
+### Layout
+
+`card`, `box`, `modal`, `dropdown`, `tabs`, `accordion`, `divider`, `section`
+
+### Navigation
+
+`nav`, `breadcrumbs`, `pagination`, `steps`
+
+### Data Display
+
+`table`, `thead`, `tbody`, `tr`, `th`, `td`, `avatar`, `icon`, `definition-list`
+
+### Other
+
+`heading`, `link`, `kbd`, `code-editor`, `chart`
+
+## Class Builder
+
+Use `UI::classes()` for smart Tailwind class merging:
+
 ```php
-$ui = new Mach3Builders\Ui();
-echo $ui->echoPhrase('Hello, Mach3Builders!');
+$classes = UI::classes()
+    ->add('px-4 py-2 rounded')
+    ->add($variant, [
+        'primary' => 'bg-primary text-white',
+        'secondary' => 'bg-secondary text-gray-900',
+    ])
+    ->add($size, [
+        'sm' => 'text-sm',
+        'md' => 'text-base',
+        'lg' => 'text-lg',
+    ])
+    ->when($disabled, 'opacity-50 cursor-not-allowed')
+    ->merge($attributes);
+```
+
+User classes automatically override base classes with the same Tailwind prefix:
+
+```blade
+{{-- User's px-6 overrides component's px-4 --}}
+<ui:button class="px-6">Wide button</ui:button>
 ```
 
 ## Testing
@@ -65,19 +135,6 @@ composer test
 ## Changelog
 
 Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
-
-## Contributing
-
-Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
-
-## Security Vulnerabilities
-
-Please review [our security policy](../../security/policy) on how to report security vulnerabilities.
-
-## Credits
-
-- [Mach3Builders](https://github.com/mach3builders)
-- [All Contributors](../../contributors)
 
 ## License
 

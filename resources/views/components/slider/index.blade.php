@@ -60,9 +60,9 @@
 
     // Thumb styling
     $thumbBase = 'h-5 w-5 appearance-none rounded-full border shadow-sm';
-    $thumbColor = 'border-primary bg-primary';
-    $thumbHover = 'hover:bg-primary-hover';
-    $thumbFocus = 'focus:ring-2 focus:ring-offset-2 focus:ring-primary';
+    $thumbColor = 'border-blue-500 bg-blue-500 dark:border-blue-600 dark:bg-blue-600';
+    $thumbHover = 'hover:bg-blue-550 dark:hover:bg-blue-550';
+    $thumbFocus = 'focus:ring-2 focus:ring-offset-2 focus:ring-blue-600 dark:focus:ring-offset-gray-800';
     $thumbClasses = implode(' ', [$thumbBase, $thumbColor, $thumbHover, $thumbFocus]);
 
     $webkitThumb = $prefixClasses('[&::-webkit-slider-thumb]', $thumbClasses);
