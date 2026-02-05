@@ -19300,7 +19300,7 @@ function HO(n) {
     closedText: "▶",
     openText: "▼"
   })), a && c.push(D$(a)), o && (c.push(q.readOnly.of(!0)), c.push(k.editable.of(!1))), t && !o && c.push(k.updateListener.of((Q) => {
-    Q.docChanged && (t.value = Q.state.doc.toString(), nl(Q.state, r));
+    Q.docChanged && (t.value = Q.state.doc.toString(), t.dispatchEvent(new Event("input", { bubbles: !0 })), nl(Q.state, r));
   }));
   const f = q.create({
     doc: l,
