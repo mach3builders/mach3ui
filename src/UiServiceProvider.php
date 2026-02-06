@@ -92,7 +92,7 @@ class UiServiceProvider extends PackageServiceProvider
 
                     $modifiers = str_contains($key, '.') ? explode('.', substr($key, strlen($prefix) + 1)) : [];
 
-                    return new class ($key, $value, $modifiers)
+                    return new class($key, $value, $modifiers)
                     {
                         public function __construct(
                             public string $directive,
