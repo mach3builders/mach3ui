@@ -1,5 +1,6 @@
 @props([
-    'duration' => 5000,
+    'duration' => 4000,
+    'max' => 3,
     'position' => 'bottom-right',
 ])
 
@@ -32,7 +33,7 @@
         'danger' => 'text-red-600 dark:text-red-500',
     ];
 
-    $descriptionClasses = [
+    $messageClasses = [
         'default' => 'text-gray-600 dark:text-gray-300',
         'info' => 'text-cyan-700 dark:text-cyan-200',
         'success' => 'text-green-700 dark:text-green-200',
@@ -70,19 +71,23 @@
         toasts: [],
         variantClasses: @js($variantClasses),
         iconClasses: @js($iconClasses),
-        descriptionClasses: @js($descriptionClasses),
+        messageClasses: @js($messageClasses),
         closeClasses: @js($closeClasses),
         icons: @js($icons),
         duration: @js($duration),
-        translateStart: @js($translateStart),
+        max: @js($max),
 
         add(toast) {
+            while (this.max && this.toasts.length >= this.max) {
+                this.toasts.shift();
+            }
+
             const id = Date.now() + Math.random();
             this.toasts.push({
                 id,
                 variant: toast.variant || 'default',
                 title: toast.title || '',
-                description: toast.description || '',
+                message: toast.message || '',
                 dismissible: toast.dismissible !== false,
                 icon: toast.icon !== false,
                 open: false,
@@ -106,7 +111,7 @@
             }
         },
     }"
-    x-on:toast.window="add($event.detail)"
+    x-on:notify.window="add($event.detail)"
     @if (class_exists('Livewire\Livewire'))
         x-init="Livewire.on('toast', (data) => add(Array.isArray(data) ? data[0] : data))"
     @endif
@@ -121,11 +126,10 @@
             x-show="toast.open"
             x-cloak
             x-transition:enter="transition ease-out duration-200"
-            x-transition:enter-start="opacity-0"
-            :class="{ [translateStart]: !toast.open }"
+            x-transition:enter-start="opacity-0 {{ $translateStart }}"
             x-transition:enter-end="opacity-100 translate-x-0 translate-y-0"
             x-transition:leave="transition ease-in duration-150"
-            x-transition:leave-start="opacity-100 translate-x-0 translate-y-0"
+            x-transition:leave-start="opacity-100"
             x-transition:leave-end="opacity-0"
             data-toaster-item
         >
@@ -148,7 +152,7 @@
 
             <div class="flex-1" data-toaster-content>
                 <div class="font-semibold leading-6 text-gray-900 dark:text-white" x-text="toast.title" data-toaster-title></div>
-                <div x-show="toast.description" x-text="toast.description" :class="descriptionClasses[toast.variant]" data-toaster-description></div>
+                <div x-show="toast.message" x-text="toast.message" :class="messageClasses[toast.variant]" data-toaster-message></div>
             </div>
 
             <button

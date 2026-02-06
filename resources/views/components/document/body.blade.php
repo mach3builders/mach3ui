@@ -41,4 +41,8 @@
     @else
         {{ $slot }}
     @endif
+
+    @persist('notifications')
+        <ui:toaster />
+    @endpersist
 </body>

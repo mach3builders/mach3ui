@@ -133,4 +133,12 @@ return [
         'hint_select' => 'select',
         'hint_close' => 'close',
     ],
+
+    // Toast
+    'toast' => [
+        'danger' => 'Toobad!',
+        'info' => 'Did you know?',
+        'success' => 'It worked!',
+        'warning' => 'Pay attention!',
+    ],
 ];
