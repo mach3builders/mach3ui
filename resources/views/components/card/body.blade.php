@@ -1,5 +1,3 @@
-@blaze
-
 @aware(['variant' => 'default'])
 
 @props([

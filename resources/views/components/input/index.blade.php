@@ -1,5 +1,3 @@
-@blaze
-
 @props([
     'addon' => null,
     'addon:end' => null,

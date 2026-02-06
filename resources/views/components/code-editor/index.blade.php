@@ -1,5 +1,3 @@
-@blaze
-
 @props([
     'footer' => false,
     'header' => true,

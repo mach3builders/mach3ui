@@ -1,5 +1,3 @@
-@blaze
-
 @props([
     'description' => null,
     'indeterminate' => false,

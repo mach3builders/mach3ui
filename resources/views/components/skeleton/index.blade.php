@@ -1,5 +1,3 @@
-@blaze
-
 @props([
     'circle' => false,
     'count' => 1,

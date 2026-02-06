@@ -1,5 +1,3 @@
-@blaze
-
 @props([
     'attached' => true,
 ])

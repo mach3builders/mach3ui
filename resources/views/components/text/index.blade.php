@@ -1,5 +1,3 @@
-@blaze
-
 @props([
     'size' => 'sm',
     'tag' => 'p',

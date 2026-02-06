@@ -1,5 +1,3 @@
-@blaze
-
 @props([
     'default' => null,
     'name' => null,

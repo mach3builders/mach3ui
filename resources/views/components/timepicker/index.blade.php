@@ -1,5 +1,3 @@
-@blaze
-
 @props([
     'clearable' => false,
     'disabled' => false,

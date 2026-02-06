@@ -1,5 +1,3 @@
-@blaze
-
 @php
     $classes = Ui::classes()
         ->add('[[data-field]+&]:mt-6 [[data-field]+&]:justify-end')

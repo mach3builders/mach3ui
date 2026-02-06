@@ -1,5 +1,3 @@
-@blaze
-
 @aware(['id'])
 
 @props([
