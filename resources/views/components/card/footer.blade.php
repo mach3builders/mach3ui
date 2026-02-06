@@ -4,6 +4,7 @@
 
 @props([
     'divided' => false,
+    'variant' => $variant,
 ])
 
 @php

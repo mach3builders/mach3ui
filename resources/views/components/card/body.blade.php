@@ -4,6 +4,7 @@
 
 @props([
     'flush' => false,
+    'variant' => $variant,
 ])
 
 @php
@@ -19,8 +20,9 @@
         ->add($variant, [
             'default' => 'border-gray-60 bg-white dark:border-gray-740 dark:bg-gray-800',
             'inverted' => 'border-gray-80 bg-gray-30 dark:border-gray-740 dark:bg-gray-820',
+            'simple' => 'bg-transparent pt-0',
         ])
-        ->when(!$isSimple && !$flush, 'px-4.5 py-4')
+        ->when(!$flush, 'px-4.5 py-4')
         ->merge($attributes);
 @endphp
 

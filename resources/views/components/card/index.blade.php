@@ -33,7 +33,7 @@
         @if (str_contains($slot->toHtml(), 'data-card-body'))
             {{ $slot }}
         @else
-            <ui:card.body>{{ $slot }}</ui:card.body>
+            <ui:card.body :variant="$variant">{{ $slot }}</ui:card.body>
         @endif
     @endif
 </div>
