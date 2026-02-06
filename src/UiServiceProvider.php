@@ -86,14 +86,30 @@ class UiServiceProvider extends PackageServiceProvider
 
             foreach ($attributes as $key => $value) {
                 if (str_starts_with($key, $prefix)) {
+                    if (class_exists(\Livewire\WireDirective::class)) {
+                        return new \Livewire\WireDirective($name, $key, $value);
+                    }
+
                     $modifiers = str_contains($key, '.') ? explode('.', substr($key, strlen($prefix) + 1)) : [];
 
-                    return (object) [
-                        'directive' => $key,
-                        'value' => $value,
-                        'modifiers' => $modifiers,
-                        'hasModifier' => fn (string $mod) => in_array($mod, $modifiers),
-                    ];
+                    return new class ($key, $value, $modifiers)
+                    {
+                        public function __construct(
+                            public string $directive,
+                            public mixed $value,
+                            public array $modifiers,
+                        ) {}
+
+                        public function value(): mixed
+                        {
+                            return $this->value;
+                        }
+
+                        public function hasModifier(string $mod): bool
+                        {
+                            return in_array($mod, $this->modifiers);
+                        }
+                    };
                 }
             }
 

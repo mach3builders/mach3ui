@@ -10,13 +10,10 @@
 @aware(['id'])
 
 @php
-    // Get wire:model using Livewire's helper (check method exists for non-Livewire contexts)
+    // Get wire:model using Livewire's helper
 $wireModel = $attributes->wire('model');
-$wireModelValue = is_object($wireModel) && method_exists($wireModel, 'value') ? $wireModel->value() : null;
-$isLive =
-    is_object($wireModel) && method_exists($wireModel, 'hasModifier')
-        ? $wireModel->hasModifier('live') ?? false
-        : false;
+$wireModelValue = $wireModel?->directive ? $wireModel->value() : null;
+$isLive = $wireModel?->directive ? $wireModel->hasModifier('live') : false;
 
 // Get x-model value
 $xModelValue = null;

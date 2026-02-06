@@ -5,10 +5,10 @@
 ])
 
 @php
-    $wireModel = method_exists($attributes, 'wire') ? $attributes->wire('model') : null;
-    $hasWireModel = $wireModel && method_exists($wireModel, 'value') && $wireModel->value();
-    $wireModelValue = $hasWireModel ? $wireModel->value() : null;
-    $isLive = $hasWireModel && $wireModel->hasModifier('live');
+    $wireModel = $attributes->wire('model');
+    $wireModelValue = $wireModel?->directive ? $wireModel->value() : null;
+    $hasWireModel = (bool) $wireModelValue;
+    $isLive = $wireModel?->directive ? $wireModel->hasModifier('live') : false;
     $openState = $hasWireModel ? "\$wire.entangle('{$wireModelValue}')" . ($isLive ? '.live' : '') : 'false';
 
     $modalId = $name ?? Ui::uniqueId('modal');
