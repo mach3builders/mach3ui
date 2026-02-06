@@ -10,6 +10,12 @@ return [
     'apply' => 'Toepassen',
     'insert' => 'Invoegen',
 
+    // Plans
+    'free_plan' => 'FREE pakket',
+    'basic_plan' => 'BASIC pakket',
+    'pro_plan' => 'PRO pakket',
+    'ultra_plan' => 'ULTRA pakket',
+
     // Datepicker
     'datepicker' => [
         'placeholder' => 'Kies een datum',

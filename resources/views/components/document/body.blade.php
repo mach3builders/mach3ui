@@ -28,7 +28,7 @@
                 </div>
             @endif
 
-            <div class="flex w-full max-w-md flex-col items-center gap-6 [&>[data-card]]:w-full">
+            <div class="flex w-full max-w-md flex-col items-center gap-6 [&>[data-card]]:w-full [&>[data-alert]]:w-full">
                 @if ($logoSlot)
                     {{ $logoSlot }}
                 @else

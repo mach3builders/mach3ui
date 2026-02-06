@@ -10,7 +10,7 @@
 @php
     $classes = Ui::classes()
         ->add(
-            'inline-flex cursor-default select-none items-center gap-1 rounded-full border px-2 py-px text-xs font-medium',
+            'inline-flex cursor-default select-none items-center self-start gap-1 rounded-full border px-2 py-px text-xs font-medium',
         )
         ->add($variant, [
             'default' => 'border-transparent bg-gray-900 text-white dark:bg-gray-50 dark:text-gray-900',
