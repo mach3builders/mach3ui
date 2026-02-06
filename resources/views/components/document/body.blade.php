@@ -12,7 +12,7 @@
         ->add('dark:text-gray-100')
         ->add(
             match ($type) {
-                'auth' => 'bg-gray-30 dark:bg-gray-830',
+                'auth' => 'bg-gray-50 dark:bg-gray-830',
                 default => 'bg-white dark:bg-gray-800',
             },
         )
@@ -28,7 +28,7 @@
                 </div>
             @endif
 
-            <div class="flex w-full max-w-md flex-col items-center gap-6">
+            <div class="flex w-full max-w-md flex-col items-center gap-6 [&>[data-card]]:w-full">
                 @if ($logoSlot)
                     {{ $logoSlot }}
                 @else

@@ -45,6 +45,7 @@
 
     // Regular button classes
     $classes = Ui::classes($baseClasses)
+        ->add('[[data-field]+&]:mt-4')
         ->add('rounded-md')
         ->add('focus:ring-1 focus:ring-offset-1 focus:outline-none')
         ->add($variant, [

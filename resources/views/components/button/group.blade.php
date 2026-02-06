@@ -6,6 +6,7 @@
 
 @php
     $classes = Ui::classes()
+        ->add('[[data-field]+&]:mt-4')
         ->add('inline-flex')
         ->add('[&>*:focus]:z-10 [&>*:focus-visible]:z-10')
         ->when(
