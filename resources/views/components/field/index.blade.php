@@ -21,8 +21,8 @@
                 default => 'flex flex-col gap-2',
             },
         )
-        ->add('[[data-field]+&]:mt-6')
         ->add('[[data-fields]+&]:mt-6')
+        ->add('[[data-field]+&]:mt-6')
         ->merge($attributes->only('class'));
 @endphp
 
