@@ -76,7 +76,7 @@ $classes = $classes
     // Merge user classes
     $classes = $classes->merge($attributes->only('class'));
 
-    $actionsClasses = Ui::classes()->add('invisible inline-flex gap-1 group-hover:visible');
+    $actionsClasses = Ui::classes()->add('invisible flex justify-end gap-1 group-hover:visible');
 @endphp
 
 <td class="{{ $classes }}" {{ $attributes->except('class') }} data-td>
