@@ -67,7 +67,7 @@ $selectClasses = Ui::classes()
 
 @if ($label)
     <ui:field :id="$id">
-        <ui:label>{{ $label }}</ui:label>
+        <ui:label :required="$attributes->has('required')">{{ $label }}</ui:label>
 
         <x-ui::select._select :id="$id" :name="$showName ? $selectName : null" :error="$error" :placeholder="$placeholder" :select-classes="$selectClasses"
             :is-live="$isLive" :wire-target="$wireModelValue" :attributes="$attributes">{{ $slot }}</x-ui::select._select>

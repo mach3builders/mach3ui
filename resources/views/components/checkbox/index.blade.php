@@ -110,7 +110,7 @@ $descriptionClasses = Ui::classes()
     @if ($hasLabel)
         <span class="flex flex-col gap-0.5">
             @if ($label)
-                <span class="{{ $labelTextClasses }}">{{ $label }}</span>
+                <span class="{{ $labelTextClasses }}">{{ $label }}@if($attributes->has('required')) <span class="text-gray-400 dark:text-gray-500">*</span>@endif</span>
             @endif
             @if ($description)
                 <span class="{{ $descriptionClasses }}">{{ $description }}</span>

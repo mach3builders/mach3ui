@@ -68,7 +68,7 @@ $alpineData = $autoResize
 
 @if ($label)
     <ui:field :id="$id">
-        <ui:label>{{ $label }}</ui:label>
+        <ui:label :required="$attributes->has('required')">{{ $label }}</ui:label>
 
         <textarea id="{{ $id }}" @if ($showName && $textareaName) name="{{ $textareaName }}" @endif
             @if ($error) aria-invalid="true" @endif

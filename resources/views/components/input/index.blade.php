@@ -89,7 +89,7 @@ $iconWrapperClasses = 'pointer-events-none absolute inset-y-0 flex items-center 
 
 @if ($label)
     <ui:field :id="$id">
-        <ui:label>{{ $label }}</ui:label>
+        <ui:label :required="$attributes->has('required')">{{ $label }}</ui:label>
 
         <x-ui::input._input :type="$type" :id="$id" :name="$showName ? $inputName : null" :error="$error" :icon="$icon"
             :icon-end="$iconEnd" :addon="$addon" :addon-end="$addonEnd" :button="$button ?? null" :input-classes="$inputClasses" :wrapper-classes="$wrapperClasses"
