@@ -17,6 +17,6 @@
         ->merge($attributes->only('class'));
 @endphp
 
-<div class="{{ $classes }}" {{ $attributes->except('class') }} data-field>
+<div class="{{ $classes }}" {{ $attributes->except('class') }} data-fields>
     {{ $slot }}
 </div>

@@ -136,7 +136,7 @@ return [
 
     // Toast
     'toast' => [
-        'danger' => 'Toobad!',
+        'danger' => 'Too bad!',
         'info' => 'Did you know?',
         'success' => 'It worked!',
         'warning' => 'Pay attention!',

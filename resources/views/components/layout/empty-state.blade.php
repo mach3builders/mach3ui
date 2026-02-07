@@ -20,7 +20,7 @@
 
 <div {{ $attributes->class($classes) }} data-layout-empty-state>
     <div class="{{ $iconWrapperClasses }}">
-        <ui:icon :name="$icon" />
+        <ui:icon :name="$icon" stroke="1.75" />
     </div>
 
     @if ($title)

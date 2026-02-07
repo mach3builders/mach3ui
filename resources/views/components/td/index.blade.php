@@ -42,14 +42,21 @@ $classes = $classes
         ->add('[tbody:last-of-type[data-expanded="false"]_tr:first-child_&]:first:rounded-bl-lg')
         ->add('[tbody:last-of-type[data-expanded="false"]_tr:first-child_&]:last:rounded-br-lg');
 
+    // Detect alignment from prop or user classes
+    $userClasses = (string) $attributes->get('class');
+    $effectiveAlign = match (true) {
+        $align !== 'left' => $align,
+        str_contains($userClasses, 'text-center') => 'center',
+        str_contains($userClasses, 'text-right') => 'right',
+        default => 'left',
+    };
+
     // Alignment
-    $classes = $classes->add(
-        match (true) {
-            $align === 'center' || $fit => 'text-center',
-            $align === 'right' || $actions => 'text-right',
-            default => 'text-left',
-        },
-    );
+    $alignClasses = match (true) {
+        $effectiveAlign === 'center' || $fit => 'flex items-center justify-center gap-2',
+        $effectiveAlign === 'right' || $actions => 'flex items-center justify-end gap-2',
+        default => null,
+    };
 
     // Fit & actions modifiers
     $classes = $classes
@@ -75,6 +82,10 @@ $classes = $classes
 <td class="{{ $classes }}" {{ $attributes->except('class') }} data-td>
     @if ($actions)
         <div class="{{ $actionsClasses }}" data-td-actions>
+            {{ $slot }}
+        </div>
+    @elseif ($alignClasses)
+        <div class="{{ $alignClasses }}">
             {{ $slot }}
         </div>
     @else
