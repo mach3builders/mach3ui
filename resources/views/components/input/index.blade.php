@@ -53,7 +53,7 @@ $inputClasses = Ui::classes()
     ->add('disabled:cursor-not-allowed disabled:opacity-50')
     ->add('autofill:shadow-[inset_0_0_0_1000px_white] autofill:[-webkit-text-fill-color:theme(colors.gray.900)]')
     ->add(
-        'dark:autofill:shadow-[inset_0_0_0_1000px_theme(colors.gray.800)] dark:autofill:[-webkit-text-fill-color:theme(colors.gray.100)]',
+        'dark:autofill:shadow-[inset_0_0_0_1000px_theme(colors.gray.800)] dark:autofill:[-webkit-text-fill-color:theme(colors.gray.100)] dark:autofill:caret-gray-100',
     )
     ->add($size, [
         'sm' => 'h-8 px-2.5 py-1.5 text-xs',
