@@ -21,7 +21,7 @@
 
     $classes = Ui::classes()
         ->add('group')
-        ->when($isClickable, 'cursor-pointer *:transition-colors hover:*:bg-gray-20 dark:hover:*:bg-gray-790')
+        ->when($isClickable, 'cursor-pointer hover:*:bg-gray-20 dark:hover:*:bg-gray-790')
         ->when($isStaticSelected, $selectedClasses)
         ->merge($attributes->only('class'));
 @endphp
