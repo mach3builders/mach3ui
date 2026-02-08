@@ -152,7 +152,7 @@
 
             <div class="flex-1" data-toaster-content>
                 <div class="font-semibold leading-6 text-gray-900 dark:text-white" x-text="toast.title" data-toaster-title></div>
-                <div x-show="toast.message" x-text="toast.message" :class="messageClasses[toast.variant]" data-toaster-message></div>
+                <div x-show="toast.message" x-html="toast.message" :class="messageClasses[toast.variant]" data-toaster-message></div>
             </div>
 
             <button

@@ -1,5 +1,7 @@
 @props([
-    'banner' => false,
+    'banner' => auth()->user()?->accountSwitched() ?? false,
+    'bannerName' => auth()->user()?->name,
+    'bannerSwitchUrl' => '#',
 ])
 
 @php
@@ -32,6 +34,10 @@
         ->add($banner ? 'min-h-[calc(100vh-2.5rem)]' : 'min-h-screen');
 @endphp
 
+@if ($banner)
+    <ui:layout.banner :name="$bannerName" :switch-url="$bannerSwitchUrl" />
+@endif
+
 <div class="{{ $classes }}" {{ $attributes->except('class') }} x-data="{
     sideBarOpen: false,
     init() {
@@ -54,7 +60,7 @@
     <div class="{{ $innerClasses }}">
         <ui:layout.backdrop />
 
-        <ui:layout.sidebar>
+        <ui:layout.sidebar :banner="$banner">
             <ui:layout.sidebar.header>
                 @if ($sidebarLogoSlot)
                     <div class="flex items-center h-10">{{ $sidebarLogoSlot }}</div>

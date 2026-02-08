@@ -11,10 +11,11 @@
 
     // Auto-adjust padding for single-child elements
     $classes = $classes
-        ->add('has-[>[data-checkbox]:only-child]:pt-3')
-        ->add('has-[>[data-icon]:only-child]:pt-3')
-        ->add('has-[>[data-button]:only-child]:pt-1.5')
-        ->add('has-[>[data-toggle]:only-child]:py-1.5');
+        ->add('has-[[data-checkbox]:only-child]:pt-3')
+        ->add('has-[[data-icon]:only-child]:pt-3')
+        ->add('has-[[data-button]:only-child]:pt-1.5')
+        ->add('has-[[data-toggle]:only-child]:py-1.5')
+        ->add('has-[[data-avatar]:only-child]:py-2.5');
 
     // Colors
     $classes = $classes
@@ -61,7 +62,7 @@ $classes = $classes
     // Fit & actions modifiers
     $classes = $classes
         ->when($actions || $fit, 'w-0')
-        ->when($fit, 'first:pr-0 not-first:not-last:px-0')
+        ->when($fit, 'first:pr-0 not-first:not-last:px-0 last:pl-0')
         ->when($actions, 'py-1.5 pr-1.5 last:pl-0');
 
     // Highlight
