@@ -37,6 +37,9 @@ $id =
 
 $error = $textareaName ? $errors->first($textareaName) ?? null : null;
 
+// Auto-restore old input for traditional form fields
+$oldValue = ($showName && $textareaName && !$wireModelValue && !$xModelValue) ? old($textareaName) : null;
+
 $classes = Ui::classes()
     ->add('block w-full appearance-none border shadow-xs focus:outline-none')
     ->add('disabled:cursor-not-allowed disabled:opacity-50')
@@ -76,7 +79,7 @@ $alpineData = $autoResize
             @if ($isLive) wire:loading.class="opacity-50" @endif
             @if ($isLive && $wireModelValue) wire:target="{{ $wireModelValue }}" @endif
             @if ($autoResize) x-data="{{ $alpineData }}" x-init="resize()" x-on:input="resize()" @endif
-            class="{{ $classes }}" {{ $attributes->except(['class', 'name', 'id', 'rows']) }} data-control>{{ $slot }}</textarea>
+            class="{{ $classes }}" {{ $attributes->except(['class', 'name', 'id', 'rows']) }} data-control>{{ $slot->isNotEmpty() ? $slot : $oldValue }}</textarea>
 
         @if ($hint)
             <ui:hint>{{ $hint }}</ui:hint>

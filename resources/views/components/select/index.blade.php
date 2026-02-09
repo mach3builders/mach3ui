@@ -35,6 +35,9 @@ $id =
 
 $error = $selectName ? $errors->first($selectName) ?? null : null;
 
+// Auto-restore old input for traditional form fields
+$oldValue = ($showName && $selectName && !$wireModelValue && !$xModelValue) ? old($selectName) : null;
+
 $selectClasses = Ui::classes()
     ->add('block w-full appearance-none border shadow-xs focus:outline-none')
     ->add('disabled:cursor-not-allowed disabled:opacity-50')
@@ -70,7 +73,7 @@ $selectClasses = Ui::classes()
         <ui:label :required="$attributes->has('required')">{{ $label }}</ui:label>
 
         <x-ui::select._select :id="$id" :name="$showName ? $selectName : null" :error="$error" :placeholder="$placeholder" :select-classes="$selectClasses"
-            :is-live="$isLive" :wire-target="$wireModelValue" :attributes="$attributes">{{ $slot }}</x-ui::select._select>
+            :is-live="$isLive" :wire-target="$wireModelValue" :old-value="$oldValue" :attributes="$attributes">{{ $slot }}</x-ui::select._select>
 
         @if ($hint)
             <ui:hint>{{ $hint }}</ui:hint>

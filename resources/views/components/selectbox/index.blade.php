@@ -47,6 +47,11 @@
     $id = $attributes->get('id') ?? ($id ?? ($selectName ?? Ui::uniqueId('selectbox')));
 
     $error = $selectName ? $errors->first($selectName) ?? null : null;
+
+    // Auto-restore old input for traditional form fields
+    if ($initialValue === null && $name && !$wireModelValue && !$xModelValue) {
+        $initialValue = old($selectName);
+    }
 @endphp
 
 @if ($label)

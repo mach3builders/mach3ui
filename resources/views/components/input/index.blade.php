@@ -39,6 +39,11 @@ $id =
 
 $error = $inputName ? $errors->first($inputName) ?? null : null;
 
+// Auto-restore old input for traditional form fields (skip password types)
+if ($showName && $inputName && $type !== 'password' && !$wireModelValue && !$xModelValue && old($inputName) !== null) {
+    $attributes = $attributes->merge(['value' => old($inputName)]);
+}
+
 $iconEnd = $__data['icon:end'] ?? null;
 $addonEnd = $__data['addon:end'] ?? null;
 

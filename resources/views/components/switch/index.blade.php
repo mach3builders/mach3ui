@@ -36,6 +36,11 @@
     $hasLabel = $label || $description;
     $error = $inputName ? $errors->first($inputName) ?? null : null;
 
+    // Auto-restore old input for traditional form fields
+    if ($name && $inputName && !$wireModelValue && !$xModelValue && old($inputName) !== null) {
+        $attributes = $attributes->merge(['checked' => true]);
+    }
+
     $wrapperClasses = Ui::classes()->merge($attributes->only('class'));
 
     // Hidden checkbox - sr-only but still focusable for accessibility

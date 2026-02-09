@@ -32,6 +32,14 @@ $id = $attributes->get('id') ?? ($id ?? ($inputName ?? Ui::uniqueId('radio')));
 $hasLabel = $label || $description;
 $error = $inputName ? $errors->first($inputName) ?? null : null;
 
+// Auto-restore old input for traditional form fields
+if ($showName && $inputName && !$wireModelValue && !$xModelValue && old($inputName) !== null) {
+    $isOldChecked = old($inputName) == $attributes->get('value');
+    if ($isOldChecked) {
+        $attributes = $attributes->merge(['checked' => true]);
+    }
+}
+
 // SVG icon for checked state (white dot)
 $dotSvg =
     "url('data:image/svg+xml,%3csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%225%22%20fill%3D%22white%22%2F%3E%3C%2Fsvg%3E')";
