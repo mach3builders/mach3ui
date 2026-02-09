@@ -53,4 +53,16 @@ class TestCase extends Orchestra
 
         return $this;
     }
+
+    /**
+     * Flash old input for testing old() restoration.
+     */
+    protected function withOldInput(array $input): self
+    {
+        $session = $this->app['session']->driver();
+        $session->put('_old_input', $input);
+        $this->app['request']->setLaravelSession($session);
+
+        return $this;
+    }
 }
