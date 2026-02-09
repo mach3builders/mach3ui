@@ -1,5 +1,3 @@
-@blaze
-
 @props([
     'description' => null,
     'label' => null,
@@ -10,13 +8,10 @@
 @aware(['id'])
 
 @php
-    // Get wire:model using Livewire's helper (check method exists for non-Livewire contexts)
+    // Get wire:model using Livewire's helper
 $wireModel = $attributes->wire('model');
-$wireModelValue = is_object($wireModel) && method_exists($wireModel, 'value') ? $wireModel->value() : null;
-$isLive =
-    is_object($wireModel) && method_exists($wireModel, 'hasModifier')
-        ? $wireModel->hasModifier('live') ?? false
-        : false;
+$wireModelValue = $wireModel?->directive ? $wireModel->value() : null;
+$isLive = $wireModel?->directive ? $wireModel->hasModifier('live') : false;
 
 // Get x-model value
 $xModelValue = null;
@@ -37,11 +32,22 @@ $id = $attributes->get('id') ?? ($id ?? ($inputName ?? Ui::uniqueId('radio')));
 $hasLabel = $label || $description;
 $error = $inputName ? $errors->first($inputName) ?? null : null;
 
+// Auto-restore old input for traditional form fields
+if ($showName && $inputName && !$wireModelValue && !$xModelValue && old($inputName) !== null) {
+    $isOldChecked = old($inputName) == $attributes->get('value');
+    if ($isOldChecked) {
+        $attributes = $attributes->merge(['checked' => true]);
+    }
+}
+
 // SVG icon for checked state (white dot)
 $dotSvg =
     "url('data:image/svg+xml,%3csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%225%22%20fill%3D%22white%22%2F%3E%3C%2Fsvg%3E')";
 
-$wrapperClasses = Ui::classes()->merge($attributes->only('class'));
+$wrapperClasses = Ui::classes()
+    ->add('[[data-fields]+&]:mt-6')
+    ->add('[[data-field]+&]:mt-6')
+    ->merge($attributes->only('class'));
 
 $radioClasses = Ui::classes()
     ->add('shrink-0 cursor-pointer appearance-none rounded-full border bg-center bg-no-repeat')
@@ -96,7 +102,7 @@ $descriptionClasses = Ui::classes()
     @if ($hasLabel)
         <span class="flex flex-col gap-0.5">
             @if ($label)
-                <span class="{{ $labelTextClasses }}">{{ $label }}</span>
+                <span class="{{ $labelTextClasses }}">{{ $label }}@if($attributes->has('required')) <span class="text-gray-400 dark:text-gray-500">*</span>@endif</span>
             @endif
             @if ($description)
                 <span class="{{ $descriptionClasses }}">{{ $description }}</span>

@@ -18,7 +18,8 @@
     }
 
     // Auto-detect name from wire:model or x-model
-    $name = $name ?: (method_exists($attributes, 'wire') ? $attributes->wire('model')->value() : null) ?: $xModel;
+    $wireModel = $attributes->wire('model');
+    $name = $name ?: ($wireModel?->directive ? $wireModel->value() : null) ?: $xModel;
 
     // SVG icons (fully URL encoded for Tailwind arbitrary values)
     $checkmarkSvg =

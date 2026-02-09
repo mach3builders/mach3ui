@@ -10,6 +10,12 @@ return [
     'apply' => 'Toepassen',
     'insert' => 'Invoegen',
 
+    // Plans
+    'free_plan' => 'FREE pakket',
+    'basic_plan' => 'BASIC pakket',
+    'pro_plan' => 'PRO pakket',
+    'ultra_plan' => 'ULTRA pakket',
+
     // Datepicker
     'datepicker' => [
         'placeholder' => 'Kies een datum',
@@ -126,5 +132,13 @@ return [
         'hint_release' => 'loslaten',
         'hint_select' => 'selecteer',
         'hint_close' => 'sluiten',
+    ],
+
+    // Toast
+    'toast' => [
+        'danger' => 'Helaas!',
+        'info' => 'Wist je dat?',
+        'success' => 'Het is gelukt!',
+        'warning' => 'Let op!',
     ],
 ];

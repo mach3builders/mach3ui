@@ -10,6 +10,12 @@ return [
     'apply' => 'Apply',
     'insert' => 'Insert',
 
+    // Plans
+    'free_plan' => 'FREE plan',
+    'basic_plan' => 'BASIC plan',
+    'pro_plan' => 'PRO plan',
+    'ultra_plan' => 'ULTRA plan',
+
     // Datepicker
     'datepicker' => [
         'placeholder' => 'Pick a date',
@@ -126,5 +132,13 @@ return [
         'hint_release' => 'release',
         'hint_select' => 'select',
         'hint_close' => 'close',
+    ],
+
+    // Toast
+    'toast' => [
+        'danger' => 'Too bad!',
+        'info' => 'Did you know?',
+        'success' => 'It worked!',
+        'warning' => 'Pay attention!',
     ],
 ];

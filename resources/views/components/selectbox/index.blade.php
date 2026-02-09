@@ -1,5 +1,3 @@
-@blaze
-
 @props([
     'disabled' => false,
     'hint' => null,
@@ -49,11 +47,16 @@
     $id = $attributes->get('id') ?? ($id ?? ($selectName ?? Ui::uniqueId('selectbox')));
 
     $error = $selectName ? $errors->first($selectName) ?? null : null;
+
+    // Auto-restore old input for traditional form fields
+    if ($initialValue === null && $name && !$wireModelValue && !$xModelValue) {
+        $initialValue = old($selectName);
+    }
 @endphp
 
 @if ($label)
     <ui:field :id="$id">
-        <ui:label>{{ $label }}</ui:label>
+        <ui:label :required="$attributes->has('required')">{{ $label }}</ui:label>
 
         <x-ui::selectbox._selectbox :id="$id" :name="$selectName" :disabled="$disabled" :error="$error"
             :multiple="$multiple" :nullable="$nullable" :nullable-label="$nullableLabel" :placeholder="$placeholder" :position="$position" :searchable="$searchable"

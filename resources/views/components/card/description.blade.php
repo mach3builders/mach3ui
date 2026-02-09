@@ -1,5 +1,3 @@
-@blaze
-
 @props([])
 
 <ui:text variant="muted" {{ $attributes }} data-card-description>

@@ -1,5 +1,5 @@
 @props([
-    'brand' => 'Builders',
+    'brand' => null,
     'color' => 'gray',
     'href' => null,
     'image' => null,
@@ -8,6 +8,8 @@
 
 @php
     $tag = $href ? 'a' : 'div';
+    $brand = $brand ?: config('app.name') ?: 'Builders';
+    $brand = str_ireplace('mach3', '', $brand);
 
     $classes = Ui::classes()
         ->add('inline-flex items-center gap-[0.1em] font-brand font-bold uppercase leading-none tracking-wide select-none')

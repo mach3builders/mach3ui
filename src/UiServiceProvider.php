@@ -4,6 +4,7 @@ namespace Mach3Builders\Ui;
 
 use Illuminate\Support\Facades\Blade;
 use Illuminate\View\ComponentAttributeBag;
+use Livewire\Component;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -27,27 +28,7 @@ class UiServiceProvider extends PackageServiceProvider
         $this->bootComponentPath();
         $this->bootTagCompiler();
         $this->bootAttributeMacros();
-        $this->bootBlazeDirectives();
-    }
-
-    /**
-     * Register @blaze, @unblaze, @endunblaze directives as no-ops
-     * when Livewire Blaze is not installed. When Blaze is installed,
-     * it will override these with its own implementation.
-     */
-    protected function bootBlazeDirectives(): void
-    {
-        // Only register fallback directives if Blaze is not installed
-        if (class_exists(\Livewire\Blaze\BlazeServiceProvider::class)) {
-            return;
-        }
-
-        // @blaze - marks component as cacheable (no-op without Blaze)
-        Blade::directive('blaze', fn () => '');
-
-        // @unblaze / @endunblaze - marks impure sections (no-op without Blaze)
-        Blade::directive('unblaze', fn () => '');
-        Blade::directive('endunblaze', fn () => '');
+        $this->bootLivewireMacros();
     }
 
     protected function bootComponentPath(): void
@@ -68,6 +49,19 @@ class UiServiceProvider extends PackageServiceProvider
 
         app('blade.compiler')->precompiler(function ($value) use ($compiler) {
             return $compiler->compile($value);
+        });
+    }
+
+    protected function bootLivewireMacros(): void
+    {
+        if (! class_exists(Component::class)) {
+            return;
+        }
+
+        Component::macro('notify', function (string $message, ?string $title = null, string $variant = 'success'): void {
+            $title = $title ?: __('ui::ui.toast.'.$variant);
+
+            $this->dispatch('notify', title: $title, message: $message, variant: $variant);
         });
     }
 
@@ -92,14 +86,30 @@ class UiServiceProvider extends PackageServiceProvider
 
             foreach ($attributes as $key => $value) {
                 if (str_starts_with($key, $prefix)) {
+                    if (class_exists(\Livewire\WireDirective::class)) {
+                        return new \Livewire\WireDirective($name, $key, $value);
+                    }
+
                     $modifiers = str_contains($key, '.') ? explode('.', substr($key, strlen($prefix) + 1)) : [];
 
-                    return (object) [
-                        'directive' => $key,
-                        'value' => $value,
-                        'modifiers' => $modifiers,
-                        'hasModifier' => fn (string $mod) => in_array($mod, $modifiers),
-                    ];
+                    return new class($key, $value, $modifiers)
+                    {
+                        public function __construct(
+                            public string $directive,
+                            public mixed $value,
+                            public array $modifiers,
+                        ) {}
+
+                        public function value(): mixed
+                        {
+                            return $this->value;
+                        }
+
+                        public function hasModifier(string $mod): bool
+                        {
+                            return in_array($mod, $this->modifiers);
+                        }
+                    };
                 }
             }
 

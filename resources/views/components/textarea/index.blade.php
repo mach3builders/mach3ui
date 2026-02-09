@@ -1,5 +1,3 @@
-@blaze
-
 @props([
     'autoResize' => true,
     'hint' => null,
@@ -14,13 +12,10 @@
 @aware(['id'])
 
 @php
-    // Get wire:model using Livewire's helper (check method exists for non-Livewire contexts)
+    // Get wire:model using Livewire's helper
 $wireModel = $attributes->wire('model');
-$wireModelValue = is_object($wireModel) && method_exists($wireModel, 'value') ? $wireModel->value() : null;
-$isLive =
-    is_object($wireModel) && method_exists($wireModel, 'hasModifier')
-        ? $wireModel->hasModifier('live') ?? false
-        : false;
+$wireModelValue = $wireModel?->directive ? $wireModel->value() : null;
+$isLive = $wireModel?->directive ? $wireModel->hasModifier('live') : false;
 
 // Get x-model value
 $xModelValue = null;
@@ -41,6 +36,9 @@ $id =
     ($id ?? ($textareaName ?? Ui::uniqueId('textarea')));
 
 $error = $textareaName ? $errors->first($textareaName) ?? null : null;
+
+// Auto-restore old input for traditional form fields
+$oldValue = ($showName && $textareaName && !$wireModelValue && !$xModelValue) ? old($textareaName) : null;
 
 $classes = Ui::classes()
     ->add('block w-full appearance-none border shadow-xs focus:outline-none')
@@ -73,7 +71,7 @@ $alpineData = $autoResize
 
 @if ($label)
     <ui:field :id="$id">
-        <ui:label>{{ $label }}</ui:label>
+        <ui:label :required="$attributes->has('required')">{{ $label }}</ui:label>
 
         <textarea id="{{ $id }}" @if ($showName && $textareaName) name="{{ $textareaName }}" @endif
             @if ($error) aria-invalid="true" @endif
@@ -81,7 +79,7 @@ $alpineData = $autoResize
             @if ($isLive) wire:loading.class="opacity-50" @endif
             @if ($isLive && $wireModelValue) wire:target="{{ $wireModelValue }}" @endif
             @if ($autoResize) x-data="{{ $alpineData }}" x-init="resize()" x-on:input="resize()" @endif
-            class="{{ $classes }}" {{ $attributes->except(['class', 'name', 'id', 'rows']) }} data-control>{{ $slot }}</textarea>
+            class="{{ $classes }}" {{ $attributes->except(['class', 'name', 'id', 'rows']) }} data-control>{{ $slot->isNotEmpty() ? $slot : $oldValue }}</textarea>
 
         @if ($hint)
             <ui:hint>{{ $hint }}</ui:hint>

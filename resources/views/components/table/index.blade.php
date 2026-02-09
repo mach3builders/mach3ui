@@ -6,14 +6,13 @@
 
 @php
     $classes = Ui::classes()
-        ->add('w-full overflow-x-auto')
+        ->add('w-full flex flex-col overflow-x-auto')
         ->when($variant === 'default', 'rounded-xl bg-gray-30 p-1.5 pt-0.5')
         ->when($variant === 'default', 'dark:bg-gray-830')
         ->merge($attributes->only('class'));
 
     $tableClasses = Ui::classes()
-        ->add('w-full border-separate border-spacing-0 text-sm')
-        ->when($variant !== 'simple', 'min-w-[600px]');
+        ->add('border-separate border-spacing-0 text-sm');
 @endphp
 
 <div class="{{ $classes }}" {{ $attributes->except('class') }} data-table data-variant="{{ $variant }}"

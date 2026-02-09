@@ -1,5 +1,3 @@
-@blaze
-
 @props([
     'description' => null,
     'indeterminate' => false,
@@ -11,13 +9,10 @@
 @aware(['id'])
 
 @php
-    // Get wire:model using Livewire's helper (check method exists for non-Livewire contexts)
+    // Get wire:model using Livewire's helper
 $wireModel = $attributes->wire('model');
-$wireModelValue = is_object($wireModel) && method_exists($wireModel, 'value') ? $wireModel->value() : null;
-$isLive =
-    is_object($wireModel) && method_exists($wireModel, 'hasModifier')
-        ? $wireModel->hasModifier('live') ?? false
-        : false;
+$wireModelValue = $wireModel?->directive ? $wireModel->value() : null;
+$isLive = $wireModel?->directive ? $wireModel->hasModifier('live') : false;
 
 // Get x-model value
 $xModelValue = null;
@@ -40,13 +35,22 @@ $id =
 $hasLabel = $label || $description;
 $error = $inputName ? $errors->first($inputName) ?? null : null;
 
+// Auto-restore old input for traditional form fields
+if ($showName && $inputName && !$wireModelValue && !$xModelValue && old($inputName) !== null) {
+    $attributes = $attributes->merge(['checked' => true]);
+}
+
 // SVG icons (fully URL encoded for Tailwind arbitrary values)
 $checkmarkSvg =
     "url('data:image/svg+xml,%3csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22white%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M20%206%209%2017l-5-5%22%2F%3E%3C%2Fsvg%3E')";
 $indeterminateSvg =
     "url('data:image/svg+xml,%3csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22white%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M5%2012h14%22%2F%3E%3C%2Fsvg%3E')";
 
-$wrapperClasses = Ui::classes()->merge($attributes->only('class'));
+$wrapperClasses = Ui::classes()
+    ->add('flex flex-col')
+    ->add('[[data-fields]+&]:mt-6')
+    ->add('[[data-field]+&]:mt-6')
+    ->merge($attributes->only('class'));
 
 $bgSize = match ($size) {
     'sm' => '12px',
@@ -115,7 +119,7 @@ $descriptionClasses = Ui::classes()
     @if ($hasLabel)
         <span class="flex flex-col gap-0.5">
             @if ($label)
-                <span class="{{ $labelTextClasses }}">{{ $label }}</span>
+                <span class="{{ $labelTextClasses }}">{{ $label }}@if($attributes->has('required')) <span class="text-gray-400 dark:text-gray-500">*</span>@endif</span>
             @endif
             @if ($description)
                 <span class="{{ $descriptionClasses }}">{{ $description }}</span>

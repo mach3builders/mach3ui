@@ -23,25 +23,9 @@
     $allAttrs = $attributes?->getAttributes() ?? [];
 
     // Check for wire:model
-    $wireModel = method_exists($attributes, 'wire') ? $attributes->wire('model')->value() : null;
-    $wireModelLive = false;
-    if (!$wireModel) {
-        foreach ($allAttrs as $attrKey => $attrValue) {
-            if (str_starts_with($attrKey, 'wire:model')) {
-                $wireModel = $attrValue;
-                $wireModelLive = str_contains($attrKey, '.live');
-                break;
-            }
-        }
-    } else {
-        // Check modifiers on the wire:model attribute
-        foreach ($allAttrs as $attrKey => $attrValue) {
-            if (str_starts_with($attrKey, 'wire:model') && str_contains($attrKey, '.live')) {
-                $wireModelLive = true;
-                break;
-            }
-        }
-    }
+    $wireModelObj = $attributes->wire('model');
+    $wireModel = $wireModelObj?->directive ? $wireModelObj->value() : null;
+    $wireModelLive = $wireModelObj?->directive ? $wireModelObj->hasModifier('live') : false;
 
     // Check for x-model
     $xModel = null;

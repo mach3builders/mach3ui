@@ -1,5 +1,3 @@
-@blaze
-
 @props([
     'level' => null,
     'size' => null,

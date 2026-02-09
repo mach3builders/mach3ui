@@ -1,5 +1,3 @@
-@blaze
-
 @props([
     'addon' => null,
     'addon:end' => null,
@@ -17,13 +15,10 @@
 @aware(['id'])
 
 @php
-    // Get wire:model using Livewire's helper (check method exists for non-Livewire contexts)
+    // Get wire:model using Livewire's helper
 $wireModel = $attributes->wire('model');
-$wireModelValue = is_object($wireModel) && method_exists($wireModel, 'value') ? $wireModel->value() : null;
-$isLive =
-    is_object($wireModel) && method_exists($wireModel, 'hasModifier')
-        ? $wireModel->hasModifier('live') ?? false
-        : false;
+$wireModelValue = $wireModel?->directive ? $wireModel->value() : null;
+$isLive = $wireModel?->directive ? $wireModel->hasModifier('live') : false;
 
 // Get x-model value
 $xModelValue = null;
@@ -44,6 +39,11 @@ $id =
 
 $error = $inputName ? $errors->first($inputName) ?? null : null;
 
+// Auto-restore old input for traditional form fields (skip password types)
+if ($showName && $inputName && $type !== 'password' && !$wireModelValue && !$xModelValue && old($inputName) !== null) {
+    $attributes = $attributes->merge(['value' => old($inputName)]);
+}
+
 $iconEnd = $__data['icon:end'] ?? null;
 $addonEnd = $__data['addon:end'] ?? null;
 
@@ -58,7 +58,7 @@ $inputClasses = Ui::classes()
     ->add('disabled:cursor-not-allowed disabled:opacity-50')
     ->add('autofill:shadow-[inset_0_0_0_1000px_white] autofill:[-webkit-text-fill-color:theme(colors.gray.900)]')
     ->add(
-        'dark:autofill:shadow-[inset_0_0_0_1000px_theme(colors.gray.800)] dark:autofill:[-webkit-text-fill-color:theme(colors.gray.100)]',
+        'dark:autofill:shadow-[inset_0_0_0_1000px_theme(colors.gray.800)] dark:autofill:[-webkit-text-fill-color:theme(colors.gray.100)] dark:autofill:caret-gray-100',
     )
     ->add($size, [
         'sm' => 'h-8 px-2.5 py-1.5 text-xs',
@@ -94,7 +94,7 @@ $iconWrapperClasses = 'pointer-events-none absolute inset-y-0 flex items-center 
 
 @if ($label)
     <ui:field :id="$id">
-        <ui:label>{{ $label }}</ui:label>
+        <ui:label :required="$attributes->has('required')">{{ $label }}</ui:label>
 
         <x-ui::input._input :type="$type" :id="$id" :name="$showName ? $inputName : null" :error="$error" :icon="$icon"
             :icon-end="$iconEnd" :addon="$addon" :addon-end="$addonEnd" :button="$button ?? null" :input-classes="$inputClasses" :wrapper-classes="$wrapperClasses"

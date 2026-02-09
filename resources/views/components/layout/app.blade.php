@@ -1,5 +1,7 @@
 @props([
-    'banner' => false,
+    'banner' => auth()->user()?->accountSwitched() ?? false,
+    'bannerName' => auth()->user()?->name,
+    'bannerSwitchUrl' => '#',
 ])
 
 @php
@@ -32,6 +34,10 @@
         ->add($banner ? 'min-h-[calc(100vh-2.5rem)]' : 'min-h-screen');
 @endphp
 
+@if ($banner)
+    <ui:layout.banner :name="$bannerName" :switch-url="$bannerSwitchUrl" />
+@endif
+
 <div class="{{ $classes }}" {{ $attributes->except('class') }} x-data="{
     sideBarOpen: false,
     init() {
@@ -54,7 +60,7 @@
     <div class="{{ $innerClasses }}">
         <ui:layout.backdrop />
 
-        <ui:layout.sidebar>
+        <ui:layout.sidebar :banner="$banner">
             <ui:layout.sidebar.header>
                 @if ($sidebarLogoSlot)
                     <div class="flex items-center h-10">{{ $sidebarLogoSlot }}</div>
@@ -124,7 +130,7 @@
                     @if ($topbarActionsSlot)
                         {{ $topbarActionsSlot }}
                     @else
-                        <ui:button size="sm" icon="package" variant="outline-danger">{{ __('common.free') }}</ui:button>
+                        <ui:button size="sm" icon="package" variant="outline-danger">{{ __('ui::ui.free_plan') }}</ui:button>
                     @endif
                 </x-slot:actions>
 
@@ -134,13 +140,13 @@
                     <ui:dropdown position="bottom-end">
                         <ui:dropdown.trigger variant="ghost" class="px-2 py-1">
                             <div class="flex items-center gap-2">
-                                <ui:avatar name="{{ auth()->user()?->name ?? 'John Doe' }}" size="sm" />
+                                <ui:avatar name="{{ auth()->user()?->name ?: 'John Doe' }}" size="sm" />
 
                                 <div class="hidden flex-col items-start sm:flex normal-case">
-                                    <ui:text weight="medium">{{ auth()->user()?->name ?? 'John Doe' }}</ui:text>
+                                    <ui:text weight="medium">{{ auth()->user()?->name ?: 'John Doe' }}</ui:text>
 
                                     <ui:text size="xs" variant="muted">
-                                        {{ auth()->user()?->account ?? 'Acme Inc' }}</ui:text>
+                                        {{ auth()->user()?->account?->name ?: 'Acme Inc' }}</ui:text>
                                 </div>
                             </div>
                         </ui:dropdown.trigger>

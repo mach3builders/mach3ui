@@ -1,5 +1,3 @@
-@blaze
-
 @props([
     'active' => false,
     'badge' => null,

@@ -1,5 +1,3 @@
-@blaze
-
 @props([
     'hint' => null,
     'label' => null,
@@ -24,22 +22,23 @@
         }
     }
 
-    // Name auto-detection (skill pattern)
-    $wireModel = method_exists($attributes, 'wire') ? $attributes->wire('model')->value() : null;
-    $name = $name ?: $wireModel ?: $xModel;
+    // Name auto-detection
+    $wireModel = $attributes->wire('model');
+    $wireModelValue = $wireModel?->directive ? $wireModel->value() : null;
+    $name = $name ?: $wireModelValue ?: $xModel;
 
     $id = $id ?? $name;
     $error = $name ? $errors->first($name) ?? null : null;
 
     // Determine value reference for x-text
     $valueRef = match (true) {
-        (bool) $wireModel => "\$wire.$wireModel",
+        (bool) $wireModelValue => "\$wire.$wireModelValue",
         (bool) $xModel => $xModel,
         default => 'value',
     };
 
     // Need Alpine wrapper when showValue without external binding
-    $needsAlpine = $showValue && !$wireModel && !$xModel;
+    $needsAlpine = $showValue && !$wireModelValue && !$xModel;
 
     // Split attributes: wire/alpine bindings go to input, rest to wrapper
     $inputAttributes = $attributes->whereStartsWith(['wire:', 'x-model']);

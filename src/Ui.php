@@ -14,8 +14,7 @@ class Ui
 
     /**
      * Generate a unique ID with the given prefix.
-     * Uses a static counter to ensure uniqueness while remaining deterministic
-     * (same render order = same IDs, which is good for Blaze caching).
+     * Uses a static counter to ensure uniqueness while remaining deterministic.
      */
     public function uniqueId(string $prefix = 'ui'): string
     {

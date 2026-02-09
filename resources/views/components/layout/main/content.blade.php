@@ -78,7 +78,7 @@
     @endif
 
     <section class="{{ $sectionClasses }}" data-layout-main-body>
-        <div class="flex flex-1 flex-col gap-12 pt-10 pb-20 max-w-{{ $width }}">
+        <div class="space-y-12 pt-10 pb-20 max-w-{{ $width }}">
             {{ $slot }}
         </div>
 

@@ -1,10 +1,9 @@
-@blaze
-
 @aware(['id'])
 
 @props([
     'badge' => null,
     'for' => null,
+    'required' => false,
 ])
 
 @php
@@ -21,6 +20,10 @@
 <label @if ($for) for="{{ $for }}" @endif class="{{ $classes }}"
     {{ $attributes->except('class') }} data-label>
     {{ $slot }}
+
+    @if ($required)
+        <span class="text-gray-400 dark:text-gray-500">*</span>
+    @endif
 
     @if ($badge)
         <ui:badge variant="secondary" class="ml-auto font-normal">{{ $badge }}</ui:badge>

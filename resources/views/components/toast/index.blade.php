@@ -62,7 +62,7 @@
             <ui:toast.title>{{ $title }}</ui:toast.title>
 
             @if ($description)
-                <ui:toast.description :variant="$variant">{{ $description }}</ui:toast.description>
+                <ui:toast.description :variant="$variant">{!! $description !!}</ui:toast.description>
             @endif
 
             {{ $slot }}

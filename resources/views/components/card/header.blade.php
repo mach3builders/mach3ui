@@ -1,5 +1,3 @@
-@blaze
-
 @props([
     'icon' => null,
     'icon:boxed' => false,

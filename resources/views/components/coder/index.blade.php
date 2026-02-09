@@ -280,7 +280,7 @@
                 return EditorView.theme({
                     '&': {
                         backgroundColor: bgColor,
-                        fontSize: '13px'
+                        fontSize: '12px'
                     },
                     '.cm-scroller': {
                         fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace',

@@ -1,5 +1,3 @@
-@blaze
-
 @props([
     'hint' => null,
     'label' => null,
