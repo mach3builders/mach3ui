@@ -15,7 +15,8 @@
         ->add('has-[[data-icon]:only-child]:pt-3')
         ->add('has-[[data-button]:only-child]:pt-1.5')
         ->add('has-[[data-toggle]:only-child]:py-1.5')
-        ->add('has-[[data-avatar]:only-child]:py-2.5');
+        ->add('has-[[data-avatar]:only-child]:py-2.5')
+        ->add('has-[[data-control]:only-child]:py-1.5');
 
     // Colors
     $classes = $classes
