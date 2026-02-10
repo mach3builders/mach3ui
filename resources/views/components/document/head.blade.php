@@ -1,5 +1,5 @@
 @props([
-    'favicon' => 'favicon.ico',
+    'favicon' => 'favicon.png',
     'robots' => 'noindex, nofollow',
     'title' => null,
 ])
