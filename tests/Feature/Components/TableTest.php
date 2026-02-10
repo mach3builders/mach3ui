@@ -267,13 +267,13 @@ it('applies group class on tr', function () {
 });
 
 it('renders clickable tr with cursor-pointer', function () {
-    $html = Blade::render('<ui:table><ui:tbody><ui:tr :clickable="true"><ui:td>Cell</ui:td></ui:tr></ui:tbody></ui:table>');
+    $html = Blade::render('<ui:table><ui:tbody><ui:tr :clickable="true" data-href="/test"><ui:td>Cell</ui:td></ui:tr></ui:tbody></ui:table>');
 
     expect($html)->toContain('cursor-pointer');
 });
 
 it('renders clickable tr when data-href is present', function () {
-    $html = Blade::render('<ui:table><ui:tbody><ui:tr data-href="/users/1"><ui:td>Cell</ui:td></ui:tr></ui:tbody></ui:table>');
+    $html = Blade::render('<ui:table><ui:tbody><ui:tr :clickable="true" data-href="/users/1"><ui:td>Cell</ui:td></ui:tr></ui:tbody></ui:table>');
 
     expect($html)
         ->toContain('cursor-pointer')
@@ -281,19 +281,19 @@ it('renders clickable tr when data-href is present', function () {
 });
 
 it('renders clickable tr when wire:click is present', function () {
-    $html = Blade::render('<ui:table><ui:tbody><ui:tr wire:click="selectRow"><ui:td>Cell</ui:td></ui:tr></ui:tbody></ui:table>');
+    $html = Blade::render('<ui:table><ui:tbody><ui:tr :clickable="true" wire:click="selectRow"><ui:td>Cell</ui:td></ui:tr></ui:tbody></ui:table>');
 
     expect($html)->toContain('cursor-pointer');
 });
 
 it('renders clickable tr when x-on:click is present', function () {
-    $html = Blade::render('<ui:table><ui:tbody><ui:tr x-on:click="handleClick"><ui:td>Cell</ui:td></ui:tr></ui:tbody></ui:table>');
+    $html = Blade::render('<ui:table><ui:tbody><ui:tr :clickable="true" x-on:click="handleClick"><ui:td>Cell</ui:td></ui:tr></ui:tbody></ui:table>');
 
     expect($html)->toContain('cursor-pointer');
 });
 
 it('renders clickable tr when @click is present', function () {
-    $html = Blade::render('<ui:table><ui:tbody><ui:tr @click="handleClick"><ui:td>Cell</ui:td></ui:tr></ui:tbody></ui:table>');
+    $html = Blade::render('<ui:table><ui:tbody><ui:tr :clickable="true" @click="handleClick"><ui:td>Cell</ui:td></ui:tr></ui:tbody></ui:table>');
 
     expect($html)->toContain('cursor-pointer');
 });
@@ -436,19 +436,22 @@ it('renders td', function () {
 it('renders td with left alignment by default', function () {
     $html = Blade::render('<ui:table><ui:tbody><ui:tr><ui:td>Cell</ui:td></ui:tr></ui:tbody></ui:table>');
 
-    expect($html)->toContain('text-left');
+    expect($html)
+        ->toContain('data-td')
+        ->not->toContain('justify-center')
+        ->not->toContain('justify-end');
 });
 
 it('renders td with center alignment', function () {
     $html = Blade::render('<ui:table><ui:tbody><ui:tr><ui:td align="center">Cell</ui:td></ui:tr></ui:tbody></ui:table>');
 
-    expect($html)->toContain('text-center');
+    expect($html)->toContain('justify-center');
 });
 
 it('renders td with right alignment', function () {
     $html = Blade::render('<ui:table><ui:tbody><ui:tr><ui:td align="right">Cell</ui:td></ui:tr></ui:tbody></ui:table>');
 
-    expect($html)->toContain('text-right');
+    expect($html)->toContain('justify-end');
 });
 
 it('renders td with fit width', function () {
@@ -456,7 +459,7 @@ it('renders td with fit width', function () {
 
     expect($html)
         ->toContain('w-0')
-        ->toContain('text-center');
+        ->toContain('justify-center');
 });
 
 it('renders td with actions styling', function () {
@@ -464,7 +467,7 @@ it('renders td with actions styling', function () {
 
     expect($html)
         ->toContain('w-0')
-        ->toContain('text-right')
+        ->toContain('justify-end')
         ->toContain('data-td-actions')
         ->toContain('<button>Edit</button>');
 });
