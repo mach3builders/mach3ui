@@ -1,5 +1,6 @@
 @props([
     'disabled' => false,
+    'href' => null,
     'icon' => null,
     'name' => null,
     'value',
@@ -62,22 +63,44 @@
         ->merge($attributes);
 @endphp
 
-<button type="button" role="tab" id="{{ $tabId }}" aria-controls="{{ $panelId }}"
-    @if ($name)
-        x-on:click="Alpine.store('tabs_{{ $name }}') && (Alpine.store('tabs_{{ $name }}').active = '{{ $value }}')"
-        :aria-selected="(Alpine.store('tabs_{{ $name }}')?.active === '{{ $value }}').toString()"
-        :tabindex="Alpine.store('tabs_{{ $name }}')?.active === '{{ $value }}' ? 0 : -1"
-        x-effect="$el.toggleAttribute('data-active', Alpine.store('tabs_{{ $name }}')?.active === '{{ $value }}')"
-    @else
-        x-on:click="select('{{ $value }}')"
-        :aria-selected="isActive('{{ $value }}').toString()"
-        :tabindex="isActive('{{ $value }}') ? 0 : -1"
-        x-bind:data-active="isActive('{{ $value }}') || undefined"
-    @endif
-    @if ($disabled) disabled aria-disabled="true" @endif {{ $attributes->except('class') }}
-    class="{{ $classes }}" data-tabs-tab data-value="{{ $value }}">
-    @if ($icon)
-        <ui:icon :name="$icon" />
-    @endif
-    {{ $slot }}
-</button>
+@if ($href)
+    <a href="{{ $href }}" role="tab" id="{{ $tabId }}" aria-controls="{{ $panelId }}"
+        @if ($name)
+            x-on:click="Alpine.store('tabs_{{ $name }}') && (Alpine.store('tabs_{{ $name }}').active = '{{ $value }}')"
+            :aria-selected="(Alpine.store('tabs_{{ $name }}')?.active === '{{ $value }}').toString()"
+            :tabindex="Alpine.store('tabs_{{ $name }}')?.active === '{{ $value }}' ? 0 : -1"
+            x-effect="$el.toggleAttribute('data-active', Alpine.store('tabs_{{ $name }}')?.active === '{{ $value }}')"
+        @else
+            x-on:click="select('{{ $value }}')"
+            :aria-selected="isActive('{{ $value }}').toString()"
+            :tabindex="isActive('{{ $value }}') ? 0 : -1"
+            x-bind:data-active="isActive('{{ $value }}') || undefined"
+        @endif
+        @if ($disabled) aria-disabled="true" @endif {{ $attributes->except(['class', 'href']) }}
+        class="{{ $classes }}" data-tabs-tab data-value="{{ $value }}">
+        @if ($icon)
+            <ui:icon :name="$icon" />
+        @endif
+        {{ $slot }}
+    </a>
+@else
+    <button type="button" role="tab" id="{{ $tabId }}" aria-controls="{{ $panelId }}"
+        @if ($name)
+            x-on:click="Alpine.store('tabs_{{ $name }}') && (Alpine.store('tabs_{{ $name }}').active = '{{ $value }}')"
+            :aria-selected="(Alpine.store('tabs_{{ $name }}')?.active === '{{ $value }}').toString()"
+            :tabindex="Alpine.store('tabs_{{ $name }}')?.active === '{{ $value }}' ? 0 : -1"
+            x-effect="$el.toggleAttribute('data-active', Alpine.store('tabs_{{ $name }}')?.active === '{{ $value }}')"
+        @else
+            x-on:click="select('{{ $value }}')"
+            :aria-selected="isActive('{{ $value }}').toString()"
+            :tabindex="isActive('{{ $value }}') ? 0 : -1"
+            x-bind:data-active="isActive('{{ $value }}') || undefined"
+        @endif
+        @if ($disabled) disabled aria-disabled="true" @endif {{ $attributes->except('class') }}
+        class="{{ $classes }}" data-tabs-tab data-value="{{ $value }}">
+        @if ($icon)
+            <ui:icon :name="$icon" />
+        @endif
+        {{ $slot }}
+    </button>
+@endif
