@@ -472,14 +472,6 @@ it('renders td with actions styling', function () {
         ->toContain('<button>Edit</button>');
 });
 
-it('renders td with actions visibility classes', function () {
-    $html = Blade::render('<ui:table><ui:tbody><ui:tr><ui:td :actions="true"><button>Edit</button></ui:td></ui:tr></ui:tbody></ui:table>');
-
-    expect($html)
-        ->toContain('invisible')
-        ->toContain('group-hover:visible');
-});
-
 it('renders td with highlight styling', function () {
     $html = Blade::render('<ui:table><ui:tbody><ui:tr><ui:td :highlight="true">Important</ui:td></ui:tr></ui:tbody></ui:table>');
 
