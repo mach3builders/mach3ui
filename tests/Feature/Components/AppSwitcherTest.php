@@ -649,7 +649,8 @@ it('renders logo as link when href is provided', function () {
         ->toContain('href="/home"');
 });
 
-it('renders logo with default brand "Builders"', function () {
+it('renders logo with default brand from config or fallback', function () {
+    config(['app.name' => null]);
     $html = Blade::render('<ui:logo />');
 
     expect($html)->toContain('Builders');

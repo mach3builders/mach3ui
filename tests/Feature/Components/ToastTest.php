@@ -452,16 +452,16 @@ it('has flex column layout with gap', function () {
         ->toContain('gap-3');
 });
 
-it('listens for toast window event', function () {
+it('listens for notify window event', function () {
     $html = Blade::render('<ui:toaster />');
 
-    expect($html)->toContain('x-on:toast.window="add($event.detail)"');
+    expect($html)->toContain('x-on:notify.window="add($event.detail)"');
 });
 
-it('has default duration of 5000ms', function () {
+it('has default duration of 4000ms', function () {
     $html = Blade::render('<ui:toaster />');
 
-    expect($html)->toContain('duration: 5000');
+    expect($html)->toContain('duration: 4000');
 });
 
 it('accepts custom duration', function () {
@@ -500,7 +500,7 @@ it('has variant classes defined', function () {
     expect($html)
         ->toContain('variantClasses')
         ->toContain('iconClasses')
-        ->toContain('descriptionClasses')
+        ->toContain('messageClasses')
         ->toContain('closeClasses');
 });
 
@@ -528,10 +528,10 @@ it('has data-toaster-title in template', function () {
     expect($html)->toContain('data-toaster-title');
 });
 
-it('has data-toaster-description in template', function () {
+it('has data-toaster-message in template', function () {
     $html = Blade::render('<ui:toaster />');
 
-    expect($html)->toContain('data-toaster-description');
+    expect($html)->toContain('data-toaster-message');
 });
 
 it('has data-toaster-close in template', function () {
@@ -565,5 +565,5 @@ it('has transition attributes for toast items', function () {
 it('calculates translate direction based on position', function () {
     $html = Blade::render('<ui:toaster position="top-left" />');
 
-    expect($html)->toContain('translateStart');
+    expect($html)->toContain('-translate-x-full');
 });

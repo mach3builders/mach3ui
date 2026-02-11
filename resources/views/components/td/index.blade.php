@@ -15,7 +15,8 @@
         ->add('has-[[data-icon]:only-child]:pt-3')
         ->add('has-[[data-button]:only-child]:pt-1.5')
         ->add('has-[[data-toggle]:only-child]:py-1.5')
-        ->add('has-[[data-avatar]:only-child]:py-2.5');
+        ->add('has-[[data-avatar]:only-child]:py-2.5')
+        ->add('has-[[data-control]:only-child]:py-1.5');
 
     // Colors
     $classes = $classes
@@ -77,7 +78,7 @@ $classes = $classes
     // Merge user classes
     $classes = $classes->merge($attributes->only('class'));
 
-    $actionsClasses = Ui::classes()->add('invisible flex justify-end gap-1 group-hover:visible');
+    $actionsClasses = Ui::classes()->add('flex justify-end gap-1');
 @endphp
 
 <td class="{{ $classes }}" {{ $attributes->except('class') }} data-td>

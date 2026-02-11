@@ -59,9 +59,10 @@ class UiServiceProvider extends PackageServiceProvider
         }
 
         Component::macro('notify', function (string $message, ?string $title = null, string $variant = 'success'): void {
+            /** @var Component $this */
             $title = $title ?: __('ui::ui.toast.'.$variant);
 
-            $this->dispatch('notify', title: $title, message: $message, variant: $variant);
+            $this->dispatch('notify', title: $title, message: $message, variant: $variant); /** @phpstan-ignore class.notFound */
         });
     }
 

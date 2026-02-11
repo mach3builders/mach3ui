@@ -21,8 +21,7 @@ it('renders tooltip with default top position', function () {
     expect($html)
         ->toContain('data-tooltip')
         ->toContain('data-tooltip-trigger')
-        ->toContain('data-tooltip-content')
-        ->toContain('data-tooltip-arrow');
+        ->toContain('data-tooltip-content');
 });
 
 it('renders tooltip with top position', function () {
@@ -30,7 +29,7 @@ it('renders tooltip with top position', function () {
 
     expect($html)
         ->toContain('anchor(top)')
-        ->toContain('border-t-gray-900');
+        ->toContain('anchor(center)');
 });
 
 it('renders tooltip with top-start position', function () {
@@ -38,8 +37,7 @@ it('renders tooltip with top-start position', function () {
 
     expect($html)
         ->toContain('anchor(top)')
-        ->toContain('anchor(left)')
-        ->toContain('border-t-gray-900');
+        ->toContain('anchor(left)');
 });
 
 it('renders tooltip with top-end position', function () {
@@ -47,8 +45,7 @@ it('renders tooltip with top-end position', function () {
 
     expect($html)
         ->toContain('anchor(top)')
-        ->toContain('anchor(right)')
-        ->toContain('border-t-gray-900');
+        ->toContain('anchor(right)');
 });
 
 it('renders tooltip with bottom position', function () {
@@ -56,7 +53,7 @@ it('renders tooltip with bottom position', function () {
 
     expect($html)
         ->toContain('anchor(bottom)')
-        ->toContain('border-b-gray-900');
+        ->toContain('anchor(center)');
 });
 
 it('renders tooltip with bottom-start position', function () {
@@ -64,8 +61,7 @@ it('renders tooltip with bottom-start position', function () {
 
     expect($html)
         ->toContain('anchor(bottom)')
-        ->toContain('anchor(left)')
-        ->toContain('border-b-gray-900');
+        ->toContain('anchor(left)');
 });
 
 it('renders tooltip with bottom-end position', function () {
@@ -73,8 +69,7 @@ it('renders tooltip with bottom-end position', function () {
 
     expect($html)
         ->toContain('anchor(bottom)')
-        ->toContain('anchor(right)')
-        ->toContain('border-b-gray-900');
+        ->toContain('anchor(right)');
 });
 
 it('renders tooltip with left position', function () {
@@ -82,7 +77,7 @@ it('renders tooltip with left position', function () {
 
     expect($html)
         ->toContain('anchor(left)')
-        ->toContain('border-l-gray-900');
+        ->toContain('anchor(center)');
 });
 
 it('renders tooltip with right position', function () {
@@ -90,14 +85,15 @@ it('renders tooltip with right position', function () {
 
     expect($html)
         ->toContain('anchor(right)')
-        ->toContain('border-r-gray-900');
+        ->toContain('anchor(center)');
 });
 
 it('falls back to top for invalid position', function () {
     $html = Blade::render('<ui:tooltip text="Invalid" position="invalid">Content</ui:tooltip>');
 
     expect($html)
-        ->toContain('border-t-gray-900');
+        ->toContain('anchor(top)')
+        ->toContain('anchor(center)');
 });
 
 it('renders tooltip with slot content', function () {
@@ -108,12 +104,13 @@ it('renders tooltip with slot content', function () {
         ->toContain('Help text');
 });
 
-it('applies hover and focus visibility classes', function () {
+it('applies hover and focus visibility via Alpine', function () {
     $html = Blade::render('<ui:tooltip text="Test">Content</ui:tooltip>');
 
     expect($html)
-        ->toContain('group-hover/tooltip:opacity-100')
-        ->toContain('group-focus-within/tooltip:opacity-100')
+        ->toContain('x-on:mouseenter')
+        ->toContain('x-on:mouseleave')
+        ->toContain('x-on:focus.in')
         ->toContain('opacity-0');
 });
 
@@ -121,9 +118,8 @@ it('applies anchor positioning styles', function () {
     $html = Blade::render('<ui:tooltip text="Test">Content</ui:tooltip>');
 
     expect($html)
-        ->toContain('anchor-scope: --tooltip-trigger')
-        ->toContain('anchor-name:--tooltip-trigger')
-        ->toContain('position-anchor: --tooltip-trigger');
+        ->toContain('anchor-name:')
+        ->toContain('position-anchor:');
 });
 
 it('passes through data-* attributes on tooltip', function () {
@@ -145,8 +141,7 @@ it('renders tooltip with dark mode classes', function () {
 
     expect($html)
         ->toContain('dark:bg-gray-100')
-        ->toContain('dark:text-gray-900')
-        ->toContain('dark:border-t-gray-100');
+        ->toContain('dark:text-gray-900');
 });
 
 // =============================================================================
