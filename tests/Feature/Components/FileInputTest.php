@@ -360,7 +360,7 @@ it('renders file upload with custom placeholder', function () {
 });
 
 it('renders file upload with hint', function () {
-    $html = Blade::render('<ui:file-upload name="files" hint="Only PNG and JPG allowed" />');
+    $html = Blade::render('<ui:file-upload name="files" label="Files" hint="Only PNG and JPG allowed" />');
 
     expect($html)
         ->toContain('Only PNG and JPG allowed');
@@ -421,7 +421,7 @@ it('passes through data attributes to file upload', function () {
 it('shows error message for file upload', function () {
     $this->withErrors(['files' => 'Please upload at least one file.']);
 
-    $html = Blade::render('<ui:file-upload name="files" />');
+    $html = Blade::render('<ui:file-upload name="files" label="Files" />');
 
     expect($html)
         ->toContain('Please upload at least one file.')
