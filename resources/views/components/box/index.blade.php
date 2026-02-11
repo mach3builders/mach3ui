@@ -4,7 +4,7 @@
 
 @php
     $classes = Ui::classes()
-        ->add('rounded-lg px-4.5 py-5')
+        ->add('rounded-lg px-4.5 py-5 has-[>[data-list]]:p-0')
         ->add($variant, [
             'default' => 'border border-gray-100 bg-white dark:border-gray-700 dark:bg-gray-800',
             'subtle' => 'border border-transparent bg-gray-30 dark:bg-gray-830',
