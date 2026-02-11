@@ -1,6 +1,6 @@
 @props([
-    'banner' => auth()->user()?->accountSwitched() ?? false,
-    'bannerName' => auth()->user()?->name,
+    'banner' => false,
+    'bannerName' => null,
     'bannerSwitchUrl' => '#',
 ])
 
@@ -64,38 +64,6 @@
             <ui:layout.sidebar.header>
                 @if ($sidebarLogoSlot)
                     <div class="flex items-center h-10">{{ $sidebarLogoSlot }}</div>
-                @else
-                    <ui:dropdown class="w-full" position="right-start">
-                        <ui:dropdown.trigger variant="ghost" class="px-3">
-                            <ui:logo />
-                        </ui:dropdown.trigger>
-
-                        <ui:dropdown.menu>
-                            <ui:dropdown.header :title="__('ui::ui.layout.applications')" />
-
-                            @foreach (config('applications') as $name => $options)
-                                <ui:dropdown.item href="{{ $options['href'] }}" active="{{ $loop->first }}">
-                                    <div class="flex items-center gap-3">
-                                        <span
-                                            class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg font-brand text-sm font-semibold bg-gray-80 dark:bg-gray-830">
-                                            <span class="-skew-x-12 text-{{ $options['color'] }}-500">III</span>
-                                        </span>
-
-                                        <div class="flex flex-col">
-                                            <ui:text weight="semibold" class="text-gray-980 dark:text-gray-100">Mach3{{ $name }}</ui:text>
-                                            @if (isset($options['description']))
-                                                <ui:text size="xs" variant="muted">{{ $options['description'] }}
-                                                </ui:text>
-                                            @endif
-                                        </div>
-                                        @if ($loop->first)
-                                            <ui:icon name="check" size="sm" class="ml-auto text-blue-500" />
-                                        @endif
-                                    </div>
-                                </ui:dropdown.item>
-                            @endforeach
-                        </ui:dropdown.menu>
-                    </ui:dropdown>
                 @endif
 
                 @if ($sidebarWorkspaceSlot)
@@ -129,52 +97,11 @@
                 <x-slot:actions>
                     @if ($topbarActionsSlot)
                         {{ $topbarActionsSlot }}
-                    @else
-                        <ui:button size="sm" icon="package" variant="outline-danger">{{ __('ui::ui.free_plan') }}</ui:button>
                     @endif
                 </x-slot:actions>
 
                 @if ($topbarUserSlot)
                     {{ $topbarUserSlot }}
-                @else
-                    <ui:dropdown position="bottom-end">
-                        <ui:dropdown.trigger variant="ghost" class="px-2 py-1">
-                            <div class="flex items-center gap-2">
-                                <ui:avatar name="{{ auth()->user()?->name ?: 'John Doe' }}" size="sm" />
-
-                                <div class="hidden flex-col items-start sm:flex normal-case">
-                                    <ui:text weight="medium">{{ auth()->user()?->name ?: 'John Doe' }}</ui:text>
-
-                                    <ui:text size="xs" variant="muted">
-                                        {{ auth()->user()?->account?->name ?: 'Acme Inc' }}</ui:text>
-                                </div>
-                            </div>
-                        </ui:dropdown.trigger>
-
-                        <ui:dropdown.menu>
-                            <ui:dropdown.header class="flex-col items-start gap-0">
-                                <ui:text weight="medium">{{ auth()->user()?->name ?? 'John Doe' }}</ui:text>
-
-                                <ui:text size="xs" variant="muted">
-                                    {{ auth()->user()?->email ?? 'john@example.com' }}</ui:text>
-                            </ui:dropdown.header>
-
-                            <ui:dropdown.item href="#" icon="user" :label="__('ui::ui.layout.profile')" />
-
-                            <ui:dropdown.item href="#" icon="settings" :label="__('ui::ui.layout.settings')" />
-
-                            <ui:dropdown.item href="#" icon="log-out" :label="__('ui::ui.layout.logout')"
-                                variant="danger" />
-
-                            <ui:divider variant="subtle" />
-
-                            <div class="flex items-center justify-between gap-1 pl-3">
-                                <ui:text size="xs" variant="muted">{{ __('ui::ui.layout.theme') }}</ui:text>
-
-                                <ui:theme-switcher />
-                            </div>
-                        </ui:dropdown.menu>
-                    </ui:dropdown>
                 @endif
             </ui:layout.main.top-bar>
 
