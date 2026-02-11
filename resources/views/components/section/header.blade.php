@@ -5,7 +5,7 @@
 
 @php
     $defaultCols = match ($variant) {
-        'stacked' => 'col-span-12',
+        'stacked', 'form' => 'col-span-12',
         'responsive' => 'col-span-12 @2xl:col-span-4 @2xl:pt-5',
     };
 

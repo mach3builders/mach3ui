@@ -18,11 +18,17 @@
                     'has-[>[data-control]:first-child]:grid-cols-[auto_1fr]',
                     'has-[>[data-control]:last-child]:grid-cols-[1fr_auto]',
                 ],
+                'horizontal' => [
+                    'col-span-full grid grid-cols-subgrid',
+                    'gap-y-2 @3xl:gap-y-1.5 @3xl:items-baseline',
+                    '@3xl:[&>[data-error]]:col-start-2',
+                    '@3xl:[&>[data-hint]]:col-start-2',
+                ],
                 default => 'flex flex-col gap-2',
             },
         )
-        ->add('[[data-fields]+&]:mt-6')
-        ->add('[[data-field]+&]:mt-6')
+        ->when($variant !== 'horizontal', '[[data-fields]+&]:mt-6')
+        ->when($variant !== 'horizontal', '[[data-field]+&]:mt-6')
         ->merge($attributes->only('class'));
 @endphp
 
