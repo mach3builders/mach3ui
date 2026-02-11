@@ -19,6 +19,7 @@
         ->add($variant, [
             'stacked' => '',
             'responsive' => '@xl:items-start @xl:gap-x-8',
+            'form' => 'max-w-4xl',
         ])
         ->merge($attributes);
 @endphp

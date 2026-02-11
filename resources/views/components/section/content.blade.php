@@ -5,12 +5,14 @@
 
 @php
     $defaultCols = match ($variant) {
-        'stacked' => 'col-span-12',
+        'stacked', 'form' => 'col-span-12',
         'responsive' => 'col-span-12 @2xl:col-span-8 @4xl:col-span-7 @5xl:col-span-6 @6xl:col-span-5',
     };
 
     $classes = Ui::classes()
-        ->add('flex flex-col')
+        ->add($variant === 'form'
+            ? 'grid grid-cols-1 gap-y-6 @3xl:grid-cols-[1fr_2fr] @3xl:gap-x-6'
+            : 'flex flex-col')
         ->add($cols ?? $defaultCols);
 @endphp
 
