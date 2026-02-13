@@ -1,4 +1,5 @@
 @props([
+    'field:variant' => null,
     'footer' => false,
     'header' => true,
     'hint' => null,
@@ -42,6 +43,7 @@
         ($id ?? ($editorName ?? Ui::uniqueId('code-editor')));
 
     $error = $editorName ? $errors->first($editorName) ?? null : null;
+    $fieldVariant = $__data['field:variant'] ?? null;
 
     // Language display labels
     $languageLabels = [
@@ -128,7 +130,7 @@
 @endphp
 
 @if ($label)
-    <ui:field :id="$id">
+    <ui:field :id="$id" :variant="$fieldVariant ?? 'block'">
         <ui:label>{{ $label }}</ui:label>
 
         <div id="{{ $id }}" class="{{ $containerClasses }}"

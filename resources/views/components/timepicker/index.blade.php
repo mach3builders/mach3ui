@@ -1,6 +1,7 @@
 @props([
     'clearable' => false,
     'disabled' => false,
+    'field:variant' => null,
     'format' => '24', // '12' or '24'
     'hint' => null,
     'label' => null,
@@ -48,6 +49,7 @@
     $id = $attributes->get('id') ?? ($id ?? ($inputName ?? Ui::uniqueId('timepicker-id')));
 
     $error = $inputName ? $errors->first($inputName) ?? null : null;
+    $fieldVariant = $__data['field:variant'] ?? null;
 
     // Localization
     $locale = $locale ?? app()->getLocale();
@@ -76,7 +78,7 @@
 @endphp
 
 @if ($label)
-    <ui:field :id="$id">
+    <ui:field :id="$id" :variant="$fieldVariant ?? 'block'">
         <ui:label>{{ $label }}</ui:label>
 
         <x-ui::timepicker._timepicker :id="$id" :name="$inputName" :popover-id="$popoverId" :value="$value"

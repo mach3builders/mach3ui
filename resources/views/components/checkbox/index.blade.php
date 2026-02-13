@@ -1,5 +1,6 @@
 @props([
     'description' => null,
+    'field:variant' => null,
     'indeterminate' => false,
     'label' => null,
     'name' => null,
@@ -34,6 +35,7 @@ $id =
 
 $hasLabel = $label || $description;
 $error = $inputName ? $errors->first($inputName) ?? null : null;
+$fieldVariant = $__data['field:variant'] ?? null;
 
 // Auto-restore old input for traditional form fields
 if ($showName && $inputName && !$wireModelValue && !$xModelValue && old($inputName) !== null) {
@@ -47,9 +49,19 @@ $indeterminateSvg =
     "url('data:image/svg+xml,%3csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22white%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M5%2012h14%22%2F%3E%3C%2Fsvg%3E')";
 
 $wrapperClasses = Ui::classes()
-    ->add('flex flex-col')
-    ->add('[[data-fields]+&]:mt-6')
-    ->add('[[data-field]+&]:mt-6')
+    ->add('min-w-0')
+    ->add(
+        match ($fieldVariant) {
+            'inline' => [
+                'col-span-full grid grid-cols-subgrid',
+                'gap-y-2 @3xl:gap-y-1.5 @3xl:items-baseline',
+                '@3xl:[&>*]:col-start-2',
+            ],
+            default => 'flex flex-col',
+        },
+    )
+    ->when($fieldVariant !== 'inline', '[[data-fields]+&]:mt-6')
+    ->when($fieldVariant !== 'inline', '[[data-field]+&]:mt-6')
     ->merge($attributes->only('class'));
 
 $bgSize = match ($size) {
@@ -103,7 +115,7 @@ $descriptionClasses = Ui::classes()
         ]);
 @endphp
 
-<div class="{{ $wrapperClasses }}" {{ $attributes->only('data-*') }} data-checkbox data-control>
+<div class="{{ $wrapperClasses }}" {{ $attributes->only('data-*') }} data-field data-variant="{{ $fieldVariant ?? 'block' }}" data-checkbox data-control>
     @if ($hasLabel)
         <label class="{{ $labelClasses }}">
     @endif

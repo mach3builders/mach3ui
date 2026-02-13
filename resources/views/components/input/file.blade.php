@@ -1,5 +1,6 @@
 @props([
     'accept' => null,
+    'field:variant' => null,
     'hint' => null,
     'label' => null,
     'multiple' => false,
@@ -28,6 +29,7 @@
     $id = $attributes->get('id') ?? ($id ?? ($inputName ?? 'file-' . Str::random(8)));
 
     $error = $inputName ? $errors->first($inputName) ?? null : null;
+    $fieldVariant = $__data['field:variant'] ?? null;
 
     $translations = [
         'choose' => $multiple ? __('Choose files') : __('Choose file'),
@@ -66,7 +68,7 @@
 @endphp
 
 @if ($label)
-    <ui:field :id="$id">
+    <ui:field :id="$id" :variant="$fieldVariant ?? 'block'">
         <ui:label>{{ $label }}</ui:label>
 
         <div

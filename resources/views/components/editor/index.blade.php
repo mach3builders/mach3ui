@@ -1,4 +1,5 @@
 @props([
+    'field:variant' => null,
     'format' => 'html',
     'hint' => null,
     'label' => null,
@@ -35,6 +36,7 @@
     $editorName = $name ?: $wireModelValue ?: $xModelValue ?: null;
     $id = $attributes->get('id') ?? ($editorName ? $editorName : 'editor-' . uniqid());
     $error = $editorName ? $errors->first($editorName) ?? null : null;
+    $fieldVariant = $__data['field:variant'] ?? null;
     $toolbarGroups = is_array($toolbar) ? $toolbar : explode(',', $toolbar);
 
     $wrapperClasses = UI::classes()
@@ -56,7 +58,7 @@
 @endphp
 
 @if ($label)
-    <ui:field :id="$id">
+    <ui:field :id="$id" :variant="$fieldVariant ?? 'block'">
         <ui:label>{{ $label }}</ui:label>
 
         <x-ui::editor._editor :id="$id" :name="$editorName" :placeholder="$placeholder" :toolbar-groups="$toolbarGroups" :format="$format"

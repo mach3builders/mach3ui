@@ -1,4 +1,5 @@
 @props([
+    'field:variant' => null,
     'hint' => null,
     'label' => null,
     'name' => null,
@@ -18,6 +19,7 @@
         ($id ?? ($inputName ?? Ui::uniqueId('input-tags')));
 
     $error = $inputName ? $errors->first($inputName) ?? null : null;
+    $fieldVariant = $__data['field:variant'] ?? null;
     $disabled = $attributes->has('disabled');
 
     $tagsArray = is_array($tags) ? $tags : (is_string($tags) ? json_decode($tags, true) ?? [] : []);
@@ -75,7 +77,7 @@
         ->except(['tags', 'label', 'hint', 'name', 'placeholder', 'size', 'variant', 'id']);
 @endphp
 
-<ui:field :id="$id">
+<ui:field :id="$id" :variant="$fieldVariant ?? 'block'">
     @if ($label)
         <ui:label>{{ $label }}</ui:label>
     @endif

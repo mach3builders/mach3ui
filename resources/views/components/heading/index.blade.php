@@ -2,19 +2,18 @@
     'level' => null,
     'size' => null,
     'variant' => 'default',
-    'weight' => 'semibold',
+    'weight' => 'medium',
 ])
 
 @php
     $tag = $level ? "h{$level}" : 'div';
 
     $size ??= match ((int) $level) {
-        1 => '2xl',
-        2 => 'xl',
-        3 => 'lg',
-        4 => 'base',
-        5 => 'sm',
-        6 => 'xs',
+        1 => 'xl',
+        2 => 'lg',
+        3 => 'base',
+        4 => 'sm',
+        5 => 'xs',
         default => 'base',
     };
 
@@ -26,7 +25,6 @@
             'base' => 'text-base',
             'lg' => 'text-lg',
             'xl' => 'text-xl',
-            '2xl' => 'text-2xl',
         ])
         // Weight
         ->add($weight, [

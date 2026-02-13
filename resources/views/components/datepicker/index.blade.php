@@ -2,6 +2,7 @@
     'clearable' => false,
     'disabled' => false,
     'displayFormat' => null,
+    'field:variant' => null,
     'hint' => null,
     'label' => null,
     'locale' => null,
@@ -47,6 +48,7 @@
     $id = $attributes->get('id') ?? ($id ?? ($inputName ?? Ui::uniqueId('datepicker-id')));
 
     $error = $inputName ? $errors->first($inputName) ?? null : null;
+    $fieldVariant = $__data['field:variant'] ?? null;
 
     // Localization
     $locale = $locale ?? app()->getLocale();
@@ -73,7 +75,7 @@
 @endphp
 
 @if ($label)
-    <ui:field :id="$id">
+    <ui:field :id="$id" :variant="$fieldVariant ?? 'block'">
         <ui:label>{{ $label }}</ui:label>
 
         <x-ui::datepicker._datepicker :id="$id" :name="$inputName" :popover-id="$popoverId" :value="$value"

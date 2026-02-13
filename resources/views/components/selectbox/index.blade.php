@@ -1,5 +1,6 @@
 @props([
     'disabled' => false,
+    'field:variant' => null,
     'hint' => null,
     'label' => null,
     'multiple' => false,
@@ -47,6 +48,7 @@
     $id = $attributes->get('id') ?? ($id ?? ($selectName ?? Ui::uniqueId('selectbox')));
 
     $error = $selectName ? $errors->first($selectName) ?? null : null;
+    $fieldVariant = $__data['field:variant'] ?? null;
 
     // Auto-restore old input for traditional form fields
     if ($initialValue === null && $name && !$wireModelValue && !$xModelValue) {
@@ -55,7 +57,7 @@
 @endphp
 
 @if ($label)
-    <ui:field :id="$id">
+    <ui:field :id="$id" :variant="$fieldVariant ?? 'block'">
         <ui:label :required="$attributes->has('required')">{{ $label }}</ui:label>
 
         <x-ui::selectbox._selectbox :id="$id" :name="$selectName" :disabled="$disabled" :error="$error"
