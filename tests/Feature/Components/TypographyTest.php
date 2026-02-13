@@ -142,7 +142,7 @@ it('renders heading with level 1', function () {
     expect($html)
         ->toContain('<h1')
         ->toContain('</h1>')
-        ->toContain('text-2xl');
+        ->toContain('text-xl');
 });
 
 it('renders heading with level 2', function () {
@@ -151,7 +151,7 @@ it('renders heading with level 2', function () {
     expect($html)
         ->toContain('<h2')
         ->toContain('</h2>')
-        ->toContain('text-xl');
+        ->toContain('text-lg');
 });
 
 it('renders heading with level 3', function () {
@@ -160,7 +160,7 @@ it('renders heading with level 3', function () {
     expect($html)
         ->toContain('<h3')
         ->toContain('</h3>')
-        ->toContain('text-lg');
+        ->toContain('text-base');
 });
 
 it('renders heading with level 4', function () {
@@ -169,7 +169,7 @@ it('renders heading with level 4', function () {
     expect($html)
         ->toContain('<h4')
         ->toContain('</h4>')
-        ->toContain('text-base');
+        ->toContain('text-sm');
 });
 
 it('renders heading with level 5', function () {
@@ -178,7 +178,7 @@ it('renders heading with level 5', function () {
     expect($html)
         ->toContain('<h5')
         ->toContain('</h5>')
-        ->toContain('text-sm');
+        ->toContain('text-xs');
 });
 
 it('renders heading with level 6', function () {
@@ -187,7 +187,7 @@ it('renders heading with level 6', function () {
     expect($html)
         ->toContain('<h6')
         ->toContain('</h6>')
-        ->toContain('text-xs');
+        ->toContain('text-base');
 });
 
 it('renders heading with custom size', function () {

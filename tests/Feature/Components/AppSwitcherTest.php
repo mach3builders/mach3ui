@@ -662,10 +662,10 @@ it('renders logo with custom brand', function () {
     expect($html)->toContain('Studio');
 });
 
-it('renders logo with default color gray', function () {
+it('renders logo with default color brand', function () {
     $html = Blade::render('<ui:logo />');
 
-    expect($html)->toContain('text-gray-500');
+    expect($html)->toContain('text-brand');
 });
 
 it('renders logo with custom color', function () {
