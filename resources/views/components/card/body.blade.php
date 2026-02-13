@@ -20,7 +20,7 @@
             'inverted' => 'border-gray-80 bg-gray-30 dark:border-gray-740 dark:bg-gray-820',
             'simple' => 'bg-transparent pt-0',
         ])
-        ->when(!$flush, 'px-4.5 py-4')
+        ->when(!$flush, 'p-5')
         ->merge($attributes);
 @endphp
 

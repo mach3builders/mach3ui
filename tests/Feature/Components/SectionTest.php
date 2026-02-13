@@ -460,8 +460,7 @@ it('applies base box styling', function () {
 
     expect($html)
         ->toContain('rounded-lg')
-        ->toContain('px-4.5')
-        ->toContain('py-5');
+        ->toContain('p-5');
 });
 
 it('applies dark mode classes on box default variant', function () {

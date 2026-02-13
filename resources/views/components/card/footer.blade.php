@@ -19,7 +19,7 @@
 
     $innerClasses = Ui::classes()
         ->add('flex items-center gap-2')
-        ->unless($isSimple, 'px-4.5 py-4');
+        ->unless($isSimple, 'px-5 py-4');
 @endphp
 
 <div {{ $attributes->except('class') }} class="{{ $classes }}" data-card-footer>

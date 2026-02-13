@@ -198,13 +198,13 @@ it('applies inverted variant styling on body', function () {
 it('applies padding by default on body', function () {
     $html = Blade::render('<ui:card.body>Content</ui:card.body>');
 
-    expect($html)->toContain('px-4.5');
+    expect($html)->toContain('p-5');
 });
 
 it('removes padding when flush is true', function () {
     $html = Blade::render('<ui:card.body flush>Content</ui:card.body>');
 
-    expect($html)->not->toContain('px-4.5');
+    expect($html)->not->toContain('p-5');
 });
 
 it('has rounded-lg styling on body', function () {
@@ -439,7 +439,7 @@ it('renders card with flush body for custom layouts', function () {
 
     expect($html)
         ->toContain('custom-layout')
-        ->not->toContain('px-4.5 py-4');
+        ->not->toContain('px-5 py-4');
 });
 
 it('renders card with divided footer', function () {

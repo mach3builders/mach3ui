@@ -46,7 +46,7 @@
 
 <label class="{{ $cardClasses }}" {{ $attributes->only('data-*') }} data-radio-card data-control>
     @if ($icon)
-        <ui:icon :name="$icon" class="size-6 shrink-0 text-gray-500 dark:text-gray-400" data-radio-card-icon />
+        <ui:icon :name="$icon" stroke="1.75" class="size-6 shrink-0 text-gray-500 dark:text-gray-400" data-radio-card-icon />
     @endif
 
     <div class="flex-1" data-radio-card-content>

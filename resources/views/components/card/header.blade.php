@@ -17,7 +17,7 @@
     $hasIcon = $iconSlot || $icon;
     $hasAction = $actionSlot !== null;
 
-    $classes = Ui::classes()->add('flex gap-3 px-4.5 pb-5 pt-5')->when($hasAction, 'relative')->merge($attributes);
+    $classes = Ui::classes()->add('flex gap-3 p-5')->when($hasAction, 'relative')->merge($attributes);
 
     $contentClasses = Ui::classes()->add('flex flex-1 flex-col gap-1.5')->when($hasIcon, 'min-w-0');
 @endphp
