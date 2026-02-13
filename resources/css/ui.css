@@ -306,6 +306,12 @@ html.dark {
     border-radius: 0.25rem;
 }
 
+/* Radio card: checked dot (white circle on blue background) */
+[data-radio-card] input[data-radio]:checked {
+    background-image: url('data:image/svg+xml,%3csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%225%22%20fill%3D%22white%22%2F%3E%3C%2Fsvg%3E');
+    background-size: 14px;
+}
+
 /* Code editor cursor */
 .dark .cm-cursor {
     border-left-color: #ffffff !important;

@@ -1,6 +1,6 @@
 @props([
     'brand' => null,
-    'color' => 'gray',
+    'color' => 'brand',
     'href' => null,
     'image' => null,
     'size' => 'md',
@@ -27,6 +27,7 @@
     $accentClasses = Ui::classes()
         ->add('-skew-x-12 font-semibold')
         ->add($color, [
+            'brand' => 'text-brand',
             'gray' => 'text-gray-500',
             'blue' => 'text-blue-500',
             'orange' => 'text-orange-500',

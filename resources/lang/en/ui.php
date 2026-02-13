@@ -10,12 +10,6 @@ return [
     'apply' => 'Apply',
     'insert' => 'Insert',
 
-    // Plans
-    'free_plan' => 'FREE plan',
-    'basic_plan' => 'BASIC plan',
-    'pro_plan' => 'PRO plan',
-    'ultra_plan' => 'ULTRA plan',
-
     // Datepicker
     'datepicker' => [
         'placeholder' => 'Pick a date',
