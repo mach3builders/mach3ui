@@ -2,6 +2,7 @@
     'addon' => null,
     'addon:end' => null,
     'button' => null,
+    'field:variant' => null,
     'hint' => null,
     'icon' => null,
     'icon:end' => null,
@@ -44,6 +45,7 @@ if ($showName && $inputName && $type !== 'password' && !$wireModelValue && !$xMo
     $attributes = $attributes->merge(['value' => old($inputName)]);
 }
 
+$fieldVariant = $__data['field:variant'] ?? null;
 $iconEnd = $__data['icon:end'] ?? null;
 $addonEnd = $__data['addon:end'] ?? null;
 
@@ -93,7 +95,7 @@ $iconWrapperClasses = 'pointer-events-none absolute inset-y-0 flex items-center 
 @endphp
 
 @if ($label)
-    <ui:field :id="$id">
+    <ui:field :id="$id" :variant="$fieldVariant ?? 'block'">
         <ui:label :required="$attributes->has('required')">{{ $label }}</ui:label>
 
         <x-ui::input._input :type="$type" :id="$id" :name="$showName ? $inputName : null" :error="$error" :icon="$icon"

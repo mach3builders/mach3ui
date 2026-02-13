@@ -1,4 +1,5 @@
 @props([
+    'field:variant' => null,
     'hint' => null,
     'label' => null,
     'name' => null,
@@ -33,6 +34,7 @@ $id =
     $attributes->get('id') ??
     ($id ?? ($selectName ?? Ui::uniqueId('select')));
 
+$fieldVariant = $__data['field:variant'] ?? null;
 $error = $selectName ? $errors->first($selectName) ?? null : null;
 
 // Auto-restore old input for traditional form fields
@@ -69,7 +71,7 @@ $selectClasses = Ui::classes()
 @endphp
 
 @if ($label)
-    <ui:field :id="$id">
+    <ui:field :id="$id" :variant="$fieldVariant ?? 'block'">
         <ui:label :required="$attributes->has('required')">{{ $label }}</ui:label>
 
         <x-ui::select._select :id="$id" :name="$showName ? $selectName : null" :error="$error" :placeholder="$placeholder" :select-classes="$selectClasses"

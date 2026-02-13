@@ -1,5 +1,6 @@
 @props([
     'autoResize' => true,
+    'field:variant' => null,
     'hint' => null,
     'label' => null,
     'name' => null,
@@ -35,6 +36,7 @@ $id =
     $attributes->get('id') ??
     ($id ?? ($textareaName ?? Ui::uniqueId('textarea')));
 
+$fieldVariant = $__data['field:variant'] ?? null;
 $error = $textareaName ? $errors->first($textareaName) ?? null : null;
 
 // Auto-restore old input for traditional form fields
@@ -70,7 +72,7 @@ $alpineData = $autoResize
 @endphp
 
 @if ($label)
-    <ui:field :id="$id">
+    <ui:field :id="$id" :variant="$fieldVariant ?? 'block'">
         <ui:label :required="$attributes->has('required')">{{ $label }}</ui:label>
 
         <textarea id="{{ $id }}" @if ($showName && $textareaName) name="{{ $textareaName }}" @endif

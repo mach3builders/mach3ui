@@ -1,4 +1,5 @@
 @props([
+    'field:variant' => null,
     'hint' => null,
     'label' => null,
     'max' => 100,
@@ -27,6 +28,7 @@
     $wireModelValue = $wireModel?->directive ? $wireModel->value() : null;
     $name = $name ?: $wireModelValue ?: $xModel;
 
+    $fieldVariant = $__data['field:variant'] ?? null;
     $id = $id ?? $name;
     $error = $name ? $errors->first($name) ?? null : null;
 
@@ -85,7 +87,7 @@
 @endif
 
 @if ($label)
-    <ui:field :$id>
+    <ui:field :$id :variant="$fieldVariant ?? 'block'">
         <div data-control class="{{ $wrapperClasses }}">
             <div class="flex items-center justify-between">
                 <ui:label>{{ $label }}</ui:label>
