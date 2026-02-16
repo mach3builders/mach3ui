@@ -9,16 +9,15 @@
     'btnClasses',
     'btnActiveClasses',
     'contentClasses',
-    'wireModelValue',
+    'entangle' => null,
     'wireModelBlur' => false,
     'xModelKey' => null,
     'xModelValue' => null,
 ])
 
 <div class="{{ $wrapperClasses }}" wire:ignore x-data="uiEditor({
-    content: @js((string) $slot),
+    content: {!! $entangle ?? '@js((string) $slot)' !!},
     placeholder: @js($placeholder),
-    wireModel: @js($wireModelValue),
     wireModelBlur: @js($wireModelBlur),
     format: @js($format),
 })"
@@ -506,7 +505,6 @@
                 Alpine.data('uiEditor', (config) => ({
                     content: config.content || '',
                     placeholder: config.placeholder,
-                    wireModel: config.wireModel || null,
                     wireModelBlur: config.wireModelBlur || false,
                     format: config.format || 'html',
                     showLinkInput: false,
@@ -675,7 +673,6 @@
             },
 
             init() {
-                // Initialize display from content
                 this.$nextTick(() => {
                     if (this.content) {
                         const displayHtml = this.format === 'markdown' ?
@@ -685,12 +682,11 @@
                     }
                 });
 
-                // Sync to Livewire on blur if configured
-                this.$refs.content.addEventListener('blur', () => {
-                    if (this.wireModel && this.wireModelBlur) {
-                        this.syncToWire();
-                    }
-                });
+                if (this.wireModelBlur) {
+                    this.$refs.content.addEventListener('blur', () => {
+                        this.$wire?.$commit();
+                    });
+                }
 
                 this.$el.querySelectorAll('[data-action]').forEach(btn => {
                     btn.addEventListener('click', (e) => {
@@ -717,23 +713,11 @@
                 });
             },
 
-            syncToWire() {
-                if (this.wireModel && this.$wire) {
-                    this.$wire.set(this.wireModel, this.content);
-                }
-            },
-
             onInput() {
                 const html = this.$refs.content.innerHTML;
-                // Convert to markdown if format is markdown, otherwise keep HTML
                 this.content = this.format === 'markdown' ?
                     this.htmlToMarkdown(html) :
                     html;
-
-                // Sync to Livewire on every input if not blur mode
-                if (this.wireModel && !this.wireModelBlur) {
-                    this.syncToWire();
-                }
             },
 
             onKeydown(e) {

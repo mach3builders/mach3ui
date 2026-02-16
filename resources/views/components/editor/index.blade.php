@@ -10,21 +10,17 @@
 
 @php
     $allAttrs = $attributes->getAttributes();
-    $wireModelKey = null;
-    $wireModelValue = null;
-    $xModelValue = null;
 
-    foreach ($allAttrs as $key => $value) {
-        if (str_starts_with($key, 'wire:model')) {
-            $wireModelKey = $key;
-            $wireModelValue = $value;
-            break;
-        }
-    }
-
-    $wireModelBlur = $wireModelKey && str_contains($wireModelKey, '.blur');
+    $wireModel = $attributes->wire('model');
+    $wireModelValue = $wireModel?->directive ? $wireModel->value() : null;
+    $wireModelLive = $wireModel?->directive ? $wireModel->hasModifier('live') : false;
+    $wireModelBlur = $wireModel?->directive ? $wireModel->hasModifier('blur') : false;
+    $entangle = $wireModelValue
+        ? "\$wire.entangle('{$wireModelValue}')" . ($wireModelLive ? '.live' : '')
+        : null;
 
     $xModelKey = null;
+    $xModelValue = null;
     foreach ($allAttrs as $key => $value) {
         if (str_starts_with($key, 'x-model')) {
             $xModelKey = $key;
@@ -62,7 +58,7 @@
         <ui:label>{{ $label }}</ui:label>
 
         <x-ui::editor._editor :id="$id" :name="$editorName" :placeholder="$placeholder" :toolbar-groups="$toolbarGroups" :format="$format"
-            :wrapper-classes="$wrapperClasses" :toolbar-classes="$toolbarClasses" :btn-classes="$btnClasses" :btn-active-classes="$btnActiveClasses" :content-classes="$contentClasses" :wire-model-value="$wireModelValue"
+            :wrapper-classes="$wrapperClasses" :toolbar-classes="$toolbarClasses" :btn-classes="$btnClasses" :btn-active-classes="$btnActiveClasses" :content-classes="$contentClasses" :entangle="$entangle"
             :wire-model-blur="$wireModelBlur" :x-model-key="$xModelKey" :x-model-value="$xModelValue">{{ $slot }}</x-ui::editor._editor>
 
         @if ($hint)
@@ -76,6 +72,6 @@
 @else
     <x-ui::editor._editor :id="$id" :name="$editorName" :placeholder="$placeholder" :toolbar-groups="$toolbarGroups" :format="$format"
         :wrapper-classes="$wrapperClasses" :toolbar-classes="$toolbarClasses" :btn-classes="$btnClasses" :btn-active-classes="$btnActiveClasses" :content-classes="$contentClasses"
-        :wire-model-value="$wireModelValue" :wire-model-blur="$wireModelBlur" :x-model-key="$xModelKey"
+        :entangle="$entangle" :wire-model-blur="$wireModelBlur" :x-model-key="$xModelKey"
         :x-model-value="$xModelValue">{{ $slot }}</x-ui::editor._editor>
 @endif
