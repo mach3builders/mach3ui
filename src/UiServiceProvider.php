@@ -27,6 +27,7 @@ class UiServiceProvider extends PackageServiceProvider
     {
         $this->bootComponentPath();
         $this->bootTagCompiler();
+        $this->bootBladeDirectives();
         $this->bootAttributeMacros();
         $this->bootLivewireMacros();
     }
@@ -49,6 +50,27 @@ class UiServiceProvider extends PackageServiceProvider
 
         app('blade.compiler')->precompiler(function ($value) use ($compiler) {
             return $compiler->compile($value);
+        });
+    }
+
+    protected function bootBladeDirectives(): void
+    {
+        Blade::directive('mach3uiScripts', function () {
+            return <<<'HTML'
+            <script>
+                (function() {
+                    function applyTheme() {
+                        var t = localStorage.getItem('mach3ui-theme');
+                        var d = t === 'dark' || (!t && matchMedia('(prefers-color-scheme:dark)').matches);
+                        document.documentElement.classList.toggle('dark', d);
+                    }
+                    applyTheme();
+                })();
+            </script>
+            <link rel="preconnect" href="https://fonts.bunny.net" />
+            <link rel="stylesheet" href="https://fonts.bunny.net/css?family=inter:400,500,600,700|saira-semi-condensed:700&display=swap" />
+            <style>[x-cloak] {display: none}</style>
+            HTML;
         });
     }
 
