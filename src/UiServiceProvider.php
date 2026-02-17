@@ -20,7 +20,7 @@ class UiServiceProvider extends PackageServiceProvider
         $package
             ->name('ui')
             ->hasTranslations()
-            ->hasViews();
+            ->hasViews('ui');
     }
 
     public function packageBooted(): void
