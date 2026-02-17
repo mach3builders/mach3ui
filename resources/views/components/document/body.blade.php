@@ -7,7 +7,7 @@
     $topbarSlot = $__laravel_slots['topbar'] ?? null;
 
     $classes = Ui::classes()
-        ->add('h-full min-h-screen font-sans text-sm antialiased')
+        ->add('h-screen min-h-screen font-sans text-sm antialiased')
         ->add('text-gray-980')
         ->add('dark:text-gray-100')
         ->add(
