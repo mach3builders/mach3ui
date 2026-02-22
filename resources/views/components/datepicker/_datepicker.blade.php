@@ -118,7 +118,7 @@
     {{-- Calendar popover --}}
     <div id="{{ $popoverId }}" popover x-ref="calendar" x-on:toggle="onToggle($event)" role="dialog"
         aria-modal="true" aria-label="Choose date"
-        style="position-anchor: {{ $anchor }}; inset: auto; top: calc(anchor(bottom) + 0.25rem); left: anchor(left); position-try-fallbacks: --datepicker-top;"
+        style="position-anchor: {{ $anchor }}; inset: auto; top: calc(anchor(bottom) + 0.25rem); left: anchor(left); position-try-fallbacks: flip-block;"
         class="{{ $calendarClasses }}">
         {{-- Header --}}
         <div class="flex items-center justify-between gap-2">

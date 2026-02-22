@@ -52,10 +52,10 @@
     $offset = '0.25rem';
 
     $positionStyles = [
-        'bottom-start' => "position-anchor: {$anchor}; inset: auto; top: calc(anchor(bottom) + {$offset}); left: anchor(left); position-try-fallbacks: --selectbox-top-start;",
-        'bottom-end' => "position-anchor: {$anchor}; inset: auto; top: calc(anchor(bottom) + {$offset}); right: anchor(right); position-try-fallbacks: --selectbox-top-end;",
-        'top-start' => "position-anchor: {$anchor}; inset: auto; bottom: calc(anchor(top) + {$offset}); left: anchor(left); position-try-fallbacks: --selectbox-bottom-start;",
-        'top-end' => "position-anchor: {$anchor}; inset: auto; bottom: calc(anchor(top) + {$offset}); right: anchor(right); position-try-fallbacks: --selectbox-bottom-end;",
+        'bottom-start' => "position-anchor: {$anchor}; inset: auto; top: calc(anchor(bottom) + {$offset}); left: anchor(left); position-try-fallbacks: flip-block;",
+        'bottom-end' => "position-anchor: {$anchor}; inset: auto; top: calc(anchor(bottom) + {$offset}); right: anchor(right); position-try-fallbacks: flip-block;",
+        'top-start' => "position-anchor: {$anchor}; inset: auto; bottom: calc(anchor(top) + {$offset}); left: anchor(left); position-try-fallbacks: flip-block;",
+        'top-end' => "position-anchor: {$anchor}; inset: auto; bottom: calc(anchor(top) + {$offset}); right: anchor(right); position-try-fallbacks: flip-block;",
     ];
 
     $wrapperClasses = Ui::classes()->add('relative inline-block w-full')->merge($attributes?->only('class'));

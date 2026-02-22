@@ -106,7 +106,7 @@
     {{-- Time popover --}}
     <div id="{{ $popoverId }}" popover x-ref="popover" x-on:toggle="onToggle($event)" role="dialog"
         aria-modal="true" aria-label="Choose time"
-        style="position-anchor: {{ $anchor }}; inset: auto; top: calc(anchor(bottom) + 0.25rem); left: anchor(left); position-try-fallbacks: --timepicker-top;"
+        style="position-anchor: {{ $anchor }}; inset: auto; top: calc(anchor(bottom) + 0.25rem); left: anchor(left); position-try-fallbacks: flip-block;"
         class="{{ $popoverClasses }}">
 
         <div class="flex gap-2">
