@@ -27,7 +27,7 @@
     $sectionClasses = Ui::classes()
         ->add($paddingX)
         ->add('relative z-10 pb-20')
-        ->add('has-[[data-layout-main-toc]]:flex has-[[data-layout-main-toc]]:gap-8');
+        ->add('has-[[data-layout-main-toc]]:flex has-[[data-layout-main-toc]]:gap-16 has-[[data-layout-main-toc]]:grow');
 
     $tocClasses = Ui::classes()
         ->add('sticky mt-10 hidden h-fit w-56 shrink-0 lg:flex lg:flex-col lg:items-end')
