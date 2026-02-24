@@ -188,10 +188,9 @@
 </div>
 
 @once
-    @push('scripts')
-        <script>
-            document.addEventListener('alpine:init', () => {
-                Alpine.data('timepicker', (config) => ({
+    <script>
+        function registerTimepicker() {
+            Alpine.data('timepicker', (config) => ({
                     value: config.value || '',
                     displayValue: config.displayValue || '',
                     format: config.format,
@@ -427,7 +426,12 @@
                         }
                     },
                 }));
-            });
-        </script>
-    @endpush
+        }
+
+        if (window.Alpine) {
+            registerTimepicker();
+        } else {
+            document.addEventListener('alpine:init', registerTimepicker);
+        }
+    </script>
 @endonce

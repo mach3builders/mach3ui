@@ -196,10 +196,9 @@
     </div>
 </div>
 
+@once
 <script>
-    document.addEventListener('alpine:init', () => {
-        if (Alpine.data.uiChart) return;
-
+    function registerUiChart() {
         Alpine.data('uiChart', (config) => ({
             type: config.type,
             data: config.data,
@@ -600,5 +599,12 @@
                 }
             },
         }));
-    });
+    }
+
+    if (window.Alpine) {
+        registerUiChart();
+    } else {
+        document.addEventListener('alpine:init', registerUiChart);
+    }
 </script>
+@endonce

@@ -499,9 +499,7 @@
 
     @once
         <script>
-            document.addEventListener('alpine:init', () => {
-                if (Alpine.data.uiEditor) return;
-
+            function registerUiEditor() {
                 Alpine.data('uiEditor', (config) => ({
                     content: config.content || '',
                     placeholder: config.placeholder,
@@ -1015,7 +1013,13 @@
                         document.addEventListener('mouseup', onMouseUp);
                     },
                 }));
-            });
+            }
+
+            if (window.Alpine) {
+                registerUiEditor();
+            } else {
+                document.addEventListener('alpine:init', registerUiEditor);
+            }
         </script>
     @endonce
 </div>

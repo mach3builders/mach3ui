@@ -185,10 +185,9 @@
 </div>
 
 @once
-    @push('scripts')
-        <script>
-            document.addEventListener('alpine:init', () => {
-                Alpine.data('datepicker', (config) => ({
+    <script>
+        function registerDatepicker() {
+            Alpine.data('datepicker', (config) => ({
                     value: config.value || '',
                     displayValue: config.displayValue || '',
                     viewYear: null,
@@ -383,7 +382,12 @@
                         return days;
                     },
                 }));
-            });
-        </script>
-    @endpush
+        }
+
+        if (window.Alpine) {
+            registerDatepicker();
+        } else {
+            document.addEventListener('alpine:init', registerDatepicker);
+        }
+    </script>
 @endonce
