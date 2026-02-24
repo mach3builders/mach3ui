@@ -6,7 +6,7 @@
 
 @php
     $classes = Ui::classes()
-        ->add('rounded-xl p-1.5')
+        ->add('flex flex-col rounded-xl p-1.5')
         ->add($variant, [
             'default' => 'bg-gray-30 dark:bg-gray-830',
             'inverted' => 'bg-white dark:bg-gray-800',
