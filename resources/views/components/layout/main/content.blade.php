@@ -10,7 +10,19 @@
             @if (isset($header))
                 {{ $header }}
             @endif
+
+            @if (isset($badges))
+                <div class="mt-1 flex items-center gap-1">
+                    {{ $badges }}
+                </div>
+            @endif
         </div>
+
+        @if (isset($actions))
+            <div class="flex items-center gap-4">
+                {{ $actions }}
+            </div>
+        @endif
     </div>
 
     @if (isset($nav))
