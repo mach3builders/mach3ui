@@ -23,7 +23,6 @@
     },
     "require": {
         "php": "^8.4",
-        "livewire/blaze": "^1.0",
         "livewire/flux-pro": "^2.0",
         "spatie/laravel-package-tools": "^1.16"
     },
