@@ -19,6 +19,7 @@ class TestCase extends Orchestra
     protected function getPackageProviders($app): array
     {
         return [
+            \Livewire\LivewireServiceProvider::class,
             \Flux\FluxServiceProvider::class,
             UiServiceProvider::class,
         ];
