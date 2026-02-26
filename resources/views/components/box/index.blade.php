@@ -5,7 +5,7 @@
 
 @php
     $classes = Flux::classes()
-        ->add('group/box rounded-xl border border-zinc-200 bg-zinc-50 dark:border-white/6 dark:bg-zinc-800')
+        ->add('group/box rounded-xl border border-zinc-200 bg-zinc-50 flex flex-col space-y-6 dark:border-white/6 dark:bg-zinc-800')
         ->add('p-6 has-[[data-flux-card]]:p-2');
 @endphp
 
