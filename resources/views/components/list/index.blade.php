@@ -1,5 +1,3 @@
-@blaze(fold: true)
-
 @props([
     'variant' => null,
 ])

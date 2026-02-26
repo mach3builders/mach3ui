@@ -1,11 +1,7 @@
-@blaze(fold: true, unsafe: ['icon:end'])
-
-@php $iconEnd ??= $attributes->pluck('icon:end'); @endphp
-
 @props([
     'href' => null,
     'icon' => null,
-    'iconEnd' => null,
+    'icon:end' => null,
     'label' => null,
     'route' => null,
     'value' => null,
@@ -13,6 +9,7 @@
 
 @php
     $url = $route ? route($route) : $href;
+    $iconEnd = $__data['icon:end'] ?? null;
     $tag = $url ? 'a' : 'div';
     $hasStructure = $label || $value || $icon || $iconEnd;
 

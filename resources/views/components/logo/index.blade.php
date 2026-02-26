@@ -1,5 +1,3 @@
-@blaze
-
 @props([
     'href' => null,
     'size' => 'md',
