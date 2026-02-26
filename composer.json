@@ -15,6 +15,12 @@
             "role": "Developer"
         }
     ],
+    "repositories": {
+        "flux-pro": {
+            "type": "composer",
+            "url": "https://composer.fluxui.dev"
+        }
+    },
     "require": {
         "php": "^8.4",
         "livewire/flux-pro": "^2.0",
