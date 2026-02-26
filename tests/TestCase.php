@@ -21,6 +21,7 @@ class TestCase extends Orchestra
         return [
             \Livewire\LivewireServiceProvider::class,
             \Flux\FluxServiceProvider::class,
+            \FluxPro\FluxProServiceProvider::class,
             UiServiceProvider::class,
         ];
     }
