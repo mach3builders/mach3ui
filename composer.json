@@ -17,8 +17,7 @@
     ],
     "require": {
         "php": "^8.4",
-        "illuminate/contracts": "^11.0||^12.0",
-        "mallardduck/blade-lucide-icons": "^1.26",
+        "livewire/flux-pro": "^2.0",
         "spatie/laravel-package-tools": "^1.16"
     },
     "require-dev": {
@@ -64,9 +63,7 @@
             "providers": [
                 "Mach3Builders\\Ui\\UiServiceProvider"
             ],
-            "aliases": {
-                "Ui": "Mach3Builders\\Ui\\Facades\\Ui"
-            }
+            "aliases": {}
         }
     },
     "minimum-stability": "dev",
