@@ -2,6 +2,7 @@
 
 @theme {
     --font-brand: "Saira Semi Condensed", sans-serif;
+    --font-sans: "Inter", sans-serif;
 }
 
 [data-flux-card] {
