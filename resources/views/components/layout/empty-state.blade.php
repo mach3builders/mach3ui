@@ -1,6 +1,6 @@
 @props([
     'description' => null,
-    'icon' => 'search',
+    'icon' => 'magnifying-glass',
     'title' => null,
 ])
 
