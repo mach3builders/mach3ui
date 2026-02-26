@@ -1,19 +1,44 @@
-#Mach3UI Reference
+# Mach3UI Reference
 
-## Blade/HTML
+## Available Components
 
-- Add a blank line between sibling HTML elements at the same indentation level
-- Always use `<ui:*>` components from the mach3ui package when a matching component exists. Never use plain HTML for elements that have a ui component equivalent.
-- Available components: accordion, action-bar, alert, avatar, badge, box, breadcrumbs, button, buttons, card, checkbox, datepicker, definition-list, divider, dropdown, editor, error, field, file-upload, heading, hint, icon, input, input.otp, kbd, label, layout.*, link, list, logo, modal, nav, pagination, progress, radio, section, select, selectbox, skeleton, slider, steps, switch, table (thead, tbody, tr, th, td), tabs, text, textarea, timepicker, toast, toaster, toggle, tooltip, theme-switcher
-- Check the component source in `../mach3ui/resources/views/components/` for available props and slots before using a component.
-- Use `:prop` syntax only on Blade components (`<x-*>`, `<ui:*>`). On plain HTML elements, use `{{ }}` interpolation instead (e.g., `action="{{ route('login') }}"`, not `:action="route('login')"`)
-- In Blade views with PHP `use` imports, always reference classes via their imported name (e.g., `Account::class`), never inline FQCN (e.g., `\App\Models\Account::class`)
-- Confirm modals (delete, invite, etc.) must display key record info inside a `<ui:box>` with a `<ui:definition-list>`. Use `space-y-6` on the modal body.
+| Component | Props | Description |
+|---|---|---|
+| `<ui:box>` | `title`, `description` | Styled container, wraps content in rounded border |
+| `<ui:list>` | `variant` | Generic list container, `variant="definition"` renders as `<dl>` |
+| `<ui:list.item>` | `label`, `value`, `icon`, `icon:end`, `href`, `route` | Structured list item |
+| `<ui:section>` | `title`, `description`, `variant` | Page section with responsive grid, wraps content in `<ui:box>` |
+| `<ui:layout.empty-state>` | `icon`, `title`, `description` | Centered empty state with icon circle |
+| `<ui:layout.error>` | `code` | Error page content using translation keys |
+| `<ui:layout.main.content>` | — | Main content with `header` and `nav` slots |
+| `<ui:logo>` | `href`, `size` | Mach3 brand logo, renders as `<a>` or `<div>` |
 
-### Buttons
+## Styling Pattern
 
-- **Create actions**: `variant="primary"`, no icon
-- **Table destructive/edit actions**: icon-only with `variant="ghost" size="sm" square` + tooltip (`common.destroy` / `common.edit`)
-- **Table invite action**: `size="sm"` (default variant) with label `common.invite`
-- **Form submit (persists data)**: text-only, no icon. Use `variant="success"` for single-form pages, `variant="secondary"` when multiple save sections exist
-- **Form submit (triggers action, e.g. sending an invite)**: `variant="secondary"` with text
+All components follow this pattern:
+
+```blade
+@php
+    $classes = Flux::classes()
+        ->add('base classes')
+        ->add($condition ? 'conditional' : '');
+@endphp
+
+<div {{ $attributes->class($classes) }} data-flux-component-name>
+    {{ $slot }}
+</div>
+```
+
+## Section Variants
+
+- `responsive` (default) — 3-column grid on xl, header left, content right
+- `stacked` — single column, header above content
+
+## List Variants
+
+- Default — bordered items with padding, supports icon/href/value
+- `definition` — renders as `<dl>`, dotted divider between label and value
+
+## Buttons
+
+Buttons are handled by Flux (`<flux:button>`), not mach3ui. See Flux documentation for button variants and props.

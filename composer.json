@@ -1,6 +1,6 @@
 {
     "name": "mach3builders/mach3ui",
-    "description": "Mach3Builders User Interface",
+    "description": "Mach3Builders Flux Companion Components",
     "keywords": [
         "Mach3Builders",
         "laravel",
@@ -34,8 +34,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Mach3Builders\\Ui\\": "src/",
-            "Mach3Builders\\Ui\\Database\\Factories\\": "database/factories/"
+            "Mach3Builders\\Ui\\": "src/"
         }
     },
     "autoload-dev": {

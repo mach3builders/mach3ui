@@ -1,117 +1,53 @@
-# Mach3Builders User Interface
+# Mach3UI — Flux Companion Components
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/mach3builders/ui.svg?style=flat-square)](https://packagist.org/packages/mach3builders/ui)
 [![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/mach3builders/mach3ui/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/mach3builders/mach3ui/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/mach3builders/mach3ui/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/mach3builders/mach3ui/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
-[![Total Downloads](https://img.shields.io/packagist/dt/mach3builders/ui.svg?style=flat-square)](https://packagist.org/packages/mach3builders/ui)
 
-A Laravel Blade UI component library that works seamlessly with and without Livewire. Built with Alpine.js for interactivity and Tailwind CSS for styling.
-
-## Features
-
-- 50+ ready-to-use Blade components
-- Works with vanilla Laravel and Livewire
-- `wire:model` support out of the box
-- Smart class merging with `UI::classes()`
-- Tailwind CSS 4 theming support
-- Lucide icons included
+A Flux companion package that provides Blade components Flux doesn't offer. Requires `livewire/flux-pro` as a dependency.
 
 ## Requirements
 
 - PHP 8.4+
 - Laravel 11 or 12
-- Tailwind CSS 4
+- Livewire Flux Pro 2.x
 
 ## Installation
 
+Projects must have the Flux Pro composer repository configured (`https://composer.fluxui.dev`).
+
 ```bash
-composer require mach3builders/ui
+composer require mach3builders/mach3ui
 ```
+
+This pulls in `livewire/flux-pro` automatically.
+
+## Components
+
+All components use the `ui:` prefix and `Flux::classes()` internally.
+
+| Component | Description |
+|---|---|
+| `<ui:box>` | Styled container with optional title/description |
+| `<ui:list>` | Generic list, `variant="definition"` for dl/dt/dd |
+| `<ui:list.item>` | List item with label, value, icon, href support |
+| `<ui:section>` | Responsive page section with title/description |
+| `<ui:layout.empty-state>` | Centered empty state with icon |
+| `<ui:layout.error>` | Error page content |
+| `<ui:layout.main.content>` | Main content area with header/nav slots |
+| `<ui:logo>` | Mach3 brand logo |
 
 ## Usage
 
-All components use the `ui:` prefix:
-
 ```html
-<ui:button>Click me</ui:button>
+<ui:section title="Profile" description="Update your account settings">
+    <flux:input label="Name" wire:model="name" />
+    <flux:input label="Email" wire:model="email" />
+</ui:section>
 
-<ui:input name="email" label="Email" placeholder="you@example.com" />
-
-<ui:select name="country" label="Country">
-    <ui:select.option value="nl">Netherlands</ui:select.option>
-    <ui:select.option value="be">Belgium</ui:select.option>
-</ui:select>
-
-<ui:checkbox name="terms" label="I agree to the terms" />
-```
-
-### With Livewire
-
-Components automatically pass through `wire:` attributes:
-
-```html
-<ui:input wire:model="email" name="email" label="Email" />
-
-<ui:select wire:model.live="country" name="country">
-    ...
-</ui:select>
-```
-
-## Available Components
-
-### Form
-
-`input`, `textarea`, `select`, `checkbox`, `radio`, `switch`, `datepicker`, `file-upload`, `field`, `label`, `hint`, `error`
-
-### Buttons
-
-`button`, `button.group`
-
-### Feedback
-
-`alert`, `badge`, `progress`, `skeleton`, `toast`, `toaster`
-
-### Layout
-
-`card`, `box`, `modal`, `dropdown`, `tabs`, `accordion`, `divider`, `section`
-
-### Navigation
-
-`nav`, `breadcrumbs`, `pagination`, `steps`
-
-### Data Display
-
-`table`, `thead`, `tbody`, `tr`, `th`, `td`, `avatar`, `icon`, `definition-list`
-
-### Other
-
-`heading`, `link`, `kbd`, `code-editor`, `chart`
-
-## Class Builder
-
-Use `UI::classes()` for smart Tailwind class merging:
-
-```php
-$classes = UI::classes()
-    ->add('px-4 py-2 rounded')
-    ->add($variant, [
-        'primary' => 'bg-primary text-white',
-        'secondary' => 'bg-secondary text-gray-900',
-    ])
-    ->add($size, [
-        'sm' => 'text-sm',
-        'md' => 'text-base',
-        'lg' => 'text-lg',
-    ])
-    ->when($disabled, 'opacity-50 cursor-not-allowed')
-    ->merge($attributes);
-```
-
-User classes automatically override base classes with the same Tailwind prefix:
-
-```html
-<!-- User's px-6 overrides component's px-4 -->
-<ui:button class="px-6">Wide button</ui:button>
+<ui:list variant="definition">
+    <ui:list.item label="Name" :value="$user->name" />
+    <ui:list.item label="Email" :value="$user->email" />
+</ui:list>
 ```
 
 ## Testing
@@ -119,10 +55,6 @@ User classes automatically override base classes with the same Tailwind prefix:
 ```bash
 composer test
 ```
-
-## Changelog
-
-Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
 
 ## License
 
