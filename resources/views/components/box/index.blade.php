@@ -1,5 +1,3 @@
-@blaze(fold: true)
-
 @props([
     'description' => null,
     'title' => null,
