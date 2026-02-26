@@ -1,3 +1,5 @@
+@blaze(fold: true)
+
 @props([
     'description' => null,
     'icon' => 'magnifying-glass',
