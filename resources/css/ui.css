@@ -1,5 +1,22 @@
+@source "../views/**/*.blade.php";
+
 @theme {
     --font-brand: "Saira Semi Condensed", sans-serif;
 }
 
-@source "../views/**/*.blade.php";
+[data-flux-card] {
+    @apply dark:[:where(&)]:bg-white/5;
+}
+
+[data-flux-modal] dialog {
+    @apply dark:bg-zinc-850 dark:ring-zinc-700/70;
+}
+
+[data-flux-modal] dialog > :has(+ .absolute:last-child) {
+    margin-bottom: 0;
+}
+
+[data-flux-modal] > dialog::backdrop {
+    background-color: rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(4px);
+}
