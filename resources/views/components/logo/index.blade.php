@@ -1,58 +1,35 @@
 @props([
-    'brand' => null,
-    'color' => 'brand',
     'href' => null,
-    'image' => null,
     'size' => 'md',
 ])
 
 @php
     $tag = $href ? 'a' : 'div';
-    $brand = $brand ?: config('app.name') ?: 'Builders';
-    $brand = str_ireplace('mach3', '', $brand);
+    $brand = str_ireplace('mach3', '', config('app.name') ?: 'Builders');
 
-    $classes = Ui::classes()
-        ->add('inline-flex items-center gap-[0.1em] font-brand font-bold uppercase leading-none tracking-wide select-none')
-        ->add('text-gray-800 dark:text-gray-50')
-        ->add($size, [
-            'sm' => 'text-sm',
-            'md' => 'text-base',
-            'lg' => 'text-lg',
-            'xl' => 'text-xl',
-            '2xl' => 'text-2xl',
-        ])
-        ->when($href, 'no-underline')
-        ->merge($attributes);
+    $sizeClasses = match ($size) {
+        'sm' => 'text-sm',
+        'lg' => 'text-lg',
+        'xl' => 'text-xl',
+        '2xl' => 'text-2xl',
+        default => 'text-base',
+    };
 
-    $accentClasses = Ui::classes()
-        ->add('-skew-x-12 font-semibold')
-        ->add($color, [
-            'brand' => 'text-brand',
-            'gray' => 'text-gray-500',
-            'blue' => 'text-blue-500',
-            'orange' => 'text-orange-500',
-            'emerald' => 'text-emerald-500',
-            'cyan' => 'text-cyan-500',
-            'teal' => 'text-teal-500',
-            'lime' => 'text-lime-500',
-            'red' => 'text-red-500',
-            'purple' => 'text-purple-500',
-            'pink' => 'text-pink-500',
-            'yellow' => 'text-yellow-500',
-        ])
-        ->when(! $color, 'text-primary');
+    $classes = Flux::classes()
+        ->add('inline-flex h-10 items-center gap-[0.1em] font-brand font-bold uppercase leading-none tracking-wide select-none')
+        ->add('text-zinc-800 dark:text-zinc-50')
+        ->add($href ? 'no-underline' : '')
+        ->add($sizeClasses);
 @endphp
 
 <{{ $tag }}
-    {{ $attributes->only(['wire:navigate', 'x-on:click', 'x-bind:href'])->merge($href ? ['href' => $href] : []) }}
-    class="{{ $classes }}"
-    data-logo
+    {{ $attributes->class($classes) }}
+    @if ($href) href="{{ $href }}" @endif
+    data-flux-logo
 >
-    @if ($image)
-        <img src="{{ $image }}" alt="{{ $brand }}" class="max-h-8" data-logo-image />
-    @else
-        <span data-logo-prefix>Mach3</span>
-        <span class="{{ $accentClasses }}" data-logo-accent>III</span>
-        <span data-logo-brand>{{ $brand }}</span>
-    @endif
+    <span>Mach3</span>
+
+    <span class="text-brand -skew-x-12 font-semibold">III</span>
+
+    <span>{{ $brand }}</span>
 </{{ $tag }}>

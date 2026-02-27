@@ -1,46 +1,36 @@
 @props([
     'description' => null,
-    'header:cols' => null,
-    'content:cols' => null,
     'title' => null,
     'variant' => 'responsive',
 ])
 
 @php
-    $headerCols = $__data['header:cols'] ?? null;
-    $contentCols = $__data['content:cols'] ?? null;
+    $classes = Flux::classes()
+        ->add('grid grid-cols-1 gap-3')
+        ->add($variant === 'responsive' ? 'xl:grid-cols-3 xl:gap-x-8' : '')
+        ->add('[[data-flux-section]+&]:mt-8');
 
-    $headerSlot = $__laravel_slots['header'] ?? null;
-    $hasHeader = $title || $description || $headerSlot;
-
-    $classes = Ui::classes()
-        ->add('@container grid grid-cols-12 gap-3')
-        ->add('[[data-section]+&]:mt-8')
-        ->add($variant, [
-            'stacked' => '',
-            'responsive' => '@xl:items-start @xl:gap-x-8',
-            'form' => 'max-w-4xl',
-        ])
-        ->merge($attributes);
+    $contentClasses = Flux::classes()->add($title || $description ? 'xl:col-span-2' : 'xl:col-span-3');
 @endphp
 
-<div {{ $attributes->except('class') }} class="{{ $classes }}" data-section data-variant="{{ $variant }}">
-    @if ($hasHeader)
-        <ui:section.header :variant="$variant" :cols="$headerCols">
-            @if ($headerSlot)
-                {{ $headerSlot }}
-            @else
-                @if ($title)
-                    <ui:section.title>{{ $title }}</ui:section.title>
-                @endif
-                @if ($description)
-                    <ui:section.description>{{ $description }}</ui:section.description>
-                @endif
+<div
+    {{ $attributes->class($classes) }}
+    data-flux-section
+    data-variant="{{ $variant }}"
+>
+    @if ($title || $description)
+        <div class="flex flex-col gap-1 xl:col-span-1 xl:pt-6">
+            @if ($title)
+                <flux:heading level="3" size="lg">{{ $title }}</flux:heading>
             @endif
-        </ui:section.header>
+
+            @if ($description)
+                <flux:text variant="subtle">{{ $description }}</flux:text>
+            @endif
+        </div>
     @endif
 
-    <ui:section.content :variant="$variant" :cols="$contentCols">
+    <ui:box class="{{ $contentClasses }}">
         {{ $slot }}
-    </ui:section.content>
+    </ui:box>
 </div>

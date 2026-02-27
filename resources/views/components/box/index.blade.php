@@ -1,17 +1,26 @@
 @props([
-    'variant' => 'default',
+    'description' => null,
+    'title' => null,
 ])
 
 @php
-    $classes = Ui::classes()
-        ->add('rounded-lg p-5 has-[>[data-list]]:p-0')
-        ->add($variant, [
-            'default' => 'border border-gray-100 bg-white dark:border-gray-700 dark:bg-gray-800',
-            'subtle' => 'border border-transparent bg-gray-30 dark:bg-gray-830',
-        ])
-        ->merge($attributes);
+    $classes = Flux::classes()
+        ->add('group/box rounded-xl border border-zinc-200 bg-zinc-50 flex flex-col space-y-6 dark:border-white/6 dark:bg-zinc-800')
+        ->add('p-6 has-[[data-flux-card]]:p-2');
 @endphp
 
-<div {{ $attributes->except('class') }} class="{{ $classes }}" data-box data-variant="{{ $variant }}">
+<div {{ $attributes->class($classes) }} data-flux-box>
+    @if ($title || $description)
+        <div class="group-has-[[data-flux-card]]/box:px-6 group-has-[[data-flux-card]]/box:pt-4">
+            @if ($title)
+                <flux:heading size="lg">{{ $title }}</flux:heading>
+            @endif
+
+            @if ($description)
+                <flux:text variant="subtle">{{ $description }}</flux:text>
+            @endif
+        </div>
+    @endif
+
     {{ $slot }}
 </div>

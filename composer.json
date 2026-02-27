@@ -1,6 +1,6 @@
 {
     "name": "mach3builders/mach3ui",
-    "description": "Mach3Builders User Interface",
+    "description": "Mach3Builders Flux Companion Components",
     "keywords": [
         "Mach3Builders",
         "laravel",
@@ -15,10 +15,15 @@
             "role": "Developer"
         }
     ],
+    "repositories": {
+        "flux-pro": {
+            "type": "composer",
+            "url": "https://composer.fluxui.dev"
+        }
+    },
     "require": {
         "php": "^8.4",
-        "illuminate/contracts": "^11.0||^12.0",
-        "mallardduck/blade-lucide-icons": "^1.26",
+        "livewire/flux-pro": "^2.0",
         "spatie/laravel-package-tools": "^1.16"
     },
     "require-dev": {
@@ -35,8 +40,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Mach3Builders\\Ui\\": "src/",
-            "Mach3Builders\\Ui\\Database\\Factories\\": "database/factories/"
+            "Mach3Builders\\Ui\\": "src/"
         }
     },
     "autoload-dev": {
@@ -64,9 +68,7 @@
             "providers": [
                 "Mach3Builders\\Ui\\UiServiceProvider"
             ],
-            "aliases": {
-                "Ui": "Mach3Builders\\Ui\\Facades\\Ui"
-            }
+            "aliases": {}
         }
     },
     "minimum-stability": "dev",
