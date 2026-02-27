@@ -3,7 +3,6 @@
 namespace Mach3Builders\Ui;
 
 use Illuminate\Support\Facades\Blade;
-use Livewire\Component;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -20,7 +19,6 @@ class UiServiceProvider extends PackageServiceProvider
     {
         $this->bootComponentPath();
         $this->bootTagCompiler();
-        $this->bootLivewireMacros();
     }
 
     protected function bootComponentPath(): void
@@ -41,22 +39,6 @@ class UiServiceProvider extends PackageServiceProvider
 
         app('blade.compiler')->precompiler(function ($value) use ($compiler) {
             return $compiler->compile($value);
-        });
-    }
-
-    protected function bootLivewireMacros(): void
-    {
-        if (! class_exists(Component::class)) {
-            return;
-        }
-
-        Component::macro('notify', function (string $message, ?string $title = null, string $variant = 'success'): void {
-            /** @var Component $this */
-            \Flux::toast(
-                text: $message,
-                heading: $title,
-                variant: $variant,
-            );
         });
     }
 }
