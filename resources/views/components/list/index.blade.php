@@ -1,9 +1,18 @@
-@props([])
+@props([
+    'variant' => null,
+])
 
 @php
-    $classes = Ui::classes()->add('flex flex-col')->merge($attributes);
+    $tag = $variant === 'definition' ? 'dl' : 'div';
+
+    $classes = Flux::classes()
+        ->add('flex flex-col')
+        ->add(match ($variant) {
+            'definition' => 'gap-3',
+            default => '',
+        });
 @endphp
 
-<div {{ $attributes->except('class') }} class="{{ $classes }}" data-list>
+<{{ $tag }} {{ $attributes->class($classes) }} data-flux-list @if ($variant) data-variant="{{ $variant }}" @endif>
     {{ $slot }}
-</div>
+</{{ $tag }}>

@@ -26,16 +26,20 @@ class UiTagCompiler extends ComponentTagCompiler
 
     protected function transformUiTags(string $value): string
     {
+        // Attribute pattern that correctly handles > inside quoted values
+        // e.g. wire:key="workspace-{{ $workspace->getKey() }}"
+        $attrs = '(?:\s(?:[^>"\']|"[^"]*"|\'[^\']*\')*)';
+
         // Self-closing tags: <ui:icon />
         $value = preg_replace(
-            '/<ui:([a-zA-Z0-9\-_.]+)((?:\s[^>]*)?)\s*\/>/s',
+            '/<ui:([a-zA-Z0-9\-_.]+)('.$attrs.'?)\s*\/>/s',
             '<x-ui::$1$2 />',
             $value
         );
 
         // Opening tags: <ui:button type="primary">
         $value = preg_replace(
-            '/<ui:([a-zA-Z0-9\-_.]+)((?:\s[^>]*)?)>/s',
+            '/<ui:([a-zA-Z0-9\-_.]+)('.$attrs.'?)>/s',
             '<x-ui::$1$2>',
             $value
         );
