@@ -2,7 +2,11 @@
     'code',
 ])
 
-<div {{ $attributes->class('flex h-screen flex-col items-center justify-center text-center') }}>
+@php
+    $classes = Flux::classes()->add('flex h-screen flex-col items-center justify-center text-center');
+@endphp
+
+<div {{ $attributes->class($classes) }} data-flux-error>
     <div class="flex w-full max-w-lg flex-col items-center">
         <flux:heading level="1" class="text-[6rem] leading-none font-semibold tracking-tight">{{ __("errors.{$code}_title") }}</flux:heading>
 
