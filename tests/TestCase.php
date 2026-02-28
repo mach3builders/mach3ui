@@ -16,5 +16,4 @@ class TestCase extends Orchestra
             UiServiceProvider::class,
         ];
     }
-
 }
