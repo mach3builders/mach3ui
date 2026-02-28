@@ -10,7 +10,7 @@
 | `<ui:section>` | `title`, `description`, `variant` | Page section with responsive grid, wraps content in `<ui:box>` |
 | `<ui:layout.empty-state>` | `icon`, `title`, `description` | Centered empty state with icon circle |
 | `<ui:layout.error>` | `code` | Error page content using translation keys |
-| `<ui:layout.main.content>` | — | Main content with `header` and `nav` slots |
+| `<ui:layout.main.content>` | — | Main content with `header`, `nav`, `badges`, `actions` slots |
 | `<ui:logo>` | `href`, `size` | Mach3 brand logo, renders as `<a>` or `<div>` |
 
 ## Styling Pattern

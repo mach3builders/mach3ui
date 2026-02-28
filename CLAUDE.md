@@ -22,7 +22,7 @@ Mach3UI is a Flux companion package that provides components Flux doesn't offer.
 | `<ui:section>` | `title`, `description`, `variant` | Page section with responsive grid layout |
 | `<ui:layout.empty-state>` | `icon`, `title`, `description` | Centered empty state with icon |
 | `<ui:layout.error>` | `code` | Error page content (no layout wrapper) |
-| `<ui:layout.main.content>` | `header`, `nav` slots | Main content area with header and nav |
+| `<ui:layout.main.content>` | `header`, `nav`, `badges`, `actions` slots | Main content area with header and nav |
 | `<ui:logo>` | `href`, `size` | Mach3 brand logo |
 
 ## Conventions
@@ -30,10 +30,9 @@ Mach3UI is a Flux companion package that provides components Flux doesn't offer.
 - Use `Flux::classes()` for all dynamic class composition
 - Use `$attributes->class($classes)` pattern (not `$attributes->except('class')` + separate `class=""`)
 - Internal component references use `<ui:*>` prefix (e.g., section uses `<ui:box>`)
-- CSS: only `--font-brand` theme variable + `@source` directive in `ui.css`
+- CSS: `--font-brand` and `--font-sans` theme variables + `@source` directive in `ui.css`
 
 ## Service Provider
 
 - `bootComponentPath()` — registers anonymous Blade components under `ui:` prefix
 - `bootTagCompiler()` — `<ui:*>` → `<x-ui::*>` transformation
-- `bootLivewireMacros()` — `notify()` macro using `Flux::toast()`

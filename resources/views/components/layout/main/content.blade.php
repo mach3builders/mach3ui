@@ -1,10 +1,11 @@
 @props([])
 
 @php
+    $classes = Flux::classes();
     $headerClasses = Flux::classes()->add('flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between lg:gap-6');
 @endphp
 
-<div {{ $attributes }} data-flux-main-content>
+<div {{ $attributes->class($classes) }} data-flux-main-content>
     <div @class([$headerClasses, 'border-b border-zinc-200 pb-6 dark:border-zinc-700/70' => !isset($nav)])>
         <div class="flex grow flex-col items-start gap-1">
             @if (isset($header))
