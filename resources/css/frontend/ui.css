@@ -22,6 +22,7 @@
 @import "components/icon.css";
 @import "components/modal.css";
 @import "components/navbar.css";
+@import "components/pagination.css";
 @import "components/radio.css";
 @import "components/select.css";
 @import "components/separator.css";
@@ -30,4 +31,5 @@
 @import "components/tabs.css";
 @import "components/textarea.css";
 @import "components/toast.css";
+@import "components/tooltip.css";
 @import "utilities.css";
