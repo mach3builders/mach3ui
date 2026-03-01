@@ -1,17 +1,225 @@
 /* ==========================================================================
-   Reset — scoped to .ui container
+   Reset — Tailwind Preflight, scoped to .ui container
    ========================================================================== */
 
 @layer ui.reset {
+
+    /* -- Box model & rendering ----------------------------------------------- */
+
     .ui {
         box-sizing: border-box;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
+        -webkit-text-size-adjust: 100%;
+        tab-size: 4;
+        line-height: 1.5;
     }
 
     .ui *,
     .ui *::before,
     .ui *::after {
         box-sizing: inherit;
+        border-width: 0;
+        border-style: solid;
+        border-color: var(--color-gray-200, currentColor);
+    }
+
+    /* -- Margins ------------------------------------------------------------- */
+
+    .ui h1,
+    .ui h2,
+    .ui h3,
+    .ui h4,
+    .ui h5,
+    .ui h6,
+    .ui p,
+    .ui blockquote,
+    .ui figure,
+    .ui pre,
+    .ui dl,
+    .ui dd,
+    .ui hr,
+    .ui fieldset {
+        margin: 0;
+    }
+
+    /* -- Headings ------------------------------------------------------------ */
+
+    .ui h1,
+    .ui h2,
+    .ui h3,
+    .ui h4,
+    .ui h5,
+    .ui h6 {
+        font-size: inherit;
+        font-weight: inherit;
+    }
+
+    /* -- Lists --------------------------------------------------------------- */
+
+    .ui ol,
+    .ui ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* -- Links --------------------------------------------------------------- */
+
+    .ui a {
+        color: inherit;
+        text-decoration: inherit;
+    }
+
+    /* -- Inline elements ----------------------------------------------------- */
+
+    .ui b,
+    .ui strong {
+        font-weight: bolder;
+    }
+
+    .ui small {
+        font-size: 80%;
+    }
+
+    .ui sub,
+    .ui sup {
+        font-size: 75%;
+        line-height: 0;
+        position: relative;
+        vertical-align: baseline;
+    }
+
+    .ui sub {
+        bottom: -0.25em;
+    }
+
+    .ui sup {
+        top: -0.5em;
+    }
+
+    /* -- Code ---------------------------------------------------------------- */
+
+    .ui code,
+    .ui kbd,
+    .ui samp,
+    .ui pre {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+            "Liberation Mono", "Courier New", monospace;
+        font-feature-settings: normal;
+        font-variation-settings: normal;
+        font-size: 1em;
+    }
+
+    /* -- Abbreviations ------------------------------------------------------- */
+
+    .ui abbr:where([title]) {
+        text-decoration: underline dotted;
+    }
+
+    /* -- Horizontal rule ----------------------------------------------------- */
+
+    .ui hr {
+        height: 0;
+        color: inherit;
+        border-top-width: 1px;
+    }
+
+    /* -- Tables -------------------------------------------------------------- */
+
+    .ui table {
+        text-indent: 0;
+        border-color: inherit;
+        border-collapse: collapse;
+    }
+
+    /* -- Form elements ------------------------------------------------------- */
+
+    .ui button,
+    .ui input,
+    .ui optgroup,
+    .ui select,
+    .ui textarea {
+        font-family: inherit;
+        font-feature-settings: inherit;
+        font-variation-settings: inherit;
+        font-size: 100%;
+        font-weight: inherit;
+        line-height: inherit;
+        letter-spacing: inherit;
+        color: inherit;
+        margin: 0;
+        padding: 0;
+    }
+
+    .ui button,
+    .ui select {
+        text-transform: none;
+    }
+
+    .ui button,
+    .ui input:where([type="button"]),
+    .ui input:where([type="reset"]),
+    .ui input:where([type="submit"]) {
+        -webkit-appearance: button;
+        background-color: transparent;
+        background-image: none;
+    }
+
+    .ui :-moz-focusring {
+        outline: auto;
+    }
+
+    .ui :-moz-ui-invalid {
+        box-shadow: none;
+    }
+
+    .ui textarea {
+        resize: vertical;
+    }
+
+    .ui input::placeholder,
+    .ui textarea::placeholder {
+        opacity: 1;
+        color: var(--color-gray-400);
+    }
+
+    /* -- Media elements ------------------------------------------------------ */
+
+    .ui img,
+    .ui svg,
+    .ui video,
+    .ui canvas,
+    .ui audio,
+    .ui iframe,
+    .ui embed,
+    .ui object {
+        display: block;
+        vertical-align: middle;
+    }
+
+    .ui img,
+    .ui video {
+        max-width: 100%;
+        height: auto;
+    }
+
+    /* -- Interactive --------------------------------------------------------- */
+
+    .ui [role="button"],
+    .ui button {
+        cursor: pointer;
+    }
+
+    .ui :disabled {
+        cursor: default;
+    }
+
+    .ui [hidden] {
+        display: none !important;
+    }
+
+    .ui summary {
+        display: list-item;
     }
 }
