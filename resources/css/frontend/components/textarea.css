@@ -1,0 +1,142 @@
+/* ==========================================================================
+   Textarea — Flux-matching native CSS
+   ========================================================================== */
+
+@layer ui.components {
+
+    /* -- Base ---------------------------------------------------------------- */
+
+    .ui-textarea {
+        width: 100%;
+        display: block;
+        appearance: none;
+        -webkit-appearance: none;
+        font-family: inherit;
+        font-size: 1rem;
+        line-height: 1.375rem;
+        padding: 0.75rem;
+        color: var(--color-gray-700);
+        background: #ffffff;
+        border: 1px solid var(--color-gray-200);
+        border-bottom-color: color-mix(in oklab, var(--color-gray-300) 80%, transparent);
+        border-radius: var(--ui-radius-lg, 8px);
+        box-shadow: var(--ui-shadow-xs);
+        resize: vertical;
+    }
+
+    @media (min-width: 640px) {
+        .ui-textarea {
+            font-size: 0.875rem;
+        }
+    }
+
+    .ui-textarea::placeholder {
+        color: var(--color-gray-400);
+    }
+
+    /* -- Resize variants ----------------------------------------------------- */
+
+    .ui-textarea-resize-none {
+        resize: none;
+    }
+
+    .ui-textarea-resize-both {
+        resize: both;
+    }
+
+    .ui-textarea-resize-horizontal {
+        resize: horizontal;
+    }
+
+    /* -- Auto-sizing --------------------------------------------------------- */
+
+    .ui-textarea-auto {
+        field-sizing: content;
+        resize: none;
+    }
+
+    /* -- Disabled ------------------------------------------------------------- */
+
+    .ui-textarea:disabled {
+        color: var(--color-gray-500);
+        border-bottom-color: var(--color-gray-200);
+        box-shadow: none;
+        cursor: default;
+    }
+
+    .ui-textarea:disabled::placeholder {
+        color: color-mix(in oklab, var(--color-gray-400) 70%, transparent);
+    }
+
+    /* -- Invalid ------------------------------------------------------------- */
+
+    .ui-textarea[data-invalid],
+    .ui-textarea[aria-invalid="true"] {
+        border-color: oklch(63.7% 0.237 25.331);
+        box-shadow: none;
+    }
+
+    /* ========================================================================
+       Dark mode — explicit (`data-theme="dark"`)
+       ======================================================================== */
+
+    .ui[data-theme="dark"] .ui-textarea {
+        background: rgb(255 255 255 / 0.1);
+        color: var(--color-gray-300);
+        border-color: rgb(255 255 255 / 0.1);
+        border-bottom-color: rgb(255 255 255 / 0.1);
+        box-shadow: none;
+    }
+
+    .ui[data-theme="dark"] .ui-textarea::placeholder {
+        color: var(--color-gray-400);
+    }
+
+    .ui[data-theme="dark"] .ui-textarea:disabled {
+        color: var(--color-gray-400);
+        background: rgb(255 255 255 / 0.07);
+        border-color: rgb(255 255 255 / 0.05);
+    }
+
+    .ui[data-theme="dark"] .ui-textarea:disabled::placeholder {
+        color: var(--color-gray-500);
+    }
+
+    .ui[data-theme="dark"] .ui-textarea[data-invalid],
+    .ui[data-theme="dark"] .ui-textarea[aria-invalid="true"] {
+        border-color: oklch(63.7% 0.237 25.331);
+    }
+
+    /* ========================================================================
+       Dark mode — automatic fallback (`prefers-color-scheme`)
+       ======================================================================== */
+
+    @media (prefers-color-scheme: dark) {
+        .ui:not([data-theme]) .ui-textarea {
+            background: rgb(255 255 255 / 0.1);
+            color: var(--color-gray-300);
+            border-color: rgb(255 255 255 / 0.1);
+            border-bottom-color: rgb(255 255 255 / 0.1);
+            box-shadow: none;
+        }
+
+        .ui:not([data-theme]) .ui-textarea::placeholder {
+            color: var(--color-gray-400);
+        }
+
+        .ui:not([data-theme]) .ui-textarea:disabled {
+            color: var(--color-gray-400);
+            background: rgb(255 255 255 / 0.07);
+            border-color: rgb(255 255 255 / 0.05);
+        }
+
+        .ui:not([data-theme]) .ui-textarea:disabled::placeholder {
+            color: var(--color-gray-500);
+        }
+
+        .ui:not([data-theme]) .ui-textarea[data-invalid],
+        .ui:not([data-theme]) .ui-textarea[aria-invalid="true"] {
+            border-color: oklch(63.7% 0.237 25.331);
+        }
+    }
+}
