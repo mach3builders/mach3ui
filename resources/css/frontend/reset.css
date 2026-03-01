@@ -1,0 +1,17 @@
+/* ==========================================================================
+   Reset — scoped to .ui container
+   ========================================================================== */
+
+@layer ui.reset {
+    .ui {
+        box-sizing: border-box;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    .ui *,
+    .ui *::before,
+    .ui *::after {
+        box-sizing: inherit;
+    }
+}

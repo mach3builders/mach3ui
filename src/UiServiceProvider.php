@@ -12,7 +12,8 @@ class UiServiceProvider extends PackageServiceProvider
     {
         $package
             ->name('ui')
-            ->hasViews('ui');
+            ->hasViews('ui')
+            ->hasAssets();
     }
 
     public function packageBooted(): void

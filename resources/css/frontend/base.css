@@ -1,0 +1,13 @@
+/* ==========================================================================
+   Base styles — scoped to .ui
+   ========================================================================== */
+
+@layer ui.base {
+    .ui {
+        font-family: var(--ui-font-sans);
+        font-size: var(--ui-text-base);
+        line-height: var(--ui-leading-normal);
+        letter-spacing: var(--ui-tracking-tight);
+        color: var(--ui-text);
+    }
+}
