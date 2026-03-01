@@ -1,0 +1,47 @@
+/* ==========================================================================
+   Icon — Flux-matching native CSS
+   Sizing classes for Lucide SVGs. Color via parent `color` (currentColor).
+   ========================================================================== */
+
+@layer ui.components {
+
+    /* -- Base (24px) --------------------------------------------------------- */
+
+    .ui-icon {
+        width: 1.5rem;
+        height: 1.5rem;
+        flex-shrink: 0;
+    }
+
+    /* -- Mini (20px) --------------------------------------------------------- */
+
+    .ui-icon-mini {
+        width: 1.25rem;
+        height: 1.25rem;
+        flex-shrink: 0;
+    }
+
+    /* -- Micro (16px) -------------------------------------------------------- */
+
+    .ui-icon-micro {
+        width: 1rem;
+        height: 1rem;
+        flex-shrink: 0;
+    }
+
+    /* -- Loading spinner ----------------------------------------------------- */
+
+    .ui-icon-loading {
+        flex-shrink: 0;
+        animation: ui-spin 1s linear infinite;
+    }
+
+    .ui-icon-loading:not(.ui-icon-mini):not(.ui-icon-micro) {
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+
+    @keyframes ui-spin {
+        to { transform: rotate(360deg); }
+    }
+}

@@ -1,0 +1,254 @@
+/* ==========================================================================
+   Avatar — Flux-matching native CSS
+   ========================================================================== */
+
+@layer ui.components {
+
+    /* -- Color tokens (per avatar, overridden by data-color) ----------------- */
+
+    .ui-avatar {
+        --_bg: var(--color-gray-200);
+        --_text: var(--color-gray-800);
+    }
+
+    .ui-avatar[data-color="red"]     { --_bg: oklch(88.5% 0.062 18.334);  --_text: oklch(44.4% 0.177 26.899);  }
+    .ui-avatar[data-color="orange"]  { --_bg: oklch(90.1% 0.076 70.697);  --_text: oklch(47% 0.157 37.304);    }
+    .ui-avatar[data-color="amber"]   { --_bg: oklch(92.4% 0.12 95.746);   --_text: oklch(47.3% 0.137 46.201);  }
+    .ui-avatar[data-color="yellow"]  { --_bg: oklch(94.5% 0.129 101.54);  --_text: oklch(47.6% 0.114 61.907);  }
+    .ui-avatar[data-color="lime"]    { --_bg: oklch(93.8% 0.127 124.321); --_text: oklch(45.3% 0.124 130.933); }
+    .ui-avatar[data-color="green"]   { --_bg: oklch(92.5% 0.084 155.995); --_text: oklch(44.8% 0.119 151.328); }
+    .ui-avatar[data-color="emerald"] { --_bg: oklch(92.9% 0.07 164.15);   --_text: oklch(43.2% 0.095 166.913); }
+    .ui-avatar[data-color="teal"]    { --_bg: oklch(93.1% 0.051 180.801); --_text: oklch(43.7% 0.078 188.216); }
+    .ui-avatar[data-color="cyan"]    { --_bg: oklch(93.2% 0.063 210.843); --_text: oklch(43.3% 0.088 227.306); }
+    .ui-avatar[data-color="sky"]     { --_bg: oklch(91.6% 0.058 230.902); --_text: oklch(42.4% 0.109 240.79);  }
+    .ui-avatar[data-color="blue"]    { --_bg: oklch(88.2% 0.059 254.128); --_text: oklch(42.4% 0.199 265.638); }
+    .ui-avatar[data-color="indigo"]  { --_bg: oklch(87% 0.065 274.039);   --_text: oklch(39.9% 0.195 275.75);  }
+    .ui-avatar[data-color="violet"]  { --_bg: oklch(86.6% 0.075 292.756); --_text: oklch(40.6% 0.208 292.647); }
+    .ui-avatar[data-color="purple"]  { --_bg: oklch(87% 0.084 305.834);   --_text: oklch(40.4% 0.213 301.493); }
+    .ui-avatar[data-color="fuchsia"] { --_bg: oklch(88.3% 0.096 320.364); --_text: oklch(43.1% 0.214 324.437); }
+    .ui-avatar[data-color="pink"]    { --_bg: oklch(89.2% 0.069 349.573); --_text: oklch(45.9% 0.187 3.815);   }
+    .ui-avatar[data-color="rose"]    { --_bg: oklch(89.6% 0.059 10.417);  --_text: oklch(45.5% 0.188 13.697);  }
+
+    /* -- Base ---------------------------------------------------------------- */
+
+    .ui-avatar {
+        position: relative;
+        display: inline-flex;
+        flex-shrink: 0;
+        align-items: center;
+        justify-content: center;
+        isolation: isolate;
+        font-weight: 500;
+        width: 2.5rem;
+        height: 2.5rem;
+        font-size: 0.875rem;
+        border-radius: var(--ui-radius-lg, 8px);
+        background: var(--_bg);
+        color: var(--_text);
+    }
+
+    /* Subtle inner ring */
+    .ui-avatar::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.07);
+        pointer-events: none;
+    }
+
+    /* -- Image --------------------------------------------------------------- */
+
+    .ui-avatar > img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: inherit;
+    }
+
+    /* -- Initials ------------------------------------------------------------ */
+
+    .ui-avatar > span {
+        user-select: none;
+    }
+
+    /* -- Icon ---------------------------------------------------------------- */
+
+    .ui-avatar > svg {
+        opacity: 0.75;
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+
+    /* -- Sizes --------------------------------------------------------------- */
+
+    .ui-avatar-xl {
+        width: 4rem;
+        height: 4rem;
+        font-size: 1rem;
+        border-radius: var(--ui-radius-xl, 12px);
+    }
+
+    .ui-avatar-lg {
+        width: 3rem;
+        height: 3rem;
+        font-size: 1rem;
+        border-radius: var(--ui-radius-lg, 8px);
+    }
+
+    .ui-avatar-sm {
+        width: 2rem;
+        height: 2rem;
+        font-size: 0.875rem;
+        border-radius: var(--ui-radius, 6px);
+    }
+
+    .ui-avatar-xs {
+        width: 1.5rem;
+        height: 1.5rem;
+        font-size: 0.75rem;
+        border-radius: var(--ui-radius-sm, 2px);
+    }
+
+    /* Icon sizes per avatar size */
+    .ui-avatar-xl > svg { width: 2rem; height: 2rem; }
+    .ui-avatar-lg > svg { width: 2rem; height: 2rem; }
+    .ui-avatar-sm > svg { width: 1.25rem; height: 1.25rem; }
+    .ui-avatar-xs > svg { width: 1rem; height: 1rem; }
+
+    /* -- Circle -------------------------------------------------------------- */
+
+    .ui-avatar-circle {
+        border-radius: var(--ui-radius-full, 9999px);
+    }
+
+    /* -- Badge --------------------------------------------------------------- */
+
+    .ui-avatar-badge {
+        position: absolute;
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 0.75rem;
+        min-width: 0.75rem;
+        border-radius: var(--ui-radius-full, 9999px);
+        font-size: 0.625rem;
+        font-weight: 500;
+        font-variant-numeric: tabular-nums;
+        overflow: hidden;
+        background: #ffffff;
+        box-shadow: 0 0 0 2px #ffffff;
+        bottom: 0;
+        inset-inline-end: 0;
+    }
+
+    .ui-avatar-sm > .ui-avatar-badge,
+    .ui-avatar-xs > .ui-avatar-badge {
+        height: 0.5rem;
+        min-width: 0.5rem;
+    }
+
+    /* Badge colors */
+    .ui-avatar-badge[data-color="green"]   { background: var(--color-green-500); }
+    .ui-avatar-badge[data-color="red"]     { background: var(--color-red-500); }
+    .ui-avatar-badge[data-color="yellow"]  { background: var(--color-yellow-500); }
+    .ui-avatar-badge[data-color="blue"]    { background: var(--color-blue-500); }
+    .ui-avatar-badge[data-color="gray"]    { background: var(--color-gray-400); }
+
+    /* Badge position variants */
+    .ui-avatar-badge[data-position="top left"]     { top: 0; bottom: auto; inset-inline-end: auto; inset-inline-start: 0; }
+    .ui-avatar-badge[data-position="top right"]    { top: 0; bottom: auto; }
+    .ui-avatar-badge[data-position="bottom left"]  { inset-inline-end: auto; inset-inline-start: 0; }
+
+    /* -- Group --------------------------------------------------------------- */
+
+    .ui-avatar-group {
+        display: flex;
+        isolation: isolate;
+    }
+
+    .ui-avatar-group > .ui-avatar:not(:first-child) {
+        margin-inline-start: -0.5rem;
+    }
+
+    .ui-avatar-group > .ui-avatar {
+        box-shadow: 0 0 0 4px #ffffff;
+    }
+
+    .ui-avatar-group > .ui-avatar-sm {
+        box-shadow: 0 0 0 2px #ffffff;
+    }
+
+    .ui-avatar-group > .ui-avatar-xs {
+        box-shadow: 0 0 0 2px #ffffff;
+    }
+
+    /* ========================================================================
+       Dark mode — explicit (`data-theme="dark"`)
+       ======================================================================== */
+
+    .ui[data-theme="dark"] .ui-avatar {
+        --_bg: var(--color-gray-600);
+        --_text: #ffffff;
+    }
+
+    .ui[data-theme="dark"] .ui-avatar::after {
+        box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.1);
+    }
+
+    .ui[data-theme="dark"] .ui-avatar-badge {
+        background: var(--color-gray-900);
+        box-shadow: 0 0 0 2px var(--color-gray-900);
+    }
+
+    .ui[data-theme="dark"] .ui-avatar-badge[data-color="green"]  { background: var(--color-green-400); }
+    .ui[data-theme="dark"] .ui-avatar-badge[data-color="red"]    { background: var(--color-red-400); }
+    .ui[data-theme="dark"] .ui-avatar-badge[data-color="yellow"] { background: var(--color-yellow-400); }
+    .ui[data-theme="dark"] .ui-avatar-badge[data-color="blue"]   { background: var(--color-blue-400); }
+    .ui[data-theme="dark"] .ui-avatar-badge[data-color="gray"]   { background: var(--color-gray-300); }
+
+    .ui[data-theme="dark"] .ui-avatar-group > .ui-avatar {
+        box-shadow: 0 0 0 4px var(--color-gray-900);
+    }
+
+    .ui[data-theme="dark"] .ui-avatar-group > .ui-avatar-sm,
+    .ui[data-theme="dark"] .ui-avatar-group > .ui-avatar-xs {
+        box-shadow: 0 0 0 2px var(--color-gray-900);
+    }
+
+    /* ========================================================================
+       Dark mode — automatic fallback (`prefers-color-scheme`)
+       ======================================================================== */
+
+    @media (prefers-color-scheme: dark) {
+        .ui:not([data-theme]) .ui-avatar {
+            --_bg: var(--color-gray-600);
+            --_text: #ffffff;
+        }
+
+        .ui:not([data-theme]) .ui-avatar::after {
+            box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.1);
+        }
+
+        .ui:not([data-theme]) .ui-avatar-badge {
+            background: var(--color-gray-900);
+            box-shadow: 0 0 0 2px var(--color-gray-900);
+        }
+
+        .ui:not([data-theme]) .ui-avatar-badge[data-color="green"]  { background: var(--color-green-400); }
+        .ui:not([data-theme]) .ui-avatar-badge[data-color="red"]    { background: var(--color-red-400); }
+        .ui:not([data-theme]) .ui-avatar-badge[data-color="yellow"] { background: var(--color-yellow-400); }
+        .ui:not([data-theme]) .ui-avatar-badge[data-color="blue"]   { background: var(--color-blue-400); }
+        .ui:not([data-theme]) .ui-avatar-badge[data-color="gray"]   { background: var(--color-gray-300); }
+
+        .ui:not([data-theme]) .ui-avatar-group > .ui-avatar {
+            box-shadow: 0 0 0 4px var(--color-gray-900);
+        }
+
+        .ui:not([data-theme]) .ui-avatar-group > .ui-avatar-sm,
+        .ui:not([data-theme]) .ui-avatar-group > .ui-avatar-xs {
+            box-shadow: 0 0 0 2px var(--color-gray-900);
+        }
+    }
+}

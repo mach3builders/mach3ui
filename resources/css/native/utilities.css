@@ -1,0 +1,32 @@
+/* ==========================================================================
+   Utilities
+   ========================================================================== */
+
+@layer ui.utilities {
+
+    /* Screen reader only */
+    .ui-sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border-width: 0;
+    }
+
+    /* Text alignment */
+    .ui-text-center { text-align: center; }
+
+    /* Spin animation */
+    .ui-animate-spin {
+        animation: ui-spin 1s linear infinite;
+    }
+
+    @keyframes ui-spin {
+        from { transform: rotate(0deg); }
+        to   { transform: rotate(360deg); }
+    }
+}

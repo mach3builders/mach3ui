@@ -1,0 +1,96 @@
+/* ==========================================================================
+   Breadcrumbs — Flux-matching native CSS
+   ========================================================================== */
+
+@layer ui.components {
+
+    /* -- Container ----------------------------------------------------------- */
+
+    .ui-breadcrumbs {
+        display: flex;
+    }
+
+    /* -- Item ---------------------------------------------------------------- */
+
+    .ui-breadcrumbs-item {
+        display: flex;
+        align-items: center;
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+
+    /* -- Link ---------------------------------------------------------------- */
+
+    .ui-breadcrumbs-item > a {
+        color: var(--color-gray-800);
+        text-decoration: none;
+        text-underline-offset: 4px;
+    }
+
+    .ui-breadcrumbs-item > a:hover {
+        text-decoration: underline;
+        text-decoration-color: color-mix(in oklab, var(--color-gray-800) 20%, transparent);
+    }
+
+    /* -- Static text (current page) ------------------------------------------ */
+
+    .ui-breadcrumbs-item > span {
+        color: var(--color-gray-500);
+    }
+
+    /* -- Separator ----------------------------------------------------------- */
+
+    .ui-breadcrumbs-item > svg {
+        margin-inline: 0.25rem;
+        color: var(--color-gray-300);
+        width: 1.25rem;
+        height: 1.25rem;
+        flex-shrink: 0;
+    }
+
+    .ui-breadcrumbs-item:last-child > svg {
+        display: none;
+    }
+
+    /* ========================================================================
+       Dark mode — explicit (`data-theme="dark"`)
+       ======================================================================== */
+
+    .ui[data-theme="dark"] .ui-breadcrumbs-item > a {
+        color: #ffffff;
+    }
+
+    .ui[data-theme="dark"] .ui-breadcrumbs-item > a:hover {
+        text-decoration-color: color-mix(in oklab, #ffffff 20%, transparent);
+    }
+
+    .ui[data-theme="dark"] .ui-breadcrumbs-item > span {
+        color: rgb(255 255 255 / 0.8);
+    }
+
+    .ui[data-theme="dark"] .ui-breadcrumbs-item > svg {
+        color: rgb(255 255 255 / 0.8);
+    }
+
+    /* ========================================================================
+       Dark mode — automatic fallback (`prefers-color-scheme`)
+       ======================================================================== */
+
+    @media (prefers-color-scheme: dark) {
+        .ui:not([data-theme]) .ui-breadcrumbs-item > a {
+            color: #ffffff;
+        }
+
+        .ui:not([data-theme]) .ui-breadcrumbs-item > a:hover {
+            text-decoration-color: color-mix(in oklab, #ffffff 20%, transparent);
+        }
+
+        .ui:not([data-theme]) .ui-breadcrumbs-item > span {
+            color: rgb(255 255 255 / 0.8);
+        }
+
+        .ui:not([data-theme]) .ui-breadcrumbs-item > svg {
+            color: rgb(255 255 255 / 0.8);
+        }
+    }
+}

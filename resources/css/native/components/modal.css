@@ -1,0 +1,243 @@
+/* ==========================================================================
+   Modal — Flux-matching native CSS
+   Uses the Popover API for CSS-only open/close, light dismiss, and Escape.
+   Transitions via @starting-style for smooth animations. Zero JavaScript.
+
+   <button popovertarget="my-modal">Open</button>
+   <div popover="auto" id="my-modal" class="ui-modal">...</div>
+   ========================================================================== */
+
+@layer ui.components {
+
+    /* -- Base (centered modal) ----------------------------------------------- */
+
+    .ui-modal {
+        border: none;
+        padding: 1.5rem;
+        border-radius: 0.75rem;
+        color: var(--color-gray-800);
+        background: #ffffff;
+        box-shadow:
+            0 0 0 1px rgb(0 0 0 / 0.05),
+            0 10px 15px -3px rgb(0 0 0 / 0.1),
+            0 4px 6px -4px rgb(0 0 0 / 0.1);
+    }
+
+    /* Low-specificity sizing — easy to override */
+    :where(.ui-modal) {
+        max-width: 36rem;
+        min-width: 20rem;
+    }
+
+    /* -- Bare variant -------------------------------------------------------- */
+
+    .ui-modal-bare {
+        padding: 0;
+        max-width: unset;
+        min-width: unset;
+        background: transparent;
+        box-shadow: none;
+        border-radius: 0;
+    }
+
+    /* -- Flyout (right, default) --------------------------------------------- */
+
+    .ui-modal-flyout {
+        --ui-flyout-translate: translateX(50px);
+        inset: unset;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        margin: 0;
+        padding: 2rem;
+        width: auto;
+        height: auto;
+        max-width: unset;
+        min-width: unset;
+        max-height: 100dvh;
+        min-height: 100dvh;
+        overflow-y: auto;
+        border: none;
+        border-inline-start: 1px solid transparent;
+        border-radius: 0;
+        background: #ffffff;
+        box-shadow: none;
+    }
+
+    @media (min-width: 768px) {
+        :where(.ui-modal-flyout) {
+            min-width: 25rem;
+        }
+    }
+
+    /* -- Flyout left --------------------------------------------------------- */
+
+    .ui-modal-left {
+        --ui-flyout-translate: translateX(-50px);
+        right: unset;
+        left: 0;
+        border-inline-start: none;
+        border-inline-end: 1px solid transparent;
+    }
+
+    /* -- Flyout bottom ------------------------------------------------------- */
+
+    .ui-modal-bottom {
+        --ui-flyout-translate: translateY(50px);
+        top: unset;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        min-height: unset;
+        max-height: unset;
+        min-width: 100vw;
+        border-inline-start: none;
+        border-top: 1px solid transparent;
+    }
+
+    /* -- Floating variant ---------------------------------------------------- */
+
+    .ui-modal-floating {
+        margin: 0.5rem;
+        max-height: calc(100dvh - 1rem);
+        min-height: calc(100dvh - 1rem);
+        border: none;
+        border-radius: 0.75rem;
+        box-shadow:
+            0 0 0 1px rgb(0 0 0 / 0.05),
+            0 10px 15px -3px rgb(0 0 0 / 0.1),
+            0 4px 6px -4px rgb(0 0 0 / 0.1);
+    }
+
+    .ui-modal-floating.ui-modal-bottom {
+        min-height: unset;
+        max-height: unset;
+        min-width: calc(100vw - 1rem);
+    }
+
+    /* -- Close button -------------------------------------------------------- */
+
+    .ui-modal-close {
+        position: absolute;
+        top: 0;
+        inset-inline-end: 0;
+        margin-top: 1rem;
+        margin-inline-end: 1rem;
+    }
+
+    /* Remove bottom margin from last content element before close button */
+    .ui-modal > :has(+ .ui-modal-close:last-child) {
+        margin-bottom: 0;
+    }
+
+    /* -- Transitions --------------------------------------------------------- */
+
+    .ui-modal {
+        opacity: 0;
+        transform: scale(0.95);
+        transition: all 0.075s allow-discrete;
+    }
+
+    .ui-modal-flyout {
+        transform: scale(1) var(--ui-flyout-translate, translateX(50px));
+    }
+
+    .ui-modal:popover-open {
+        opacity: 1;
+        transform: scale(1);
+        transition: all 0.15s allow-discrete;
+    }
+
+    @starting-style {
+        .ui-modal:popover-open {
+            opacity: 0;
+            transform: scale(0.95);
+        }
+
+        .ui-modal-flyout:popover-open {
+            transform: scale(1) var(--ui-flyout-translate, translateX(50px));
+        }
+    }
+
+    .ui-modal::backdrop {
+        background-color: rgb(0 0 0 / 0.25);
+        backdrop-filter: blur(4px);
+        opacity: 0;
+        transition: all 0.075s allow-discrete;
+    }
+
+    .ui-modal:popover-open::backdrop {
+        opacity: 1;
+        transition: all 0.15s allow-discrete;
+    }
+
+    @starting-style {
+        .ui-modal:popover-open::backdrop {
+            opacity: 0;
+        }
+    }
+
+    /* ========================================================================
+       Dark mode — explicit (`data-theme="dark"`)
+       ======================================================================== */
+
+    .ui[data-theme="dark"] .ui-modal {
+        color: #ffffff;
+        background: var(--color-gray-800);
+        box-shadow:
+            0 0 0 1px color-mix(in oklab, var(--color-gray-700) 70%, transparent),
+            0 10px 15px -3px rgb(0 0 0 / 0.1),
+            0 4px 6px -4px rgb(0 0 0 / 0.1);
+    }
+
+    .ui[data-theme="dark"] .ui-modal-bare {
+        background: transparent;
+        box-shadow: none;
+    }
+
+    .ui[data-theme="dark"] .ui-modal-flyout {
+        background: var(--color-gray-800);
+        border-color: var(--color-gray-700);
+        box-shadow: none;
+    }
+
+    .ui[data-theme="dark"] .ui-modal-floating {
+        box-shadow:
+            0 0 0 1px color-mix(in oklab, var(--color-gray-700) 70%, transparent),
+            0 10px 15px -3px rgb(0 0 0 / 0.1),
+            0 4px 6px -4px rgb(0 0 0 / 0.1);
+    }
+
+    /* ========================================================================
+       Dark mode — automatic fallback (`prefers-color-scheme`)
+       ======================================================================== */
+
+    @media (prefers-color-scheme: dark) {
+        .ui:not([data-theme]) .ui-modal {
+            color: #ffffff;
+            background: var(--color-gray-800);
+            box-shadow:
+                0 0 0 1px color-mix(in oklab, var(--color-gray-700) 70%, transparent),
+                0 10px 15px -3px rgb(0 0 0 / 0.1),
+                0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+
+        .ui:not([data-theme]) .ui-modal-bare {
+            background: transparent;
+            box-shadow: none;
+        }
+
+        .ui:not([data-theme]) .ui-modal-flyout {
+            background: var(--color-gray-800);
+            border-color: var(--color-gray-700);
+            box-shadow: none;
+        }
+
+        .ui:not([data-theme]) .ui-modal-floating {
+            box-shadow:
+                0 0 0 1px color-mix(in oklab, var(--color-gray-700) 70%, transparent),
+                0 10px 15px -3px rgb(0 0 0 / 0.1),
+                0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+    }
+}

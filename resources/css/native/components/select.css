@@ -1,0 +1,207 @@
+/* ==========================================================================
+   Select — Flux-matching native CSS
+   Native <select> element with custom chevron indicator.
+
+   <select class="ui-select">
+     <option value="">Choose...</option>
+     <option value="1">Option 1</option>
+   </select>
+   ========================================================================== */
+
+@layer ui.components {
+
+    /* -- Base (outline variant) ---------------------------------------------- */
+
+    .ui-select {
+        width: 100%;
+        display: block;
+        appearance: none;
+        -webkit-appearance: none;
+        font-family: inherit;
+        font-size: 1rem;
+        line-height: 1.375rem;
+        height: 2.5rem;
+        padding: 0.5rem 0.75rem;
+        padding-inline-end: 2.5rem;
+        color: var(--color-gray-700);
+        background: #ffffff;
+        border: 1px solid var(--color-gray-200);
+        border-bottom-color: color-mix(in oklab, var(--color-gray-300) 80%, transparent);
+        border-radius: var(--ui-radius-lg, 8px);
+        box-shadow: var(--ui-shadow-xs);
+        cursor: pointer;
+
+        /* Chevron indicator */
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23d4d4d8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+        background-position: right 0.5rem center;
+        background-repeat: no-repeat;
+        background-size: 1.25em 1.25em;
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+    }
+
+    @media (min-width: 640px) {
+        .ui-select {
+            font-size: 0.875rem;
+        }
+    }
+
+    /* RTL chevron position */
+    [dir="rtl"] .ui-select {
+        background-position: left 0.5rem center;
+    }
+
+    /* Hover — darken chevron */
+    .ui-select:hover {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2327272a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    }
+
+    /* Placeholder (first disabled option) */
+    .ui-select:has(option[value=""]:checked) {
+        color: var(--color-gray-400);
+    }
+
+    /* -- Filled variant ------------------------------------------------------ */
+
+    .ui-select-filled {
+        background-color: color-mix(in oklab, var(--color-gray-800) 5%, transparent);
+        border: none;
+        box-shadow: none;
+    }
+
+    /* -- Sizes --------------------------------------------------------------- */
+
+    .ui-select-sm {
+        font-size: 0.875rem;
+        line-height: 1.125rem;
+        height: 2rem;
+        padding-top: 0.375rem;
+        padding-bottom: 0.375rem;
+        padding-inline-start: 0.75rem;
+        padding-inline-end: 2rem;
+        border-radius: var(--ui-radius-md, 6px);
+        background-size: 1em 1em;
+    }
+
+    .ui-select-xs {
+        font-size: 0.75rem;
+        line-height: 1.125rem;
+        height: 1.5rem;
+        padding-top: 0.375rem;
+        padding-bottom: 0.375rem;
+        padding-inline-start: 0.75rem;
+        padding-inline-end: 2rem;
+        border-radius: var(--ui-radius-md, 6px);
+        background-size: 1em 1em;
+    }
+
+    /* -- Disabled ------------------------------------------------------------ */
+
+    .ui-select:disabled {
+        color: var(--color-gray-500);
+        border-bottom-color: var(--color-gray-200);
+        box-shadow: none;
+        cursor: default;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23e4e4e7' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    }
+
+    .ui-select-filled:disabled {
+        border: none;
+    }
+
+    /* -- Invalid ------------------------------------------------------------- */
+
+    .ui-select[data-invalid],
+    .ui-select[aria-invalid="true"] {
+        border-color: oklch(63.7% 0.237 25.331);
+        box-shadow: none;
+    }
+
+    /* ========================================================================
+       Dark mode — explicit (`data-theme="dark"`)
+       ======================================================================== */
+
+    .ui[data-theme="dark"] .ui-select {
+        background-color: rgb(255 255 255 / 0.1);
+        color: var(--color-gray-300);
+        border-color: rgb(255 255 255 / 0.1);
+        border-bottom-color: rgb(255 255 255 / 0.1);
+        box-shadow: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23a1a1aa' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    }
+
+    .ui[data-theme="dark"] .ui-select:hover {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    }
+
+    .ui[data-theme="dark"] .ui-select:has(option[value=""]:checked) {
+        color: var(--color-gray-400);
+    }
+
+    .ui[data-theme="dark"] .ui-select-filled {
+        background-color: rgb(255 255 255 / 0.1);
+        border: none;
+    }
+
+    .ui[data-theme="dark"] .ui-select:disabled {
+        color: var(--color-gray-400);
+        background-color: rgb(255 255 255 / 0.07);
+        border-color: rgb(255 255 255 / 0.05);
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2352525b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    }
+
+    .ui[data-theme="dark"] .ui-select-filled:disabled {
+        background-color: rgb(255 255 255 / 0.07);
+        border: none;
+    }
+
+    .ui[data-theme="dark"] .ui-select[data-invalid],
+    .ui[data-theme="dark"] .ui-select[aria-invalid="true"] {
+        border-color: oklch(63.7% 0.237 25.331);
+    }
+
+    /* ========================================================================
+       Dark mode — automatic fallback (`prefers-color-scheme`)
+       ======================================================================== */
+
+    @media (prefers-color-scheme: dark) {
+        .ui:not([data-theme]) .ui-select {
+            background-color: rgb(255 255 255 / 0.1);
+            color: var(--color-gray-300);
+            border-color: rgb(255 255 255 / 0.1);
+            border-bottom-color: rgb(255 255 255 / 0.1);
+            box-shadow: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23a1a1aa' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+        }
+
+        .ui:not([data-theme]) .ui-select:hover {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+        }
+
+        .ui:not([data-theme]) .ui-select:has(option[value=""]:checked) {
+            color: var(--color-gray-400);
+        }
+
+        .ui:not([data-theme]) .ui-select-filled {
+            background-color: rgb(255 255 255 / 0.1);
+            border: none;
+        }
+
+        .ui:not([data-theme]) .ui-select:disabled {
+            color: var(--color-gray-400);
+            background-color: rgb(255 255 255 / 0.07);
+            border-color: rgb(255 255 255 / 0.05);
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2352525b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+        }
+
+        .ui:not([data-theme]) .ui-select-filled:disabled {
+            background-color: rgb(255 255 255 / 0.07);
+            border: none;
+        }
+
+        .ui:not([data-theme]) .ui-select[data-invalid],
+        .ui:not([data-theme]) .ui-select[aria-invalid="true"] {
+            border-color: oklch(63.7% 0.237 25.331);
+        }
+    }
+}

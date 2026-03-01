@@ -1,0 +1,358 @@
+/* ==========================================================================
+   Alert — Flux-matching native CSS (Flux "callout" → our "alert")
+   ========================================================================== */
+
+@layer ui.components {
+    /* -- Color tokens (per alert, overridden by data-color) ----------------- */
+    /*    c1  = bg (light)                                                     */
+    /*    c2  = border (light) + heading (dark)   — shade 200                  */
+    /*    c3  = text (dark)                       — shade 300                  */
+    /*    c4  = mix source (dark border/bg) + icon (dark)  — shade 400         */
+    /*    c5  = icon (light)                      — shade 500 (or 400)         */
+    /*    c6  = text (light)                      — shade 600 (or 700)         */
+    /*    c7  = heading (light)                   — shade 600 (or 700/800)     */
+    /*    c-bd = border override (light) when ≠ shade 200                      */
+
+    .ui-alert {
+        --_c1: #ffffff;
+        --_c2: var(--color-gray-200);
+        --_c3: var(--color-gray-300);
+        --_c4: var(--color-gray-400);
+        --_c5: var(--color-gray-400);
+        --_c6: var(--color-gray-500);
+        --_c7: var(--color-gray-800);
+    }
+
+    .ui-alert[data-color="red"] {
+        --_c1: oklch(97.1% 0.013 17.38);
+        --_c2: oklch(88.5% 0.062 18.334);
+        --_c3: oklch(80.8% 0.114 19.571);
+        --_c4: oklch(70.4% 0.191 22.216);
+        --_c5: oklch(70.4% 0.191 22.216);
+        --_c6: oklch(50.5% 0.213 27.518);
+        --_c7: oklch(50.5% 0.213 27.518);
+    }
+    .ui-alert[data-color="orange"] {
+        --_c1: oklch(98% 0.016 73.684);
+        --_c2: oklch(90.1% 0.076 70.697);
+        --_c3: oklch(83.7% 0.128 66.29);
+        --_c4: oklch(75% 0.183 55.934);
+        --_c5: oklch(70.5% 0.213 47.604);
+        --_c6: oklch(64.6% 0.222 41.116);
+        --_c7: oklch(64.6% 0.222 41.116);
+    }
+    .ui-alert[data-color="amber"] {
+        --_c1: oklch(98.7% 0.022 95.277);
+        --_c2: oklch(92.4% 0.12 95.746);
+        --_c3: oklch(87.9% 0.169 91.605);
+        --_c4: oklch(82.8% 0.189 84.429);
+        --_c5: oklch(76.9% 0.188 70.08);
+        --_c6: oklch(66.6% 0.179 58.318);
+        --_c7: oklch(66.6% 0.179 58.318);
+        --_c-bd: oklch(82.8% 0.189 84.429);
+    }
+    .ui-alert[data-color="yellow"] {
+        --_c1: oklch(98.7% 0.026 102.212);
+        --_c2: oklch(94.5% 0.129 101.54);
+        --_c3: oklch(90.5% 0.182 98.111);
+        --_c4: oklch(85.2% 0.199 91.936);
+        --_c5: oklch(79.5% 0.184 86.047);
+        --_c6: oklch(55.4% 0.135 66.442);
+        --_c7: oklch(68.1% 0.162 75.834);
+        --_c-bd: oklch(85.2% 0.199 91.936);
+    }
+    .ui-alert[data-color="lime"] {
+        --_c1: oklch(98.6% 0.031 120.757);
+        --_c2: oklch(93.8% 0.127 124.321);
+        --_c3: oklch(89.7% 0.196 126.665);
+        --_c4: oklch(84.1% 0.238 128.85);
+        --_c5: oklch(76.8% 0.233 130.85);
+        --_c6: oklch(64.8% 0.2 131.684);
+        --_c7: oklch(53.2% 0.157 131.589);
+        --_c-bd: oklch(84.1% 0.238 128.85);
+    }
+    .ui-alert[data-color="green"] {
+        --_c1: oklch(98.2% 0.018 155.826);
+        --_c2: oklch(92.5% 0.084 155.995);
+        --_c3: oklch(87.1% 0.15 154.449);
+        --_c4: oklch(79.2% 0.209 151.711);
+        --_c5: oklch(72.3% 0.219 149.579);
+        --_c6: oklch(62.7% 0.194 149.214);
+        --_c7: oklch(62.7% 0.194 149.214);
+        --_c-bd: oklch(87.1% 0.15 154.449);
+    }
+    .ui-alert[data-color="emerald"] {
+        --_c1: oklch(97.9% 0.021 166.113);
+        --_c2: oklch(92.9% 0.07 164.15);
+        --_c3: oklch(86.5% 0.127 163.544);
+        --_c4: oklch(76.5% 0.177 163.223);
+        --_c5: oklch(69.6% 0.17 162.48);
+        --_c6: oklch(59.6% 0.145 163.225);
+        --_c7: oklch(59.6% 0.145 163.225);
+    }
+    .ui-alert[data-color="teal"] {
+        --_c1: oklch(98.4% 0.014 180.72);
+        --_c2: oklch(93.1% 0.051 180.801);
+        --_c3: oklch(85.5% 0.096 180.426);
+        --_c4: oklch(77.7% 0.152 181.912);
+        --_c5: oklch(70.4% 0.14 182.503);
+        --_c6: oklch(60% 0.118 184.704);
+        --_c7: oklch(60% 0.118 184.704);
+    }
+    .ui-alert[data-color="cyan"] {
+        --_c1: oklch(98.4% 0.019 200.873);
+        --_c2: oklch(93.2% 0.063 210.843);
+        --_c3: oklch(88.5% 0.098 214.15);
+        --_c4: oklch(78.9% 0.154 211.53);
+        --_c5: oklch(71.5% 0.143 215.221);
+        --_c6: oklch(60.9% 0.126 221.723);
+        --_c7: oklch(60.9% 0.126 221.723);
+    }
+    .ui-alert[data-color="sky"] {
+        --_c1: oklch(97.7% 0.013 236.62);
+        --_c2: oklch(91.6% 0.058 230.902);
+        --_c3: oklch(86.2% 0.098 230.717);
+        --_c4: oklch(74.6% 0.16 232.661);
+        --_c5: oklch(68.5% 0.169 237.323);
+        --_c6: oklch(58.8% 0.158 241.966);
+        --_c7: oklch(58.8% 0.158 241.966);
+    }
+    .ui-alert[data-color="blue"] {
+        --_c1: oklch(97% 0.014 254.604);
+        --_c2: oklch(88.2% 0.059 254.128);
+        --_c3: oklch(80.9% 0.105 251.813);
+        --_c4: oklch(70.7% 0.165 254.624);
+        --_c5: oklch(62.3% 0.214 259.815);
+        --_c6: oklch(54.6% 0.245 262.881);
+        --_c7: oklch(54.6% 0.245 262.881);
+    }
+    .ui-alert[data-color="indigo"] {
+        --_c1: oklch(96.2% 0.018 272.314);
+        --_c2: oklch(87% 0.065 274.039);
+        --_c3: oklch(78.5% 0.115 274.713);
+        --_c4: oklch(67.3% 0.17 276.935);
+        --_c5: oklch(58.5% 0.233 277.117);
+        --_c6: oklch(51.1% 0.262 276.966);
+        --_c7: oklch(51.1% 0.262 276.966);
+    }
+    .ui-alert[data-color="violet"] {
+        --_c1: oklch(96.9% 0.016 293.756);
+        --_c2: oklch(86.6% 0.075 292.756);
+        --_c3: oklch(81.1% 0.136 293.041);
+        --_c4: oklch(70.2% 0.183 293.541);
+        --_c5: oklch(60.6% 0.25 292.717);
+        --_c6: oklch(54.1% 0.281 293.009);
+        --_c7: oklch(54.1% 0.281 293.009);
+    }
+    .ui-alert[data-color="purple"] {
+        --_c1: oklch(97.7% 0.014 308.299);
+        --_c2: oklch(87% 0.084 305.834);
+        --_c3: oklch(82.7% 0.119 306.383);
+        --_c4: oklch(71.4% 0.203 305.504);
+        --_c5: oklch(62.7% 0.265 303.9);
+        --_c6: oklch(49.6% 0.265 301.924);
+        --_c7: oklch(43.8% 0.218 303.724);
+        --_c-bd: oklch(82.7% 0.119 306.383);
+    }
+    .ui-alert[data-color="fuchsia"] {
+        --_c1: oklch(97.7% 0.017 320.058);
+        --_c2: oklch(88.3% 0.096 320.364);
+        --_c3: oklch(83.3% 0.143 321.434);
+        --_c4: oklch(74% 0.238 322.16);
+        --_c5: oklch(66.7% 0.295 322.15);
+        --_c6: oklch(59.1% 0.293 322.896);
+        --_c7: oklch(59.1% 0.293 322.896);
+    }
+    .ui-alert[data-color="pink"] {
+        --_c1: oklch(97.1% 0.014 343.198);
+        --_c2: oklch(89.2% 0.069 349.573);
+        --_c3: oklch(84.4% 0.107 352.943);
+        --_c4: oklch(71.8% 0.202 349.761);
+        --_c5: oklch(65.6% 0.241 354.308);
+        --_c6: oklch(59.2% 0.249 0.584);
+        --_c7: oklch(59.2% 0.249 0.584);
+    }
+    .ui-alert[data-color="rose"] {
+        --_c1: oklch(96.9% 0.015 12.422);
+        --_c2: oklch(89.6% 0.059 10.417);
+        --_c3: oklch(81% 0.117 11.638);
+        --_c4: oklch(71.2% 0.194 13.428);
+        --_c5: oklch(64.5% 0.246 16.439);
+        --_c6: oklch(58.6% 0.253 17.585);
+        --_c7: oklch(58.6% 0.253 17.585);
+    }
+    .ui-alert[data-color="zinc"] {
+        --_c1: var(--color-gray-50);
+    }
+
+    /* -- Base ---------------------------------------------------------------- */
+
+    .ui-alert {
+        display: flex;
+        align-items: flex-start;
+        padding: 0.5rem;
+        border: 1px solid var(--_c-bd, var(--_c2));
+        border-radius: var(--ui-radius-xl, 12px);
+        background: var(--_c1);
+        font-family: inherit;
+    }
+
+    /* -- Icon (direct SVG child) --------------------------------------------- */
+
+    .ui-alert > svg {
+        flex-shrink: 0;
+        width: 1.25rem;
+        height: 1.25rem;
+        margin: 0.5rem 0 0.5rem 0.5rem;
+        color: var(--_c5);
+    }
+
+    /* -- Body (content wrapper) ---------------------------------------------- */
+
+    .ui-alert-body {
+        flex: 1;
+        min-width: 0;
+        padding: 0.5rem 0.75rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    /* -- Heading ------------------------------------------------------------- */
+
+    .ui-alert-heading {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: var(--_c7);
+    }
+
+    .ui-alert-heading svg {
+        flex-shrink: 0;
+        width: 1.25rem;
+        height: 1.25rem;
+        color: var(--_c5);
+    }
+
+    /* -- Text ---------------------------------------------------------------- */
+
+    .ui-alert-text {
+        font-size: 0.875rem;
+        color: var(--_c6);
+    }
+
+    /* -- Link (inline in text) ----------------------------------------------- */
+
+    .ui-alert-link {
+        font-weight: 500;
+        text-decoration: underline;
+        text-underline-offset: 6px;
+        text-decoration-color: color-mix(
+            in srgb,
+            currentColor,
+            transparent 80%
+        );
+        color: inherit;
+    }
+
+    .ui-alert-link:hover {
+        text-decoration-color: currentColor;
+    }
+
+    /* -- Actions ------------------------------------------------------------- */
+
+    .ui-alert-actions {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    /* -- Close button -------------------------------------------------------- */
+
+    .ui-alert-close {
+        flex-shrink: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.5rem;
+        margin: -0.125rem -0.125rem -0.125rem 0;
+        background: none;
+        border: none;
+        color: var(--_c5);
+        opacity: 0.7;
+        cursor: pointer;
+        border-radius: var(--ui-radius, 6px);
+    }
+
+    .ui-alert-close:hover {
+        opacity: 1;
+    }
+
+    .ui-alert-close svg {
+        width: 1.25rem;
+        height: 1.25rem;
+    }
+
+    /* ========================================================================
+       Dark mode — explicit (`data-theme="dark"`)
+       ======================================================================== */
+
+    .ui[data-theme="dark"] .ui-alert {
+        border-color: color-mix(in oklab, var(--_c4), transparent 50%);
+        background: color-mix(in oklab, var(--_c4), transparent 90%);
+    }
+
+    /* Default + zinc: subtle white border (matches Flux) */
+    .ui[data-theme="dark"] .ui-alert:not([data-color]),
+    .ui[data-theme="dark"] .ui-alert[data-color="zinc"] {
+        border-color: color-mix(in oklab, #ffffff, transparent 95%);
+    }
+
+    .ui[data-theme="dark"] .ui-alert-heading {
+        color: var(--_c2);
+    }
+
+    .ui[data-theme="dark"] .ui-alert-heading svg,
+    .ui[data-theme="dark"] .ui-alert > svg,
+    .ui[data-theme="dark"] .ui-alert-close {
+        color: var(--_c4);
+    }
+
+    .ui[data-theme="dark"] .ui-alert-text {
+        color: var(--_c3);
+    }
+
+    /* ========================================================================
+       Dark mode — automatic fallback (`prefers-color-scheme`)
+       ======================================================================== */
+
+    @media (prefers-color-scheme: dark) {
+        .ui:not([data-theme]) .ui-alert {
+            border-color: color-mix(in oklab, var(--_c4), transparent 50%);
+            background: color-mix(in oklab, var(--_c4), transparent 90%);
+        }
+
+        /* Default + zinc: subtle white border (matches Flux) */
+        .ui:not([data-theme]) .ui-alert:not([data-color]),
+        .ui:not([data-theme]) .ui-alert[data-color="zinc"] {
+            border-color: color-mix(in oklab, #ffffff, transparent 95%);
+        }
+
+        .ui:not([data-theme]) .ui-alert-heading {
+            color: var(--_c2);
+        }
+
+        .ui:not([data-theme]) .ui-alert-heading svg,
+        .ui:not([data-theme]) .ui-alert > svg,
+        .ui:not([data-theme]) .ui-alert-close {
+            color: var(--_c4);
+        }
+
+        .ui:not([data-theme]) .ui-alert-text {
+            color: var(--_c3);
+        }
+    }
+}

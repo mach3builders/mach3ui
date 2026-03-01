@@ -11,3 +11,4 @@
 /phpstan-baseline.neon  export-ignore
 /testbench.yaml     export-ignore
 /tests              export-ignore
+/docs               export-ignore

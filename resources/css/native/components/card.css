@@ -1,0 +1,42 @@
+/* ==========================================================================
+   Card — Flux-matching native CSS
+   ========================================================================== */
+
+@layer ui.components {
+
+    /* -- Base ---------------------------------------------------------------- */
+
+    .ui-card {
+        background: #ffffff;
+        border: 1px solid var(--color-gray-200);
+        border-radius: var(--ui-radius-xl, 12px);
+        padding: 1.5rem;
+    }
+
+    /* -- Small variant ------------------------------------------------------- */
+
+    .ui-card-sm {
+        border-radius: var(--ui-radius-lg, 8px);
+        padding: 1rem;
+    }
+
+    /* ========================================================================
+       Dark mode — explicit (`data-theme="dark"`)
+       ======================================================================== */
+
+    .ui[data-theme="dark"] .ui-card {
+        background: rgb(255 255 255 / 0.1);
+        border-color: rgb(255 255 255 / 0.1);
+    }
+
+    /* ========================================================================
+       Dark mode — automatic fallback (`prefers-color-scheme`)
+       ======================================================================== */
+
+    @media (prefers-color-scheme: dark) {
+        .ui:not([data-theme]) .ui-card {
+            background: rgb(255 255 255 / 0.1);
+            border-color: rgb(255 255 255 / 0.1);
+        }
+    }
+}

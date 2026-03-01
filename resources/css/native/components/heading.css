@@ -1,0 +1,98 @@
+/* ==========================================================================
+   Heading & Subheading — Flux-matching native CSS
+   ========================================================================== */
+
+@layer ui.components {
+
+    /* -- Heading ------------------------------------------------------------- */
+
+    .ui-heading {
+        font-weight: 500;
+        font-size: 0.875rem;
+        line-height: 1.25rem;
+        color: var(--color-gray-800);
+    }
+
+    .ui-heading-lg {
+        font-size: 1rem;
+        line-height: 1.5rem;
+    }
+
+    .ui-heading-xl {
+        font-size: 1.5rem;
+        line-height: 2rem;
+    }
+
+    /* Accent */
+
+    .ui-heading-accent {
+        color: var(--color-accent-content);
+    }
+
+    /* -- Subheading ---------------------------------------------------------- */
+
+    .ui-subheading {
+        font-size: 0.875rem;
+        line-height: 1.25rem;
+        color: var(--color-gray-500);
+    }
+
+    .ui-subheading-sm {
+        font-size: 0.75rem;
+        line-height: 1rem;
+    }
+
+    .ui-subheading-lg {
+        font-size: 1rem;
+        line-height: 1.5rem;
+    }
+
+    .ui-subheading-xl {
+        font-size: 1.125rem;
+        line-height: 1.75rem;
+    }
+
+    /* -- Heading + Subheading pairing ---------------------------------------- */
+
+    .ui-heading:has(+ .ui-subheading) {
+        margin-bottom: 0.5rem;
+    }
+
+    .ui-subheading + .ui-heading {
+        margin-top: 0.5rem;
+    }
+
+    /* ========================================================================
+       Dark mode — explicit (`data-theme="dark"`)
+       ======================================================================== */
+
+    .ui[data-theme="dark"] .ui-heading {
+        color: #ffffff;
+    }
+
+    .ui[data-theme="dark"] .ui-heading-accent {
+        color: var(--color-accent-content);
+    }
+
+    .ui[data-theme="dark"] .ui-subheading {
+        color: rgb(255 255 255 / 0.7);
+    }
+
+    /* ========================================================================
+       Dark mode — automatic fallback (`prefers-color-scheme`)
+       ======================================================================== */
+
+    @media (prefers-color-scheme: dark) {
+        .ui:not([data-theme]) .ui-heading {
+            color: #ffffff;
+        }
+
+        .ui:not([data-theme]) .ui-heading-accent {
+            color: var(--color-accent-content);
+        }
+
+        .ui:not([data-theme]) .ui-subheading {
+            color: rgb(255 255 255 / 0.7);
+        }
+    }
+}
