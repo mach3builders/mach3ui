@@ -26,6 +26,8 @@
 @import "components/select.css";
 @import "components/separator.css";
 @import "components/switch.css";
+@import "components/table.css";
 @import "components/tabs.css";
 @import "components/textarea.css";
+@import "components/toast.css";
 @import "utilities.css";

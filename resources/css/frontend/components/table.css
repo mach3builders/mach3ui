@@ -1,0 +1,227 @@
+/* ==========================================================================
+   Table — Flux-matching native CSS
+
+   <table class="ui-table">
+     <thead>
+       <tr>
+         <th>Name</th>
+         <th>Email</th>
+       </tr>
+     </thead>
+     <tbody>
+       <tr>
+         <td class="ui-table-cell-strong">John Doe</td>
+         <td>john@example.com</td>
+       </tr>
+     </tbody>
+   </table>
+   ========================================================================== */
+
+@layer ui.components {
+
+    /* -- Table --------------------------------------------------------------- */
+
+    .ui-table {
+        min-width: 100%;
+        table-layout: fixed;
+        border-collapse: separate;
+        border-spacing: 0;
+        isolation: isolate;
+        color: var(--color-gray-800);
+        white-space: nowrap;
+    }
+
+    /* -- Header (th) --------------------------------------------------------- */
+
+    .ui-table th {
+        padding: 0.75rem;
+        text-align: start;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: var(--color-gray-800);
+        border-bottom: 1px solid color-mix(in oklab, var(--color-gray-800) 10%, transparent);
+    }
+
+    .ui-table th:first-child {
+        padding-inline-start: 0;
+    }
+
+    .ui-table th:last-child {
+        padding-inline-end: 0;
+    }
+
+    /* -- Body cell (td) ------------------------------------------------------ */
+
+    .ui-table td {
+        padding: 0.75rem;
+        font-size: 0.875rem;
+        color: var(--color-gray-500);
+    }
+
+    .ui-table td:first-child {
+        padding-inline-start: 0;
+    }
+
+    .ui-table td:last-child {
+        padding-inline-end: 0;
+    }
+
+    /* Row borders (skip first row) */
+    .ui-table tbody tr:not(:first-child) td {
+        border-top: 1px solid color-mix(in oklab, var(--color-gray-800) 10%, transparent);
+    }
+
+    /* -- Strong cell --------------------------------------------------------- */
+
+    .ui-table-cell-strong {
+        font-weight: 500;
+        color: var(--color-gray-800);
+    }
+
+    /* -- Alignment ----------------------------------------------------------- */
+
+    .ui-table-center {
+        text-align: center;
+    }
+
+    .ui-table-end {
+        text-align: end;
+    }
+
+    /* -- Sortable column header ---------------------------------------------- */
+
+    .ui-table-sortable {
+        cursor: pointer;
+    }
+
+    .ui-table-sortable > button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+        margin-block: -0.25rem;
+        margin-inline: -0.5rem;
+        padding: 0.25rem 0.5rem;
+        font: inherit;
+        color: inherit;
+        background: none;
+        border: none;
+        cursor: pointer;
+    }
+
+    .ui-table-sortable > button > svg {
+        width: 0.75rem;
+        height: 0.75rem;
+        flex-shrink: 0;
+        color: var(--color-gray-400);
+        opacity: 0;
+        transition: opacity 0.15s;
+    }
+
+    .ui-table-sortable:hover > button > svg {
+        opacity: 1;
+        color: var(--color-gray-800);
+    }
+
+    /* Active sort */
+    .ui-table-sorted > button > svg {
+        opacity: 1;
+    }
+
+    .ui-table-sorted-desc > button > svg {
+        transform: rotate(180deg);
+    }
+
+    /* -- Sticky header ------------------------------------------------------- */
+
+    .ui-table-sticky thead {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+    }
+
+    .ui-table-sticky thead th {
+        background: #ffffff;
+    }
+
+    /* -- Scroll container ---------------------------------------------------- */
+
+    .ui-table-container {
+        overflow-x: auto;
+    }
+
+    /* ========================================================================
+       Dark mode — explicit (`data-theme="dark"`)
+       ======================================================================== */
+
+    .ui[data-theme="dark"] .ui-table {
+        color: #ffffff;
+    }
+
+    .ui[data-theme="dark"] .ui-table th {
+        color: #ffffff;
+        border-bottom-color: rgb(255 255 255 / 0.2);
+    }
+
+    .ui[data-theme="dark"] .ui-table td {
+        color: var(--color-gray-300);
+    }
+
+    .ui[data-theme="dark"] .ui-table tbody tr:not(:first-child) td {
+        border-top-color: rgb(255 255 255 / 0.2);
+    }
+
+    .ui[data-theme="dark"] .ui-table-cell-strong {
+        color: #ffffff;
+    }
+
+    .ui[data-theme="dark"] .ui-table-sortable > button > svg {
+        color: var(--color-gray-400);
+    }
+
+    .ui[data-theme="dark"] .ui-table-sortable:hover > button > svg {
+        color: #ffffff;
+    }
+
+    .ui[data-theme="dark"] .ui-table-sticky thead th {
+        background: var(--color-gray-900);
+    }
+
+    /* ========================================================================
+       Dark mode — automatic fallback (`prefers-color-scheme`)
+       ======================================================================== */
+
+    @media (prefers-color-scheme: dark) {
+        .ui:not([data-theme]) .ui-table {
+            color: #ffffff;
+        }
+
+        .ui:not([data-theme]) .ui-table th {
+            color: #ffffff;
+            border-bottom-color: rgb(255 255 255 / 0.2);
+        }
+
+        .ui:not([data-theme]) .ui-table td {
+            color: var(--color-gray-300);
+        }
+
+        .ui:not([data-theme]) .ui-table tbody tr:not(:first-child) td {
+            border-top-color: rgb(255 255 255 / 0.2);
+        }
+
+        .ui:not([data-theme]) .ui-table-cell-strong {
+            color: #ffffff;
+        }
+
+        .ui:not([data-theme]) .ui-table-sortable > button > svg {
+            color: var(--color-gray-400);
+        }
+
+        .ui:not([data-theme]) .ui-table-sortable:hover > button > svg {
+            color: #ffffff;
+        }
+
+        .ui:not([data-theme]) .ui-table-sticky thead th {
+            background: var(--color-gray-900);
+        }
+    }
+}
