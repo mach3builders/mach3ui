@@ -87,7 +87,9 @@
     /* -- Focus --------------------------------------------------------------- */
 
     .ui-checkbox input[type="checkbox"]:focus-visible {
-        outline: 2px solid var(--color-gray-800);
+        outline: auto;
+        outline-color: Highlight;
+        outline-color: -webkit-focus-ring-color;
         outline-offset: 2px;
     }
 

@@ -64,18 +64,6 @@
         padding-bottom: 0.375rem;
     }
 
-    /* -- Focus --------------------------------------------------------------- */
-
-    .ui-input:focus {
-        outline: none;
-        border-color: var(--color-gray-800);
-        box-shadow: 0 0 0 1px var(--color-gray-800);
-    }
-
-    .ui-input-filled:focus {
-        box-shadow: 0 0 0 1px var(--color-gray-800);
-    }
-
     /* -- Disabled ------------------------------------------------------------ */
 
     .ui-input:disabled {
@@ -105,9 +93,45 @@
         box-shadow: none;
     }
 
-    .ui-input[data-invalid]:focus,
-    .ui-input[aria-invalid="true"]:focus {
-        box-shadow: 0 0 0 1px oklch(63.7% 0.237 25.331);
+    /* -- File input ---------------------------------------------------------- */
+
+    .ui-input-file {
+        width: 100%;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: var(--color-gray-500);
+        background: transparent;
+        border: none;
+        box-shadow: none;
+        padding: 0;
+        height: auto;
+        cursor: default;
+    }
+
+    .ui-input-file::file-selector-button {
+        appearance: none;
+        font-family: inherit;
+        font-size: 0.875rem;
+        font-weight: 500;
+        line-height: 1.25rem;
+        height: 2.5rem;
+        padding: 0 1rem;
+        margin-inline-end: 1rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        white-space: nowrap;
+        background: #ffffff;
+        color: var(--color-gray-800);
+        border: 1px solid var(--color-gray-200);
+        border-bottom-color: color-mix(in oklab, var(--color-gray-300) 80%, transparent);
+        border-radius: var(--ui-radius-lg, 8px);
+        box-shadow: var(--ui-shadow-xs);
+        cursor: pointer;
+    }
+
+    .ui-input-file::file-selector-button:hover {
+        background: var(--color-gray-50);
     }
 
     /* -- Icon wrapper -------------------------------------------------------- */
@@ -138,6 +162,96 @@
     .ui-input-group > .ui-input-icon > svg {
         width: 1rem;
         height: 1rem;
+    }
+
+    /* -- Combo group (prefix + input + suffix) ------------------------------- */
+
+    .ui-input-combo {
+        width: 100%;
+        display: flex;
+    }
+
+    .ui-input-combo > .ui-input-group,
+    .ui-input-combo > .ui-input {
+        flex-grow: 1;
+        min-width: 0;
+    }
+
+    /* Focus ring on group wrapper instead of individual input */
+    .ui-input-combo:has(:focus-visible) {
+        outline: auto;
+        outline-color: Highlight;
+        outline-color: -webkit-focus-ring-color;
+        border-radius: var(--ui-radius-lg, 8px);
+    }
+
+    .ui-input-combo :focus-visible {
+        outline: none;
+    }
+
+    /* Prefix */
+
+    .ui-input-combo-prefix {
+        display: flex;
+        align-items: center;
+        padding: 0 1rem;
+        font-size: 0.875rem;
+        white-space: nowrap;
+        color: var(--color-gray-800);
+        background: color-mix(in oklab, var(--color-gray-800) 5%, transparent);
+        border: 1px solid var(--color-gray-200);
+        border-inline-end-width: 0;
+        border-start-start-radius: var(--ui-radius-lg, 8px);
+        border-end-start-radius: var(--ui-radius-lg, 8px);
+        box-shadow: var(--ui-shadow-xs);
+    }
+
+    /* Suffix */
+
+    .ui-input-combo-suffix {
+        display: flex;
+        align-items: center;
+        padding: 0 1rem;
+        font-size: 0.875rem;
+        white-space: nowrap;
+        color: var(--color-gray-800);
+        background: color-mix(in oklab, var(--color-gray-800) 5%, transparent);
+        border: 1px solid var(--color-gray-200);
+        border-inline-start-width: 0;
+        border-start-end-radius: var(--ui-radius-lg, 8px);
+        border-end-end-radius: var(--ui-radius-lg, 8px);
+        box-shadow: var(--ui-shadow-xs);
+    }
+
+    /* Radius welding: reset all input radius inside combo */
+    .ui-input-combo .ui-input {
+        border-radius: 0;
+    }
+
+    /* Keep start radius when input container is first child */
+    .ui-input-combo > :first-child > .ui-input,
+    .ui-input-combo > .ui-input:first-child {
+        border-start-start-radius: var(--ui-radius-lg, 8px);
+        border-end-start-radius: var(--ui-radius-lg, 8px);
+    }
+
+    /* Keep end radius when input container is last child */
+    .ui-input-combo > :last-child > .ui-input,
+    .ui-input-combo > .ui-input:last-child {
+        border-start-end-radius: var(--ui-radius-lg, 8px);
+        border-end-end-radius: var(--ui-radius-lg, 8px);
+    }
+
+    /* Remove start border after prefix (unless invalid) */
+    .ui-input-combo > :not(:first-child) > .ui-input:not([data-invalid]),
+    .ui-input-combo > .ui-input:not(:first-child):not([data-invalid]) {
+        border-inline-start-width: 0;
+    }
+
+    /* Remove end border before suffix (unless invalid) */
+    .ui-input-combo > :has(+ .ui-input-combo-suffix) > .ui-input:not([data-invalid]),
+    .ui-input-combo > .ui-input:has(+ .ui-input-combo-suffix):not([data-invalid]) {
+        border-inline-end-width: 0;
     }
 
     /* ========================================================================
@@ -189,13 +303,31 @@
         border-color: oklch(63.7% 0.237 25.331);
     }
 
-    .ui[data-theme="dark"] .ui-input:focus {
-        border-color: #ffffff;
-        box-shadow: 0 0 0 1px #ffffff;
+    .ui[data-theme="dark"] .ui-input-file {
+        color: var(--color-gray-400);
+    }
+
+    .ui[data-theme="dark"] .ui-input-file::file-selector-button {
+        background: var(--color-gray-700);
+        color: #ffffff;
+        border-color: var(--color-gray-600);
+        border-bottom-color: var(--color-gray-600);
+        box-shadow: none;
+    }
+
+    .ui[data-theme="dark"] .ui-input-file::file-selector-button:hover {
+        background: color-mix(in oklab, var(--color-gray-600) 75%, transparent);
     }
 
     .ui[data-theme="dark"] .ui-input-group > .ui-input-icon {
         color: rgb(255 255 255 / 0.6);
+    }
+
+    .ui[data-theme="dark"] .ui-input-combo-prefix,
+    .ui[data-theme="dark"] .ui-input-combo-suffix {
+        color: var(--color-gray-200);
+        background: rgb(255 255 255 / 0.2);
+        border-color: rgb(255 255 255 / 0.1);
     }
 
     /* ========================================================================
@@ -248,13 +380,31 @@
             border-color: oklch(63.7% 0.237 25.331);
         }
 
-        .ui:not([data-theme]) .ui-input:focus {
-            border-color: #ffffff;
-            box-shadow: 0 0 0 1px #ffffff;
+        .ui:not([data-theme]) .ui-input-file {
+            color: var(--color-gray-400);
+        }
+
+        .ui:not([data-theme]) .ui-input-file::file-selector-button {
+            background: var(--color-gray-700);
+            color: #ffffff;
+            border-color: var(--color-gray-600);
+            border-bottom-color: var(--color-gray-600);
+            box-shadow: none;
+        }
+
+        .ui:not([data-theme]) .ui-input-file::file-selector-button:hover {
+            background: color-mix(in oklab, var(--color-gray-600) 75%, transparent);
         }
 
         .ui:not([data-theme]) .ui-input-group > .ui-input-icon {
             color: rgb(255 255 255 / 0.6);
+        }
+
+        .ui:not([data-theme]) .ui-input-combo-prefix,
+        .ui:not([data-theme]) .ui-input-combo-suffix {
+            color: var(--color-gray-200);
+            background: rgb(255 255 255 / 0.2);
+            border-color: rgb(255 255 255 / 0.1);
         }
     }
 }
