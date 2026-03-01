@@ -5,6 +5,8 @@
 @import "reset.css";
 @import "tokens.css";
 @import "base.css";
+@import "components/heading.css";
+@import "components/text.css";
 @import "components/button.css";
 @import "components/badge.css";
 @import "components/alert.css";
