@@ -6,4 +6,5 @@
 @import "tokens.css";
 @import "base.css";
 @import "components/button.css";
+@import "components/badge.css";
 @import "utilities.css";

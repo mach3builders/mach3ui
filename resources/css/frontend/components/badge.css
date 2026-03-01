@@ -1,0 +1,143 @@
+/* ==========================================================================
+   Badge — Flux-matching native CSS
+   ========================================================================== */
+
+@layer ui.components {
+
+    /* -- Color tokens (per badge, overridden by data-color) ----------------- */
+
+    .ui-badge {
+        --_c2: var(--color-gray-200);
+        --_c4: var(--color-gray-400);
+        --_c6: var(--color-gray-600);
+        --_c7: var(--color-gray-700);
+    }
+
+    .ui-badge[data-color="red"]     { --_c2: oklch(88.5% 0.062 18.334);  --_c4: oklch(70.4% 0.191 22.216);  --_c6: oklch(57.7% 0.245 27.325);  --_c7: oklch(50.5% 0.213 27.518);  }
+    .ui-badge[data-color="orange"]  { --_c2: oklch(90.1% 0.076 70.697);  --_c4: oklch(75% 0.183 55.934);    --_c6: oklch(64.6% 0.222 41.116);  --_c7: oklch(55.3% 0.195 38.402);  }
+    .ui-badge[data-color="amber"]   { --_c2: oklch(92.4% 0.12 95.746);   --_c4: oklch(82.8% 0.189 84.429);  --_c6: oklch(66.6% 0.179 58.318);  --_c7: oklch(55.5% 0.163 48.998);  }
+    .ui-badge[data-color="yellow"]  { --_c2: oklch(94.5% 0.129 101.54);  --_c4: oklch(85.2% 0.199 91.936);  --_c6: oklch(68.1% 0.162 75.834);  --_c7: oklch(55.4% 0.135 66.442);  }
+    .ui-badge[data-color="lime"]    { --_c2: oklch(93.8% 0.127 124.321); --_c4: oklch(84.1% 0.238 128.85);  --_c6: oklch(64.8% 0.2 131.684);   --_c7: oklch(53.2% 0.157 131.589); }
+    .ui-badge[data-color="green"]   { --_c2: oklch(92.5% 0.084 155.995); --_c4: oklch(79.2% 0.209 151.711); --_c6: oklch(62.7% 0.194 149.214); --_c7: oklch(52.7% 0.154 150.069); }
+    .ui-badge[data-color="emerald"] { --_c2: oklch(92.9% 0.07 164.15);   --_c4: oklch(76.5% 0.177 163.223); --_c6: oklch(59.6% 0.145 163.225); --_c7: oklch(50.8% 0.118 165.612); }
+    .ui-badge[data-color="teal"]    { --_c2: oklch(93.1% 0.051 180.801); --_c4: oklch(77.7% 0.152 181.912); --_c6: oklch(60% 0.118 184.704);   --_c7: oklch(51.1% 0.096 186.391); }
+    .ui-badge[data-color="cyan"]    { --_c2: oklch(93.2% 0.063 210.843); --_c4: oklch(78.9% 0.154 211.53);  --_c6: oklch(60.9% 0.126 221.723); --_c7: oklch(50.8% 0.103 223.128); }
+    .ui-badge[data-color="sky"]     { --_c2: oklch(91.6% 0.058 230.902); --_c4: oklch(74.6% 0.16 232.661);  --_c6: oklch(58.8% 0.158 241.966); --_c7: oklch(50% 0.134 242.749);   }
+    .ui-badge[data-color="blue"]    { --_c2: oklch(88.2% 0.059 254.128); --_c4: oklch(70.7% 0.165 254.624); --_c6: oklch(54.6% 0.245 262.881); --_c7: oklch(48.8% 0.243 264.376); }
+    .ui-badge[data-color="indigo"]  { --_c2: oklch(87% 0.065 274.039);   --_c4: oklch(67.3% 0.17 276.935);  --_c6: oklch(51.1% 0.262 276.966); --_c7: oklch(45.7% 0.239 277.023); }
+    .ui-badge[data-color="violet"]  { --_c2: oklch(86.6% 0.075 292.756); --_c4: oklch(70.2% 0.183 293.541); --_c6: oklch(54.1% 0.281 293.009); --_c7: oklch(49.1% 0.27 292.581);  }
+    .ui-badge[data-color="purple"]  { --_c2: oklch(87% 0.084 305.834);   --_c4: oklch(71.4% 0.203 305.504); --_c6: oklch(55.8% 0.288 302.321); --_c7: oklch(49.6% 0.265 301.924); }
+    .ui-badge[data-color="fuchsia"] { --_c2: oklch(88.3% 0.096 320.364); --_c4: oklch(74% 0.238 322.16);    --_c6: oklch(59.1% 0.293 322.896); --_c7: oklch(51.8% 0.253 323.949); }
+    .ui-badge[data-color="pink"]    { --_c2: oklch(89.2% 0.069 349.573); --_c4: oklch(71.8% 0.202 349.761); --_c6: oklch(59.2% 0.249 0.584);   --_c7: oklch(52.5% 0.223 3.958);   }
+    .ui-badge[data-color="rose"]    { --_c2: oklch(89.6% 0.059 10.417);  --_c4: oklch(71.2% 0.194 13.428);  --_c6: oklch(58.6% 0.253 17.585);  --_c7: oklch(51.4% 0.227 16.935);  }
+
+    /* -- Base (soft is the default variant) ---------------------------------- */
+
+    .ui-badge {
+        display: inline-flex;
+        align-items: center;
+        font-family: inherit;
+        font-size: 0.875rem;
+        font-weight: 500;
+        line-height: 1;
+        white-space: nowrap;
+        padding: 0.25rem 0.5rem;
+        border-radius: var(--ui-radius, 6px);
+        color: var(--_c7);
+        background: color-mix(in oklab, var(--_c4), transparent 85%);
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+    }
+
+    /* -- Solid variant ------------------------------------------------------- */
+
+    .ui-badge-solid {
+        color: #ffffff;
+        background: var(--_c6);
+    }
+
+    /* -- Sizes --------------------------------------------------------------- */
+
+    .ui-badge-sm {
+        font-size: 0.75rem;
+    }
+
+    .ui-badge-lg {
+        padding: 0.375rem 0.5rem;
+    }
+
+    /* -- Pill (full rounded) ------------------------------------------------- */
+
+    .ui-badge-pill {
+        border-radius: var(--ui-radius-full, 9999px);
+        padding-inline: 0.75rem;
+    }
+
+    /* -- Inline SVG (icons) -------------------------------------------------- */
+
+    .ui-badge svg {
+        width: 0.875rem;
+        height: 0.875rem;
+        flex-shrink: 0;
+    }
+
+    .ui-badge-sm svg {
+        width: 0.75rem;
+        height: 0.75rem;
+    }
+
+    /* -- Close button -------------------------------------------------------- */
+
+    .ui-badge-close {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.25rem;
+        margin: -0.25rem -0.25rem -0.25rem 0.125rem;
+        background: none;
+        border: none;
+        color: inherit;
+        opacity: 0.5;
+        cursor: pointer;
+        border-radius: var(--ui-radius-sm, 2px);
+    }
+
+    .ui-badge-close:hover {
+        opacity: 1;
+    }
+
+    .ui-badge-close svg {
+        width: 0.75rem;
+        height: 0.75rem;
+    }
+
+    /* ========================================================================
+       Dark mode — explicit (`data-theme="dark"`)
+       ======================================================================== */
+
+    .ui[data-theme="dark"] .ui-badge {
+        color: var(--_c2);
+        background: color-mix(in oklab, var(--_c4), transparent 60%);
+    }
+
+    .ui[data-theme="dark"] .ui-badge-solid {
+        color: #ffffff;
+        background: var(--_c6);
+    }
+
+    /* ========================================================================
+       Dark mode — automatic fallback (`prefers-color-scheme`)
+       ======================================================================== */
+
+    @media (prefers-color-scheme: dark) {
+        .ui:not([data-theme]) .ui-badge {
+            color: var(--_c2);
+            background: color-mix(in oklab, var(--_c4), transparent 60%);
+        }
+
+        .ui:not([data-theme]) .ui-badge-solid {
+            color: #ffffff;
+            background: var(--_c6);
+        }
+    }
+}
