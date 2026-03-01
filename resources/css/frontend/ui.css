@@ -15,4 +15,7 @@
 @import "components/field.css";
 @import "components/file-upload.css";
 @import "components/input.css";
+@import "components/accordion.css";
+@import "components/avatar.css";
+@import "components/breadcrumbs.css";
 @import "utilities.css";
