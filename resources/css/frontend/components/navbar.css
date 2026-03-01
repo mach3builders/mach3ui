@@ -3,7 +3,6 @@
    ========================================================================== */
 
 @layer ui.components {
-
     /* ========================================================================
        Navbar (horizontal)
        ======================================================================== */
@@ -31,7 +30,9 @@
         white-space: nowrap;
         color: var(--color-gray-500);
         text-decoration: none;
-        transition: color 0.15s, background-color 0.15s;
+        transition:
+            color 0.15s,
+            background-color 0.15s;
     }
 
     .ui-navbar-item:hover {
@@ -46,12 +47,16 @@
 
     .ui-navbar-item[data-current]:hover {
         color: var(--color-accent-content, var(--color-gray-800));
-        background: color-mix(in oklab, var(--color-accent-content, var(--color-gray-800)) 10%, transparent);
+        background: color-mix(
+            in oklab,
+            var(--color-accent-content, var(--color-gray-800)) 10%,
+            transparent
+        );
     }
 
     /* Active bar */
     .ui-navbar-item[data-current]::after {
-        content: '';
+        content: "";
         position: absolute;
         bottom: -0.75rem;
         inset-inline: 0;
@@ -102,7 +107,9 @@
         white-space: nowrap;
         color: var(--color-gray-500);
         text-decoration: none;
-        transition: color 0.15s, background-color 0.15s;
+        transition:
+            color 0.15s,
+            background-color 0.15s;
     }
 
     @media (min-width: 1024px) {
@@ -159,6 +166,10 @@
         color: var(--color-gray-400);
     }
 
+    .ui-navlist-heading:not(:first-child) {
+        margin-top: 1.5rem;
+    }
+
     /* -- Expandable group (details/summary) ---------------------------------- */
 
     .ui-navlist-group > summary {
@@ -174,7 +185,9 @@
         color: var(--color-gray-500);
         cursor: pointer;
         list-style: none;
-        transition: color 0.15s, background-color 0.15s;
+        transition:
+            color 0.15s,
+            background-color 0.15s;
     }
 
     @media (min-width: 1024px) {
@@ -212,7 +225,7 @@
     }
 
     .ui-navlist-group-content::before {
-        content: '';
+        content: "";
         position: absolute;
         inset-block: 3px;
         inset-inline-start: 1rem;
@@ -235,7 +248,11 @@
     }
 
     .ui[data-theme="dark"] .ui-navbar-item[data-current]:hover {
-        background: color-mix(in oklab, var(--color-accent-content, #ffffff) 10%, transparent);
+        background: color-mix(
+            in oklab,
+            var(--color-accent-content, #ffffff) 10%,
+            transparent
+        );
     }
 
     .ui[data-theme="dark"] .ui-navbar-item[data-current]::after {
@@ -305,7 +322,11 @@
         }
 
         .ui:not([data-theme]) .ui-navbar-item[data-current]:hover {
-            background: color-mix(in oklab, var(--color-accent-content, #ffffff) 10%, transparent);
+            background: color-mix(
+                in oklab,
+                var(--color-accent-content, #ffffff) 10%,
+                transparent
+            );
         }
 
         .ui:not([data-theme]) .ui-navbar-item[data-current]::after {
@@ -335,7 +356,9 @@
             background: rgb(255 255 255 / 0.07);
         }
 
-        .ui:not([data-theme]) .ui-navlist-outline .ui-navlist-item[data-current] {
+        .ui:not([data-theme])
+            .ui-navlist-outline
+            .ui-navlist-item[data-current] {
             background: rgb(255 255 255 / 0.07);
             border-color: transparent;
             box-shadow: none;
