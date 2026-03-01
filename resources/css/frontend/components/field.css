@@ -1,0 +1,129 @@
+/* ==========================================================================
+   Field, Label, Description, Error — Flux-matching native CSS
+   ========================================================================== */
+
+@layer ui.components {
+
+    /* -- Field (block layout) ------------------------------------------------ */
+
+    .ui-field {
+        display: block;
+        min-width: 0;
+    }
+
+    /* Label → control spacing */
+    .ui-field > .ui-label {
+        margin-bottom: 0.75rem;
+    }
+
+    /* Label followed by description → tighter spacing */
+    .ui-field > .ui-label:has(+ .ui-description) {
+        margin-bottom: 0.5rem;
+    }
+
+    /* Description after label */
+    .ui-field > .ui-label + .ui-description {
+        margin-top: 0;
+        margin-bottom: 0.75rem;
+    }
+
+    /* Description after control (trailing) */
+    .ui-field > *:not(.ui-label) + .ui-description {
+        margin-top: 0.75rem;
+    }
+
+    /* Dim label when control is disabled */
+    .ui-field:has(input:disabled) > .ui-label,
+    .ui-field:has(select:disabled) > .ui-label,
+    .ui-field:has(textarea:disabled) > .ui-label {
+        opacity: 0.5;
+    }
+
+    /* -- Label --------------------------------------------------------------- */
+
+    .ui-label {
+        display: inline-flex;
+        align-items: center;
+        font-size: 0.875rem;
+        font-weight: 500;
+        line-height: 1.25rem;
+        color: var(--color-gray-800);
+    }
+
+    .ui-label-badge {
+        margin-inline-start: 0.375rem;
+        font-size: 0.75rem;
+        font-weight: 400;
+        color: color-mix(in oklab, var(--color-gray-800) 70%, transparent);
+        background: color-mix(in oklab, var(--color-gray-800) 5%, transparent);
+        padding: 0.25rem 0.375rem;
+        margin-block: -0.25rem;
+        border-radius: 4px;
+    }
+
+    /* -- Description --------------------------------------------------------- */
+
+    .ui-description {
+        font-size: 0.875rem;
+        line-height: 1.25rem;
+        color: var(--color-gray-500);
+    }
+
+    /* -- Error --------------------------------------------------------------- */
+
+    .ui-error {
+        margin-top: 0.75rem;
+        font-size: 0.875rem;
+        line-height: 1.25rem;
+        font-weight: 500;
+        color: oklch(63.7% 0.237 25.331);
+    }
+
+    .ui-error:empty {
+        display: none;
+    }
+
+    /* ========================================================================
+       Dark mode — explicit (`data-theme="dark"`)
+       ======================================================================== */
+
+    .ui[data-theme="dark"] .ui-label {
+        color: #ffffff;
+    }
+
+    .ui[data-theme="dark"] .ui-label-badge {
+        color: var(--color-gray-300);
+        background: rgb(255 255 255 / 0.1);
+    }
+
+    .ui[data-theme="dark"] .ui-description {
+        color: rgb(255 255 255 / 0.6);
+    }
+
+    .ui[data-theme="dark"] .ui-error {
+        color: oklch(70.4% 0.191 22.216);
+    }
+
+    /* ========================================================================
+       Dark mode — automatic fallback (`prefers-color-scheme`)
+       ======================================================================== */
+
+    @media (prefers-color-scheme: dark) {
+        .ui:not([data-theme]) .ui-label {
+            color: #ffffff;
+        }
+
+        .ui:not([data-theme]) .ui-label-badge {
+            color: var(--color-gray-300);
+            background: rgb(255 255 255 / 0.1);
+        }
+
+        .ui:not([data-theme]) .ui-description {
+            color: rgb(255 255 255 / 0.6);
+        }
+
+        .ui:not([data-theme]) .ui-error {
+            color: oklch(70.4% 0.191 22.216);
+        }
+    }
+}

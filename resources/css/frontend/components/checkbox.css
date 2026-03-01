@@ -1,0 +1,156 @@
+/* ==========================================================================
+   Checkbox — Flux-matching native CSS
+   ========================================================================== */
+
+@layer ui.components {
+
+    /* -- Container ----------------------------------------------------------- */
+
+    .ui-checkbox {
+        display: inline-flex;
+        align-items: flex-start;
+        gap: 0.75rem;
+        cursor: pointer;
+        font-size: 0.875rem;
+        font-weight: 500;
+        line-height: 1.25rem;
+        color: var(--color-gray-800);
+    }
+
+    .ui-checkbox:has(input:disabled) {
+        cursor: default;
+    }
+
+    /* -- Input --------------------------------------------------------------- */
+
+    .ui-checkbox input[type="checkbox"] {
+        appearance: none;
+        -webkit-appearance: none;
+        position: relative;
+        width: 1.125rem;
+        height: 1.125rem;
+        flex-shrink: 0;
+        border-radius: 0.3rem;
+        border: 1px solid var(--color-gray-300);
+        background: #ffffff;
+        box-shadow: var(--ui-shadow-xs);
+        margin-top: 1px;
+        outline-offset: 2px;
+        cursor: pointer;
+    }
+
+    /* -- Checked ------------------------------------------------------------- */
+
+    .ui-checkbox input[type="checkbox"]:checked,
+    .ui-checkbox input[type="checkbox"]:indeterminate {
+        background-color: var(--color-accent);
+        border-color: transparent;
+        box-shadow: none;
+    }
+
+    .ui-checkbox input[type="checkbox"]:checked::after,
+    .ui-checkbox input[type="checkbox"]:indeterminate::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: var(--color-accent-foreground);
+        -webkit-mask-size: 100%;
+        mask-size: 100%;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+    }
+
+    .ui-checkbox input[type="checkbox"]:checked::after {
+        -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='black'%3E%3Cpath fill-rule='evenodd' d='M12.416 3.376a.75.75 0 0 1 .208 1.04l-5 7.5a.75.75 0 0 1-1.154.114l-3-3a.75.75 0 0 1 1.06-1.06l2.353 2.353 4.493-6.74a.75.75 0 0 1 1.04-.207Z' clip-rule='evenodd'/%3E%3C/svg%3E");
+        mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='black'%3E%3Cpath fill-rule='evenodd' d='M12.416 3.376a.75.75 0 0 1 .208 1.04l-5 7.5a.75.75 0 0 1-1.154.114l-3-3a.75.75 0 0 1 1.06-1.06l2.353 2.353 4.493-6.74a.75.75 0 0 1 1.04-.207Z' clip-rule='evenodd'/%3E%3C/svg%3E");
+    }
+
+    .ui-checkbox input[type="checkbox"]:indeterminate::after {
+        -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='black'%3E%3Cpath d='M3.75 7.25a.75.75 0 0 0 0 1.5h8.5a.75.75 0 0 0 0-1.5h-8.5Z'/%3E%3C/svg%3E");
+        mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='black'%3E%3Cpath d='M3.75 7.25a.75.75 0 0 0 0 1.5h8.5a.75.75 0 0 0 0-1.5h-8.5Z'/%3E%3C/svg%3E");
+    }
+
+    /* -- Disabled ------------------------------------------------------------ */
+
+    .ui-checkbox input[type="checkbox"]:disabled {
+        opacity: 0.75;
+        border-color: var(--color-gray-200);
+        box-shadow: none;
+        cursor: default;
+    }
+
+    .ui-checkbox input[type="checkbox"]:checked:disabled,
+    .ui-checkbox input[type="checkbox"]:indeterminate:disabled {
+        opacity: 0.5;
+    }
+
+    /* -- Focus --------------------------------------------------------------- */
+
+    .ui-checkbox input[type="checkbox"]:focus-visible {
+        outline: 2px solid var(--color-accent, var(--color-gray-800));
+        outline-offset: 2px;
+    }
+
+    /* -- Label & Description ------------------------------------------------- */
+
+    .ui-checkbox-description {
+        font-weight: 400;
+        color: var(--color-gray-500);
+    }
+
+    /* ========================================================================
+       Dark mode — explicit (`data-theme="dark"`)
+       ======================================================================== */
+
+    .ui[data-theme="dark"] .ui-checkbox {
+        color: #ffffff;
+    }
+
+    .ui[data-theme="dark"] .ui-checkbox input[type="checkbox"] {
+        background: rgb(255 255 255 / 0.1);
+        border-color: rgb(255 255 255 / 0.1);
+    }
+
+    .ui[data-theme="dark"] .ui-checkbox input[type="checkbox"]:checked,
+    .ui[data-theme="dark"] .ui-checkbox input[type="checkbox"]:indeterminate {
+        background-color: var(--color-accent);
+        border-color: transparent;
+    }
+
+    .ui[data-theme="dark"] .ui-checkbox input[type="checkbox"]:disabled {
+        border-color: rgb(255 255 255 / 0.05);
+    }
+
+    .ui[data-theme="dark"] .ui-checkbox-description {
+        color: rgb(255 255 255 / 0.6);
+    }
+
+    /* ========================================================================
+       Dark mode — automatic fallback (`prefers-color-scheme`)
+       ======================================================================== */
+
+    @media (prefers-color-scheme: dark) {
+        .ui:not([data-theme]) .ui-checkbox {
+            color: #ffffff;
+        }
+
+        .ui:not([data-theme]) .ui-checkbox input[type="checkbox"] {
+            background: rgb(255 255 255 / 0.1);
+            border-color: rgb(255 255 255 / 0.1);
+        }
+
+        .ui:not([data-theme]) .ui-checkbox input[type="checkbox"]:checked,
+        .ui:not([data-theme]) .ui-checkbox input[type="checkbox"]:indeterminate {
+            background-color: var(--color-accent);
+            border-color: transparent;
+        }
+
+        .ui:not([data-theme]) .ui-checkbox input[type="checkbox"]:disabled {
+            border-color: rgb(255 255 255 / 0.05);
+        }
+
+        .ui:not([data-theme]) .ui-checkbox-description {
+            color: rgb(255 255 255 / 0.6);
+        }
+    }
+}
