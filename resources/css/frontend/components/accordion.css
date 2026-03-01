@@ -1,0 +1,168 @@
+/* ==========================================================================
+   Accordion — Flux-matching native CSS
+   Uses <details>/<summary> for JS-free toggle. Add shared `name` attribute
+   for exclusive mode (one open at a time).
+   ========================================================================== */
+
+@layer ui.components {
+
+    /* -- Container ----------------------------------------------------------- */
+
+    .ui-accordion {
+        display: block;
+    }
+
+    /* -- Item ---------------------------------------------------------------- */
+
+    .ui-accordion-item {
+        display: block;
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid color-mix(in oklab, var(--color-gray-800) 10%, transparent);
+    }
+
+    .ui-accordion-item:first-child {
+        padding-top: 0;
+    }
+
+    .ui-accordion-item:last-child {
+        padding-bottom: 0;
+        border-bottom: none;
+    }
+
+    /* -- Heading (summary) --------------------------------------------------- */
+
+    .ui-accordion-heading {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        font-size: 0.875rem;
+        font-weight: 500;
+        text-align: start;
+        color: var(--color-gray-800);
+        cursor: pointer;
+        list-style: none;
+    }
+
+    .ui-accordion-heading::-webkit-details-marker {
+        display: none;
+    }
+
+    /* -- Icon ---------------------------------------------------------------- */
+
+    .ui-accordion-heading > svg {
+        margin-inline-start: 1.5rem;
+        color: var(--color-gray-300);
+        width: 1.25rem;
+        height: 1.25rem;
+        flex-shrink: 0;
+        transition: transform 150ms ease;
+    }
+
+    .ui-accordion-heading:hover > svg {
+        color: var(--color-gray-800);
+    }
+
+    .ui-accordion-item[open] > .ui-accordion-heading > svg {
+        transform: rotate(180deg);
+    }
+
+    /* -- Content ------------------------------------------------------------- */
+
+    .ui-accordion-content {
+        padding-top: 0.5rem;
+        font-size: 0.875rem;
+        color: var(--color-gray-500);
+    }
+
+    /* -- Disabled ------------------------------------------------------------ */
+
+    .ui-accordion-item[disabled] > .ui-accordion-heading,
+    .ui-accordion-heading[disabled] {
+        color: var(--color-gray-400);
+        cursor: default;
+        pointer-events: none;
+    }
+
+    .ui-accordion-item[disabled] > .ui-accordion-heading > svg,
+    .ui-accordion-heading[disabled] > svg {
+        color: var(--color-gray-300);
+    }
+
+    /* -- Reverse variant ----------------------------------------------------- */
+
+    .ui-accordion-reverse .ui-accordion-heading {
+        flex-direction: row-reverse;
+        justify-content: flex-end;
+    }
+
+    .ui-accordion-reverse .ui-accordion-heading > svg {
+        margin-inline-start: 0;
+        margin-inline-end: 0.5rem;
+    }
+
+    .ui-accordion-reverse .ui-accordion-item[open] > .ui-accordion-heading > svg {
+        transform: rotate(90deg);
+    }
+
+    /* ========================================================================
+       Dark mode — explicit (`data-theme="dark"`)
+       ======================================================================== */
+
+    .ui[data-theme="dark"] .ui-accordion-item {
+        border-bottom-color: rgb(255 255 255 / 0.1);
+    }
+
+    .ui[data-theme="dark"] .ui-accordion-heading {
+        color: #ffffff;
+    }
+
+    .ui[data-theme="dark"] .ui-accordion-heading > svg {
+        color: var(--color-gray-400);
+    }
+
+    .ui[data-theme="dark"] .ui-accordion-heading:hover > svg {
+        color: #ffffff;
+    }
+
+    .ui[data-theme="dark"] .ui-accordion-content {
+        color: var(--color-gray-300);
+    }
+
+    .ui[data-theme="dark"] .ui-accordion-item[disabled] > .ui-accordion-heading,
+    .ui[data-theme="dark"] .ui-accordion-heading[disabled] {
+        color: var(--color-gray-400);
+    }
+
+    /* ========================================================================
+       Dark mode — automatic fallback (`prefers-color-scheme`)
+       ======================================================================== */
+
+    @media (prefers-color-scheme: dark) {
+        .ui:not([data-theme]) .ui-accordion-item {
+            border-bottom-color: rgb(255 255 255 / 0.1);
+        }
+
+        .ui:not([data-theme]) .ui-accordion-heading {
+            color: #ffffff;
+        }
+
+        .ui:not([data-theme]) .ui-accordion-heading > svg {
+            color: var(--color-gray-400);
+        }
+
+        .ui:not([data-theme]) .ui-accordion-heading:hover > svg {
+            color: #ffffff;
+        }
+
+        .ui:not([data-theme]) .ui-accordion-content {
+            color: var(--color-gray-300);
+        }
+
+        .ui:not([data-theme]) .ui-accordion-item[disabled] > .ui-accordion-heading,
+        .ui:not([data-theme]) .ui-accordion-heading[disabled] {
+            color: var(--color-gray-400);
+        }
+    }
+}
