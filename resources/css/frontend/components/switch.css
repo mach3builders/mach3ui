@@ -1,0 +1,202 @@
+/* ==========================================================================
+   Switch — Flux-matching native CSS
+   Uses native <input type="checkbox" role="switch"> with :checked for state.
+
+   <label class="ui-switch">
+     <input type="checkbox" role="switch">
+     <span class="ui-switch-track"><span></span></span>
+     Label text
+   </label>
+   ========================================================================== */
+
+@layer ui.components {
+
+    /* -- Container ----------------------------------------------------------- */
+
+    .ui-switch {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75rem;
+        cursor: pointer;
+        font-size: 0.875rem;
+        font-weight: 500;
+        line-height: 1.25rem;
+        color: var(--color-gray-800);
+    }
+
+    .ui-switch:has(input:disabled) {
+        cursor: default;
+    }
+
+    /* -- Visually hidden input ----------------------------------------------- */
+
+    .ui-switch > input[type="checkbox"] {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+    }
+
+    /* -- Track --------------------------------------------------------------- */
+
+    .ui-switch-track {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        flex-shrink: 0;
+        width: 2rem;
+        height: 1.25rem;
+        border-radius: 9999px;
+        background: color-mix(in oklab, var(--color-gray-800) 15%, transparent);
+        transition: background-color 0.15s;
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+    }
+
+    /* -- Thumb --------------------------------------------------------------- */
+
+    .ui-switch-track > span {
+        display: block;
+        width: 0.875rem;
+        height: 0.875rem;
+        border-radius: 9999px;
+        background: #ffffff;
+        transform: translateX(3px);
+        transition: transform 0.15s;
+    }
+
+    /* RTL */
+    [dir="rtl"] .ui-switch-track > span {
+        transform: translateX(-3px);
+    }
+
+    /* -- Checked ------------------------------------------------------------- */
+
+    .ui-switch:has(:checked) > .ui-switch-track {
+        background: var(--color-accent, var(--color-gray-800));
+    }
+
+    .ui-switch:has(:checked) > .ui-switch-track > span {
+        background: var(--color-accent-foreground, #ffffff);
+        transform: translateX(15px);
+    }
+
+    [dir="rtl"] .ui-switch:has(:checked) > .ui-switch-track > span {
+        transform: translateX(-15px);
+    }
+
+    /* -- Disabled ------------------------------------------------------------ */
+
+    .ui-switch:has(:disabled) > .ui-switch-track {
+        opacity: 0.5;
+    }
+
+    /* -- Focus --------------------------------------------------------------- */
+
+    .ui-switch:has(:focus-visible) > .ui-switch-track {
+        outline: auto;
+        outline-color: Highlight;
+        outline-color: -webkit-focus-ring-color;
+        outline-offset: 2px;
+    }
+
+    /* -- Description --------------------------------------------------------- */
+
+    .ui-switch-description {
+        font-weight: 400;
+        color: var(--color-gray-500);
+    }
+
+    /* ========================================================================
+       Dark mode — explicit (`data-theme="dark"`)
+       ======================================================================== */
+
+    .ui[data-theme="dark"] .ui-switch {
+        color: #ffffff;
+    }
+
+    .ui[data-theme="dark"] .ui-switch-track {
+        background: transparent;
+        border: 1px solid rgb(255 255 255 / 0.2);
+    }
+
+    .ui[data-theme="dark"] .ui-switch-track > span {
+        transform: translateX(2px);
+    }
+
+    [dir="rtl"] .ui[data-theme="dark"] .ui-switch-track > span {
+        transform: translateX(-2px);
+    }
+
+    .ui[data-theme="dark"] .ui-switch:has(:checked) > .ui-switch-track {
+        background: var(--color-accent, #ffffff);
+        border-color: transparent;
+    }
+
+    .ui[data-theme="dark"] .ui-switch:has(:checked) > .ui-switch-track > span {
+        background: var(--color-accent-foreground, var(--color-gray-800));
+        transform: translateX(15px);
+    }
+
+    [dir="rtl"] .ui[data-theme="dark"] .ui-switch:has(:checked) > .ui-switch-track > span {
+        transform: translateX(-15px);
+    }
+
+    .ui[data-theme="dark"] .ui-switch:has(:disabled) > .ui-switch-track {
+        border-color: rgb(255 255 255 / 0.1);
+    }
+
+    .ui[data-theme="dark"] .ui-switch-description {
+        color: rgb(255 255 255 / 0.6);
+    }
+
+    /* ========================================================================
+       Dark mode — automatic fallback (`prefers-color-scheme`)
+       ======================================================================== */
+
+    @media (prefers-color-scheme: dark) {
+        .ui:not([data-theme]) .ui-switch {
+            color: #ffffff;
+        }
+
+        .ui:not([data-theme]) .ui-switch-track {
+            background: transparent;
+            border: 1px solid rgb(255 255 255 / 0.2);
+        }
+
+        .ui:not([data-theme]) .ui-switch-track > span {
+            transform: translateX(2px);
+        }
+
+        [dir="rtl"] .ui:not([data-theme]) .ui-switch-track > span {
+            transform: translateX(-2px);
+        }
+
+        .ui:not([data-theme]) .ui-switch:has(:checked) > .ui-switch-track {
+            background: var(--color-accent, #ffffff);
+            border-color: transparent;
+        }
+
+        .ui:not([data-theme]) .ui-switch:has(:checked) > .ui-switch-track > span {
+            background: var(--color-accent-foreground, var(--color-gray-800));
+            transform: translateX(15px);
+        }
+
+        [dir="rtl"] .ui:not([data-theme]) .ui-switch:has(:checked) > .ui-switch-track > span {
+            transform: translateX(-15px);
+        }
+
+        .ui:not([data-theme]) .ui-switch:has(:disabled) > .ui-switch-track {
+            border-color: rgb(255 255 255 / 0.1);
+        }
+
+        .ui:not([data-theme]) .ui-switch-description {
+            color: rgb(255 255 255 / 0.6);
+        }
+    }
+}
