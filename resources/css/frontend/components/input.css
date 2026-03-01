@@ -19,7 +19,7 @@
         color: var(--color-gray-700);
         background: #ffffff;
         border: 1px solid var(--color-gray-200);
-        border-bottom-color: var(--color-gray-300);
+        border-bottom-color: color-mix(in oklab, var(--color-gray-300) 80%, transparent);
         border-radius: var(--ui-radius-lg, 8px);
         box-shadow: var(--ui-shadow-xs);
     }
@@ -68,12 +68,12 @@
 
     .ui-input:focus {
         outline: none;
-        border-color: var(--color-accent, var(--color-gray-800));
-        box-shadow: 0 0 0 1px var(--color-accent, var(--color-gray-800));
+        border-color: var(--color-gray-800);
+        box-shadow: 0 0 0 1px var(--color-gray-800);
     }
 
     .ui-input-filled:focus {
-        box-shadow: 0 0 0 1px var(--color-accent, var(--color-gray-800));
+        box-shadow: 0 0 0 1px var(--color-gray-800);
     }
 
     /* -- Disabled ------------------------------------------------------------ */
@@ -190,8 +190,8 @@
     }
 
     .ui[data-theme="dark"] .ui-input:focus {
-        border-color: var(--color-accent, #ffffff);
-        box-shadow: 0 0 0 1px var(--color-accent, #ffffff);
+        border-color: #ffffff;
+        box-shadow: 0 0 0 1px #ffffff;
     }
 
     .ui[data-theme="dark"] .ui-input-group > .ui-input-icon {
@@ -249,8 +249,8 @@
         }
 
         .ui:not([data-theme]) .ui-input:focus {
-            border-color: var(--color-accent, #ffffff);
-            box-shadow: 0 0 0 1px var(--color-accent, #ffffff);
+            border-color: #ffffff;
+            box-shadow: 0 0 0 1px #ffffff;
         }
 
         .ui:not([data-theme]) .ui-input-group > .ui-input-icon {

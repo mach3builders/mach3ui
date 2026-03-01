@@ -1,0 +1,195 @@
+/* ==========================================================================
+   File Upload — Flux-matching native CSS
+   ========================================================================== */
+
+@layer ui.components {
+
+    /* -- Dropzone (default: vertical) ---------------------------------------- */
+
+    .ui-file-upload {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 1.25rem 1.5rem;
+        border: 2px dashed var(--color-gray-200);
+        border-radius: var(--ui-radius-lg, 8px);
+        background: color-mix(in oklab, var(--color-gray-800) 3%, transparent);
+        transition: background-color 0.15s, border-color 0.15s;
+        cursor: pointer;
+    }
+
+    @media (min-width: 640px) {
+        .ui-file-upload {
+            padding: 2.5rem 4rem;
+        }
+    }
+
+    /* -- Inline variant ------------------------------------------------------ */
+
+    .ui-file-upload-inline {
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+        padding: 1rem;
+        border-width: 1px;
+    }
+
+    @media (min-width: 640px) {
+        .ui-file-upload-inline {
+            padding-inline-start: 1.25rem;
+            padding-inline-end: 2rem;
+        }
+    }
+
+    /* -- Icon ---------------------------------------------------------------- */
+
+    .ui-file-upload-icon {
+        margin-bottom: 1rem;
+        color: var(--color-gray-400);
+        transition: color 0.15s;
+    }
+
+    .ui-file-upload-inline > .ui-file-upload-icon {
+        margin-bottom: 0;
+        margin-inline-end: 1rem;
+    }
+
+    .ui-file-upload-icon > svg {
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+
+    .ui-file-upload:hover > .ui-file-upload-icon,
+    .ui-file-upload[data-dragging] > .ui-file-upload-icon {
+        color: var(--color-gray-800);
+    }
+
+    /* -- Content wrapper ----------------------------------------------------- */
+
+    .ui-file-upload-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .ui-file-upload-inline > .ui-file-upload-content {
+        align-items: flex-start;
+        gap: 0.25rem;
+    }
+
+    /* -- Heading ------------------------------------------------------------- */
+
+    .ui-file-upload-heading {
+        font-size: 0.875rem;
+        font-weight: 500;
+        line-height: 1.25rem;
+        color: var(--color-gray-800);
+    }
+
+    /* -- Text ---------------------------------------------------------------- */
+
+    .ui-file-upload-text {
+        font-size: 0.875rem;
+        line-height: 1.25rem;
+        color: var(--color-gray-500);
+    }
+
+    .ui-file-upload-inline .ui-file-upload-text {
+        font-size: 0.75rem;
+        line-height: 1rem;
+    }
+
+    /* -- Drag-over state ----------------------------------------------------- */
+
+    .ui-file-upload[data-dragging] {
+        background: color-mix(in oklab, var(--color-gray-800) 7%, transparent);
+        border-color: var(--color-gray-300);
+    }
+
+    /* -- Disabled ------------------------------------------------------------ */
+
+    .ui-file-upload[data-disabled] {
+        opacity: 0.75;
+        pointer-events: none;
+        cursor: default;
+    }
+
+    .ui-file-upload[data-disabled]:hover > .ui-file-upload-icon {
+        color: var(--color-gray-400);
+    }
+
+    /* ========================================================================
+       Dark mode — explicit (`data-theme="dark"`)
+       ======================================================================== */
+
+    .ui[data-theme="dark"] .ui-file-upload {
+        background: rgb(255 255 255 / 0.1);
+        border-color: rgb(255 255 255 / 0.1);
+    }
+
+    .ui[data-theme="dark"] .ui-file-upload[data-dragging] {
+        background: rgb(255 255 255 / 0.15);
+        border-color: rgb(255 255 255 / 0.2);
+    }
+
+    .ui[data-theme="dark"] .ui-file-upload-icon {
+        color: rgb(255 255 255 / 0.6);
+    }
+
+    .ui[data-theme="dark"] .ui-file-upload:hover > .ui-file-upload-icon,
+    .ui[data-theme="dark"] .ui-file-upload[data-dragging] > .ui-file-upload-icon {
+        color: #ffffff;
+    }
+
+    .ui[data-theme="dark"] .ui-file-upload[data-disabled]:hover > .ui-file-upload-icon {
+        color: rgb(255 255 255 / 0.6);
+    }
+
+    .ui[data-theme="dark"] .ui-file-upload-heading {
+        color: #ffffff;
+    }
+
+    .ui[data-theme="dark"] .ui-file-upload-text {
+        color: rgb(255 255 255 / 0.6);
+    }
+
+    /* ========================================================================
+       Dark mode — automatic fallback (`prefers-color-scheme`)
+       ======================================================================== */
+
+    @media (prefers-color-scheme: dark) {
+        .ui:not([data-theme]) .ui-file-upload {
+            background: rgb(255 255 255 / 0.1);
+            border-color: rgb(255 255 255 / 0.1);
+        }
+
+        .ui:not([data-theme]) .ui-file-upload[data-dragging] {
+            background: rgb(255 255 255 / 0.15);
+            border-color: rgb(255 255 255 / 0.2);
+        }
+
+        .ui:not([data-theme]) .ui-file-upload-icon {
+            color: rgb(255 255 255 / 0.6);
+        }
+
+        .ui:not([data-theme]) .ui-file-upload:hover > .ui-file-upload-icon,
+        .ui:not([data-theme]) .ui-file-upload[data-dragging] > .ui-file-upload-icon {
+            color: #ffffff;
+        }
+
+        .ui:not([data-theme]) .ui-file-upload[data-disabled]:hover > .ui-file-upload-icon {
+            color: rgb(255 255 255 / 0.6);
+        }
+
+        .ui:not([data-theme]) .ui-file-upload-heading {
+            color: #ffffff;
+        }
+
+        .ui:not([data-theme]) .ui-file-upload-text {
+            color: rgb(255 255 255 / 0.6);
+        }
+    }
+}
