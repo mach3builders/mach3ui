@@ -5,7 +5,9 @@
 
 @php
     $tag = $href ? 'a' : 'div';
-    $brand = str_ireplace('mach3', '', config('app.name') ?: 'Builders');
+    $appName = config('app.name') ?: 'Builders';
+    $hasMach3 = str_contains(strtolower($appName), 'mach3');
+    $brand = $hasMach3 ? str_ireplace('mach3', '', $appName) : $appName;
 
     $sizeClasses = match ($size) {
         'sm' => 'text-sm',
@@ -27,9 +29,11 @@
     @if ($href) href="{{ $href }}" @endif
     data-flux-logo
 >
-    <span>Mach3</span>
+    @if ($hasMach3)
+        <span>Mach3</span>
 
-    <span class="text-brand -skew-x-12 font-semibold">III</span>
+        <span class="text-brand -skew-x-12 font-semibold">III</span>
+    @endif
 
     <span>{{ $brand }}</span>
 </{{ $tag }}>

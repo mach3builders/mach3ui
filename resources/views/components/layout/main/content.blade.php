@@ -27,7 +27,7 @@
     </div>
 
     @if (isset($nav))
-        <nav class="dark:bg-zinc-850 sticky top-16 z-40 -mx-6 mt-6 bg-white px-6 lg:-mx-8 lg:px-8">
+        <nav class="dark:bg-zinc-850 sticky top-16 z-10 lg:z-40 -mx-6 mt-6 bg-white px-6 lg:-mx-8 lg:px-8">
             {{ $nav }}
         </nav>
     @endif
