@@ -1,27 +1,21 @@
 @props([
     'href' => null,
-    'size' => 'md',
+    'size' => 'base',
+    'light' => '/logo-light.svg',
+    'dark' => '/logo-dark.svg',
 ])
 
 @php
     $tag = $href ? 'a' : 'div';
-    $appName = config('app.name') ?: 'Builders';
-    $hasMach3 = str_contains(strtolower($appName), 'mach3');
-    $brand = $hasMach3 ? str_ireplace('mach3', '', $appName) : $appName;
 
-    $sizeClasses = match ($size) {
-        'sm' => 'text-sm',
-        'lg' => 'text-lg',
-        'xl' => 'text-xl',
-        '2xl' => 'text-2xl',
-        default => 'text-base',
+    $sizeClass = match ($size) {
+        'sm' => 'h-2',
+        'lg' => 'h-4',
+        default => 'h-3',
     };
 
     $classes = Flux::classes()
-        ->add('inline-flex h-10 items-center gap-[0.1em] font-brand font-bold uppercase leading-none tracking-wide select-none')
-        ->add('text-zinc-800 dark:text-zinc-50')
-        ->add($href ? 'no-underline' : '')
-        ->add($sizeClasses);
+        ->add('inline-flex items-center');
 @endphp
 
 <{{ $tag }}
@@ -29,11 +23,6 @@
     @if ($href) href="{{ $href }}" @endif
     data-flux-logo
 >
-    @if ($hasMach3)
-        <span>Mach3</span>
-
-        <span class="text-brand -skew-x-12 font-semibold">III</span>
-    @endif
-
-    <span>{{ $brand }}</span>
+    <img src="{{ $dark }}" alt="{{ config('app.name', 'App') }}" class="{{ $sizeClass }} dark:hidden" />
+    <img src="{{ $light }}" alt="{{ config('app.name', 'App') }}" class="{{ $sizeClass }} hidden dark:block" />
 </{{ $tag }}>
