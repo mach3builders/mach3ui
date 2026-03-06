@@ -53,14 +53,14 @@ it('renders logo with default images and size', function () {
 
     expect($html)
         ->toContain('data-flux-logo')
-        ->toContain('src="/logo-dark.svg"')
-        ->toContain('src="/logo-light.svg"')
+        ->toContain('src="/img/logo-dark.svg"')
+        ->toContain('src="/img/logo-light.svg"')
         ->toContain('h-3');
 });
 
 it('renders logo with custom size', function () {
     expect(Blade::render('<ui:logo size="sm" />'))->toContain('h-2');
-    expect(Blade::render('<ui:logo size="lg" />'))->toContain('h-4');
+    expect(Blade::render('<ui:logo size="lg" />'))->toContain('h-4.5');
 });
 
 it('renders logo with custom image paths', function () {

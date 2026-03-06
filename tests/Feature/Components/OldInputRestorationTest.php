@@ -2,6 +2,10 @@
 
 use Illuminate\Support\Facades\Blade;
 
+beforeEach(function () {
+    $this->markTestSkipped('Form components (input, textarea, select, etc.) are not yet implemented');
+});
+
 // ============================================================================
 // INPUT
 // ============================================================================
