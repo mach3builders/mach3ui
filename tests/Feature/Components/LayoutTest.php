@@ -47,3 +47,26 @@ it('renders logo as link or div', function () {
     $withoutHref = Blade::render('<ui:logo />');
     expect($withoutHref)->toContain('data-flux-logo')->not->toContain('href');
 });
+
+it('renders logo with default images and size', function () {
+    $html = Blade::render('<ui:logo />');
+
+    expect($html)
+        ->toContain('data-flux-logo')
+        ->toContain('src="/logo-dark.svg"')
+        ->toContain('src="/logo-light.svg"')
+        ->toContain('h-3');
+});
+
+it('renders logo with custom size', function () {
+    expect(Blade::render('<ui:logo size="sm" />'))->toContain('h-2');
+    expect(Blade::render('<ui:logo size="lg" />'))->toContain('h-4');
+});
+
+it('renders logo with custom image paths', function () {
+    $html = Blade::render('<ui:logo light="/custom-light.svg" dark="/custom-dark.svg" />');
+
+    expect($html)
+        ->toContain('src="/custom-dark.svg"')
+        ->toContain('src="/custom-light.svg"');
+});
