@@ -1,8 +1,8 @@
 @props([
     'href' => null,
     'size' => 'base',
-    'light' => '/logo-light.svg',
-    'dark' => '/logo-dark.svg',
+    'light' => '/img//logo-light.svg',
+    'dark' => '/img/logo-dark.svg',
 ])
 
 @php
@@ -10,7 +10,7 @@
 
     $sizeClass = match ($size) {
         'sm' => 'h-2',
-        'lg' => 'h-4',
+        'lg' => 'h-4.5',
         default => 'h-3',
     };
 
