@@ -15,42 +15,120 @@ class UiTagCompiler extends ComponentTagCompiler
         parent::__construct($aliases, $namespaces, $blade);
     }
 
-    public function compile(string $value): string
+    protected function compileOpeningTags(string $value)
     {
-        // Transform <ui:component> to <x-ui::component> before parent compilation
-        $value = $this->transformUiTags($value);
+        $pattern = "/
+            <
+                \s*
+                ui[\:]([\w\-\:\.]*)
+                (?<attributes>
+                    (?:
+                        \s+
+                        (?:
+                            (?:
+                                @(?:class)(\( (?: (?>[^()]+) | (?-1) )* \))
+                            )
+                            |
+                            (?:
+                                @(?:style)(\( (?: (?>[^()]+) | (?-1) )* \))
+                            )
+                            |
+                            (?:
+                                \{\{\s*\\\$attributes(?:[^}]+?)?\s*\}\}
+                            )
+                            |
+                            (?:
+                                (\:\\\$)(\w+)
+                            )
+                            |
+                            (?:
+                                [\w\-:.@%]+
+                                (
+                                    =
+                                    (?:
+                                        \\\"[^\\\"]*\\\"
+                                        |
+                                        \'[^\']*\'
+                                        |
+                                        [^\'\\\"=<>]+
+                                    )
+                                )?
+                            )
+                        )
+                    )*
+                    \s*
+                )
+                (?<![\/=\-])
+            >
+        /x";
 
-        // Now compile the transformed x-ui:: tags using parent's component compilation
-        return parent::compile($value);
+        return preg_replace_callback($pattern, function (array $matches) {
+            $this->boundAttributes = [];
+
+            $attributes = $this->getAttributesFromAttributeString($matches['attributes']);
+
+            return $this->componentString('ui::'.$matches[1], $attributes);
+        }, $value);
     }
 
-    protected function transformUiTags(string $value): string
+    protected function compileSelfClosingTags(string $value)
     {
-        // Attribute pattern that correctly handles > inside quoted values
-        // e.g. wire:key="workspace-{{ $workspace->getKey() }}"
-        $attrs = '(?:\s(?:[^>"\']|"[^"]*"|\'[^\']*\')*)';
+        $pattern = "/
+            <
+                \s*
+                ui[\:]([\w\-\:\.]*)
+                \s*
+                (?<attributes>
+                    (?:
+                        \s+
+                        (?:
+                            (?:
+                                @(?:class)(\( (?: (?>[^()]+) | (?-1) )* \))
+                            )
+                            |
+                            (?:
+                                @(?:style)(\( (?: (?>[^()]+) | (?-1) )* \))
+                            )
+                            |
+                            (?:
+                                \{\{\s*\\\$attributes(?:[^}]+?)?\s*\}\}
+                            )
+                            |
+                            (?:
+                                (\:\\\$)(\w+)
+                            )
+                            |
+                            (?:
+                                [\w\-:.@%]+
+                                (
+                                    =
+                                    (?:
+                                        \\\"[^\\\"]*\\\"
+                                        |
+                                        \'[^\']*\'
+                                        |
+                                        [^\'\\\"=<>]+
+                                    )
+                                )?
+                            )
+                        )
+                    )*
+                    \s*
+                )
+            \/>
+        /x";
 
-        // Self-closing tags: <ui:icon />
-        $value = preg_replace(
-            '/<ui:([a-zA-Z0-9\-_.]+)('.$attrs.'?)\s*\/>/s',
-            '<x-ui::$1$2 />',
-            $value
-        );
+        return preg_replace_callback($pattern, function (array $matches) {
+            $this->boundAttributes = [];
 
-        // Opening tags: <ui:button type="primary">
-        $value = preg_replace(
-            '/<ui:([a-zA-Z0-9\-_.]+)('.$attrs.'?)>/s',
-            '<x-ui::$1$2>',
-            $value
-        );
+            $attributes = $this->getAttributesFromAttributeString($matches['attributes']);
 
-        // Closing tags: </ui:button>
-        $value = preg_replace(
-            '/<\/ui:([a-zA-Z0-9\-_.]+)>/s',
-            '</x-ui::$1>',
-            $value
-        );
+            return $this->componentString('ui::'.$matches[1], $attributes)."\n@endComponentClass##END-COMPONENT-CLASS##";
+        }, $value);
+    }
 
-        return $value;
+    protected function compileClosingTags(string $value)
+    {
+        return preg_replace("/<\/\s*ui[\:][\w\-\:\.]*\s*>/", ' @endComponentClass##END-COMPONENT-CLASS##', $value);
     }
 }
