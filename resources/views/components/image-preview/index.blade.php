@@ -1,6 +1,5 @@
 @props([
     'src' => null,
-    'alt' => '',
     'delete' => null,
 ])
 
@@ -15,8 +14,8 @@
 
 <div {{ $attributes->class('flex items-center gap-4') }} data-flux-image-preview>
     @if ($src)
-        <button type="button" x-on:click="previewSrc = '{{ $src }}'; $flux.modal('image-preview').show()" class="{{ $clickable_classes }}">
-            <img src="{{ $src }}" alt="{{ $alt }}" class="max-h-full max-w-full rounded object-contain" />
+        <button type="button" x-on:click="previewSrc = '{{ $src }}'; let y = window.scrollY; $flux.modal('image-preview').show(); requestAnimationFrame(() => window.scrollTo(0, y))" class="{{ $clickable_classes }}">
+            <img src="{{ $src }}" class="max-h-full max-w-full rounded object-contain" />
         </button>
     @else
         <div class="{{ $container_classes }}">
