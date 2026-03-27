@@ -25,6 +25,7 @@ Mach3UI is a Flux companion package that provides components Flux doesn't offer.
 | `<ui:layout.main.content>` | `header`, `nav`, `badges`, `actions` slots | Main content area with header and nav |
 | `<ui:logo>` | `href`, `size` | Mach3 brand logo |
 | `<ui:code-editor>` | `language`, `placeholder`, `readonly`, `lineNumbers`, `minHeight`, `maxHeight`, `tabSize` | CodeMirror 6 code editor with wire:model support |
+| `<ui:color-picker>` | `placeholder`, `size` | Hex color input with swatch preview and native picker |
 
 ## Conventions
 
