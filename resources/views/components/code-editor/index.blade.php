@@ -34,30 +34,25 @@ $classes = Flux::classes()
     {{ $attributes->except(['wire:model', 'wire:model.live', 'wire:model.blur', 'wire:model.lazy', 'wire:model.debounce'])->class($classes) }}
     data-flux-code-editor
     @if($disabled) disabled @endif
-    x-data="{
-        ready: false,
-        minHeight: @js($minHeight),
-    }"
+    x-data="{ ready: false, minHeight: @js($minHeight), _cleanup: null }"
     x-init="
-        let check = () => {
-            if (window._codeEditorFactory) {
-                Object.assign($data, window._codeEditorFactory({
-                    language: @js($language),
-                    readonly: @js((bool) ($readonly || $disabled)),
-                    lineNumbers: @js((bool) $lineNumbers),
-                    placeholder: @js($placeholder),
-                    minHeight: @js($minHeight),
-                    maxHeight: @js($maxHeight),
-                    tabSize: @js((int) $tabSize),
-                    wireModel: @js($name),
-                }));
-                $data.init();
-            } else {
-                setTimeout(check, 50);
-            }
+        let mount = () => {
+            if (!window._mountCodeEditor) { setTimeout(mount, 50); return; }
+            _cleanup = window._mountCodeEditor($refs.editor, $refs.textarea, {
+                language: @js($language),
+                readonly: @js((bool) ($readonly || $disabled)),
+                lineNumbers: @js((bool) $lineNumbers),
+                placeholder: @js($placeholder),
+                minHeight: @js($minHeight),
+                maxHeight: @js($maxHeight),
+                tabSize: @js((int) $tabSize),
+                wireModel: @js($name),
+            }, $wire);
+            ready = true;
         };
-        check();
+        mount();
     "
+    x-on:destroy="if (_cleanup) _cleanup()"
 >
     {{-- Loading skeleton --}}
     <div x-show="!ready" class="animate-pulse rounded bg-zinc-100 dark:bg-white/5" :style="`min-height: ${minHeight}`"></div>
