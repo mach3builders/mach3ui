@@ -21,22 +21,22 @@ $invalid ??= ($name && $errors->has($name));
     class="relative"
     x-data="{
         color: '',
-
         display: '',
+        wireModel: @js($name),
 
         strip(v) { return v ? v.replace(/^#/, '') : ''; },
         withHash(v) { let s = this.strip(v); return s ? '#' + s : ''; },
 
         init() {
-            let raw = this.$refs.hidden.value || '{{ $placeholder }}';
+            let raw = (this.$wire ? this.$wire.get(this.wireModel) : null) || '{{ $placeholder }}';
             this.display = this.strip(raw);
             this.color = this.withHash(raw);
+        },
 
-            this.$watch('color', (value) => {
-                this.$refs.swatch.style.backgroundColor = value;
-            });
-
-            this.$refs.swatch.style.backgroundColor = this.color;
+        sync() {
+            if (this.$wire && this.wireModel) {
+                this.$wire.set(this.wireModel, this.color);
+            }
         },
 
         openPicker() {
@@ -46,27 +46,16 @@ $invalid ??= ($name && $errors->has($name));
         onPickerInput(e) {
             this.color = e.target.value;
             this.display = this.strip(this.color);
-            this.$refs.hidden.value = this.color;
-            this.$refs.hidden.dispatchEvent(new Event('input', { bubbles: true }));
+            this.sync();
         },
 
         onDisplayInput() {
             this.display = this.display.replace(/[^0-9a-fA-F]/g, '');
             this.color = this.withHash(this.display);
-            this.$refs.hidden.value = this.color;
-            this.$refs.hidden.dispatchEvent(new Event('input', { bubbles: true }));
+            this.sync();
         },
     }"
 >
-    {{-- Hidden input for wire:model (stores #hex) --}}
-    <textarea
-        x-ref="hidden"
-        class="sr-only"
-        tabindex="-1"
-        aria-hidden="true"
-        {{ $attributes->only(['wire:model', 'wire:model.live', 'wire:model.blur', 'wire:model.lazy', 'wire:model.debounce']) }}
-    ></textarea>
-
     <flux:input.group>
         <flux:input.group.prefix>#</flux:input.group.prefix>
 
@@ -83,6 +72,7 @@ $invalid ??= ($name && $errors->has($name));
             <div
                 x-ref="swatch"
                 class="size-6 cursor-pointer rounded"
+                :style="'background-color:' + color"
                 x-on:click="openPicker()"
             ></div>
         </div>
