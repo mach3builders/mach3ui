@@ -1,6 +1,7 @@
 import { EditorView, basicSetup } from 'codemirror';
 import { EditorState, Compartment } from '@codemirror/state';
-import { placeholder, EditorView as ViewModule } from '@codemirror/view';
+import { placeholder, EditorView as ViewModule, keymap } from '@codemirror/view';
+import { indentWithTab } from '@codemirror/commands';
 import { oneDark } from '@codemirror/theme-one-dark';
 import { HighlightStyle, syntaxHighlighting } from '@codemirror/language';
 import { tags } from '@lezer/highlight';
@@ -26,10 +27,10 @@ const isDark = () =>
 
 const lightTheme = EditorView.theme(
     {
-        '&': { backgroundColor: '#ffffff', color: '#1e1e1e' },
+        '&': { backgroundColor: 'transparent', color: '#1e1e1e' },
         '.cm-content': { caretColor: '#000' },
         '.cm-cursor, .cm-dropCursor': { borderLeftColor: '#000' },
-        '.cm-gutters': { backgroundColor: '#f7f7f7', color: '#858585', borderRight: '1px solid #e5e5e5' },
+        '.cm-gutters': { backgroundColor: 'rgba(0,0,0,0.02)', color: '#858585', borderRight: '1px solid #e5e5e5' },
         '.cm-activeLineGutter': { backgroundColor: '#e8e8e8', color: '#1e1e1e' },
         '.cm-activeLine': { backgroundColor: '#fffbdd' },
         '&.cm-focused .cm-selectionBackground, ::selection': { backgroundColor: '#add6ff' },
@@ -58,7 +59,11 @@ const lightHighlight = HighlightStyle.define([
     { tag: tags.invalid, color: '#cd3131' },
 ]);
 
-const darkExtra = EditorView.theme({ '&.cm-focused': { outline: 'none' } }, { dark: true });
+const darkExtra = EditorView.theme({
+    '&': { backgroundColor: 'transparent' },
+    '.cm-gutters': { backgroundColor: 'rgba(255,255,255,0.03)', borderRight: '1px solid rgba(255,255,255,0.08)' },
+    '&.cm-focused': { outline: 'none' },
+}, { dark: true });
 
 const buildTheme = (dark) =>
     dark ? [oneDark, darkExtra] : [lightTheme, syntaxHighlighting(lightHighlight)];
@@ -77,6 +82,7 @@ window._mountCodeEditor = function (editorEl, textareaEl, config, wire) {
 
     const ext = [
         basicSetup,
+        keymap.of([indentWithTab]),
         EditorState.tabSize.of(config.tabSize),
         EditorState.readOnly.of(config.readonly),
         ViewModule.editable.of(!config.readonly),

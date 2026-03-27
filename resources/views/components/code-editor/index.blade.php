@@ -73,9 +73,10 @@ $classes = Flux::classes()
 
 @assets
 <style>
-[data-flux-code-editor] .cm-editor { height: auto; }
+[data-flux-code-editor] .cm-editor { height: auto; background-color: transparent !important; }
 [data-flux-code-editor] .cm-editor.cm-focused { outline: none; }
-[data-flux-code-editor] .cm-scroller { font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace; font-size: 0.875rem; line-height: 1.5; padding: 0.5rem 0; }
+[data-flux-code-editor] .cm-scroller { font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace; font-size: 0.8125rem; line-height: 1.5; padding: 0.5rem 0; }
+[data-flux-code-editor] .cm-gutters { background-color: transparent !important; }
 [data-flux-code-editor] .cm-no-line-numbers .cm-gutters { display: none; }
 </style>
 @endassets
