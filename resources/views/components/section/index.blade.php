@@ -34,7 +34,9 @@
     @endif
 
     @if ($bare)
-        {{ $slot }}
+        <div class="{{ $contentClasses }}">
+            {{ $slot }}
+        </div>
     @else
         <ui:box class="{{ $contentClasses }}">
             {{ $slot }}
