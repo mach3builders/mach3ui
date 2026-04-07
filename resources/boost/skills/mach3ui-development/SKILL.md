@@ -1,43 +1,20 @@
-# Mach3UI Reference
+---
+name: mach3ui-development
+description: Build and work with mach3builders/mach3ui Flux companion components.
+license: MIT
+metadata:
+  author: Mach3Builders
+---
 
-## Available Components
+# Mach3UI Development
 
-| Component | Props | Description |
-|---|---|---|
-| `<ui:box>` | `title`, `description` | Styled container, wraps content in rounded border |
-| `<ui:list>` | `variant` | Generic list container, `variant="definition"` renders as `<dl>` |
-| `<ui:list.item>` | `label`, `value`, `icon`, `icon:end`, `href`, `route` | Structured list item |
-| `<ui:section>` | `title`, `description`, `variant` | Page section with responsive grid, wraps content in `<ui:box>` |
-| `<ui:layout.empty-state>` | `icon`, `title`, `description` | Centered empty state with icon circle |
-| `<ui:layout.error>` | `code` | Error page content using translation keys |
-| `<ui:layout.main.content>` | — | Main content with `header`, `nav`, `badges`, `actions` slots |
-| `<ui:logo>` | `href`, `size` | Mach3 brand logo, renders as `<a>` or `<div>` |
+## Overview
 
-## Styling Pattern
+Mach3UI is a Flux companion package that provides components Flux doesn't offer. All components use `Flux::classes()` for styling and `<flux:*>` components internally.
 
-All components follow this pattern:
+## When to activate
 
-```blade
-@php
-    $classes = Flux::classes()
-        ->add('base classes')
-        ->add($condition ? 'conditional' : '');
-@endphp
-
-<div {{ $attributes->class($classes) }} data-flux-component-name>
-    {{ $slot }}
-</div>
-```
-
-## Section Variants
-
-- `responsive` (default) — 3-column grid on xl, header left, content right
-- `stacked` — single column, header above content
-
-## List Variants
-
-- Default — bordered items with padding, supports icon/href/value
-- `definition` — renders as `<dl>`, dotted divider between label and value
+Activate this skill when working with `<ui:*>` components: box, list, section, layout (empty-state, error, main content), or logo.
 
 ## Blade/HTML
 
@@ -62,3 +39,17 @@ All components follow this pattern:
 - **Table textual actions** (with or without icon): `variant="filled" size="sm"` with label (e.g. `common.invite`)
 - **Form submit (persists data)**: text-only, no icon. Use `variant="success"` for single-form pages, `variant="secondary"` when multiple save sections exist
 - **Form submit (triggers action, e.g. sending an invite)**: `variant="secondary"` with text
+
+## Do and Don't
+
+Do:
+- Use `Flux::classes()` for dynamic class building in components
+- Use `data-flux-*` attributes for component identification
+
+Don't:
+- Don't use `Ui::classes()` or `ClassBuilder` (removed, use `Flux::classes()`)
+- Don't use custom gray colors (gray-10/gray-990), use zinc palette
+- Don't create standalone UI components that Flux already provides
+
+## References
+- `references/mach3ui-guide.md`
