@@ -3,7 +3,7 @@ name: mach3ui-development
 description: Build and work with mach3builders/mach3ui Flux companion components.
 license: MIT
 metadata:
-  author: Mach3Builders
+    author: Mach3Builders
 ---
 
 # Mach3UI Development
@@ -43,13 +43,188 @@ Activate this skill when working with `<ui:*>` components: box, list, section, l
 ## Do and Don't
 
 Do:
+
 - Use `Flux::classes()` for dynamic class building in components
 - Use `data-flux-*` attributes for component identification
 
 Don't:
+
 - Don't use `Ui::classes()` or `ClassBuilder` (removed, use `Flux::classes()`)
 - Don't use custom gray colors (gray-10/gray-990), use zinc palette
 - Don't create standalone UI components that Flux already provides
 
+## View Conventions
+
+### Page Layout
+
+Every page uses `<ui:layout.main.content>` with a `header` slot. Optional slots: `badges`, `actions`, `nav`.
+
+```blade
+<ui:layout.main.content>
+    <x-slot name="header">
+        <flux:heading level="1" size="xl">{{ __('model.plural') }}</flux:heading>
+        <flux:text variant="subtle">{{ __('model.plural_description') }}</flux:text>
+    </x-slot>
+
+    <x-slot:nav>
+        @include('pages::model.partials.nav', ['tab' => 'details'])
+    </x-slot>
+
+    {{-- content --}}
+</ui:layout.main.content>
+```
+
+### Index Page (Table)
+
+```blade
+@if (count($items) || $search)
+    <div class="space-y-6">
+        <div class="flex items-center gap-4">
+            <flux:button variant="primary" wire:click="create">{{ __('model.create') }}</flux:button>
+
+            <flux:input wire:model.live.debounce.300ms="search" icon="search"
+                :placeholder="__('common.search')" class="ms-auto max-w-64" />
+        </div>
+
+        @if (count($items))
+            <flux:table :paginate="$items">
+                <flux:table.columns>...</flux:table.columns>
+                <flux:table.rows>...</flux:table.rows>
+            </flux:table>
+        @else
+            <flux:text variant="subtle" class="py-8 text-center">{{ __('common.no_results_message') }}</flux:text>
+        @endif
+    </div>
+@else
+    <ui:layout.empty-state :title="__('common.no_results_title')" :description="__('common.no_results_message')">
+        <flux:button variant="primary" wire:click="create">{{ __('model.create') }}</flux:button>
+    </ui:layout.empty-state>
+@endif
+```
+
+- Toolbar: primary create button left, search right (`ms-auto max-w-64`)
+- Empty state (`<ui:layout.empty-state>`) only when no data AND no active search
+- No search results: centered subtle text, not empty state
+
+### Index Page (Grid/Cards)
+
+```blade
+<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    @foreach ($items as $item)
+        <a wire:navigate href="{{ route('model.show', $item) }}" class="group">
+            <ui:box class="space-y-3! hover:ring-1 hover:ring-zinc-300 dark:hover:ring-zinc-600">
+                <div class="flex items-center justify-between">
+                    <flux:heading size="sm">{{ $item->name }}</flux:heading>
+
+                    <flux:icon.arrow-right class="size-5 shrink-0 text-zinc-300 opacity-0
+                        transition group-hover:translate-x-0.5 group-hover:text-zinc-500
+                        group-hover:opacity-100 dark:text-zinc-600 dark:group-hover:text-zinc-400" />
+                </div>
+            </ui:box>
+        </a>
+    @endforeach
+</div>
+
+<div>{{ $items->links() }}</div>
+```
+
+- Responsive: `grid-cols-1 sm:grid-cols-2 lg:grid-cols-3` with `gap-4`
+- Cards: `<ui:box>` with hover ring effect, arrow icon appears on hover
+- Pagination outside the grid
+
+### Form Page
+
+```blade
+<form wire:submit="save" class="space-y-6">
+    <ui:section :title="__('model.details')" :description="__('model.details_description')">
+        <flux:input :label="__('model.name')" wire:model="name" required />
+
+        <div class="grid grid-cols-2 gap-4">
+            <flux:input :label="__('model.first_name')" wire:model="first_name" required />
+            <flux:input :label="__('model.last_name')" wire:model="last_name" required />
+        </div>
+    </ui:section>
+
+    <ui:section bare>
+        <flux:button type="submit" variant="primary" wire:loading.attr="data-loading">
+            {{ __('common.save') }}
+        </flux:button>
+    </ui:section>
+</form>
+```
+
+- Group fields in `<ui:section :title :description>` — title/description on left, fields on right (responsive)
+- Multi-column fields: `<div class="grid grid-cols-N gap-4">`
+- Submit button: always in `<ui:section bare>` at end of form, always `variant="primary"`
+
+### Navigation
+
+- **Sidebar items**: always include an icon, use `wire:navigate` and `:current` for active state
+- **Tab navigation**: `<flux:tabs>` in the `nav` slot, always include icons, use `:selected` for active state
+- Tab partials go in `partials/nav.blade.php` or `partials/tabs.blade.php`
+
+### Modals
+
+**Create/edit modal** (`max-w-lg`):
+
+```blade
+<flux:modal wire:model.self="show_create_modal" class="w-full max-w-lg space-y-6">
+    <div>
+        <flux:heading size="lg">{{ __('model.create') }}</flux:heading>
+    </div>
+
+    <form wire:submit="store" class="space-y-6">
+        <ui:box>
+            <div class="space-y-6">
+                {{-- fields --}}
+            </div>
+        </ui:box>
+
+        <div class="flex justify-end gap-2">
+            <flux:modal.close>
+                <flux:button variant="ghost">{{ __('common.cancel') }}</flux:button>
+            </flux:modal.close>
+
+            <flux:button type="submit" variant="primary" wire:target="store" wire:loading.attr="disabled">
+                {{ __('common.save') }}
+            </flux:button>
+        </div>
+    </form>
+</flux:modal>
+```
+
+**Delete/confirm modal** (`max-w-md`):
+
+```blade
+<flux:modal wire:model.self="show_delete_modal" class="w-full max-w-md space-y-6">
+    <div>
+        <flux:heading size="lg">{{ __('model.destroy') }}</flux:heading>
+    </div>
+
+    <flux:text>{{ __('model.destroy_message') }}</flux:text>
+
+    @if ($deleting)
+        <ui:box>
+            <ui:list variant="definition">
+                <ui:list.item :label="__('model.name')" :value="$deleting->name" />
+            </ui:list>
+        </ui:box>
+    @endif
+
+    <div class="flex justify-end gap-2">
+        <flux:modal.close>
+            <flux:button variant="ghost">{{ __('common.cancel') }}</flux:button>
+        </flux:modal.close>
+
+        <flux:button variant="danger" wire:click="confirmDelete">{{ __('common.destroy') }}</flux:button>
+    </div>
+</flux:modal>
+```
+
+- Create/edit modals: `max-w-lg`, fields wrapped in `<ui:box>`
+- Delete/confirm modals: `max-w-md`, record info in `<ui:box>` with `<ui:list variant="definition">`
+- Footer: `<div class="flex justify-end gap-2">` — cancel (`ghost`) left, action button right
+
 ## References
+
 - `references/mach3ui-guide.md`
