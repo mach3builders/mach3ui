@@ -2,7 +2,9 @@
 
 namespace Mach3Builders\Ui\Tests;
 
-use Illuminate\Support\Facades\Session;
+use Flux\FluxServiceProvider;
+use FluxPro\FluxProServiceProvider;
+use Livewire\LivewireServiceProvider;
 use Mach3Builders\Ui\UiServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 
@@ -11,17 +13,10 @@ class TestCase extends Orchestra
     protected function getPackageProviders($app): array
     {
         return [
-            \Livewire\LivewireServiceProvider::class,
-            \Flux\FluxServiceProvider::class,
-            \FluxPro\FluxProServiceProvider::class,
+            LivewireServiceProvider::class,
+            FluxServiceProvider::class,
+            FluxProServiceProvider::class,
             UiServiceProvider::class,
         ];
-    }
-
-    protected function withOldInput(array $input): static
-    {
-        Session::put('_old_input', $input);
-
-        return $this;
     }
 }

@@ -38,7 +38,3 @@ All components follow this pattern:
 
 - Default — bordered items with padding, supports icon/href/value
 - `definition` — renders as `<dl>`, dotted divider between label and value
-
-## Buttons
-
-Buttons are handled by Flux (`<flux:button>`), not mach3ui. See Flux documentation for button variants and props.

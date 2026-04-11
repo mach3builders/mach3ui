@@ -38,7 +38,7 @@ class UiServiceProvider extends PackageServiceProvider
             app('blade.compiler')
         );
 
-        app('blade.compiler')->precompiler(function ($value) use ($compiler) {
+        app('blade.compiler')->prepareStringsForCompilationUsing(function ($value) use ($compiler) {
             return $compiler->compile($value);
         });
     }

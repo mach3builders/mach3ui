@@ -1,4 +1,5 @@
 @props([
+    'bare' => false,
     'description' => null,
     'title' => null,
     'variant' => 'responsive',
@@ -10,7 +11,7 @@
         ->add($variant === 'responsive' ? 'xl:grid-cols-3 xl:gap-x-8' : '')
         ->add('[[data-flux-section]+&]:mt-8');
 
-    $contentClasses = Flux::classes()->add($title || $description ? 'xl:col-span-2' : 'xl:col-span-3');
+    $contentClasses = Flux::classes()->add($title || $description ? 'xl:col-span-2' : ($bare ? 'xl:col-span-2' : 'xl:col-span-3'));
 @endphp
 
 <div
@@ -28,9 +29,17 @@
                 <flux:text variant="subtle">{{ $description }}</flux:text>
             @endif
         </div>
+    @elseif ($bare && $variant === 'responsive')
+        <div class="hidden xl:block"></div>
     @endif
 
-    <ui:box class="{{ $contentClasses }}">
-        {{ $slot }}
-    </ui:box>
+    @if ($bare)
+        <div class="{{ $contentClasses }}">
+            {{ $slot }}
+        </div>
+    @else
+        <ui:box class="{{ $contentClasses }}">
+            {{ $slot }}
+        </ui:box>
+    @endif
 </div>
