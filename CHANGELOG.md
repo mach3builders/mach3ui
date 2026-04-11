@@ -4,7 +4,7 @@ All notable changes to `mach3ui` will be documented in this file.
 
 ## [Unreleased]
 
-## [6.0.0] - 2026-02-26
+## [5.0.0] - 2026-04-11
 
 ### Changed
 - Transformed from standalone UI library (67+ components) to Flux companion package
@@ -27,7 +27,7 @@ All notable changes to `mach3ui` will be documented in this file.
 - JavaScript assets (code-editor, ui.js)
 - `mallardduck/blade-lucide-icons` dependency — Flux has its own icon system
 
-## [5.0.0-beta.1] - 2026-02-05
+## [5.0.0-beta] - 2026-02-05
 
 ### Added
 - Initial standalone UI library with 65+ components

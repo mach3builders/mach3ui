@@ -14,7 +14,7 @@
 
 <div {{ $attributes->class('flex items-center gap-4') }} data-flux-image-preview>
     @if ($src)
-        <button type="button" x-on:click="previewSrc = '{{ $src }}'; let y = window.scrollY; $flux.modal('image-preview').show(); requestAnimationFrame(() => window.scrollTo(0, y))" class="{{ $clickable_classes }}">
+        <button type="button" x-on:click="previewSrc = @js($src); let y = window.scrollY; $flux.modal('image-preview').show(); requestAnimationFrame(() => window.scrollTo(0, y))" class="{{ $clickable_classes }}">
             <img src="{{ $src }}" class="max-h-full max-w-full rounded object-contain" />
         </button>
     @else

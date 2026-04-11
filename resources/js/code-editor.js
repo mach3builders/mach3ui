@@ -123,12 +123,13 @@ window._mountCodeEditor = function (editorEl, textareaEl, config, wire) {
     });
     valueObserver.observe(textareaEl, { attributes: true, childList: true, characterData: true });
 
-    textareaEl.addEventListener('change', () => {
+    const changeHandler = () => {
         const v = textareaEl.value;
         if (v !== view.state.doc.toString()) {
             view.dispatch({ changes: { from: 0, to: view.state.doc.length, insert: v } });
         }
-    });
+    };
+    textareaEl.addEventListener('change', changeHandler);
 
     // Dark mode observer
     const themeObserver = new MutationObserver(() => {
@@ -140,5 +141,6 @@ window._mountCodeEditor = function (editorEl, textareaEl, config, wire) {
         view.destroy();
         valueObserver.disconnect();
         themeObserver.disconnect();
+        textareaEl.removeEventListener('change', changeHandler);
     };
 };
