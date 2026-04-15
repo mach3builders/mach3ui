@@ -28,7 +28,7 @@
         ->add('text-zinc-900 dark:text-white')
         ->add('[&>svg]:size-5 [&>svg]:shrink-0 [&>svg]:text-zinc-400 dark:[&>svg]:text-zinc-500')
         // Definition variant overrides
-        ->add('[[data-variant=definition]_&]:shrink-0 [[data-variant=definition]_&]:font-normal [[data-variant=definition]_&]:text-zinc-500 [[data-variant=definition]_&]:dark:text-zinc-400');
+        ->add('[[data-variant=definition]_&]:font-normal [[data-variant=definition]_&]:text-zinc-500 [[data-variant=definition]_&]:dark:text-zinc-400');
 
     $dividerClasses = Flux::classes()
         ->add('hidden flex-1 border-b border-dotted border-zinc-400 dark:border-zinc-600')
