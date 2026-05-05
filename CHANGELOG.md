@@ -4,6 +4,9 @@ All notable changes to `mach3ui` will be documented in this file.
 
 ## [Unreleased]
 
+### Removed
+- `<ui:color-picker>` — Flux now ships its own `<flux:color-picker>` component
+
 ## [5.0.0] - 2026-04-11
 
 ### Changed
