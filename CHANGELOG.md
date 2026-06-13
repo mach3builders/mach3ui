@@ -2,6 +2,11 @@
 
 All notable changes to `mach3ui` will be documented in this file.
 
+## [5.0.4] - 2026-06-13
+
+### Changed
+- Rebuilt `code-editor` JS bundle with Vite 8
+
 ## [5.0.3] - 2026-06-13
 
 ### Changed
