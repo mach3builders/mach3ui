@@ -2,6 +2,11 @@
 
 All notable changes to `mach3ui` will be documented in this file.
 
+## [5.0.3] - 2026-06-13
+
+### Changed
+- `<ui:layout.main.content>` nav background from `bg-white` to `bg-zinc-100`
+
 ## [5.0.2] - 2026-05-05
 
 ### Removed

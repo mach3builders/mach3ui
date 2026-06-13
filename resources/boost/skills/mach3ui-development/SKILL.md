@@ -31,9 +31,11 @@ Activate this skill when working with `<ui:*>` components: box, list, section, l
 - Badges in the `badges` slot of `<ui:layout.main.content>` must always include the `rounded` prop.
 - Icon columns in tables (standalone `<flux:icon>` in a cell): same layout — `<flux:table.column>` gets `align="center" class="w-0"`, `<flux:table.cell>` gets `align="center"`, and the `<flux:icon>` gets `class="mx-auto size-5"`.
 - Action columns in tables (edit, delete buttons): `<flux:table.column>` gets `class="w-0"`, `<flux:table.cell>` gets `align="end"`.
+- `<flux:table.row>` must never carry an `href` or `wire:navigate`. Wrap the name cell's value in a `<flux:link>` instead so only the name is clickable.
 
-### Buttons
+### Buttons & Links
 
+- `<flux:link>` must always have `class="cursor-pointer"`. `<flux:button>` must never set `cursor-pointer` (already styled by Flux).
 - **Create actions**: `variant="primary"`, no icon
 - **Table icon-only actions** (edit, delete): `variant="subtle" size="sm" square` + tooltip (`common.destroy` / `common.edit`)
 - **Table textual actions** (with or without icon): `variant="filled" size="sm"` with label (e.g. `common.invite`)
