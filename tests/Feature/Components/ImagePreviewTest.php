@@ -17,3 +17,19 @@ it('renders empty placeholder without source', function () {
         ->toContain('data-flux-image-preview')
         ->not->toContain('<img');
 });
+
+it('renders preview tile on a dark background with the dark prop', function () {
+    $html = Blade::render('<ui:image-preview src="/img/photo.jpg" dark />');
+
+    expect($html)
+        ->toContain('bg-zinc-900')
+        ->not->toContain('bg-white');
+});
+
+it('renders preview tile on a white background by default', function () {
+    $html = Blade::render('<ui:image-preview src="/img/photo.jpg" />');
+
+    expect($html)
+        ->toContain('bg-white')
+        ->not->toContain('bg-zinc-900');
+});
