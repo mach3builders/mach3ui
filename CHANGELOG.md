@@ -2,6 +2,11 @@
 
 All notable changes to `mach3ui` will be documented in this file.
 
+## [5.0.5] - 2026-06-16
+
+### Added
+- `<ui:image-preview>` `dark` prop to render the preview tile on a dark background
+
 ## [5.0.4] - 2026-06-13
 
 ### Changed
