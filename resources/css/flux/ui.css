@@ -26,4 +26,4 @@
     line-height: var(--tw-leading, var(--text-xs--line-height));
 }
 
-@source "../views/**/*.blade.php";
+@source "../../views/**/*.blade.php";
