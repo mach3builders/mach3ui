@@ -13,6 +13,7 @@ class UiServiceProvider extends PackageServiceProvider
         $package
             ->name('ui')
             ->hasViews('ui')
+            ->hasTranslations()
             ->hasAssets();
     }
 
