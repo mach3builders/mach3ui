@@ -26,6 +26,15 @@ it('renders preview tile on a dark background with the dark prop', function () {
         ->not->toContain('bg-white');
 });
 
+it('renders preview tile on a plain white background with the light prop', function () {
+    $html = Blade::render('<ui:image-preview src="/img/photo.jpg" light />');
+
+    expect($html)
+        ->toContain('bg-white')
+        ->not->toContain('dark:bg-white/5')
+        ->not->toContain('bg-zinc-900');
+});
+
 it('renders preview tile on a white background by default', function () {
     $html = Blade::render('<ui:image-preview src="/img/photo.jpg" />');
 

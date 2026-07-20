@@ -1,20 +1,34 @@
 @props([
     'src' => null,
     'delete' => null,
+    'light' => false,
     'dark' => false,
 ])
 
 @php
-    $background_classes = $dark
-        ? 'border-white/10 bg-zinc-900'
-        : 'border-zinc-200 bg-white dark:border-white/10 dark:bg-white/5';
+    $background_classes = match (true) {
+        $dark => 'border-white/10 bg-zinc-900',
+        $light => 'border-zinc-200 bg-white',
+        default => 'border-zinc-200 bg-white dark:border-white/10 dark:bg-white/5',
+    };
 
     $container_classes = Flux::classes()
         ->add('flex h-20 w-32 items-center justify-center overflow-hidden rounded-lg border p-2')
         ->add($background_classes);
 
     $clickable_classes = Flux::classes($container_classes)
-        ->add($dark ? 'cursor-pointer hover:border-white/25' : 'cursor-pointer hover:border-zinc-400 dark:hover:border-white/25');
+        ->add('cursor-pointer')
+        ->add(match (true) {
+            $dark => 'hover:border-white/25',
+            $light => 'hover:border-zinc-400',
+            default => 'hover:border-zinc-400 dark:hover:border-white/25',
+        });
+
+    $icon_classes = match (true) {
+        $dark => 'text-zinc-600',
+        $light => 'text-zinc-300',
+        default => 'text-zinc-300 dark:text-zinc-600',
+    };
 @endphp
 
 <div {{ $attributes->class('flex items-center gap-4') }} data-flux-image-preview>
@@ -24,13 +38,13 @@
         </button>
     @else
         <div class="{{ $container_classes }}">
-            <flux:icon name="photo" class="size-5 {{ $dark ? 'text-zinc-600' : 'text-zinc-300 dark:text-zinc-600' }}" />
+            <flux:icon name="photo" class="size-5 {{ $icon_classes }}" />
         </div>
     @endif
 
     @if ($src && $delete)
         <flux:button variant="subtle" size="sm" icon="trash-2" wire:click="{{ $delete }}">
-            {{ __('common.destroy') }}
+            {{ __('ui::common.destroy') }}
         </flux:button>
     @endif
 </div>
