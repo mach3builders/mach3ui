@@ -2,6 +2,11 @@
 
 All notable changes to `mach3ui` will be documented in this file.
 
+## [5.1.0] - 2026-07-09
+
+### Fixed
+- Tailwind `@source` in `resources/css/flux/ui.css` pointed at a non-existent `resources/css/views` (wrong relative depth after the file moved into `css/flux/`). Now points at `resources/views`, so package-only utilities (e.g. `has-[[data-flux-card]]:p-2`) are generated deterministically instead of relying on the app's compiled-view scan.
+
 ## [5.0.5] - 2026-06-16
 
 ### Added
