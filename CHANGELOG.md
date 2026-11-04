@@ -2,6 +2,17 @@
 
 All notable changes to `mach3ui` will be documented in this file.
 
+## [5.1.1] - 2026-11-04
+
+### Added
+- Shared Mach3 UI handbook with 221 rules and Laravel Boost project instructions for Claude Code and Codex.
+- Fixed light background option for image previews and Dutch package translations for error pages and common actions.
+
+### Changed
+- Updated the Mach3UI development skill to reference the shared handbook.
+- Image preview modals now handle a dispatched event and manage the selected image internally.
+- Updated npm dependencies and rebuilt the CodeMirror bundle. Verified the package with Flux and Flux Pro 2.21.0.
+
 ## [5.1.0] - 2026-07-09
 
 ### Fixed

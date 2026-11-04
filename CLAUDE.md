@@ -38,3 +38,7 @@ Mach3UI is a Flux companion package that provides components Flux doesn't offer.
 
 - `bootComponentPath()` — registers anonymous Blade components under `ui:` prefix
 - `bootTagCompiler()` — `<ui:*>` → `<x-ui::*>` transformation
+
+## Shared UI handbook
+
+For UI work, read `resources/boost/skills/mach3ui-development/SKILL.md` and the relevant rules in its `references/ui-handbook.md` before implementation. This is the canonical ecosystem handbook; generic or older design examples do not override it. Maintain the package skill and Boost guideline together.
